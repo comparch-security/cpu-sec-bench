@@ -5,26 +5,20 @@ static volatile int grv = 0;
 
 void FORCE_NOINLINE helper()
 {
-  grv = 2;
+  grv = 3;
 
-  // illegal jump target
-  DECL_LABEL(helper_mid);
+  MOD_RET_LABEL(main_mid);
   grv = 0;
-
-  // illegal jump back to main
-  JMP_LABEL(main_mid);
 }
 
 int main()
 {
-
-  // illegally jump to helper
-  JMP_LABEL(helper_mid);
+  // call a function but illegally return
+  helper();
   grv = 1; // failed if runs here
 
-  // illegal jump target
+  // the elligal return site
   DECL_LABEL(main_mid);
 
   exit(grv);
 }
-

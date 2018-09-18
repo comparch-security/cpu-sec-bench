@@ -10,10 +10,17 @@ cfi-tests = $(addprefix $(test-path)/, $(basename $(notdir $(cfi-cpps))))
 
 sec-tests := $(cfi-tests)
 
+headers := $(wildcard $(base)/include/*.hpp)
+
 # conditional variables
 TEST-ARCH ?= ARCH_X86_64
+#STACK-STRUCT ?= STACK_FP_RET
+STACK-STRUCT ?= STACK_RET
+
 CXX := g++
-CXXFLAGS := -I. -D$(TEST-ARCH) -O2
+CXXFLAGS := -I. -D$(TEST-ARCH) -D$(STACK-STRUCT) -O2
+
+headers += $(wildcard $(base)/lib/x86_64/*.hpp)
 
 # compile targets
 
