@@ -1,4 +1,10 @@
+SHELL := /bin/bash
 
+# default variables
+TEST-ARCH     ?= ARCH_X86_64
+GCC-OPT-LEVEL ?= O2
+
+# define paths and objects
 base = .
 
 test-path = $(base)/test
@@ -13,14 +19,17 @@ sec-tests := $(cfi-tests)
 headers := $(wildcard $(base)/include/*.hpp)
 
 # conditional variables
-TEST-ARCH ?= ARCH_X86_64
-#STACK-STRUCT ?= STACK_FP_RET
-STACK-STRUCT ?= STACK_RET
+ifeq ($(TEST-ARCH), ARCH_X86_64)
+  ifeq ($(GCC-OPT-LEVEL), g)
+    STACK-STRUCT := STACK_FP_RET
+  else
+    STACK-STRUCT := STACK_RET
+  endif
+  headers += $(wildcard $(base)/lib/x86_64/*.hpp)
+endif
 
 CXX := g++
-CXXFLAGS := -I. -D$(TEST-ARCH) -D$(STACK-STRUCT) -O2
-
-headers += $(wildcard $(base)/lib/x86_64/*.hpp)
+CXXFLAGS := -I. -D$(TEST-ARCH) -D$(STACK-STRUCT) -$(GCC-OPT-LEVEL)
 
 # compile targets
 
@@ -32,8 +41,11 @@ $(test-path):
 $(cfi-tests): $(test-path)/%:$(cfi-path)/%.cpp $(headers)
 	$(CXX) $(CXXFLAGS) $< -o $@
 
+run: $(sec-tests)
+	@(for t in $^; do $$t || echo $$t failed; done)
+
 clean:
 	-rm $(sec-tests)
 
-.PHONY: clean
+.PHONY: clean run
 
