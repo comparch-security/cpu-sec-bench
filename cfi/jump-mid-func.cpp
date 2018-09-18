@@ -1,9 +1,15 @@
 #include "include/assembly.hpp"
 
+static volatile int grv = 0;
+
 void FORCE_NOINLINE helper()
 {
+  grv = 2;
+
   // illegal jump target
   DECL_LABEL(helper_mid);
+
+  grv = 0;
 
   // illegal jump back to main
   JMP_LABEL(main_mid);
@@ -11,16 +17,15 @@ void FORCE_NOINLINE helper()
 
 int main()
 {
-  int rv = 0; // return value
 
   // illegally jump to helper
   JMP_LABEL(helper_mid);
 
-  rv = 1; // return test failed
+  grv = 1;
 
   // illegal jump target
   DECL_LABEL(main_mid);
 
-  return rv;
+  return grv;
 }
 

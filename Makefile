@@ -13,7 +13,7 @@ sec-tests := $(cfi-tests)
 # conditional variables
 TEST-ARCH ?= ARCH_X86_64
 CXX := g++
-CXXFLAGS := -I. -D$(TEST-ARCH)
+CXXFLAGS := -I. -D$(TEST-ARCH) -O2
 
 # compile targets
 
