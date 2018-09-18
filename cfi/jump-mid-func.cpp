@@ -1,6 +1,6 @@
 #include "include/assembly.hpp"
 
-void helper()
+void FORCE_NOINLINE helper()
 {
   // illegal jump target
   DECL_LABEL(helper_mid);
@@ -11,12 +11,16 @@ void helper()
 
 int main()
 {
+  int rv = 0; // return value
+
   // illegally jump to helper
   JMP_LABEL(helper_mid);
+
+  rv = 1; // return test failed
 
   // illegal jump target
   DECL_LABEL(main_mid);
 
-  return 0;
+  return rv;
 }
 
