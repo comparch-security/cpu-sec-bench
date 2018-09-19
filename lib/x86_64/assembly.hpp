@@ -17,3 +17,6 @@
 #elif defined(STACK_RET)
   #define MOD_RET_LABEL(label) MOD_STACK_LABEL(label, 0)
 #endif
+
+// assembly anchor
+#define ASM_ANCHOR asm volatile("nop;")

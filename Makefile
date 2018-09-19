@@ -1,8 +1,8 @@
 SHELL := /bin/bash
 
 # default variables
-TEST-ARCH     ?= ARCH_X86_64
-GCC-OPT-LEVEL ?= O2
+TEST_ARCH     ?= ARCH_X86_64
+GCC_OPT_LEVEL ?= O2
 
 # define paths and objects
 base = .
@@ -19,17 +19,17 @@ sec-tests := $(cfi-tests)
 headers := $(wildcard $(base)/include/*.hpp)
 
 # conditional variables
-ifeq ($(TEST-ARCH), ARCH_X86_64)
-  ifeq ($(GCC-OPT-LEVEL), g)
-    STACK-STRUCT := STACK_FP_RET
+ifeq ($(TEST_ARCH), ARCH_X86_64)
+  ifeq ($(GCC_OPT_LEVEL), g)
+    STACK_STRUCT := STACK_FP_RET
   else
-    STACK-STRUCT := STACK_RET
+    STACK_STRUCT := STACK_RET
   endif
   headers += $(wildcard $(base)/lib/x86_64/*.hpp)
 endif
 
 CXX := g++
-CXXFLAGS := -I. -D$(TEST-ARCH) -D$(STACK-STRUCT) -$(GCC-OPT-LEVEL)
+CXXFLAGS := -I. -D$(TEST_ARCH) -D$(STACK_STRUCT) -$(GCC_OPT_LEVEL) -Wall
 
 # compile targets
 
