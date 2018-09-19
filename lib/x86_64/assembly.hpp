@@ -20,3 +20,11 @@
 
 // assembly anchor
 #define ASM_ANCHOR asm volatile("nop;")
+
+// call a function with no argument
+#define CALL_FUNC_0(pFunc) \
+  asm volatile(            \
+    "call *%0;"            \
+    : : "r" (pFunc)        \
+  )                        \
+
