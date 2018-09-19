@@ -1,18 +1,14 @@
-\documentclass{article}
+\documentclass[a4paper]{book}
 
-\usepackage{mathptmx}       % selects Times Roman as basic font
-\usepackage{helvet}         % selects Helvetica as sans-serif font
-\usepackage{courier}        % selects Courier as typewriter font
-\usepackage{type1cm}        % activate if the above 3 fonts are
-                            % not available on your system
-
-\usepackage{graphicx}        % standard LaTeX graphics tool
-                             % when including figure files
-\usepackage{multicol}        % used for the two-column index
-\usepackage[bottom]{footmisc}% places footnotes at page bottom
-
+\usepackage{mathptmx}
+\usepackage{helvet}
+\usepackage{courier}
+\usepackage{type1cm}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage[bottom]{footmisc}
 \usepackage[hyphens]{url}
-\usepackage{hyperref}
+\usepackage[pdftex]{hyperref}
 \usepackage{color}
 \usepackage{soul}
 \usepackage[caption=false,font=footnotesize]{subfig}
@@ -27,15 +23,121 @@
 
 \begin{document}
 
-\title{A Security Benchmark Suite Exploring the Existing Vulnerabilities of a Computer System}
+\title{\textbf{A Security Benchmark Suite Exploring the Existing Vulnerabilities of a Computer System} \\ \large{Version: 0.1.0}}
 
 \author{Wei Song, Jiameng Ying and Boya Li\\
 \small{Institute of Information Engineeringat at the Chinese Academy of Sciences}\\
 \small{89 Minzhuang Road, Haidian, Beijing 100093, P. R. China}\\
-\small{\url{\{songwei, yingjiameng, liboya\}@iie.ac.cn}}}
+\small{\url{{songwei, yingjiameng, liboya}@iie.ac.cn}}}
 
 \maketitle
 
+\copyright 2017-2018, Institute of Information Engineering, CAS, all right reserved.
 
+\chapter{Introduction}
+
+\chapter{Overview of the Security Benchmark Suite}
+
+\chapter{Description of Test Cases}
+
+\section{Control Flow Integrity (CFI)}
+
+\begin{itemize}[noitemsep]
+\item Forward-edge CFI
+  \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
+  \item Call
+    \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
+      \item \texttt{wrong-num-arg-vtable}: [\ref{test-wrong-num-arg-vtable}] call a function with mismatched number of arguements (virtual function).
+    \end{itemize}
+  \item Jump
+    \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
+      \item \texttt{jump-mid-func}: [\ref{test-jump-mid-func}] jump to the middle of a function.
+    \end{itemize}
+  \end{itemize}
+\item Backward-edge CFI
+  \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
+  \item Return
+    \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
+      \item \texttt{return-non-call-site}: [\ref{test-return-non-call-site}] return to a none call-site position.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\newpage
+\subsection{\texttt{wrong-num-arg-vtable}}\label{test-wrong-num-arg-vtable}
+
+\subsubsection{Description}
+Illegally call a virtual function with mismatched number of arguements by modifying the VTable pointer.
+
+\subsubsection{Vulnerability}
+Break the data integrity of the Vtable pointer.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\textbf{x86\_64}: Only work with \texttt{-g} because the modifying of the VTable pointer is optimized away with \texttt{-O2}.
+
+
+\newpage
+\subsection{\texttt{jump-mid-func}}\label{test-jump-mid-func}
+
+\subsubsection{Description}
+Illegally jump from the \texttt{main()} function to the middle of another function.
+
+\subsubsection{Vulnerability}
+Break the execution compartment complied by most C/C++ programs.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+\subsection{\texttt{return-non-call-site}}\label{test-return-non-call-site}
+
+\subsubsection{Description}
+Illegally modify the return address stored on the stack and then return to an none call-site position.
+
+\subsubsection{Vulnerability}
+Break the backward CFI and the integrity of the return address.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\textbf{x86\_64}: The \texttt{rbp} register might be (with \texttt{-g}) or not be (with \texttt{-O2}) pushed to the stack.
+The return address is modified by embedded assembly using \texttt{rsp} as the base register. See \texttt{STACK\_STRUCT} in the make file.
+
+\chapter{Remaining Issues}
+
+\begin{itemize}
+  \item \texttt{wrong-num-arg-vtable} \ref{test-wrong-num-arg-vtable}
+\end{itemize}
 
 \end{document}
