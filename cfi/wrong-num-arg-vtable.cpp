@@ -17,8 +17,7 @@ public:
     }
 };
 
-int main()
-{
+int main() {
   HelperOrig orig, *pOrig;
   HelperReplace replace;
   pOrig = &orig;

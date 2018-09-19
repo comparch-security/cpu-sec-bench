@@ -3,8 +3,7 @@
 
 static volatile int grv = 0;
 
-void FORCE_NOINLINE helper()
-{
+void FORCE_NOINLINE helper() {
   grv = 2;
 
   // illegal jump target
@@ -15,8 +14,7 @@ void FORCE_NOINLINE helper()
   JMP_LABEL(main_mid);
 }
 
-int main()
-{
+int main() {
 
   // illegally jump to helper
   JMP_LABEL(helper_mid);

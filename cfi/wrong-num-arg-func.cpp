@@ -7,9 +7,8 @@ int helper(int a, int b) {
   return a+b;
 }
 
-int main()
-{
-  CALL_FUNC_0(helper);
+int main() {
+  CALL_VOID_FUNC_0(helper);
   return grv;
 }
 
