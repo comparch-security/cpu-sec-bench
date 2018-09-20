@@ -34,6 +34,9 @@
 
 \copyright 2017-2018, Institute of Information Engineering, CAS, all right reserved.
 
+\tableofcontents
+\newpage
+
 \chapter{Introduction}
 
 \chapter{Overview of the Security Benchmark Suite}
@@ -49,6 +52,7 @@
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
       \item \ref{test-wrong-num-arg-func}: \texttt{wrong-num-arg-func}
       \item \ref{test-wrong-num-arg-vtable}: \texttt{wrong-num-arg-vtable}
+      \item \ref{test-wrong-type-arg-func}: \texttt{wrong-type-arg-func}
     \end{itemize}
   \item Jump
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
@@ -111,6 +115,28 @@ Break the data integrity of the Vtable pointer.
 
 
 \newpage
+\subsection{\texttt{wrong-type-arg-func}}\label{test-wrong-type-arg-func}
+
+\subsubsection{Description}
+Illegally call a function with wrong types of arguements.
+
+\subsubsection{Vulnerability}
+Break the function calling convention.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+None.
+
+\newpage
 \subsection{\texttt{jump-mid-func}}\label{test-jump-mid-func}
 
 \subsubsection{Description}
@@ -161,6 +187,7 @@ The return address is modified by embedded assembly using \texttt{rsp} as the ba
 
 \begin{itemize}
   \item \texttt{wrong-num-arg-func} \ref{test-wrong-num-arg-func}: test for arguements passed on stack.
+  \item \texttt{wrong-type-arg-func} \ref{test-wrong-type-arg-func}: more importantly, test (data/code) pointer to integer.
   \item \texttt{wrong-num-arg-vtable} \ref{test-wrong-num-arg-vtable}: known issues.
   \item call a unvisible function (call a local function from outside).
   \item differentiate between global data, heap and stack.
