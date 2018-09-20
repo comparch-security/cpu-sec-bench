@@ -12,9 +12,11 @@ test-path = $(base)/test
 cfi-path  = $(base)/cfi
 cfi-cpps  = $(wildcard $(cfi-path)/*.cpp)
 cfi-tests = $(addprefix $(test-path)/, $(basename $(notdir $(cfi-cpps))))
-
+cfi-cpps-prep = $(addsuffix .prep, $(cfi-cpps))
 
 sec-tests := $(cfi-tests)
+sec-tests-dump = $(addsuffix .dump, $(sec-tests))
+sec-tests-prep := $(cfi-cpps-prep)
 
 headers := $(wildcard $(base)/include/*.hpp)
 
@@ -30,6 +32,8 @@ endif
 
 CXX := g++
 CXXFLAGS := -I. -D$(TEST_ARCH) -D$(STACK_STRUCT) -$(GCC_OPT_LEVEL) -Wall
+OBJDUMP := objdump
+OBJDUMPFLAGS := -D
 
 # compile targets
 
@@ -41,11 +45,22 @@ $(test-path):
 $(cfi-tests): $(test-path)/%:$(cfi-path)/%.cpp $(headers)
 	$(CXX) $(CXXFLAGS) $< -o $@
 
+$(cfi-cpps-prep): %.prep:%
+	$(CXX) -E $(CXXFLAGS) $< > $@
+
 run: $(sec-tests)
 	@(for t in $^; do $$t || echo $$t failed; done)
 
+dump: $(sec-tests-dump)
+$(sec-tests-dump): %.dump:%
+	$(OBJDUMP) $(OBJDUMPFLAGS) $< > $@
+
+prep: $(sec-tests-prep)
+
 clean:
 	-rm $(sec-tests)
+	-rm $(sec-tests-dump)
+	-rm $(sec-tests-prep)
 
-.PHONY: clean run
+.PHONY: clean run dump prep
 
