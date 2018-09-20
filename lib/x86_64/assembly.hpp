@@ -21,10 +21,25 @@
 // assembly anchor
 #define ASM_ANCHOR asm volatile("nop;")
 
-// call a function with no argument
-#define CALL_VOID_FUNC_0(pFunc) \
-  asm volatile(                 \
-    "call *%0;"                 \
-    : : "r" (pFunc)             \
-  )                             \
+// call a function
+#define CALL_FUNC(pFunc) \
+  asm volatile(          \
+    "call *%0;"          \
+    : : "r" (pFunc)      \
+  )                      \
+
+// pass a integer argument
+#define PASS_INT_ARG(Idx, arg) PASS_INT_ARG##Idx(arg)
+
+#define PASS_INT_ARG0(arg) asm volatile("mov %0, %rdi;" : : "r" (arg))
+#define PASS_INT_ARG1(arg) asm volatile("mov %0, %rsi;" : : "r" (arg))
+
+// pass a double argument
+#define PASS_DOUBLE_ARG_FROM_INT(Idx, arg) \
+  asm volatile(                  \
+    "movq %0, %%rax;"            \
+    "movq %%rax, %%xmm" #Idx ";" \
+    : : "r" (arg)                \
+  : "rax", "xmm" #Idx            \
+  )                              \
 
