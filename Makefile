@@ -11,7 +11,7 @@ test-path = $(base)/test
 
 cfi-path  = $(base)/cfi
 cfi-cpps  = $(wildcard $(cfi-path)/*.cpp)
-cfi-tests = $(addprefix $(test-path)/, $(basename $(notdir $(cfi-cpps))))
+cfi-tests = $(addprefix $(test-path)/cfi-, $(basename $(notdir $(cfi-cpps))))
 cfi-cpps-prep = $(addsuffix .prep, $(cfi-cpps))
 
 sec-tests := $(cfi-tests)
@@ -42,13 +42,16 @@ all: $(test-path) $(sec-tests)
 $(test-path):
 	-mkdir -p $@
 
-$(cfi-tests): $(test-path)/%:$(cfi-path)/%.cpp $(headers)
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(headers)
 	$(CXX) $(CXXFLAGS) $< -o $@
 
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 run: $(sec-tests)
+	@echo ===============================
+	@echo Run all tests:
+	@echo -------------------------------
 	@(for t in $^; do $$t || echo $$t failed; done)
 
 dump: $(sec-tests-dump)
@@ -58,9 +61,9 @@ $(sec-tests-dump): %.dump:%
 prep: $(sec-tests-prep)
 
 clean:
-	-rm $(sec-tests)
-	-rm $(sec-tests-dump)
-	-rm $(sec-tests-prep)
+	-rm $(sec-tests) > /dev/null 2>&1
+	-rm $(sec-tests-dump) > /dev/null 2>&1
+	-rm $(sec-tests-prep) > /dev/null 2>&1
 
 .PHONY: clean run dump prep
 
