@@ -50,20 +50,21 @@
   \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
   \item Call
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-      \item \ref{test-wrong-num-arg-func}: \texttt{wrong-num-arg-func}
-      \item \ref{test-wrong-num-arg-vtable}: \texttt{wrong-num-arg-vtable}
-      \item \ref{test-wrong-type-arg-func}: \texttt{wrong-type-arg-func}
+    \item \ref{test-wrong-num-arg-func}: \texttt{wrong-num-arg-func}
+    \item \ref{test-wrong-num-arg-vtable}: \texttt{wrong-num-arg-vtable}
+    \item \ref{test-wrong-type-arg-func}: \texttt{wrong-type-arg-func}
     \end{itemize}
   \item Jump
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-      \item \ref{test-jump-mid-func}: \texttt{jump-mid-func}
+    \item \ref{test-jump-mid-func}: \texttt{jump-mid-func}
     \end{itemize}
   \end{itemize}
 \item Backward-edge CFI
   \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
   \item Return
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-      \item \ref{test-return-non-call-site}: \texttt{return-non-call-site} 
+    \item \ref{test-return-non-call-site}: \texttt{return-non-call-site}
+    \item \ref{test-return-to-func}: \texttt{return-to-func}  
     \end{itemize}
   \end{itemize}
 \end{itemize}
@@ -182,6 +183,27 @@ Break the backward CFI and the integrity of the return address.
 
 \textbf{x86\_64}: The \texttt{rbp} register might be (with \texttt{-g}) or not be (with \texttt{-O2}) pushed to the stack.
 The return address is modified by embedded assembly using \texttt{rsp} as the base register. See \texttt{STACK\_STRUCT} in the make file.
+
+\newpage
+\subsection{\texttt{return-to-func}}\label{test-return-to-func}
+
+\subsubsection{Description}
+Illegally modify the return address stored on the stack and directly return to another function.
+
+\subsubsection{Vulnerability}
+Break the backward CFI and the integrity of the return address.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
 
 \chapter{Remaining Issues}
 
