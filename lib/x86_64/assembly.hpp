@@ -7,15 +7,19 @@
 // jump to a label
 #define JMP_LABEL(label) asm volatile("jmp " #label ";")
 
-// modify stack to a label
+// modify stack
 #define MOD_STACK_LABEL(label, offset) \
   asm volatile("movq $" #label ", " #offset "(%rsp);")
+#define MOD_STACK_DAT(dat, offset) \
+  asm volatile("movq %0, " #offset "(%%rsp);" : : "r" (dat))
 
 // modify return address to a label
 #ifdef STACK_FP_RET
   #define MOD_RET_LABEL(label) MOD_STACK_LABEL(label, 8)
+  #define MOD_RET_DAT(dat)     MOD_STACK_DAT(dat, 8)
 #elif defined(STACK_RET)
   #define MOD_RET_LABEL(label) MOD_STACK_LABEL(label, 0)
+  #define MOD_RET_DAT(dat)     MOD_STACK_DAT(dat, 0)
 #endif
 
 // assembly anchor

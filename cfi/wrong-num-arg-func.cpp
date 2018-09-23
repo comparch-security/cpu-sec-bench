@@ -2,7 +2,7 @@
 
 static volatile int grv = 1;
 
-int helper(int a, int b) {
+int FORCE_NOINLINE helper(int a, int b) {
   grv = 0;
   return a+b;
 }

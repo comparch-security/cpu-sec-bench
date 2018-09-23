@@ -1,6 +1,6 @@
 #include "include/assembly.hpp"
 
-int helper(double var) {
+int FORCE_NOINLINE helper(double var) {
   return var > 0;
 }
 int main()
