@@ -1,31 +1,27 @@
-#include <iostream>
+#include <cstdlib>
 #include "include/assembly.hpp"
 
-using namespace std;
-
-class Base1
+class HelperOrig
 {
 public:
-    virtual void f1() {cout<<"Base1::f1"<<endl;}
-    virtual void g1() {cout<<"Base1::g1"<<endl;}	
+  virtual void exit_1() { exit(1); }
 };
 
-class Base2
+class HelperReplace
 {
 public:
-    virtual void f2() {cout<<"Base2::f2()"<<endl;}
+  virtual void exit_0() { exit(0); } // fake virtual function
+  virtual void exit_2() { exit(2); }
 };
 
 int main() {
-  Base1 b1, *pb1;
-  Base2 b2;
+  HelperOrig orig, *pOrig = &orig;
+  HelperReplace replace;
 
-  *(int *)&b1 = *(int *)&b2;
-  //asm volatile("movq ")
-  b1.f1();
-  pb1 = &b1;
-  pb1->f1();
+  // replace the vtable pointer
+  XCHG_MEM(&orig, &replace);
+  pOrig->exit_1();
 
-  return 0;
+  return 3;
 }
 

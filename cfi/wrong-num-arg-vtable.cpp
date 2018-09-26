@@ -1,10 +1,10 @@
+#include <cstdlib>
+#include "include/assembly.hpp"
 
 class HelperOrig
 {
 public:
-  virtual int set_var() {
-    return 1;
-  }
+  virtual void exit_1() { exit(1); }
 };
 
 class HelperReplace
@@ -13,20 +13,21 @@ class HelperReplace
 public:
     virtual int set_var(int new_var) {
       lvar = new_var;
-      return 0;
+      exit(0);
     }
 };
 
 int main() {
-  HelperOrig orig, *pOrig;
+  HelperOrig orig, *pOrig = &orig;
   HelperReplace replace;
-  pOrig = &orig;
  
   // replace the vtable pointer
-  *(unsigned long long *)&orig = *(unsigned long long *)&replace; 
+  XCHG_MEM(&replace, &orig);
   
   // call the original virtual function
-  return pOrig->set_var();
+  pOrig->exit_1();
+
+  return 2;
  }
 
 

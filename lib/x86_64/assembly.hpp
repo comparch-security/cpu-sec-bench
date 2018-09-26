@@ -22,6 +22,17 @@
   #define MOD_RET_DAT(dat)     MOD_STACK_DAT(dat, 0)
 #endif
 
+// exchange memory value
+#define XCHG_MEM(ptrL, ptrR)   \
+  asm volatile(                \
+    "movq (%0), %%rax;"        \
+    "xchg %%rax, (%1);"        \
+    "movq %%rax, (%0);"        \
+    : : "r" (ptrL), "r" (ptrR) \
+    : "rax"                    \
+  )                            \
+
+
 // call a function
 #define CALL_FUNC(pFunc) \
   asm volatile(          \
@@ -41,6 +52,6 @@
     "movq %0, %%rax;"            \
     "movq %%rax, %%xmm" #Idx ";" \
     : : "r" (arg)                \
-  : "rax", "xmm" #Idx            \
+    : "rax", "xmm" #Idx          \
   )                              \
 
