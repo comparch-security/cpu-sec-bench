@@ -22,9 +22,6 @@
   #define MOD_RET_DAT(dat)     MOD_STACK_DAT(dat, 0)
 #endif
 
-// assembly anchor
-#define ASM_ANCHOR asm volatile("nop;")
-
 // call a function
 #define CALL_FUNC(pFunc) \
   asm volatile(          \
