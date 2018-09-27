@@ -42,11 +42,11 @@ all: $(test-path) $(sec-tests)
 $(test-path):
 	-mkdir -p $@
 
-$(base)/lib/common/cfi.o: %.o : %.cpp $(base)/lib/include/cfi.hpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(test-path)/libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
+	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(base)/lib/common/cfi.o $(headers)
-	$(CXX) $(CXXFLAGS) $< $(base)/lib/common/cfi.o -o $@
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(test-path)/libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< -L$(test-path) -lcfi -o $@
 
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
