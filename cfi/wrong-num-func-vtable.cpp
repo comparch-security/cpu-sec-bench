@@ -1,17 +1,12 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
+#include "include/cfi.hpp"
 
-class HelperOrig
+class HelperReplace : public HelperOrig
 {
 public:
-  virtual void exit_1() { exit(1); }
-};
-
-class HelperReplace
-{
-public:
-  virtual void exit_0() { exit(0); } // fake virtual function
-  virtual void exit_2() { exit(2); }
+  virtual void virtual_func() { exit(0); } // fake virtual function
+  virtual void other_func() { exit(2); }
 };
 
 int main() {
@@ -20,7 +15,7 @@ int main() {
 
   // replace the vtable pointer
   XCHG_MEM(&orig, &replace);
-  pOrig->exit_1();
+  pOrig->virtual_func();
 
   return 3;
 }

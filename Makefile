@@ -18,7 +18,7 @@ sec-tests := $(cfi-tests)
 sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(cfi-cpps-prep)
 
-headers := $(wildcard $(base)/include/*.hpp)
+headers := $(wildcard $(base)/lib/include/*.hpp)
 
 # conditional variables
 ifeq ($(TEST_ARCH), ARCH_X86_64)
@@ -31,7 +31,7 @@ ifeq ($(TEST_ARCH), ARCH_X86_64)
 endif
 
 CXX := g++
-CXXFLAGS := -I. -D$(TEST_ARCH) -D$(STACK_STRUCT) -$(GCC_OPT_LEVEL) -Wall
+CXXFLAGS := -I./lib -D$(TEST_ARCH) -D$(STACK_STRUCT) -$(GCC_OPT_LEVEL) -Wall
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D
 
@@ -42,8 +42,11 @@ all: $(test-path) $(sec-tests)
 $(test-path):
 	-mkdir -p $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(headers)
-	$(CXX) $(CXXFLAGS) $< -o $@
+$(base)/lib/common/cfi.o: %.o : %.cpp $(base)/lib/include/cfi.hpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(base)/lib/common/cfi.o $(headers)
+	$(CXX) $(CXXFLAGS) $< $(base)/lib/common/cfi.o -o $@
 
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
