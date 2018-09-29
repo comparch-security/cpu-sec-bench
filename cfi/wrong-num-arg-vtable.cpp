@@ -1,17 +1,12 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
+#include "include/cfi.hpp"
 
-class HelperOrig
-{
-public:
-  virtual void exit_1() { exit(1); }
-};
-
-class HelperReplace
+class HelperReplace : public HelperOrig
 {
   int lvar;
 public:
-    virtual int set_var(int new_var) {
+    virtual int virtual_func(int new_var) {
       lvar = new_var;
       exit(0);
     }
@@ -25,7 +20,7 @@ int main() {
   XCHG_MEM(&replace, &orig);
   
   // call the original virtual function
-  pOrig->exit_1();
+  pOrig->virtual_func();
 
   return 2;
  }
