@@ -43,8 +43,8 @@
 // pass a integer argument
 #define PASS_INT_ARG(Idx, arg) PASS_INT_ARG##Idx(arg)
 
-#define PASS_INT_ARG0(arg) asm volatile("mov %0, %rdi;" : : "r" (arg))
-#define PASS_INT_ARG1(arg) asm volatile("mov %0, %rsi;" : : "r" (arg))
+#define PASS_INT_ARG0(arg) asm volatile("mov %0, %%rdi;" : : "r" (arg))
+#define PASS_INT_ARG1(arg) asm volatile("mov %0, %%rsi;" : : "r" (arg))
 
 // pass a double argument
 #define PASS_DOUBLE_ARG_FROM_INT(Idx, arg) \
