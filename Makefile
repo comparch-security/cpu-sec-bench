@@ -35,6 +35,7 @@ CXX := g++
 CXXFLAGS := -I./lib -D$(TEST_ARCH) -D$(STACK_STRUCT) -$(GCC_OPT_LEVEL) -Wall
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D
+RUN_SCRIPT := $(base)/script/run-test.py
 
 # compile targets
 
@@ -56,7 +57,7 @@ run: $(sec-tests)
 	@echo ===============================
 	@echo Run all tests:
 	@echo -------------------------------
-	@for t in $^; do $$t || echo $$t failed; done
+	@for t in $^; do $(RUN_SCRIPT) $$t; done
 
 dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%
