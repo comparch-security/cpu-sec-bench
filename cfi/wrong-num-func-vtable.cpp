@@ -2,21 +2,21 @@
 #include "include/assembly.hpp"
 #include "include/cfi.hpp"
 
-class HelperReplace : public HelperOrig
+class Fake : public Base
 {
 public:
   virtual void virtual_func() { exit(0); } // fake virtual function
-  virtual void other_func() { exit(2); }
+  virtual void other_func() { exit(3); }
 };
 
 int main() {
-  HelperOrig orig, *pOrig = &orig;
-  HelperReplace replace;
+  Helper *orig = new Helper();
+  Fake *fake = new Fake();
 
   // replace the vtable pointer
-  XCHG_MEM(&orig, &replace);
-  pOrig->virtual_func();
+  XCHG_MEM(orig, fake);
+  orig->virtual_func();
 
-  return 3;
+  return 4;
 }
 

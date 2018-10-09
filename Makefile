@@ -8,6 +8,7 @@ GCC_OPT_LEVEL ?= O2
 base = .
 
 test-path = $(base)/test
+LD_LIBRARY_PATH=$(test-path)
 
 cfi-path  = $(base)/cfi
 cfi-cpps  = $(wildcard $(cfi-path)/*.cpp)
@@ -33,7 +34,8 @@ endif
 CXX := g++
 CXXFLAGS := -I./lib -D$(TEST_ARCH) -D$(STACK_STRUCT) -$(GCC_OPT_LEVEL) -Wall
 OBJDUMP := objdump
-OBJDUMPFLAGS := -D
+OBJDUMPFLAGS := -D -l -s
+RUN_SCRIPT := $(base)/script/run-test.py
 
 # compile targets
 
@@ -46,7 +48,7 @@ $(test-path)/libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
 	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@
 
 $(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< -L$(test-path) -lcfi -o $@
+	$(CXX) $(CXXFLAGS) $< -L$(test-path) -lcfi -Wl,-rpath,$(test-path) -o $@
 
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
@@ -55,7 +57,7 @@ run: $(sec-tests)
 	@echo ===============================
 	@echo Run all tests:
 	@echo -------------------------------
-	@(for t in $^; do $$t || echo $$t failed; done)
+	@for t in $^; do $(RUN_SCRIPT) $$t; done
 
 dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%

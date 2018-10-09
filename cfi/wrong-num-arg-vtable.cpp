@@ -2,7 +2,9 @@
 #include "include/assembly.hpp"
 #include "include/cfi.hpp"
 
-class HelperReplace : public HelperOrig
+#include <iostream>
+
+class Fake
 {
   int lvar;
 public:
@@ -13,16 +15,16 @@ public:
 };
 
 int main() {
-  HelperOrig orig, *pOrig = &orig;
-  HelperReplace replace;
- 
+  Helper *orig = new Helper();
+  Fake *fake = new Fake();
+
   // replace the vtable pointer
-  XCHG_MEM(&replace, &orig);
+  XCHG_MEM(orig, fake);
   
   // call the original virtual function
-  pOrig->virtual_func();
+  orig->virtual_func();
 
-  return 2;
+  return 4;
  }
 
 
