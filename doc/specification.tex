@@ -53,6 +53,7 @@
     \item \ref{test-wrong-num-arg-func}: \texttt{wrong-num-arg-func}
     \item \ref{test-wrong-num-arg-vtable}: \texttt{wrong-num-arg-vtable}
     \item \ref{test-wrong-type-arg-func}: \texttt{wrong-type-arg-func}
+    \item \ref{test-wrong-num-func-vtable}: \texttt{wrong-num-func-vtable}
     \end{itemize}
   \item Jump
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
@@ -112,7 +113,7 @@ Break the data integrity of the Vtable pointer.
 
 \subsubsection{Known issues}
 
-\textbf{x86\_64}: Only work with \texttt{-g} because the modifying of the VTable pointer is optimized away with \texttt{-O2}.
+\textbf{x86\_64}: Currently only works with object allocated on heap.
 
 
 \newpage
@@ -136,6 +137,29 @@ Break the function calling convention.
 
 \subsubsection{Known issues}
 None.
+
+\newpage
+\subsection{\texttt{wrong-num-func-vtable}}\label{test-wrong-num-func-vtable}
+
+\subsubsection{Description}
+Illegally call a fake virtual function with the VTable being replaced with another one of different number of virtual functions.
+
+\subsubsection{Vulnerability}
+Break the data integrity of the Vtable pointer.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+\textbf{x86\_64}: Currently only works with object allocated on heap.
 
 \newpage
 \subsection{\texttt{jump-mid-func}}\label{test-jump-mid-func}
@@ -211,6 +235,7 @@ Break the backward CFI and the integrity of the return address.
   \item \texttt{wrong-num-arg-func} \ref{test-wrong-num-arg-func}: test for arguements passed on stack.
   \item \texttt{wrong-type-arg-func} \ref{test-wrong-type-arg-func}: more importantly, test (data/code) pointer to integer.
   \item \texttt{wrong-num-arg-vtable} \ref{test-wrong-num-arg-vtable}: known issues.
+  \item \texttt{wrong-num-func-vtable} \ref{test-wrong-num-func-vtable}: known issues.
   \item call a unvisible function (call a local function from outside).
   \item differentiate between global data, heap and stack.
 \end{itemize}

@@ -72,3 +72,8 @@ clean:
 
 .PHONY: clean run dump prep
 
+doc:
+	cd doc; pdflatex specification
+
+.PHONY: doc
+
