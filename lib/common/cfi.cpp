@@ -1,6 +1,11 @@
 #include <cstdlib>
 #include "include/cfi.hpp"
 
-void HelperOrig::virtual_func() {
+void Base::virtual_func() {
   exit(1);
 }
+
+void Helper::virtual_func() {
+  exit(2);
+}
+

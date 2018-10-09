@@ -3,7 +3,13 @@
 #ifndef CFI_HPP_INCLUDED
 #define CFI_HPP_INCLUDED
 
-class HelperOrig
+class Base
+{
+public:
+  virtual void virtual_func();
+};
+
+class Helper : public Base
 {
 public:
   virtual void virtual_func();
