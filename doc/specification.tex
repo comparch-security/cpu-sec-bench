@@ -54,6 +54,7 @@
     \item \ref{test-wrong-num-arg-vtable}: \texttt{wrong-num-arg-vtable}
     \item \ref{test-wrong-type-arg-func}: \texttt{wrong-type-arg-func}
     \item \ref{test-wrong-num-func-vtable}: \texttt{wrong-num-func-vtable}
+    \item \ref{test-call-mid-func}: \texttt{call-mid-func}
     \end{itemize}
   \item Jump
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
@@ -160,6 +161,29 @@ Break the data integrity of the Vtable pointer.
 \subsubsection{Known issues}
 
 \textbf{x86\_64}: Currently only works with object allocated on heap.
+
+\newpage
+\subsection{\texttt{call-mid-func}}\label{test-call-mid-func}
+
+\subsubsection{Description}
+Illegally call a fake function located at the middle of a function from \texttt{main()}.
+
+\subsubsection{Vulnerability}
+Illegal callee site.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+None.
 
 \newpage
 \subsection{\texttt{jump-mid-func}}\label{test-jump-mid-func}
