@@ -34,7 +34,7 @@ endif
 CXX := g++
 CXXFLAGS := -I./lib -D$(TEST_ARCH) -D$(STACK_STRUCT) -$(GCC_OPT_LEVEL) -Wall
 OBJDUMP := objdump
-OBJDUMPFLAGS := -D -l -s
+OBJDUMPFLAGS := -D -l -S
 RUN_SCRIPT := $(base)/script/run-test.py
 
 # compile targets
