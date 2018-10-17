@@ -72,7 +72,7 @@
 #define MID_INSTRUTION_LABLE(lable)           \
   asm volatile(#lable ": add $0xc3, %rax;")   \
 
-//jmp to the mid of instruvtion with offset
+//jmp to the mid of instruction with offset
 #define JMP_MID_INSTRUCTION(label, offset)      \
   asm(                                          \
     "mov " #label "@GOTPCREL(%rip), %rax;"      \
