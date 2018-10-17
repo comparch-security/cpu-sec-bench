@@ -15,4 +15,11 @@ public:
   virtual void virtual_func();
 };
 
+class Helper2 : public Base
+{
+	double lvar;
+public:
+	virtual void virtual_func(int arg);
+};
+
 #endif

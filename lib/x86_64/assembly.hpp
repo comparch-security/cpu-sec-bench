@@ -55,3 +55,15 @@
     : "rax", "xmm" #Idx          \
   )                              \
 
+// push an address
+#define PUSH_LABLE(label) asm volatile("push " #label "@GOTPCREL(%rip)")
+
+// return
+#define RET asm volatile("ret")
+
+//call to a label
+#define CALL_LABEL(label)                    \
+  asm volatile(                              \
+    "mov " #label "@GOTPCREL(%rip), %rax;"   \
+    "call *%rax;"                            \
+    )                                        

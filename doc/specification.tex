@@ -54,6 +54,7 @@
     \item \ref{test-wrong-num-arg-vtable}: \texttt{wrong-num-arg-vtable}
     \item \ref{test-wrong-type-arg-func}: \texttt{wrong-type-arg-func}
     \item \ref{test-wrong-num-func-vtable}: \texttt{wrong-num-func-vtable}
+    \item \ref{test-call-mid-func}: \texttt{call-mid-func}
     \end{itemize}
   \item Jump
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
@@ -65,7 +66,8 @@
   \item Return
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
     \item \ref{test-return-non-call-site}: \texttt{return-non-call-site}
-    \item \ref{test-return-to-func}: \texttt{return-to-func}  
+    \item \ref{test-return-to-func}: \texttt{return-to-func}
+    \item \ref{test-return-without-call}: \texttt{return-to-without-call}
     \end{itemize}
   \end{itemize}
 \end{itemize}
@@ -162,6 +164,29 @@ Break the data integrity of the Vtable pointer.
 \textbf{x86\_64}: Currently only works with object allocated on heap.
 
 \newpage
+\subsection{\texttt{call-mid-func}}\label{test-call-mid-func}
+
+\subsubsection{Description}
+Illegally call a fake function located at the middle of a function from \texttt{main()}.
+
+\subsubsection{Vulnerability}
+Illegal callee site.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+None.
+
+\newpage
 \subsection{\texttt{jump-mid-func}}\label{test-jump-mid-func}
 
 \subsubsection{Description}
@@ -229,6 +254,29 @@ Break the backward CFI and the integrity of the return address.
   
 \subsubsection{Known issues}
 
+\newpage
+\subsection{\texttt{return-without-call}}\label{test-return-without-call}
+
+\subsubsection{Description}
+Illegally add a fake function call onto the stack and return to it..
+
+\subsubsection{Vulnerability}
+Break the backward CFI and the integrity of the return address.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+\textbf{x86\_64}: The \texttt{rbp} register might be (with \texttt{-g}) or not be (with \texttt{-O2}) pushed to the stack.
+Currently the test works only with \texttt{-O2}.
+
 \chapter{Remaining Issues}
 
 \begin{itemize}
@@ -236,6 +284,7 @@ Break the backward CFI and the integrity of the return address.
   \item \texttt{wrong-type-arg-func} \ref{test-wrong-type-arg-func}: more importantly, test (data/code) pointer to integer.
   \item \texttt{wrong-num-arg-vtable} \ref{test-wrong-num-arg-vtable}: known issues.
   \item \texttt{wrong-num-func-vtable} \ref{test-wrong-num-func-vtable}: known issues.
+  \item \texttt{return-without-call} \ref{test-return-without-call}: known issues.
   \item call a unvisible function (call a local function from outside).
   \item differentiate between global data, heap and stack.
 \end{itemize}
