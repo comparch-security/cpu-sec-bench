@@ -66,4 +66,16 @@
   asm volatile(                              \
     "mov " #label "@GOTPCREL(%rip), %rax;"   \
     "call *%rax;"                            \
-    )                                        
+    )  
+
+// a instrction can jmp to mid
+#define MID_INSTRUTION_LABLE(lable)           \
+  asm volatile(#lable ": add $0xc3, %rax;")   \
+
+//jmp to the mid of instruvtion with offset
+#define JMP_MID_INSTRUCTION(label, offset)      \
+  asm(                                          \
+    "mov " #label "@GOTPCREL(%rip), %rax;"      \
+    "add $" #offset ", %rax;"                    \
+    "jmp *%rax;"                                \
+    )                                          
