@@ -1,14 +1,18 @@
 #include "include/assembly.hpp"
 
-int FORCE_NOINLINE helper(double var) {
-  return var > 0;
+static unsigned int rv = 1;
+
+void FORCE_NOINLINE helper(double var) {
+  rv = (var == 0.5) ? 0 : 2;
 }
+
 int main()
 {
   long long tmp = -1;
-  PASS_DOUBLE_ARG_FROM_INT(0, tmp);
+  helper(0.5);
+  PASS_INT_ARG0(tmp);
   CALL_FUNC(helper);  
-  return 0;
+  return rv;
 }
 
 
