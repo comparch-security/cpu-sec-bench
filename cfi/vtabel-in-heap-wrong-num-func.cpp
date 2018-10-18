@@ -1,9 +1,6 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
 #include "include/cfi.hpp"
-#include "common/cfi.cpp"
-
-#include <iostream>
 
 void fake_func() 
 {
@@ -13,14 +10,13 @@ void fake_func()
 int main() {
   Helper *orig = new Helper();
 
-  //creat a fake vtable with 1 function pointer
-  VPOINTER func_list = creat_fake_vtable(3);
-  //fill in the vtable with fake_function
+  //creat a fake vtable with 3 function pointer
+  pvtable_t fake_vtable = create_fake_vtable_on_heap(3);
   for(int i=0; i<3; i++) 
-    *(func_list+i) = (void *)fake_func;
+    fake_vtable[i] = fake_func;
 
   // replace the vtable pointer 
-  * (int **) orig = (int*)func_list;
+  * (int **) orig = (int*)fake_vtable;
   orig->virtual_func();
 
   return 4;
