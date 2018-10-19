@@ -50,11 +50,16 @@
   \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
   \item Call
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item \ref{test-call-wrong-num-arg-func}: \texttt{call-wrong-num-arg-func}
-    \item \ref{test-call-wrong-num-arg-vtable}: \texttt{call-wrong-num-arg-vtable}
-    \item \ref{test-call-wrong-type-arg-func}: \texttt{call-wrong-type-arg-func}
-    \item \ref{test-call-wrong-num-func-vtable}: \texttt{call-wrong-num-func-vtable}
     \item \ref{test-call-mid-func}: \texttt{call-mid-func}
+    \item \ref{test-call-wrong-num-arg-func}: \texttt{call-wrong-num-arg-func}
+    \item \ref{test-call-wrong-type-arg-func}: \texttt{call-wrong-type-arg-func}
+    \item \ref{test-call-wrong-num-arg-vtable}: \texttt{call-wrong-num-arg-vtable}
+    \item \ref{test-call-wrong-type-arg-vtable}: \texttt{call-wrong-type-arg-vtable}
+    \item \ref{test-call-wrong-num-func-vtable}: \texttt{call-wrong-num-func-vtable}
+    \item \ref{test-call-wrong-vtable-heap}: \texttt{call-wrong-vtable-heap}
+    \item \ref{test-call-wrong-num-arg-vtable-heap}: \texttt{call-wrong-num-arg-vtable-heap}
+    \item \ref{test-call-wrong-type-arg-vtable-heap}: \texttt{call-wrong-type-arg-func-vtable-heap}
+    \item \ref{test-call-wrong-num-func-vtable-heap}: \texttt{call-wrong-num-func-vtable-heap}
     \end{itemize}
   \item Jump
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
@@ -71,6 +76,29 @@
     \end{itemize}
   \end{itemize}
 \end{itemize}
+
+\newpage
+\subsection{\texttt{call-mid-func}}\label{test-call-mid-func}
+
+\subsubsection{Description}
+Illegally call a fake function located at the middle of a function from \texttt{main()}.
+
+\subsubsection{Vulnerability}
+Illegal callee site.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+None.
 
 \newpage
 \subsection{\texttt{call-wrong-num-arg-func}}\label{test-call-wrong-num-arg-func}
@@ -95,30 +123,6 @@ Break the function calling convention.
 None.
 
 \newpage
-\subsection{\texttt{call-wrong-num-arg-vtable}}\label{test-call-wrong-num-arg-vtable}
-
-\subsubsection{Description}
-Illegally call a virtual function with mismatched number of arguements by modifying the VTable pointer.
-
-\subsubsection{Vulnerability}
-Break the data integrity of the Vtable pointer.
-
-\subsubsection{Test result}
-\begin{tabular}{cl}
-  \toprule
-  \emph{return}  & \emph{description} \\
-  \midrule
-  0              & \textbf{vulnerable} \\
-  other          & might be safe \\
-  \bottomrule
-\end{tabular}
-
-\subsubsection{Known issues}
-
-\textbf{x86\_64}: Currently only works with object allocated on heap.
-
-
-\newpage
 \subsection{\texttt{call-wrong-type-arg-func}}\label{test-call-wrong-type-arg-func}
 
 \subsubsection{Description}
@@ -139,6 +143,52 @@ Break the function calling convention.
 
 \subsubsection{Known issues}
 None.
+
+\newpage
+\subsection{\texttt{call-wrong-num-arg-vtable}}\label{test-call-wrong-num-arg-vtable}
+
+\subsubsection{Description}
+Illegally call a virtual function with mismatched number of arguements by modifying the VTable pointer.
+
+\subsubsection{Vulnerability}
+Break the function calling convention and the data integrity of the Vtable pointer.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+\textbf{x86\_64}: Currently only works with object allocated on heap.
+
+
+\newpage
+\subsection{\texttt{call-wrong-type-arg-vtable}}\label{test-call-wrong-type-arg-vtable}
+
+\subsubsection{Description}
+Illegally call a function with wrong types of arguements by modifying the VTable pointer.
+
+\subsubsection{Vulnerability}
+Break the function calling convention and the data integrity of the Vtable pointer.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+\textbf{x86\_64}: Currently only works with object allocated on heap.
 
 \newpage
 \subsection{\texttt{call-wrong-num-func-vtable}}\label{test-call-wrong-num-func-vtable}
@@ -164,13 +214,14 @@ Break the data integrity of the Vtable pointer.
 \textbf{x86\_64}: Currently only works with object allocated on heap.
 
 \newpage
-\subsection{\texttt{call-mid-func}}\label{test-call-mid-func}
+\subsection{\texttt{call-wrong-num-arg-vtable-heap}}\label{test-call-wrong-num-arg-vtable-heap}
 
 \subsubsection{Description}
-Illegally call a fake function located at the middle of a function from \texttt{main()}.
+Replace the Vtable pointer with a fake Vtable constructed in heap and
+illegally call a virtual function with mismatched number of arguements.
 
 \subsubsection{Vulnerability}
-Illegal callee site.
+Break the function calling convention, the data integrity of the Vtable pointer and the Vtable itself.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -181,10 +232,58 @@ Illegal callee site.
   other          & might be safe \\
   \bottomrule
 \end{tabular}
-  
+
 \subsubsection{Known issues}
 
-None.
+\textbf{x86\_64}: Currently only works with object allocated on heap.
+
+
+\newpage
+\subsection{\texttt{call-wrong-type-arg-vtable-heap}}\label{test-call-wrong-type-arg-vtable-heap}
+
+\subsubsection{Description}
+Replace the Vtable pointer with a fake Vtable constructed in heap and
+illegally call a virtual function with wrong types of arguements.
+
+\subsubsection{Vulnerability}
+Break the function calling convention, the data integrity of the Vtable pointer and the Vtable itself.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+\textbf{x86\_64}: Currently only works with object allocated on heap.
+
+\newpage
+\subsection{\texttt{call-wrong-num-func-vtable-heap}}\label{test-call-wrong-num-func-vtable-heap}
+
+\subsubsection{Description}
+Replace the Vtable pointer with a fake Vtable constructed in heap with different number of virtual functions and
+illegally call a fake virtual function.
+
+\subsubsection{Vulnerability}
+Break the data integrity of the Vtable pointer and the Vtable itself.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+\textbf{x86\_64}: Currently only works with object allocated on heap.
 
 \newpage
 \subsection{\texttt{jump-mid-func}}\label{test-jump-mid-func}
