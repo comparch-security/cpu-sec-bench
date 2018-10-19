@@ -47,8 +47,12 @@ $(test-path):
 $(test-path)/libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
 	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@
 
+rubbish += $(test-path)/libcfi.so
+
 $(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< -L$(test-path) -lcfi -Wl,-rpath,$(test-path) -o $@
+	$(CXX) $(CXXFLAGS) $< -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
+
+rubbish += $(cfi-tests)
 
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
@@ -63,12 +67,14 @@ dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%
 	$(OBJDUMP) $(OBJDUMPFLAGS) $< > $@
 
+rubbish += $(sec-tests-dump)
+
 prep: $(sec-tests-prep)
 
+rubbish += $(sec-tests-prep)
+
 clean:
-	-rm $(sec-tests) > /dev/null 2>&1
-	-rm $(sec-tests-dump) > /dev/null 2>&1
-	-rm $(sec-tests-prep) > /dev/null 2>&1
+	-rm $(rubbish) > /dev/null 2>&1
 
 .PHONY: clean run dump prep
 

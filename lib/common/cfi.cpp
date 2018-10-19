@@ -2,8 +2,6 @@
 #include <cstring>
 #include "include/cfi.hpp"
 
-#define VPOINTER void**
-
 void Base::virtual_func() {
   exit(1);
 }
@@ -18,9 +16,8 @@ void Helper2::virtual_func(int arg) {
 }
 
 // Fake Vtable in Heap
-VPOINTER creat_fake_vtable(int func_num)
-{
-	VPOINTER addr = (VPOINTER)malloc(func_num * sizeof(void*));
+extern pvtable_t create_fake_vtable_on_heap(unsigned int nfunc) {
+	pvtable_t addr = (pvtable_t)malloc(nfunc * sizeof(pvtable_t));
 	return addr;
 }
 

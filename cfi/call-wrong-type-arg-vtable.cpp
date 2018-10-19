@@ -2,8 +2,6 @@
 #include "include/assembly.hpp"
 #include "include/cfi.hpp"
 
-#include <iostream>
-
 class Fake : public Base
 {
   double lvar;
@@ -26,6 +24,4 @@ int main() {
   orig->virtual_func(val);
 
   return 4;
- }
-
-
+}
