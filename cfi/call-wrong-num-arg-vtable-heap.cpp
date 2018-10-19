@@ -17,7 +17,8 @@ int main() {
   *fake_vtable = (pfunc_t)fake_func;
 
   // replace the vtable pointer 
-  * (int **) orig = (int*)fake_vtable;
+  XCHG_MEM(orig, &fake_vtable);
+
   orig->virtual_func();
 
   return 4;

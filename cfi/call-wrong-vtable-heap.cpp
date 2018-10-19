@@ -13,8 +13,6 @@ int main() {
 
   // replace the vtable pointer 
   XCHG_MEM(orig, &fake_vtable);
-  //* (int **) orig = (int*)func_list;
-
 
   orig->virtual_func();
 
