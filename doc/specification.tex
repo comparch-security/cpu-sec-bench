@@ -50,29 +50,29 @@
   \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
   \item Call
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item \ref{test-call-mid-func}: \texttt{call-mid-func}
-    \item \ref{test-call-wrong-num-arg-func}: \texttt{call-wrong-num-arg-func}
-    \item \ref{test-call-wrong-type-arg-func}: \texttt{call-wrong-type-arg-func}
-    \item \ref{test-call-wrong-num-arg-vtable}: \texttt{call-wrong-num-arg-vtable}
-    \item \ref{test-call-wrong-type-arg-vtable}: \texttt{call-wrong-type-arg-vtable}
-    \item \ref{test-call-wrong-num-func-vtable}: \texttt{call-wrong-num-func-vtable}
-    \item \ref{test-call-wrong-vtable-heap}: \texttt{call-wrong-vtable-heap}
-    \item \ref{test-call-wrong-num-arg-vtable-heap}: \texttt{call-wrong-num-arg-vtable-heap}
-    \item \ref{test-call-wrong-type-arg-vtable-heap}: \texttt{call-wrong-type-arg-func-vtable-heap}
-    \item \ref{test-call-wrong-num-func-vtable-heap}: \texttt{call-wrong-num-func-vtable-heap}
+    \item[\ref{test-call-mid-func}]                   \texttt{call-mid-func}
+    \item[\ref{test-call-wrong-num-arg-func}]         \texttt{call-wrong-num-arg-func}
+    \item[\ref{test-call-wrong-type-arg-func}]        \texttt{call-wrong-type-arg-func}
+    \item[\ref{test-call-wrong-num-arg-vtable}]       \texttt{call-wrong-num-arg-vtable}
+    \item[\ref{test-call-wrong-type-arg-vtable}]      \texttt{call-wrong-type-arg-vtable}
+    \item[\ref{test-call-wrong-num-func-vtable}]      \texttt{call-wrong-num-func-vtable}
+    \item[\ref{test-call-wrong-vtable-heap}]          \texttt{call-wrong-vtable-heap}
+    \item[\ref{test-call-wrong-num-arg-vtable-heap}]  \texttt{call-wrong-num-arg-vtable-heap}
+    \item[\ref{test-call-wrong-type-arg-vtable-heap}] \texttt{call-wrong-type-arg-func-vtable-heap}
+    \item[\ref{test-call-wrong-num-func-vtable-heap}] \texttt{call-wrong-num-func-vtable-heap}
     \end{itemize}
   \item Jump
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item \ref{test-jump-mid-func}: \texttt{jump-mid-func}
+    \item[\ref{test-jump-mid-func}] \texttt{jump-mid-func}
     \end{itemize}
   \end{itemize}
 \item Backward-edge CFI
   \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
   \item Return
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item \ref{test-return-non-call-site}: \texttt{return-non-call-site}
-    \item \ref{test-return-to-func}: \texttt{return-to-func}
-    \item \ref{test-return-without-call}: \texttt{return-to-without-call}
+    \item[\ref{test-return-non-call-site}] \texttt{return-non-call-site}
+    \item[\ref{test-return-to-func}]       \texttt{return-to-func}
+    \item[\ref{test-return-without-call}]  \texttt{return-to-without-call}
     \end{itemize}
   \end{itemize}
 \end{itemize}
@@ -212,6 +212,30 @@ Break the data integrity of the Vtable pointer.
 \subsubsection{Known issues}
 
 \textbf{x86\_64}: Currently only works with object allocated on heap.
+
+\newpage
+\subsection{\texttt{call-wrong-vtable-heap}}\label{test-call-wrong-vtable-heap}
+
+\subsubsection{Description}
+Replace the Vtable pointer with a fake Vtable constructed in heap.
+
+\subsubsection{Vulnerability}
+Break the data integrity of the Vtable pointer and the Vtable itself.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+\textbf{x86\_64}: Currently only works with object allocated on heap.
+
 
 \newpage
 \subsection{\texttt{call-wrong-num-arg-vtable-heap}}\label{test-call-wrong-num-arg-vtable-heap}
