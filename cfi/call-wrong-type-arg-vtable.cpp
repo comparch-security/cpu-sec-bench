@@ -24,6 +24,4 @@ int main() {
   orig->virtual_func(val);
 
   return 4;
- }
-
-
+}

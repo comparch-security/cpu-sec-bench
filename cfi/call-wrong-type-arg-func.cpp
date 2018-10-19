@@ -14,5 +14,3 @@ int main()
   CALL_FUNC(helper);  
   return rv;
 }
-
-

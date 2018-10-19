@@ -50,10 +50,10 @@
   \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
   \item Call
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item \ref{test-wrong-num-arg-func}: \texttt{wrong-num-arg-func}
-    \item \ref{test-wrong-num-arg-vtable}: \texttt{wrong-num-arg-vtable}
-    \item \ref{test-wrong-type-arg-func}: \texttt{wrong-type-arg-func}
-    \item \ref{test-wrong-num-func-vtable}: \texttt{wrong-num-func-vtable}
+    \item \ref{test-call-wrong-num-arg-func}: \texttt{call-wrong-num-arg-func}
+    \item \ref{test-call-wrong-num-arg-vtable}: \texttt{call-wrong-num-arg-vtable}
+    \item \ref{test-call-wrong-type-arg-func}: \texttt{call-wrong-type-arg-func}
+    \item \ref{test-call-wrong-num-func-vtable}: \texttt{call-wrong-num-func-vtable}
     \item \ref{test-call-mid-func}: \texttt{call-mid-func}
     \end{itemize}
   \item Jump
@@ -73,7 +73,7 @@
 \end{itemize}
 
 \newpage
-\subsection{\texttt{wrong-num-arg-func}}\label{test-wrong-num-arg-func}
+\subsection{\texttt{call-wrong-num-arg-func}}\label{test-call-wrong-num-arg-func}
 
 \subsubsection{Description}
 Illegally call a function with mismatched number of arguements.
@@ -95,7 +95,7 @@ Break the function calling convention.
 None.
 
 \newpage
-\subsection{\texttt{wrong-num-arg-vtable}}\label{test-wrong-num-arg-vtable}
+\subsection{\texttt{call-wrong-num-arg-vtable}}\label{test-call-wrong-num-arg-vtable}
 
 \subsubsection{Description}
 Illegally call a virtual function with mismatched number of arguements by modifying the VTable pointer.
@@ -119,7 +119,7 @@ Break the data integrity of the Vtable pointer.
 
 
 \newpage
-\subsection{\texttt{wrong-type-arg-func}}\label{test-wrong-type-arg-func}
+\subsection{\texttt{call-wrong-type-arg-func}}\label{test-call-wrong-type-arg-func}
 
 \subsubsection{Description}
 Illegally call a function with wrong types of arguements.
@@ -141,7 +141,7 @@ Break the function calling convention.
 None.
 
 \newpage
-\subsection{\texttt{wrong-num-func-vtable}}\label{test-wrong-num-func-vtable}
+\subsection{\texttt{call-wrong-num-func-vtable}}\label{test-call-wrong-num-func-vtable}
 
 \subsubsection{Description}
 Illegally call a fake virtual function with the VTable being replaced with another one of different number of virtual functions.
@@ -280,10 +280,10 @@ Currently the test works only with \texttt{-O2}.
 \chapter{Remaining Issues}
 
 \begin{itemize}
-  \item \texttt{wrong-num-arg-func} \ref{test-wrong-num-arg-func}: test for arguements passed on stack.
-  \item \texttt{wrong-type-arg-func} \ref{test-wrong-type-arg-func}: more importantly, test (data/code) pointer to integer.
-  \item \texttt{wrong-num-arg-vtable} \ref{test-wrong-num-arg-vtable}: known issues.
-  \item \texttt{wrong-num-func-vtable} \ref{test-wrong-num-func-vtable}: known issues.
+  \item \texttt{call-wrong-num-arg-func} \ref{test-call-wrong-num-arg-func}: test for arguements passed on stack.
+  \item \texttt{call-wrong-type-arg-func} \ref{test-call-wrong-type-arg-func}: more importantly, test (data/code) pointer to integer.
+  \item \texttt{call-wrong-num-arg-vtable} \ref{test-call-wrong-num-arg-vtable}: known issues.
+  \item \texttt{call-wrong-num-func-vtable} \ref{test-call-wrong-num-func-vtable}: known issues.
   \item \texttt{return-without-call} \ref{test-return-without-call}: known issues.
   \item call a unvisible function (call a local function from outside).
   \item differentiate between global data, heap and stack.
