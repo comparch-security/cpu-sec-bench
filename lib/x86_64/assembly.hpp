@@ -67,3 +67,15 @@
     "mov " #label "@GOTPCREL(%rip), %rax;"   \
     "call *%rax;"                            \
     )                                        
+
+// a instrction can run in the mid
+#define MID_INSTRUTION_LABLE(lable)           \
+  asm volatile(#lable ": add $0xc3, %rax;")   \
+
+//call to the mid of instruction with offset
+#define CALL_MID_INSTRUCTION(label, offset)       \
+  asm volatile(                                   \
+    "mov " #label "@GOTPCREL(%rip), %rax;"        \
+    "add $" #offset ", %rax;"                     \
+    "call *%rax;"                                 \
+    ) 
