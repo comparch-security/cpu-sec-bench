@@ -8,19 +8,32 @@
 #define JMP_LABEL(label) asm volatile("jmp " #label ";")
 
 // modify stack
-#define MOD_STACK_LABEL(label, offset) \
-  asm volatile("movq $" #label ", " #offset "(%rsp);")
-#define MOD_STACK_DAT(dat, offset) \
-  asm volatile("movq %0, " #offset "(%%rsp);" : : "r" (dat))
+#define MOD_STACK_LABEL(label, offset)                  \
+  asm volatile(                                         \
+               "movq %%rsp, %%rax;"                     \
+               "addq  %0, %%rax;"                       \
+               "movq $" #label ", (%%rax);"             \
+               : : "r"(offset)                          \
+               : "rax"                                  \
+                                                        )
+
+#define MOD_STACK_DAT(dat, offset)                      \
+  asm volatile(                                         \
+               "movq %%rsp, %%rax;"                     \
+               "addq  %1, %%rax;"                       \
+               "movq %0, (%%rax);"                      \
+               : : "r"(dat), "r"(offset)                \
+               : "rax"                                  \
+                                                        )
+
+// detect the stack
+extern unsigned long long min_stack_size;
+extern void asm_stack_test();
+
 
 // modify return address to a label
-#ifdef STACK_FP_RET
-  #define MOD_RET_LABEL(label) MOD_STACK_LABEL(label, 8)
-  #define MOD_RET_DAT(dat)     MOD_STACK_DAT(dat, 8)
-#elif defined(STACK_RET)
-  #define MOD_RET_LABEL(label) MOD_STACK_LABEL(label, 0)
-  #define MOD_RET_DAT(dat)     MOD_STACK_DAT(dat, 0)
-#endif
+#define MOD_RET_LABEL(label) MOD_STACK_LABEL(label, min_stack_size)
+#define MOD_RET_DAT(dat)     MOD_STACK_DAT(dat, min_stack_size)
 
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)   \
