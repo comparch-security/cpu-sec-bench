@@ -13,6 +13,11 @@ arguments = {
 }
 
 # run the test
-return_value = subprocess.call([fname, arguments.get(bname, "")])
-if return_value != 0:
-    print(bname, "** FAIL! ** return:", return_value)
+try:
+    subprocess.check_call(
+        [fname, arguments.get(bname, "")],
+        stderr=subprocess.STDOUT,
+        shell=True
+    )
+except subprocess.CalledProcessError as e:
+    print(bname, "** FAIL! ** return:", e.returncode)
