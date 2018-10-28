@@ -43,7 +43,7 @@ extern void asm_stack_test();
     "movq %%rax, (%0);"        \
     : : "r" (ptrL), "r" (ptrR) \
     : "rax"                    \
-  )                            \
+                               )
 
 
 // call a function
@@ -51,7 +51,7 @@ extern void asm_stack_test();
   asm volatile(          \
     "call *%0;"          \
     : : "r" (pFunc)      \
-  )                      \
+                         )
 
 // pass a integer argument
 #define PASS_INT_ARG(Idx, arg) PASS_INT_ARG##Idx(arg)
@@ -61,15 +61,20 @@ extern void asm_stack_test();
 
 // pass a double argument
 #define PASS_DOUBLE_ARG_FROM_INT(Idx, arg) \
-  asm volatile(                  \
-    "movq %0, %%rax;"            \
-    "movq %%rax, %%xmm" #Idx ";" \
-    : : "r" (arg)                \
-    : "rax", "xmm" #Idx          \
-  )                              \
+  asm volatile(                            \
+    "movq %0, %%rax;"                      \
+    "movq %%rax, %%xmm" #Idx ";"           \
+    : : "r" (arg)                          \
+    : "rax", "xmm" #Idx                    \
+                                           )
 
 // push an address
-#define PUSH_LABLE(label) asm volatile("push " #label "@GOTPCREL(%rip)")
+#define PUSH_FAKE_RET_LABEL(label)      \
+  asm volatile(                         \
+    "push " #label "@GOTPCREL(%%rip);"  \
+    "subq %0, %%rsp;"                   \
+    : : "r"(min_stack_size)             \
+                                        )
 
 // return
 #define RET asm volatile("ret")
@@ -77,6 +82,7 @@ extern void asm_stack_test();
 //call to a label
 #define CALL_LABEL(label)                    \
   asm volatile(                              \
-    "mov " #label "@GOTPCREL(%rip), %rax;"   \
-    "call *%rax;"                            \
-    )                                        
+    "mov " #label "@GOTPCREL(%%rip), %%rax;" \
+    "call *%%rax;"                           \
+    : : : "rax"                              \
+                                             )
