@@ -23,16 +23,12 @@ headers := $(wildcard $(base)/lib/include/*.hpp)
 
 # conditional variables
 ifeq ($(TEST_ARCH), ARCH_X86_64)
-  ifeq ($(GCC_OPT_LEVEL), g)
-    STACK_STRUCT := STACK_FP_RET
-  else
-    STACK_STRUCT := STACK_RET
-  endif
   headers += $(wildcard $(base)/lib/x86_64/*.hpp)
+  arch_targets = $(addprefix $(base)/lib/x86_64/, assembly.o)
 endif
 
 CXX := g++
-CXXFLAGS := -I./lib -D$(TEST_ARCH) -D$(STACK_STRUCT) -$(GCC_OPT_LEVEL) -Wall
+CXXFLAGS := -I./lib -D$(TEST_ARCH) -$(GCC_OPT_LEVEL) -Wall
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D -l -S
 RUN_SCRIPT := $(base)/script/run-test.py
@@ -49,8 +45,13 @@ $(test-path)/libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
 
 rubbish += $(test-path)/libcfi.so
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
+$(arch_targets): %.o : %.cpp $(headers)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+rubbish += $(arch_targets)
+
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(arch_targets) $(test-path)/libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(arch_targets) -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
 
 rubbish += $(cfi-tests)
 
