@@ -11,13 +11,13 @@ void FORCE_NOINLINE helper() {
   grv = 0;
 
   // illegal jump back to main
-  JMP_LABEL(main_mid);
+  JMP_LABEL(main_mid, 0);
 }
 
 int main() {
 
   // illegally jump to helper
-  JMP_LABEL(helper_mid);
+  JMP_LABEL(helper_mid, 0);
   grv = 1; // failed if runs here
 
   // illegal jump target

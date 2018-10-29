@@ -1,2 +1,9 @@
 test/*
 *~
+*.o
+*.so
+doc/*.log
+doc/*.out
+doc/*.aux
+doc/*.toc
+*.dump

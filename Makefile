@@ -23,16 +23,12 @@ headers := $(wildcard $(base)/lib/include/*.hpp)
 
 # conditional variables
 ifeq ($(TEST_ARCH), ARCH_X86_64)
-  ifeq ($(GCC_OPT_LEVEL), g)
-    STACK_STRUCT := STACK_FP_RET
-  else
-    STACK_STRUCT := STACK_RET
-  endif
   headers += $(wildcard $(base)/lib/x86_64/*.hpp)
+  arch_targets = $(addprefix $(base)/lib/x86_64/, assembly.o)
 endif
 
 CXX := g++
-CXXFLAGS := -I./lib -D$(TEST_ARCH) -D$(STACK_STRUCT) -$(GCC_OPT_LEVEL) -Wall
+CXXFLAGS := -I./lib -D$(TEST_ARCH) -$(GCC_OPT_LEVEL) -Wall
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D -l -S
 RUN_SCRIPT := $(base)/script/run-test.py
@@ -47,8 +43,17 @@ $(test-path):
 $(test-path)/libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
 	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< -L$(test-path) -lcfi -Wl,-rpath,$(test-path) -o $@
+rubbish += $(test-path)/libcfi.so
+
+$(arch_targets): %.o : %.cpp $(headers)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+rubbish += $(arch_targets)
+
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(arch_targets) $(test-path)/libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(arch_targets) -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
+
+rubbish += $(cfi-tests)
 
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
@@ -63,12 +68,14 @@ dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%
 	$(OBJDUMP) $(OBJDUMPFLAGS) $< > $@
 
+rubbish += $(sec-tests-dump)
+
 prep: $(sec-tests-prep)
 
+rubbish += $(sec-tests-prep)
+
 clean:
-	-rm $(sec-tests) > /dev/null 2>&1
-	-rm $(sec-tests-dump) > /dev/null 2>&1
-	-rm $(sec-tests-prep) > /dev/null 2>&1
+	-rm $(rubbish) > /dev/null 2>&1
 
 .PHONY: clean run dump prep
 
