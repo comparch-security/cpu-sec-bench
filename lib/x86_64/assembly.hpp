@@ -4,9 +4,6 @@
 // declare a label in assembly
 #define DECL_LABEL(label) asm volatile(#label ":")
 
-// jump to a label
-#define JMP_LABEL(label) asm volatile("jmp " #label ";")
-
 // modify stack
 #define MOD_STACK_LABEL(label, offset)                  \
   asm volatile(                                         \
@@ -68,7 +65,7 @@ extern void asm_stack_test();
     : "rax", "xmm" #Idx                    \
                                            )
 
-// push an address
+// create a fake return stack
 #define PUSH_FAKE_RET_LABEL(label)      \
   asm volatile(                         \
     "push " #label "@GOTPCREL(%%rip);"  \
@@ -76,13 +73,33 @@ extern void asm_stack_test();
     : : "r"(min_stack_size)             \
                                         )
 
+// push an address
+#define PUSH_LABEL(label) asm volatile("push " #label "@GOTPCREL(%rip)")
+
+
 // return
 #define RET asm volatile("ret")
 
 //call to a label
-#define CALL_LABEL(label)                    \
+#define CALL_LABEL(label, offset)            \
   asm volatile(                              \
     "mov " #label "@GOTPCREL(%%rip), %%rax;" \
+    "add %0, %%rax;"                         \
     "call *%%rax;"                           \
-    : : : "rax"                              \
+    : : "i"(offset) : "rax"                  \
                                              )
+
+// jump to a label
+#define JMP_LABEL(label, offset)             \
+  asm volatile(                              \
+    "mov " #label "@GOTPCREL(%%rip), %%rax;" \
+    "add %0, %%rax;"                         \
+    "jmp *%%rax;"                            \
+    : : "i"(offset) : "rax"                  \
+                                             )
+
+// a instrction that can jmp to the middle
+// 48 05 c3 00 00 00    	add    $0xc3,%rax
+// c3 retq
+// offset = 2
+#define MID_INSTRUTION asm volatile("mid_instruction: add $0xc3, %%rax;" : : : "rax")

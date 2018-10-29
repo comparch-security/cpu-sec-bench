@@ -14,7 +14,7 @@ void FORCE_NOINLINE helper()
 
 int main()
 {
-  CALL_LABEL(func_mid);
+  CALL_LABEL(func_mid, 0);
 
   exit(grv);
 }
