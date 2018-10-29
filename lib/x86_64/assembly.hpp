@@ -4,9 +4,6 @@
 // declare a label in assembly
 #define DECL_LABEL(label) asm volatile(#label ":")
 
-// jump to a label
-#define JMP_LABEL(label) asm volatile("jmp " #label ";")
-
 // modify stack
 #define MOD_STACK_LABEL(label, offset) \
   asm volatile("movq $" #label ", " #offset "(%rsp);")
@@ -56,26 +53,31 @@
   )                              \
 
 // push an address
-#define PUSH_LABLE(label) asm volatile("push " #label "@GOTPCREL(%rip)")
+#define PUSH_LABEL(label) asm volatile("push " #label "@GOTPCREL(%rip)")
 
 // return
 #define RET asm volatile("ret")
 
 //call to a label
-#define CALL_LABEL(label)                    \
+#define CALL_LABEL(label, offset)            \
   asm volatile(                              \
-    "mov " #label "@GOTPCREL(%rip), %rax;"   \
-    "call *%rax;"                            \
-    )  
+    "mov " #label "@GOTPCREL(%%rip), %%rax;" \
+    "add %0, %%rax;"                         \
+    "call *%%rax;"                           \
+    : : "i"(offset) : "rax"                  \
+                                             )
 
-// a instrction can jmp to mid
-#define MID_INSTRUTION_LABLE(lable)           \
-  asm volatile(#lable ": add $0xc3, %rax;")   \
+// jump to a label
+#define JMP_LABEL(label, offset)             \
+  asm volatile(                              \
+    "mov " #label "@GOTPCREL(%%rip), %%rax;" \
+    "add %0, %%rax;"                         \
+    "jmp *%%rax;"                            \
+    : : "i"(offset) : "rax"                  \
+                                             )
 
-//jmp to the mid of instruction with offset
-#define JMP_MID_INSTRUCTION(label, offset)      \
-  asm(                                          \
-    "mov " #label "@GOTPCREL(%rip), %rax;"      \
-    "add $" #offset ", %rax;"                    \
-    "jmp *%rax;"                                \
-    )                                          
+// a instrction that can jmp to the middle
+// 48 05 c3 00 00 00    	add    $0xc3,%rax
+// c3 retq
+// offset = 2
+#define MID_INSTRUTION asm volatile("mid_instruction: add $0xc3, %%rax;" : : : "rax")

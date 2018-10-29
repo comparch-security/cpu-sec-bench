@@ -11,7 +11,7 @@ void FORCE_NOINLINE helper() {
   }
 
   // push the lable address
-  PUSH_LABLE(ret_address);
+  PUSH_LABEL(ret_address);
 
   //return to the push adderss
   // although a simple assembly "ret" would work out of the box

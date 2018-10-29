@@ -1,30 +1,27 @@
-#include <cstdlib>
 #include "include/assembly.hpp"
 
-#include <iostream>
-using namespace std;
-
-int volatile grv = 0;
+int volatile grv = 1;
 
 void FORCE_NOINLINE helper()
 {
+  // construct a fake return address
+  PUSH_LABEL(ret_address);
 
-	//48 05 c3 00 00 00    	add    $0xc3,%rax
-	//c3 retq
-	//offset = 2
-	JMP_MID_INSTRUCTION(lable, 2);
-	
+  grv = 0;
 
-	// a instruction for jump to the mid
-	MID_INSTRUTION_LABLE(lable);
+  // jump to the middle of MID_INSTRUCTION
+  JMP_LABEL(mid_instruction, 2);
 
-	grv = 4;
+  // a instruction to jump to the middle
+  MID_INSTRUTION;
 
+  grv = 3;
 }
 
 
 int main()
 {
-	helper();
-	exit(grv);
+  helper();
+  DECL_LABEL(ret_address);
+  return grv;
 }
