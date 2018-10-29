@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "include/assembly.hpp"
 
 int volatile grv = 1;
@@ -23,5 +24,5 @@ int main()
 {
   helper();
   DECL_LABEL(ret_address);
-  return grv;
+  exit(grv);
 }

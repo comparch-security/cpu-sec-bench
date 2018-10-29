@@ -1,27 +1,21 @@
-#include <cstdlib>
 #include "include/assembly.hpp"
-
-#include <iostream>
-using namespace std;
 
 int volatile grv = 2;
 
 void FORCE_NOINLINE helper()
 {
-	// a instruction can run at mid of instruction
-	MID_INSTRUTION_LABLE(lable);
+  // a instruction can run at mid of instruction
+  MID_INSTRUTION;
 
-	grv -= 2;
+  grv = 1;
 
-	//48 05 c3 00 00 00    	add    $0xc3,%rax
-	//c3 retq
-	//offset = 2
-	CALL_MID_INSTRUCTION(lable, 2);
+  // call the middle of MID_INSTRUCTION
+  CALL_LABEL(mid_instruction, 2);
 }
 
 
 int main()
 {
-	helper();
-	exit(grv);
+  helper();
+  return grv-1;
 }
