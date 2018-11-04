@@ -103,3 +103,5 @@ extern void asm_stack_test();
 // c3 retq
 // offset = 2
 #define MID_INSTRUTION asm volatile("mid_instruction: add $0xc3, %%rax;" : : : "rax")
+
+#define POP_STACK asm volatile("pop %rax")
