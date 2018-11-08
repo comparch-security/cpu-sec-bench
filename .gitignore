@@ -7,3 +7,4 @@ doc/*.out
 doc/*.aux
 doc/*.toc
 *.dump
+results.json
