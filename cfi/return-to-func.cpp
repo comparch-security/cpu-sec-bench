@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
+#include "include/gcc_builtin.hpp"
 
 int FORCE_NOINLINE fake_ret()
 {

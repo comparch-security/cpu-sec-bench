@@ -1,4 +1,5 @@
 #include "include/assembly.hpp"
+#include "include/gcc_builtin.hpp"
 
 static unsigned int rv = 1;
 
