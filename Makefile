@@ -15,9 +15,14 @@ cfi-cpps  = $(wildcard $(cfi-path)/*.cpp)
 cfi-tests = $(addprefix $(test-path)/cfi-, $(basename $(notdir $(cfi-cpps))))
 cfi-cpps-prep = $(addsuffix .prep, $(cfi-cpps))
 
-sec-tests := $(cfi-tests)
+bof-path  = $(base)/bof
+bof-cpps  = $(wildcard $(bof-path)/*.cpp)
+bof-tests = $(addprefix $(test-path)/bof-, $(basename $(notdir $(bof-cpps))))
+bof-cpps-prep = $(addsuffix .prep, $(bof-cpps))
+
+sec-tests := $(cfi-tests) $(bof-tests)
 sec-tests-dump = $(addsuffix .dump, $(sec-tests))
-sec-tests-prep := $(cfi-cpps-prep)
+sec-tests-prep := $(cfi-cpps-prep) $(bof-cpps-prep)
 
 headers := $(wildcard $(base)/lib/include/*.hpp)
 
@@ -56,6 +61,14 @@ $(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(arch_targets) $(test-path)/
 rubbish += $(cfi-tests)
 
 $(cfi-cpps-prep): %.prep:%
+	$(CXX) -E $(CXXFLAGS) $< > $@
+
+$(bof-tests): $(test-path)/bof-%:$(bof-path)/%.cpp $(arch_targets) $(headers)
+	$(CXX) $(CXXFLAGS) $< $(arch_targets) -o $@
+
+rubbish += $(bof-tests)
+
+$(bof-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 run: $(sec-tests)

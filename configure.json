@@ -1,0 +1,20 @@
+{
+    "cfi-call-mid-func":                   { "arguments": "", "depends-on": [ ] },
+    "cfi-call-mid-instruction":            { "arguments": "", "depends-on": [ ] },
+    "cfi-call-wrong-num-arg-func":         { "arguments": "", "depends-on": [ ] },
+    "cfi-call-wrong-num-arg-vtable":       { "arguments": "", "depends-on": [ ] },
+    "cfi-call-wrong-num-arg-vtable-heap":  { "arguments": "", "depends-on": [ ] },
+    "cfi-call-wrong-num-func-vtable":      { "arguments": "", "depends-on": [ ] },
+    "cfi-call-wrong-num-func-vtable-heap": { "arguments": "", "depends-on": [ ] },
+    "cfi-call-wrong-type-arg-func":        { "arguments": "", "depends-on": [ ] },
+    "cfi-call-wrong-type-arg-vtable":      { "arguments": "", "depends-on": [ ] },
+    "cfi-call-wrong-type-arg-vtable-heap": { "arguments": "", "depends-on": [ ] },
+    "cfi-call-wrong-vtable-heap":          { "arguments": "", "depends-on": [ ] },
+    "cfi-jump-mid-func":                   { "arguments": "", "depends-on": [ ] },
+    "cfi-jump-mid-instrunction":           { "arguments": "", "depends-on": [ ] },
+    "cfi-return-non-call-site":            { "arguments": "", "depends-on": [ ] },
+    "cfi-return-to-func":                  { "arguments": "", "depends-on": ["cfi-return-non-call-site" ] },
+    "cfi-return-without-call":             { "arguments": "", "depends-on": [ ] },
+    "cfi-return-mid-instruction":          { "arguments": "", "depends-on": ["cfi-return-non-call-site", "cfi-return-without-call" ] },
+    "bof-overflow-stack":                  { "arguments": "", "depends-on": [ ] }
+}
