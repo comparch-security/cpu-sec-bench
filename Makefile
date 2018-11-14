@@ -10,19 +10,24 @@ base = .
 test-path = $(base)/test
 LD_LIBRARY_PATH=$(test-path)
 
-cfi-path  = $(base)/cfi
-cfi-cpps  = $(wildcard $(cfi-path)/*.cpp)
-cfi-tests = $(addprefix $(test-path)/cfi-, $(basename $(notdir $(cfi-cpps))))
-cfi-cpps-prep = $(addsuffix .prep, $(cfi-cpps))
-
 bof-path  = $(base)/bof
 bof-cpps  = $(wildcard $(bof-path)/*.cpp)
 bof-tests = $(addprefix $(test-path)/bof-, $(basename $(notdir $(bof-cpps))))
 bof-cpps-prep = $(addsuffix .prep, $(bof-cpps))
 
-sec-tests := $(cfi-tests) $(bof-tests)
+cpi-path  = $(base)/cpi
+cpi-cpps  = $(wildcard $(cpi-path)/*.cpp)
+cpi-tests = $(addprefix $(test-path)/cpi-, $(basename $(notdir $(cpi-cpps))))
+cpi-cpps-prep = $(addsuffix .prep, $(cpi-cpps))
+
+cfi-path  = $(base)/cfi
+cfi-cpps  = $(wildcard $(cfi-path)/*.cpp)
+cfi-tests = $(addprefix $(test-path)/cfi-, $(basename $(notdir $(cfi-cpps))))
+cfi-cpps-prep = $(addsuffix .prep, $(cfi-cpps))
+
+sec-tests := $(bof-tests) $(cpi-tests) $(cfi-tests)
 sec-tests-dump = $(addsuffix .dump, $(sec-tests))
-sec-tests-prep := $(cfi-cpps-prep) $(bof-cpps-prep)
+sec-tests-prep := $(bof-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
 headers := $(wildcard $(base)/lib/include/*.hpp)
 
@@ -55,20 +60,28 @@ $(arch_targets): %.o : %.cpp $(headers)
 
 rubbish += $(arch_targets)
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(arch_targets) $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(arch_targets) -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
-
-rubbish += $(cfi-tests)
-
-$(cfi-cpps-prep): %.prep:%
-	$(CXX) -E $(CXXFLAGS) $< > $@
-
 $(bof-tests): $(test-path)/bof-%:$(bof-path)/%.cpp $(arch_targets) $(headers)
 	$(CXX) $(CXXFLAGS) $< $(arch_targets) -o $@
 
 rubbish += $(bof-tests)
 
 $(bof-cpps-prep): %.prep:%
+	$(CXX) -E $(CXXFLAGS) $< > $@
+
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(arch_targets) $(headers)
+	$(CXX) $(CXXFLAGS) $< $(arch_targets) -o $@
+
+rubbish += $(cpi-tests)
+
+$(cpi-cpps-prep): %.prep:%
+	$(CXX) -E $(CXXFLAGS) $< > $@
+
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(arch_targets) $(test-path)/libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(arch_targets) -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
+
+rubbish += $(cfi-tests)
+
+$(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 run: $(sec-tests)

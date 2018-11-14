@@ -1,4 +1,13 @@
 {
+    "bof-overflow-stack": {
+        "arguments": "",
+        "depends-on": [ ]
+    },
+    "cpi-modify-func-pointer": {
+        "comment": "force revision on function pointers",
+        "arguments": "",
+        "depends-on": [ ]
+    },
     "cfi-call-mid-func": {
         "arguments": "",
         "depends-on": [ ]
@@ -74,9 +83,5 @@
         "depends-on": ["cfi-return-non-call-site",
                        "cfi-return-without-call"
                       ]
-    },
-    "bof-overflow-stack": {
-        "arguments": "",
-        "depends-on": [ ]
     }
 }
