@@ -46,7 +46,12 @@
         "arguments": "",
         "depends-on": [ ]
     },
-    "cfi-call-wrong-type-arg-vtable": {
+     "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
+        "comment": "Call a function with a wrong type of argument. Fake function on rodata section",
+        "arguments": "",
+        "depends-on": [ "cfi-call-mid-func" ]
+    },
+   "cfi-call-wrong-type-arg-vtable": {
         "arguments": "",
         "depends-on": [ ]
     },

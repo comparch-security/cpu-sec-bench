@@ -104,4 +104,13 @@ extern void asm_stack_test();
 // offset = 2
 #define MID_INSTRUTION asm volatile("mid_instruction: add $0xc3, %%rax;" : : : "rax")
 
-#define POP_STACK asm volatile("pop %rax")
+#define POP_STACK asm volatile("pop %%rax" : : : "rax")
+
+// the machine code of a function
+//
+//  unsigned int func() {
+//    return 0;
+//  }
+//  00:       31 c0                   xor    %eax,%eax
+//  02:       c3                      retq
+#define FUNC_MACHINE_CODE {0x31, 0xc0, 0xc3}
