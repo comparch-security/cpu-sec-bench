@@ -1,105 +1,43 @@
 {
-    "bof-overflow-stack": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
+    "bof-overflow-stack": {},
     "cpi-modify-func-pointer": {
-        "comment": "force revision on function pointers",
-        "arguments": "",
-        "depends-on": [ ]
+        "comment": "force revision on function pointers"
     },
-    "cfi-call-mid-func": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-call-mid-instruction": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-call-wrong-num-arg-func": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-call-wrong-num-arg-vtable": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-call-wrong-num-arg-vtable-heap": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-call-wrong-num-func-vtable": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-call-wrong-num-func-vtable-heap": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-call-wrong-type-arg-int2double-func": {
-        "comment": "call a function with a wrong type of argument, integer to double",
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-call-wrong-type-arg-fp2dp-func": {
-        "comment": "call a function with a wrong type of argument, function pointer to data pointer",
-        "arguments": "",
-        "depends-on": [ ]
-    },
+    "cfi-call-mid-func": {},
+    "cfi-call-mid-instruction": {},
+    "cfi-call-wrong-num-arg-func": {},
+    "cfi-call-wrong-num-arg-vtable": {},
+    "cfi-call-wrong-num-arg-vtable-heap": {},
+    "cfi-call-wrong-num-func-vtable": {},
+    "cfi-call-wrong-num-func-vtable-heap": {},
+    "cfi-call-wrong-type-arg-int2double-func": {},
+    "cfi-call-wrong-type-arg-fp2dp-func": {},
      "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
-        "comment": "Call a function with a wrong type of argument. Fake function on rodata section",
-        "arguments": "",
         "depends-on": [ "cfi-call-mid-func" ]
-    },
+     },
      "cfi-call-wrong-type-arg-dp2fp-func-bss": {
-        "comment": "Call a function with a wrong type of argument. Fake function on bss section",
-        "arguments": "",
-        "depends-on": [ "cfi-call-mid-func" ]
-    },
+        "depends-on": [ "cfi-call-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+     },
      "cfi-call-wrong-type-arg-dp2fp-func-stack": {
-        "comment": "Call a function with a wrong type of argument. Fake function on stack",
-        "arguments": "",
-        "depends-on": [ "cfi-call-mid-func" ]
+        "depends-on": [ "cfi-call-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
     },
-     "cfi-call-wrong-type-arg-dp2fp-func-heap": {
-        "comment": "Call a function with a wrong type of argument. Fake function on heap",
-        "arguments": "",
-        "depends-on": [ "cfi-call-mid-func" ]
+    "cfi-call-wrong-type-arg-dp2fp-func-heap": {
+        "depends-on": [ "cfi-call-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
     },
-   "cfi-call-wrong-type-arg-vtable": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-call-wrong-type-arg-vtable-heap": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-call-wrong-vtable-heap": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-jump-mid-func": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-jump-mid-instrunction": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
-    "cfi-return-non-call-site": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
+    "cfi-call-wrong-type-arg-vtable": {},
+    "cfi-call-wrong-type-arg-vtable-heap": {},
+    "cfi-call-wrong-vtable-heap": {},
+    "cfi-jump-mid-func": {},
+    "cfi-jump-mid-instrunction": {},
+    "cfi-return-non-call-site": {},
     "cfi-return-to-func": {
-        "arguments": "",
         "depends-on": ["cfi-return-non-call-site" ]
     },
-    "cfi-return-without-call": {
-        "arguments": "",
-        "depends-on": [ ]
-    },
+    "cfi-return-without-call": {},
     "cfi-return-mid-instruction": {
-        "arguments": "",
         "depends-on": ["cfi-return-non-call-site",
                        "cfi-return-without-call"
                       ]

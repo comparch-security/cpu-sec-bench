@@ -1,5 +1,6 @@
 #include "include/assembly.hpp"
 #include "include/gcc_builtin.hpp"
+#include "include/signal.hpp"
 
 static unsigned int rv = 1;
 
@@ -13,6 +14,8 @@ int main()
 {
   unsigned char m[] = FUNC_MACHINE_CODE;
   rv = m[0];
+
+  signal(SIGSEGV, sigsegv_handler); // catch SIGSEGV
   helper((func_type)(&m));
   return rv;
 }

@@ -22,8 +22,15 @@ if os.path.isfile(result_file):
     with open(result_file, "r") as read_file:
         resultDB = json.loads(read_file.read())
 
-arguments = configDB[bname]["arguments"]
-depend_on_tests = configDB[bname]["depends-on"]
+def db_fetch(key_name, default_value):
+    if key_name in configDB[bname]:
+        return configDB[bname][key_name]
+    else:
+        return default_value
+
+arguments = db_fetch("arguments", "")
+depend_on_tests = db_fetch("depends-on", [])
+expected_results = db_fetch("results", {})
 resultDB[bname] = {}
 
 # check dependency
@@ -43,7 +50,8 @@ if depends_ok:
         )
         resultDB[bname]["result"] = 0
     except subprocess.CalledProcessError as e:
-        print(bname, "** FAIL! ** return:", e.returncode)
+        if not str(e.returncode) in expected_results:
+            print(bname, "** FAIL! ** return:", e.returncode)
         resultDB[bname]["result"] = e.returncode
 else:
     resultDB[bname]["result"] = 1024
