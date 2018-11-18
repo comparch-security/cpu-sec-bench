@@ -114,3 +114,9 @@ extern void asm_stack_test();
 //  00:       31 c0                   xor    %eax,%eax
 //  02:       c3                      retq
 #define FUNC_MACHINE_CODE {0x31, 0xc0, 0xc3}
+
+void inline assign_fake_machine_code(unsigned char *p) {
+  *p++ = 0x31;
+  *p++ = 0xc0;
+  *p++ = 0xc3;
+}

@@ -51,6 +51,21 @@
         "arguments": "",
         "depends-on": [ "cfi-call-mid-func" ]
     },
+     "cfi-call-wrong-type-arg-dp2fp-func-bss": {
+        "comment": "Call a function with a wrong type of argument. Fake function on bss section",
+        "arguments": "",
+        "depends-on": [ "cfi-call-mid-func" ]
+    },
+     "cfi-call-wrong-type-arg-dp2fp-func-stack": {
+        "comment": "Call a function with a wrong type of argument. Fake function on stack",
+        "arguments": "",
+        "depends-on": [ "cfi-call-mid-func" ]
+    },
+     "cfi-call-wrong-type-arg-dp2fp-func-heap": {
+        "comment": "Call a function with a wrong type of argument. Fake function on heap",
+        "arguments": "",
+        "depends-on": [ "cfi-call-mid-func" ]
+    },
    "cfi-call-wrong-type-arg-vtable": {
         "arguments": "",
         "depends-on": [ ]
