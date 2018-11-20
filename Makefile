@@ -38,7 +38,7 @@ ifeq ($(TEST_ARCH), ARCH_X86_64)
 endif
 
 CXX := g++
-CXXFLAGS := -I./lib -D$(TEST_ARCH) -$(GCC_OPT_LEVEL) -Wall
+CXXFLAGS := -I./lib -D$(TEST_ARCH) -$(GCC_OPT_LEVEL) -Wall -fno-omit-frame-pointer
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D -l -S
 RUN_SCRIPT := $(base)/script/run-test.py
