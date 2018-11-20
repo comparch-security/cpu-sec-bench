@@ -32,6 +32,13 @@ extern void asm_stack_test();
 #define MOD_RET_LABEL(label) MOD_STACK_LABEL(label, min_stack_size)
 #define MOD_RET_DAT(dat)     MOD_STACK_DAT(dat, min_stack_size)
 
+// get the address of the return address using a gcc builtin
+// NOTE FOR POSSIBLE SIDE-EFFECT
+//   If this macro is used, the compiler is forced to push %rbp on the stack,
+// which is equivalent to enforce gcc argument -fno-omit-frame-pointer option
+// on the current frame.
+#define GET_RET_ADDR ((void **)__builtin_frame_address(0) + 1)
+
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)   \
   asm volatile(                \
