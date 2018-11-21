@@ -14,7 +14,6 @@ void FORCE_NOINLINE helper()
 
 int main()
 {
-  asm_stack_test();
   helper();
   return 1;
 }

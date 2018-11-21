@@ -4,33 +4,9 @@
 // declare a label in assembly
 #define DECL_LABEL(label) asm volatile(#label ":")
 
-// modify stack
-#define MOD_STACK_LABEL(label, offset)                  \
-  asm volatile(                                         \
-               "movq %%rsp, %%rax;"                     \
-               "addq  %0, %%rax;"                       \
-               "movq $" #label ", (%%rax);"             \
-               : : "r"(offset)                          \
-               : "rax"                                  \
-                                                        )
-
-#define MOD_STACK_DAT(dat, offset)                      \
-  asm volatile(                                         \
-               "movq %%rsp, %%rax;"                     \
-               "addq  %1, %%rax;"                       \
-               "movq %0, (%%rax);"                      \
-               : : "r"(dat), "r"(offset)                \
-               : "rax"                                  \
-                                                        )
-
-// detect the stack
-extern unsigned long long min_stack_size;
-extern void asm_stack_test();
-
-
 // modify return address to a label
-#define MOD_RET_LABEL(label) MOD_STACK_LABEL(label, min_stack_size)
-#define MOD_RET_DAT(dat)     MOD_STACK_DAT(dat, min_stack_size)
+#define MOD_RET_LABEL(label) asm volatile( "movq $" #label ", 8(%rbp);" )
+#define MOD_RET_DAT(dat)     asm volatile( "movq %0, 8(%%rbp);" : : "r"(dat) )
 
 // get the address of the return address using a gcc builtin
 // NOTE FOR POSSIBLE SIDE-EFFECT
@@ -73,12 +49,12 @@ extern void asm_stack_test();
                                            )
 
 // create a fake return stack
-#define PUSH_FAKE_RET_LABEL(label)      \
-  asm volatile(                         \
-    "push " #label "@GOTPCREL(%%rip);"  \
-    "subq %0, %%rsp;"                   \
-    : : "r"(min_stack_size)             \
-                                        )
+#define PUSH_FAKE_RET(label)              \
+  asm volatile(                           \
+    "push " #label "@GOTPCREL(%%rip);"    \
+    "push %0;"                            \
+    : : "r" (__builtin_frame_address(0))  )
+
 
 // push an address
 #define PUSH_LABEL(label) asm volatile("push " #label "@GOTPCREL(%rip)")

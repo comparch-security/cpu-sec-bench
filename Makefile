@@ -34,7 +34,7 @@ headers := $(wildcard $(base)/lib/include/*.hpp)
 # conditional variables
 ifeq ($(TEST_ARCH), ARCH_X86_64)
   headers += $(wildcard $(base)/lib/x86_64/*.hpp)
-  arch_targets = $(addprefix $(base)/lib/x86_64/, assembly.o)
+#  arch_targets = $(addprefix $(base)/lib/x86_64/, assembly.o)
 endif
 
 CXX := g++

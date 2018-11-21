@@ -28,7 +28,6 @@ void FORCE_NOINLINE helper2()
 
 int main()
 {
-  asm_stack_test();
   helper2();
   DECL_LABEL(ret_address);
   exit(grv);

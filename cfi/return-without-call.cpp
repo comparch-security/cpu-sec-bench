@@ -7,12 +7,11 @@ static volatile int grv = 1;
 void FORCE_NOINLINE helper() {
   if(grv == 2) {
     DECL_LABEL(ret_address);
-    grv = 0;
-    return;
+    exit(0);
   }
 
   // push the lable address
-  PUSH_FAKE_RET_LABEL(ret_address);
+  PUSH_FAKE_RET(ret_address);
 
   //return to the push adderss
   // although a simple assembly "ret" would work out of the box
@@ -21,7 +20,6 @@ void FORCE_NOINLINE helper() {
 }
 
 int main() {
-  asm_stack_test();
   helper();
   return grv;
 }
