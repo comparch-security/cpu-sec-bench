@@ -41,5 +41,6 @@
         "depends-on": ["cfi-return-non-call-site",
                        "cfi-return-without-call"
                       ]
-    }
+    },
+    "cfi-return-to-another-call-return-address": {}
 }
