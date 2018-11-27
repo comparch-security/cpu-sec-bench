@@ -41,5 +41,13 @@
         "depends-on": ["cfi-return-non-call-site",
                        "cfi-return-without-call"
                       ]
+    },
+    "cfi-return-to-instruction-in-stack": {
+        "depends-on": [ "cfi-call-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-call-instruction-in-stack": {
+        "depends-on": [ "cfi-call-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
     }
 }
