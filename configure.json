@@ -41,5 +41,9 @@
         "depends-on": ["cfi-return-non-call-site",
                        "cfi-return-without-call"
                       ]
+    },
+    "cfi-jmp-instruction-in-stack": {
+        "depends-on": [ "cfi-jump-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
     }
 }

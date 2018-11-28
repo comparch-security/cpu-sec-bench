@@ -103,3 +103,9 @@ void inline assign_fake_machine_code(unsigned char *p) {
   *p++ = 0xc0;
   *p++ = 0xc3;
 }
+
+#define JMP_FUNC(pFunc)   \
+  asm volatile(           \
+    "jmp *%0;"            \
+    : : "r" (pFunc)       \
+                          )
