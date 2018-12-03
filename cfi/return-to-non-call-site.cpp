@@ -2,7 +2,7 @@
 #include "include/assembly.hpp"
 #include "include/gcc_builtin.hpp"
 
-static volatile int grv = 0;
+static volatile int grv = 1;
 
 void FORCE_NOINLINE helper() {
   grv = 3;
@@ -14,7 +14,7 @@ void FORCE_NOINLINE helper() {
 int main() {
   // call a function but illegally return
   helper();
-  grv = 1; // failed if runs here
+  grv = 4; // failed if runs here
 
   // the elligal return site
   DECL_LABEL(main_mid);

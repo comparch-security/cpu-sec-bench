@@ -2,7 +2,7 @@
 #include "include/assembly.hpp"
 #include "include/gcc_builtin.hpp"
 
-static volatile int grv = 0;
+static volatile int grv = 1;
 
 void FORCE_NOINLINE helper() {
   grv = 3;
