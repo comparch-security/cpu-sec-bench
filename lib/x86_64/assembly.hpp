@@ -49,11 +49,12 @@
                                            )
 
 // create a fake return stack
-#define PUSH_FAKE_RET(label)              \
-  asm volatile(                           \
-    "push " #label "@GOTPCREL(%%rip);"    \
-    "push %0;"                            \
-    : : "r" (__builtin_frame_address(0))  )
+#define PUSH_FAKE_RET(label)             \
+  asm volatile(                          \
+    "push " #label "@GOTPCREL(%%rip);"   \
+    "push %0;"                           \
+    : : "r" (__builtin_frame_address(0)) \
+                                         )
 
 
 // push an address
@@ -85,7 +86,7 @@
 // 48 05 c3 00 00 00    	add    $0xc3,%rax
 // c3 retq
 // offset = 2
-#define MID_INSTRUTION asm volatile("mid_instruction: add $0xc3, %%rax;" : : : "rax")
+#define MID_INSTRUCTION asm volatile("mid_instruction: add $0xc3, %%rax;" : : : "rax")
 
 #define POP_STACK asm volatile("pop %%rax" : : : "rax")
 
