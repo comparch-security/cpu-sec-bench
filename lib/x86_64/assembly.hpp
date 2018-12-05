@@ -49,16 +49,23 @@
                                            )
 
 // create a fake return stack
-#define PUSH_FAKE_RET(label)             \
-  asm volatile(                          \
-    "push " #label "@GOTPCREL(%%rip);"   \
-    "push %0;"                           \
-    : : "r" (__builtin_frame_address(0)) \
-                                         )
+#define PUSH_FAKE_RET(label)                 \
+  asm volatile(                              \
+    "mov " #label "@GOTPCREL(%%rip), %%rax;" \
+    "push %%rax;"                            \
+    "push %0;"                               \
+    : : "r" (__builtin_frame_address(0))     \
+    : "rax"                                  \
+                                             )
 
 
 // push an address
-#define PUSH_LABEL(label) asm volatile("push " #label "@GOTPCREL(%rip)")
+#define PUSH_LABEL(label)                    \
+  asm volatile(                              \
+    "mov " #label "@GOTPCREL(%%rip), %%rax;" \
+    "push %%rax;"                            \
+    : : : "rax"                              \
+                                             )
 
 
 // return
