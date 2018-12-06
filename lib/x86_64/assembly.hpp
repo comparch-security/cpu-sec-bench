@@ -58,7 +58,7 @@
 // create a fake return stack
 #define PUSH_FAKE_RET(label)                 \
   asm volatile(                              \
-    "mov " #label "@GOTPCREL(%%rip), %%rax;" \
+    "lea " #label "(%%rip), %%rax;"          \
     "push %%rax;"                            \
     "push %0;"                               \
     : : "r" (__builtin_frame_address(0))     \
@@ -69,7 +69,7 @@
 // push an address
 #define PUSH_LABEL(label)                    \
   asm volatile(                              \
-    "mov " #label "@GOTPCREL(%%rip), %%rax;" \
+    "lea " #label "(%%rip), %%rax;"          \
     "push %%rax;"                            \
     : : : "rax"                              \
                                              )
@@ -82,7 +82,7 @@
 //call to a label
 #define CALL_LABEL(label, offset)            \
   asm volatile(                              \
-    "mov " #label "@GOTPCREL(%%rip), %%rax;" \
+    "lea " #label "(%%rip), %%rax;"          \
     "add %0, %%rax;"                         \
     "call *%%rax;"                           \
     : : "i"(offset) : "rax"                  \
@@ -91,7 +91,7 @@
 // jump to a label
 #define JMP_LABEL(label, offset)             \
   asm volatile(                              \
-    "mov " #label "@GOTPCREL(%%rip), %%rax;" \
+    "lea " #label "(%%rip), %%rax;"          \
     "add %0, %%rax;"                         \
     "jmp *%%rax;"                            \
     : : "i"(offset) : "rax"                  \
