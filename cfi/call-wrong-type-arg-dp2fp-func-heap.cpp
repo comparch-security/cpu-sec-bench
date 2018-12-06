@@ -7,7 +7,9 @@ static unsigned int rv = 1;
 typedef unsigned int (*func_type)(void);
 
 void FORCE_NOINLINE helper(func_type fp) {
+  signal(SIGSEGV, sigsegv_handler); // catch SIGSEGV
   rv = fp();
+  signal(SIGSEGV, SIG_DFL);         // uncatch SIGSEGV
 }
 
 int main()
@@ -16,7 +18,6 @@ int main()
   assign_fake_machine_code(m);
   rv = m[0];
 
-  signal(SIGSEGV, sigsegv_handler); // catch SIGSEGV
   helper((func_type)(&m));
   return rv;
 }

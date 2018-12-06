@@ -18,5 +18,6 @@ int main()
   PUSH_LABEL(xlabel);
   helper(m);
   DECL_LABEL(xlabel);
+  signal(SIGSEGV, SIG_DFL);         // uncatch SIGSEGV
   return 0;
 }
