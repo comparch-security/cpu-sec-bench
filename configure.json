@@ -48,10 +48,18 @@
                       ]
     },
     "cfi-return-to-instruction-in-rodata": {
-        "depends-on": [ "cfi-call-mid-func" ]
+        "depends-on": [ "cfi-return-to-func" ]
+    },
+    "cfi-return-to-instruction-in-bss": {
+        "depends-on": [ "cfi-return-to-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-return-to-instruction-in-heap": {
+        "depends-on": [ "cfi-return-to-func" ],
+        "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-stack": {
-        "depends-on": [ "cfi-call-mid-func" ],
+        "depends-on": [ "cfi-return-to-func" ],
         "results": { "16": "expected excption on the illegal call." }
     }
 }

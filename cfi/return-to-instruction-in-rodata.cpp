@@ -3,6 +3,7 @@
 #include "include/signal.hpp"
 
 static unsigned int rv = 1;
+const unsigned char m[] = FUNC_MACHINE_CODE;
 
 void FORCE_NOINLINE helper(const unsigned char* m) {
   rv = 1;
@@ -12,7 +13,6 @@ void FORCE_NOINLINE helper(const unsigned char* m) {
 
 int main()
 {
-  unsigned char m[] = FUNC_MACHINE_CODE;
   rv = m[0];
 
   PUSH_LABEL(xlabel);
@@ -20,3 +20,4 @@ int main()
   DECL_LABEL(xlabel);
   return 0;
 }
+
