@@ -30,6 +30,10 @@
     "cfi-call-wrong-type-arg-vtable": {},
     "cfi-call-wrong-type-arg-vtable-heap": {},
     "cfi-call-wrong-vtable-heap": {},
+    "cfi-call-instruction-in-stack": {
+        "depends-on": [ "cfi-call-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
     "cfi-jump-mid-func": {},
     "cfi-jump-mid-instruction": {},
     "cfi-return-to-non-call-site": {},
@@ -43,11 +47,10 @@
                        "cfi-return-without-call"
                       ]
     },
-    "cfi-return-to-instruction-in-stack": {
-        "depends-on": [ "cfi-call-mid-func" ],
-        "results": { "16": "expected excption on the illegal call." }
+    "cfi-return-to-instruction-in-rodata": {
+        "depends-on": [ "cfi-call-mid-func" ]
     },
-    "cfi-call-instruction-in-stack": {
+    "cfi-return-to-instruction-in-stack": {
         "depends-on": [ "cfi-call-mid-func" ],
         "results": { "16": "expected excption on the illegal call." }
     }
