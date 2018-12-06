@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 # default variables
-TEST_ARCH     ?= ARCH_X86_64
+CPU_ARCH := $(shell uname -i)
 GCC_OPT_LEVEL ?= O2
 
 # define paths and objects
@@ -32,13 +32,13 @@ sec-tests-prep := $(bof-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 headers := $(wildcard $(base)/lib/include/*.hpp)
 
 # conditional variables
-ifeq ($(TEST_ARCH), ARCH_X86_64)
+ifeq ($(CPU_ARCH), x86_64)
   headers += $(wildcard $(base)/lib/x86_64/*.hpp)
 #  arch_targets = $(addprefix $(base)/lib/x86_64/, assembly.o)
 endif
 
 CXX := g++
-CXXFLAGS := -I./lib -D$(TEST_ARCH) -$(GCC_OPT_LEVEL) -Wall -fno-omit-frame-pointer
+CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall -fno-omit-frame-pointer
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D -l -S
 RUN_SCRIPT := $(base)/script/run-test.py

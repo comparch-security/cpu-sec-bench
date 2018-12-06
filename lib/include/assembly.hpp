@@ -8,7 +8,7 @@
 // a barrier to stop compiler from reorder memory operations
 #define COMPILER_BARRIER asm volatile("" : : : "memory")
 
-#ifdef ARCH_X86_64
+#ifdef __x86_64
   #include "x86_64/assembly.hpp"
 #endif
 
