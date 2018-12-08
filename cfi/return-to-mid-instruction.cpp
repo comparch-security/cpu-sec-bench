@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
-#include "include/gcc_builtin.hpp"
 
 static volatile int grv = 0;
 
@@ -21,7 +20,7 @@ void FORCE_NOINLINE helper2()
   grv = 1; // failed if runs here
 
   // a instruction to jump to the middle
-  MID_INSTRUTION;
+  MID_INSTRUCTION;
 
   grv = 4;
 }

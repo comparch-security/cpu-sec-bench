@@ -3,12 +3,10 @@
 
 static unsigned int rv = 1;
 
-typedef unsigned int (*func_type)(void);
-
-void FORCE_NOINLINE helper(func_type fp) {
+void FORCE_NOINLINE helper(const unsigned char* m) {
+  rv = 1;
+  MOD_RET_DAT(m);
   signal(SIGSEGV, sigsegv_handler); // catch SIGSEGV
-  rv = fp();
-  signal(SIGSEGV, SIG_DFL);         // uncatch SIGSEGV
 }
 
 int main()
@@ -17,6 +15,9 @@ int main()
   assign_fake_machine_code(m);
   rv = m[0];
 
-  helper((func_type)(&m));
-  return rv;
+  PUSH_LABEL(xlabel);
+  helper(m);
+  DECL_LABEL(xlabel);
+  signal(SIGSEGV, SIG_DFL);         // uncatch SIGSEGV
+  return 0;
 }

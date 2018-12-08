@@ -30,20 +30,48 @@
     "cfi-call-wrong-type-arg-vtable": {},
     "cfi-call-wrong-type-arg-vtable-heap": {},
     "cfi-call-wrong-vtable-heap": {},
+    "cfi-call-instruction-in-rodata": {
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-call-instruction-in-bss": {
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-call-instruction-in-stack": {
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-call-instruction-in-heap": {
+        "results": { "16": "expected excption on the illegal call." }
+    },
     "cfi-jump-mid-func": {},
-    "cfi-jump-mid-instrunction": {},
-    "cfi-return-non-call-site": {},
+    "cfi-jump-mid-instruction": {},
+    "cfi-return-to-non-call-site": {},
+    "cfi-return-to-wrong-call-site": {},
     "cfi-return-to-func": {
-        "depends-on": ["cfi-return-non-call-site" ]
+        "depends-on": ["cfi-return-to-non-call-site" ]
     },
     "cfi-return-without-call": {},
-    "cfi-return-mid-instruction": {
-        "depends-on": ["cfi-return-non-call-site",
+    "cfi-return-to-mid-instruction": {
+        "depends-on": ["cfi-return-to-non-call-site",
                        "cfi-return-without-call"
                       ]
     },
     "cfi-jmp-instruction-in-stack": {
         "depends-on": [ "cfi-jump-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-return-to-instruction-in-rodata": {
+        "depends-on": [ "cfi-return-to-func" ]
+    },
+    "cfi-return-to-instruction-in-bss": {
+        "depends-on": [ "cfi-return-to-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-return-to-instruction-in-heap": {
+        "depends-on": [ "cfi-return-to-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-return-to-instruction-in-stack": {
+        "depends-on": [ "cfi-return-to-func" ],
         "results": { "16": "expected excption on the illegal call." }
     }
 }
