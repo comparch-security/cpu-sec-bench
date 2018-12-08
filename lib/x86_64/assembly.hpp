@@ -29,13 +29,37 @@
     : "rax"                           \
                                       )
 
+// call to a pointer
+#define CALL_DAT(ptr)                        \
+  asm volatile(                              \
+    "call *%0;"                              \
+    : : "r" (ptr)                            \
+                                             )
 
-// call a function
-#define CALL_FUNC(pFunc)        \
-  asm volatile(                 \
-    "call *%0;"                 \
-    : : "r" (pFunc)             \
-                                )
+//call to a label
+#define CALL_LABEL(label, offset)            \
+  asm volatile(                              \
+    "lea " #label "(%%rip), %%rax;"          \
+    "add %0, %%rax;"                         \
+    "call *%%rax;"                           \
+    : : "i"(offset) : "rax"                  \
+                                             )
+
+// jump to a pointer
+#define JMP_DAT(ptr)                         \
+  asm volatile(                              \
+    "jmp *%0;"                               \
+    : : "r" (ptr)                            \
+                                             )
+
+// jump to a label
+#define JMP_LABEL(label, offset)             \
+  asm volatile(                              \
+    "lea " #label "(%%rip), %%rax;"          \
+    "add %0, %%rax;"                         \
+    "jmp *%%rax;"                            \
+    : : "i"(offset) : "rax"                  \
+                                             )
 
 // pass a integer argument
 #define PASS_INT_ARG(Idx, arg) \
@@ -73,29 +97,9 @@
     "push %%rax;"                            \
     : : : "rax"                              \
                                              )
-
-
 // return
 #define RET \
   asm volatile("ret")
-
-//call to a label
-#define CALL_LABEL(label, offset)            \
-  asm volatile(                              \
-    "lea " #label "(%%rip), %%rax;"          \
-    "add %0, %%rax;"                         \
-    "call *%%rax;"                           \
-    : : "i"(offset) : "rax"                  \
-                                             )
-
-// jump to a label
-#define JMP_LABEL(label, offset)             \
-  asm volatile(                              \
-    "lea " #label "(%%rip), %%rax;"          \
-    "add %0, %%rax;"                         \
-    "jmp *%%rax;"                            \
-    : : "i"(offset) : "rax"                  \
-                                             )
 
 // a instrction that can jmp to the middle
 // 48 05 c3 00 00 00    	add    $0xc3,%rax
@@ -122,9 +126,3 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0xc0;
   *p++ = 0xc3;
 }
-
-#define JMP_FUNC(pFunc)   \
-  asm volatile(           \
-    "jmp *%0;"            \
-    : : "r" (pFunc)       \
-                          )

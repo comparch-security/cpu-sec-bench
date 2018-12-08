@@ -11,6 +11,6 @@ int main()
   long long tmp = -1;
   helper(0.5);
   PASS_INT_ARG(0, tmp);
-  CALL_FUNC(helper);  
+  CALL_DAT(helper);
   return rv;
 }

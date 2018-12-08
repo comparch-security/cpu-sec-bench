@@ -9,10 +9,10 @@ void FORCE_NOINLINE helper() {
     exit(0);
   }
 
-  // push the lable address
+  // push the label address
   PUSH_FAKE_RET(ret_address);
 
-  //return to the push adderss
+  // return to the push adderss
   // although a simple assembly "ret" would work out of the box
   // we use the normal return to mimic a more genuine case
   return;
