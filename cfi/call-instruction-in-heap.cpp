@@ -5,8 +5,8 @@ int main()
 {
   unsigned char *m = new unsigned char [16];
   assign_fake_machine_code(m);
-  signal(SIGSEGV, sigsegv_handler); // catch SIGSEGV
+  begin_catch_nx_exception(m);
   CALL_DAT(m);
-  signal(SIGSEGV, SIG_DFL);         // uncatch SIGSEGV
+  end_catch_nx_exception();
   return 0;
 }

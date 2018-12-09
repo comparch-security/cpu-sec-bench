@@ -1,4 +1,5 @@
 #include "include/signal.hpp"
+#include "include/gcc_builtin.hpp"
 #include <csignal>
 #include <cstdlib>
 #include <cstdio>
@@ -13,7 +14,7 @@ void xcpt_nx_handler(int signo, siginfo_t *sinfo, void *context) {
   // check the exception cause
   sigact_record_t *record = sigact_stack.top();
   sigact_stack.pop();
-  if((record->faulty_addr != (void *)0llu && record->faulty_addr != sinfo->si_addr) // faulty addr
+  if((record->faulty_data_addr != NULL && record->faulty_data_addr != sinfo->si_addr) // faulty addr
      || sinfo->si_code != SEGV_ACCERR) {                                            // exception cause
     puts("xcpt_nx_handler(): mismatched SEGV signal.");
     exit(RT_CODE_MISMATCH);
@@ -23,11 +24,7 @@ void xcpt_nx_handler(int signo, siginfo_t *sinfo, void *context) {
   }
 }
 
-void begin_catch_nx_exception(void *expected_faulty_addr) {
-  // construct the sigact environment
-  sigact_record_t *record = new sigact_record_t;
-  record->faulty_addr = expected_faulty_addr;
-
+void FORCE_INLINE begin_catch_nx_exception_common(sigact_record_t *record) {
   // construct the signal action
   struct sigaction act;
   act.sa_sigaction = xcpt_nx_handler;
@@ -41,6 +38,30 @@ void begin_catch_nx_exception(void *expected_faulty_addr) {
   } else {
     sigact_stack.push(record);
   }
+}
+
+void begin_catch_nx_exception(const void *expected_faulty_addr) {
+  // construct the sigact environment
+  sigact_record_t *record = new sigact_record_t;
+  record->faulty_data_addr = expected_faulty_addr;
+
+  begin_catch_nx_exception_common(record);
+}
+
+void begin_catch_nx_exception(const void **expected_faulty_addr) {
+  // construct the sigact environment
+  sigact_record_t *record = new sigact_record_t;
+  record->faulty_func_addr = expected_faulty_addr;
+
+  begin_catch_nx_exception_common(record);
+}
+
+void begin_catch_nx_exception() {
+  // construct the sigact environment
+  sigact_record_t *record = new sigact_record_t;
+  record->faulty_data_addr = NULL;
+
+  begin_catch_nx_exception_common(record);
 }
 
 void end_catch_nx_exception() {

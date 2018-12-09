@@ -6,7 +6,7 @@ static unsigned int rv = 1;
 void FORCE_NOINLINE helper(const unsigned char* m) {
   rv = 1;
   MOD_RET_DAT(m);
-  signal(SIGSEGV, sigsegv_handler); // catch SIGSEGV
+  begin_catch_nx_exception(m);
 }
 
 int main()
@@ -17,6 +17,6 @@ int main()
   PUSH_LABEL(xlabel);
   helper(m);
   DECL_LABEL(xlabel);
-  signal(SIGSEGV, SIG_DFL);         // uncatch SIGSEGV
+  end_catch_nx_exception();
   return 0;
 }
