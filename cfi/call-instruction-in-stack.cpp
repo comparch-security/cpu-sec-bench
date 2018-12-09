@@ -4,8 +4,8 @@
 int main()
 {
   unsigned char m[] = FUNC_MACHINE_CODE;
-  signal(SIGSEGV, sigsegv_handler); // catch SIGSEGV
+  begin_catch_nx_exception(m);
   CALL_DAT(m);
-  signal(SIGSEGV, SIG_DFL);         // uncatch SIGSEGV
+  end_catch_nx_exception();
   return 0;
 }
