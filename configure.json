@@ -42,5 +42,6 @@
                        "cfi-return-without-call"
                       ]
     },
-    "cfi-return-to-another-call-return-address": {}
+    "cfi-return-to-another-call-return-address": {},
+    "cfi-call-static-analysis-grain-test": {}
 }
