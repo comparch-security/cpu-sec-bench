@@ -1,7 +1,8 @@
 SHELL := /bin/bash
 
 # default variables
-CPU_ARCH := $(shell uname -i)
+CPU_ARCH ?= $(shell uname -i)
+CXX ?= g++
 GCC_OPT_LEVEL ?= O2
 
 # define paths and objects
@@ -38,7 +39,6 @@ ifeq ($(CPU_ARCH), x86_64)
 #  extra_objects += $(addprefix $(base)/lib/x86_64/, assembly.o)
 endif
 
-CXX := g++
 CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall -fno-omit-frame-pointer
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D -l -S
