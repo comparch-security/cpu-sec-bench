@@ -2,6 +2,9 @@
 #include "include/assembly.hpp"
 #include "include/gcc_builtin.hpp"
 
+#include<iostream>
+using namespace std;
+
 static volatile int grv = 1;
 
 void FORCE_NOINLINE helper1()
@@ -17,10 +20,10 @@ void FORCE_NOINLINE helper2()
 int main()
 {
 	typedef void (*Fun)(void);
-	Fun pFun;
+	volatile Fun pFun;
 	Fun tmp = helper2;
-	int b = 1024;
-	if(b - grv)
+	volatile int b = 1024;
+	if(b)
 	{
 		pFun = helper1;
 	}
@@ -30,7 +33,7 @@ int main()
 	}
 	XCHG_MEM(&tmp, &pFun);
 	pFun();
-	pFun();
+	//pFun();
 	return grv;
 }
 
