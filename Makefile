@@ -36,10 +36,11 @@ extra_objects := $(base)/lib/common/signal.o
 # conditional variables
 ifeq ($(CPU_ARCH), x86_64)
   headers += $(wildcard $(base)/lib/x86_64/*.hpp)
-#  extra_objects += $(addprefix $(base)/lib/x86_64/, assembly.o)
+  extra_objects += $(addprefix $(base)/lib/x86_64/, assembly.o)
 endif
 
-CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall -fno-omit-frame-pointer
+CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall
+# -fno-omit-frame-pointer
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D -l -S
 RUN_SCRIPT := $(base)/script/run-test.py
