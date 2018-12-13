@@ -27,5 +27,31 @@ struct charBuffer_data
   char overflow[8];
 };
 
+class buf
+{
+  public:
+    char d[8];
+};
+
+struct buffer_struct
+{
+  buf underflow;
+  buf data;
+  buf overflow;
+
+  buffer_struct()
+  {
+    for(unsigned int i=0; i<7; i++)
+    {    
+      underflow.d[i] = 'u';
+      data.d[i] = 'd';
+      overflow.d[i] = 'o';
+    } 
+    underflow.d[7] = 0;
+    data.d[7] = 0;
+    overflow.d[7] = 0;
+  }
+};
+
 #endif
 
