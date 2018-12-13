@@ -17,6 +17,14 @@ struct charBuffer
     data[7]      = 0;
     overflow[7]  = 0;
   }
+
+};
+
+struct charBuffer_data
+{
+  char underflow[8];
+  char data[8];
+  char overflow[8];
 };
 
 #endif

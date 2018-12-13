@@ -1,8 +1,38 @@
 {
-    "bof-overflow-stack": {},
+    "bof-overflow-index-stack": {
+        "results": "1"
+    },
+    "bof-overflow-index-bss": {
+        "results": "1"
+    },
+    "bof-overflow-index-data": {
+        "results": "1"
+    },
+    "bof-overflow-index-heap": {
+        "results": "1"
+    },
+    "bof-underflow-index-bss": {
+        "results": "1"
+    },
+    "bof-underflow-index-data": {
+        "results": "1"
+    },
+    "bof-underflow-index-heap": {
+        "results": "1"
+    },
+    "bof-underflow-index-stack": {
+        "results": "1"
+    },
+
+
+
+
+
+
     "cpi-modify-func-pointer": {
         "comment": "force revision on function pointers"
     },
+
     "cfi-call-mid-func": {},
     "cfi-call-mid-instruction": {},
     "cfi-call-wrong-num-arg-func": {},
