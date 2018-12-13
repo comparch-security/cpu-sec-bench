@@ -44,7 +44,7 @@ else:
 if depends_ok:
     try:
         subprocess.check_call(
-            [fname, arguments],
+            fname + " " + arguments,
             stderr=subprocess.STDOUT,
             shell=True
         )

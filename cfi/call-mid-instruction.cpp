@@ -1,12 +1,11 @@
 #include "include/assembly.hpp"
-#include "include/gcc_builtin.hpp"
 
 int volatile grv = 2;
 
 void FORCE_NOINLINE helper()
 {
   // a instruction can run at mid of instruction
-  MID_INSTRUTION;
+  MID_INSTRUCTION;
 
   grv = 1;
 

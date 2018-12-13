@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
-#include "include/gcc_builtin.hpp"
 
 int FORCE_NOINLINE fake_ret()
 {
@@ -14,6 +13,7 @@ void FORCE_NOINLINE helper()
 
 int main()
 {
+  asm_stack_test();
   helper();
   return 1;
 }

@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
-#include "include/gcc_builtin.hpp"
 
 int volatile grv = 1;
 
@@ -15,7 +14,7 @@ void FORCE_NOINLINE helper()
   JMP_LABEL(mid_instruction, 2);
 
   // a instruction to jump to the middle
-  MID_INSTRUTION;
+  MID_INSTRUCTION;
 
   grv = 3;
 }

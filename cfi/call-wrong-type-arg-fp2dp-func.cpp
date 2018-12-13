@@ -1,5 +1,4 @@
 #include "include/assembly.hpp"
-#include "include/gcc_builtin.hpp"
 
 static unsigned int rv = 1;
 
@@ -11,7 +10,7 @@ int main()
 {
   int var = 0;
   helper(&var);
-  PASS_INT_ARG0(helper);
-  CALL_FUNC(helper);
+  PASS_INT_ARG(0, helper);
+  CALL_DAT(helper);
   return rv;
 }

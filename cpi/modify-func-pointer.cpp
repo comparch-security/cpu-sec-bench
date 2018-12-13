@@ -1,5 +1,4 @@
 #include "include/assembly.hpp"
-#include "include/gcc_builtin.hpp"
 
 static volatile int grv = 1;
 
@@ -14,6 +13,6 @@ int *FORCE_NOINLINE helper1(int *p) {
 int main() {
   int *func_p = (int *)helper;
   // force revision on function pointer
-  CALL_FUNC(helper1(func_p) + 1);
+  CALL_DAT(helper1(func_p) + 1);
   return grv;
 }

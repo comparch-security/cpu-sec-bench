@@ -10,7 +10,9 @@
     "cfi-call-wrong-num-arg-vtable-heap": {},
     "cfi-call-wrong-num-func-vtable": {},
     "cfi-call-wrong-num-func-vtable-heap": {},
-    "cfi-call-wrong-type-arg-int2double-func": {},
+    "cfi-call-wrong-type-arg-int2double-func": {
+        "arguments" : "0 2"
+    },
     "cfi-call-wrong-type-arg-fp2dp-func": {},
      "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
         "depends-on": [ "cfi-call-mid-func" ]
@@ -30,18 +32,58 @@
     "cfi-call-wrong-type-arg-vtable": {},
     "cfi-call-wrong-type-arg-vtable-heap": {},
     "cfi-call-wrong-vtable-heap": {},
+    "cfi-call-instruction-in-rodata": {},
+    "cfi-call-instruction-in-bss": {
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-call-instruction-in-stack": {
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-call-instruction-in-heap": {
+        "results": { "16": "expected excption on the illegal call." }
+    },
     "cfi-jump-mid-func": {},
-    "cfi-jump-mid-instrunction": {},
-    "cfi-return-non-call-site": {},
+    "cfi-jump-mid-instruction": {},
+    "cfi-jump-instruction-in-rodata": {
+        "depends-on": [ "cfi-jump-mid-func" ]
+    },
+    "cfi-jump-instruction-in-bss": {
+        "depends-on": [ "cfi-jump-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-jump-instruction-in-stack": {
+        "depends-on": [ "cfi-jump-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-jump-instruction-in-heap": {
+        "depends-on": [ "cfi-jump-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-return-to-non-call-site": {},
+    "cfi-return-to-wrong-call-site": {},
     "cfi-return-to-func": {
-        "depends-on": ["cfi-return-non-call-site" ]
+        "depends-on": ["cfi-return-to-non-call-site" ]
     },
     "cfi-return-without-call": {},
-    "cfi-return-mid-instruction": {
-        "depends-on": ["cfi-return-non-call-site",
+    "cfi-return-to-mid-instruction": {
+        "depends-on": ["cfi-return-to-non-call-site",
                        "cfi-return-without-call"
                       ]
     },
-    "cfi-return-to-another-call-return-address": {},
-    "cfi-call-static-analysis-grain-test": {}
+    "cfi-call-static-analysis-grain-test": {},
+    "cfi-return-to-instruction-in-rodata": {
+        "depends-on": [ "cfi-return-to-func" ]
+    },
+    "cfi-return-to-instruction-in-bss": {
+        "depends-on": [ "cfi-return-to-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-return-to-instruction-in-heap": {
+        "depends-on": [ "cfi-return-to-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-return-to-instruction-in-stack": {
+        "depends-on": [ "cfi-return-to-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    }
 }

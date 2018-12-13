@@ -1,8 +1,7 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
-#include "include/gcc_builtin.hpp"
 
-static volatile int grv = 0;
+static volatile int grv = 1;
 
 void FORCE_NOINLINE helper() {
   grv = 3;
@@ -16,6 +15,7 @@ void FORCE_NOINLINE helper2() {
 }
 
 int main() {
+  asm_stack_test();
   // call a function but illegally return
   helper();
   helper2();// failed if runs here
