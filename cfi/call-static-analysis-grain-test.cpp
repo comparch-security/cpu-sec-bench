@@ -1,39 +1,21 @@
-#include <cstdlib>
 #include "include/assembly.hpp"
-#include "include/gcc_builtin.hpp"
-
-#include<iostream>
-using namespace std;
 
 static volatile int grv = 1;
+typedef void (*Fun)(void);
 
-void FORCE_NOINLINE helper1()
-{
-	grv = 100;
+void FORCE_NOINLINE helper1() {
+  grv = 2;
 }
 
-void FORCE_NOINLINE helper2()
-{
-	grv = 0;
+void FORCE_NOINLINE helper2() {
+  grv = 0;
 }
 
 int main()
 {
-	typedef void (*Fun)(void);
-	volatile Fun pFun;
-	Fun tmp = helper2;
-	volatile int b = 1024;
-	if(b)
-	{
-		pFun = helper1;
-	}
-	else
-	{
-		pFun = helper2;
-	}
-	XCHG_MEM(&tmp, &pFun);
-	pFun();
-	//pFun();
-	return grv;
+  volatile Fun pFun = grv ? helper1 : helper2;
+  Fun tmp = helper2;
+  XCHG_MEM(&tmp, &pFun);
+  pFun();
+  return grv;
 }
-
