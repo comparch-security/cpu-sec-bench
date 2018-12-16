@@ -5,6 +5,10 @@
     },
     "cfi-call-mid-func": {},
     "cfi-call-mid-instruction": {},
+    "cfi-call-wrong-func-within-static-analysis": {},
+    "cfi-call-wrong-func": {
+        "depends-on": [ "cfi-call-wrong-func-within-static-analysis" ]
+    },
     "cfi-call-wrong-num-arg-func": {},
     "cfi-call-wrong-num-arg-vtable": {},
     "cfi-call-wrong-num-arg-vtable-heap": {},
@@ -14,14 +18,14 @@
         "arguments" : "0 2"
     },
     "cfi-call-wrong-type-arg-fp2dp-func": {},
-     "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
+    "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
         "depends-on": [ "cfi-call-mid-func" ]
-     },
-     "cfi-call-wrong-type-arg-dp2fp-func-bss": {
+    },
+    "cfi-call-wrong-type-arg-dp2fp-func-bss": {
         "depends-on": [ "cfi-call-mid-func" ],
         "results": { "16": "expected excption on the illegal call." }
-     },
-     "cfi-call-wrong-type-arg-dp2fp-func-stack": {
+    },
+    "cfi-call-wrong-type-arg-dp2fp-func-stack": {
         "depends-on": [ "cfi-call-mid-func" ],
         "results": { "16": "expected excption on the illegal call." }
     },
@@ -70,7 +74,6 @@
                        "cfi-return-without-call"
                       ]
     },
-    "cfi-call-static-analysis-grain-test": {},
     "cfi-return-to-instruction-in-rodata": {
         "depends-on": [ "cfi-return-to-func" ]
     },
