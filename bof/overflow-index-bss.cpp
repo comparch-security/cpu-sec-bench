@@ -1,7 +1,6 @@
 #include "include/gcc_builtin.hpp"
 #include "include/bof.hpp"
 
-
 volatile charBuffer buffer;   // volatile to avoid compiler optimization
 
 int FORCE_NOINLINE helper(unsigned int size)

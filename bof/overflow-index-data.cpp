@@ -1,9 +1,7 @@
 #include "include/gcc_builtin.hpp"
 #include "include/bof.hpp"
 
-
-volatile charBuffer_data buffer={"UUUUUUU","DDDDDDD","OOOOOOO"};   // volatile to avoid compiler optimization
-
+volatile charBuffer buffer = {"uuuuuuu","ddddddd","ooooooo"};   // volatile to avoid compiler optimization
 
 int FORCE_NOINLINE helper(unsigned int size)
 {
@@ -19,6 +17,5 @@ int FORCE_NOINLINE helper(unsigned int size)
 
 int main()
 {
-	
   return helper(16);
 }

@@ -55,13 +55,18 @@ $(test-path)/libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
 
 rubbish += $(test-path)/libcfi.so
 
+$(base)/lib/common/bof.o: %.o : %.cpp $(base)/lib/include/bof.hpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+rubbish += $(base)/lib/common/bof.o
+
 $(arch_targets): %.o : %.cpp $(headers)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 rubbish += $(arch_targets)
 
-$(bof-tests): $(test-path)/bof-%:$(bof-path)/%.cpp $(arch_targets) $(headers)
-	$(CXX) $(CXXFLAGS) $< $(arch_targets) -o $@
+$(bof-tests): $(test-path)/bof-%:$(bof-path)/%.cpp $(arch_targets) $(headers) $(base)/lib/common/bof.o
+	$(CXX) $(CXXFLAGS) $< $(arch_targets) $(base)/lib/common/bof.o -o $@
 
 rubbish += $(bof-tests)
 

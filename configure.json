@@ -42,14 +42,14 @@
     "cfi-call-wrong-num-func-vtable-heap": {},
     "cfi-call-wrong-type-arg-int2double-func": {},
     "cfi-call-wrong-type-arg-fp2dp-func": {},
-     "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
+    "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
         "depends-on": [ "cfi-call-mid-func" ]
-     },
-     "cfi-call-wrong-type-arg-dp2fp-func-bss": {
+    },
+    "cfi-call-wrong-type-arg-dp2fp-func-data": {
         "depends-on": [ "cfi-call-mid-func" ],
         "results": { "16": "expected excption on the illegal call." }
-     },
-     "cfi-call-wrong-type-arg-dp2fp-func-stack": {
+    },
+    "cfi-call-wrong-type-arg-dp2fp-func-stack": {
         "depends-on": [ "cfi-call-mid-func" ],
         "results": { "16": "expected excption on the illegal call." }
     },
@@ -63,7 +63,7 @@
     "cfi-call-instruction-in-rodata": {
         "results": { "16": "expected excption on the illegal call." }
     },
-    "cfi-call-instruction-in-bss": {
+    "cfi-call-instruction-in-data": {
         "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-stack": {
@@ -88,7 +88,7 @@
     "cfi-return-to-instruction-in-rodata": {
         "depends-on": [ "cfi-return-to-func" ]
     },
-    "cfi-return-to-instruction-in-bss": {
+    "cfi-return-to-instruction-in-data": {
         "depends-on": [ "cfi-return-to-func" ],
         "results": { "16": "expected excption on the illegal call." }
     },
