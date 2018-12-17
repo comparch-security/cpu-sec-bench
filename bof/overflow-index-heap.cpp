@@ -11,11 +11,8 @@ int FORCE_NOINLINE helper(unsigned int size)
 
   for(unsigned int i=0; i<7; i++)
     if(buffer->overflow[i] != 'c')
-    {
-      delete buffer;
       return 1;
-    }
-  delete buffer;
+
   return 0;
 }
 

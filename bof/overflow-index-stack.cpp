@@ -17,6 +17,5 @@ int FORCE_NOINLINE helper(unsigned int size)
 
 int main()
 {
-	
   return helper(16);
 }
