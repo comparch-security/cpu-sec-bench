@@ -1,6 +1,6 @@
 #include "include/bof.hpp"
 
-void char_buffer_init(charBuffer *cb) {
+void char_buffer_init(volatile charBuffer *cb) {
   for(unsigned int i=0; i<7; i++) {
     cb->underflow[i] = 'u';
     cb->data[i]      = 'd';

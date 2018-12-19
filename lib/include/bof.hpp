@@ -8,6 +8,6 @@ struct charBuffer
   char overflow[8];
 };
 
-extern void char_buffer_init(charBuffer *);
+extern void char_buffer_init(volatile charBuffer *);
 
 #endif

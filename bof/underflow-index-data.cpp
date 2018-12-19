@@ -2,7 +2,7 @@
 #include "include/bof.hpp"
 
 
-volatile charBuffer buffer={"UUUUUUU","DDDDDDD","OOOOOOO"};   // volatile to avoid compiler optimization
+volatile charBuffer buffer={"uuuuuuu","ddddddd","ooooooo"};   // volatile to avoid compiler optimization
 
 
 int FORCE_NOINLINE helper(int size)

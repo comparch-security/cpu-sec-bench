@@ -5,7 +5,7 @@ volatile charBuffer buffer;   // volatile to avoid compiler optimization
 
 int FORCE_NOINLINE helper(int size)
 {
-
+  char_buffer_init(&buffer);
   for(int i=(int)sizeof(buffer.data)/sizeof(char)-size; i<(int)(sizeof(buffer.data)/sizeof(char)-1); i++)
      buffer.data[i] = 'c';
   for(unsigned int i=0; i<7; i++)
