@@ -62,8 +62,13 @@ $(extra_objects): %.o : %.cpp $(headers)
 
 rubbish += $(extra_objects)
 
-$(bof-tests): $(test-path)/bof-%:$(bof-path)/%.cpp $(extra_objects) $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@
+$(base)/lib/common/bof.o: %.o : %.cpp $(base)/lib/include/bof.hpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+rubbish += $(base)/lib/common/bof.o
+
+$(bof-tests): $(test-path)/bof-%:$(bof-path)/%.cpp $(extra_objects) $(headers) $(base)/lib/common/bof.o
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/bof.o -o $@
 
 rubbish += $(bof-tests)
 
@@ -111,4 +116,3 @@ doc:
 	cd doc; pdflatex specification
 
 .PHONY: doc
-
