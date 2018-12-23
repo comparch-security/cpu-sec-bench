@@ -8,32 +8,9 @@ struct charBuffer
   char overflow[8];
 };
 
-extern void char_buffer_init(volatile charBuffer *);
-
-class buf
-{
-  public:
-    char d[8];
-};
-
-struct buffer_struct
-{
-  buf underflow;
-  buf data;
-  buf overflow;
-
-  buffer_struct()
-  {
-    for(unsigned int i=0; i<7; i++)
-    {    
-      underflow.d[i] = 'u';
-      data.d[i] = 'd';
-      overflow.d[i] = 'o';
-    } 
-    underflow.d[7] = 0;
-    data.d[7] = 0;
-    overflow.d[7] = 0;
-  }
-};
+extern void char_buffer_init(charBuffer *);
+extern void update_index(charBuffer& cb, int size, int step);
+extern void update_pointer(char *buf, int size, int step);
+extern int check(const char *buf);
 
 #endif
