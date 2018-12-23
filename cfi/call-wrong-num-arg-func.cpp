@@ -8,7 +8,7 @@ int FORCE_NOINLINE helper(int a, int b) {
 }
 
 int main() {
-  CALL_FUNC(helper);
+  CALL_DAT(helper);
   return grv;
 }
 

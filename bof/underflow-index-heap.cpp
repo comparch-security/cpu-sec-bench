@@ -4,18 +4,15 @@
 
 int FORCE_NOINLINE helper(int size)
 {
-  volatile charBuffer * buffer=new charBuffer();   // volatile to avoid compiler optimization
-
-  for(int i=(int)sizeof(buffer->data)/sizeof(char)-size; i<(int)(sizeof(buffer->data)/sizeof(char)-1); i++)
+  volatile charBuffer * buffer = new charBuffer();   // volatile to avoid compiler optimization
+  char_buffer_init(buffer);
+  for(int i=8-size; i<size-1; i++)
     buffer->data[i] = 'c';
 
   for(unsigned int i=0; i<7; i++)
     if(buffer->underflow[i] != 'c')
-    {
-      delete buffer;
       return 1;
-    }
-  delete buffer;
+
   return 0;
 }
 

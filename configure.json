@@ -1,46 +1,12 @@
 {
-    "bof-overflow-index-bss": {
-        "results": "1"
-    },
-    "bof-overflow-index-data": {
-        "results": "1"
-    },
-    "bof-overflow-index-heap": {
-        "results": "1"
-    },
-    "bof-overflow-index-stack": {
-        "results": "1"
-    },
-    "bof-underflow-index-bss": {
-        "results": "1"
-    },
-    "bof-underflow-index-data": {
-        "results": "1"
-    },
-    "bof-underflow-index-heap": {
-        "results": "1"
-    },
-    "bof-underflow-index-stack": {
-        "results": "1"
-    },
-    "bof-overflow-ptr-bss": {
-        "results": "1"
-    },
-    "bof-overflow-ptr-stack": {
-        "results": "1"
-    },
-    "bof-overflow-ptr-heap": {
-        "results": "1"
-    },
-    "bof-underflow-ptr-bss": {
-        "results": "1"
-    },
-    "bof-underflow-ptr-stack": {
-        "results": "1"
-    },
-    "bof-underflow-ptr-heap": {
-        "results": "1"
-    },
+    "bof-overflow-index-stack": {},
+    "bof-overflow-index-bss": {},
+    "bof-overflow-index-data": {},
+    "bof-overflow-index-heap": {},
+    "bof-underflow-index-bss": {},
+    "bof-underflow-index-data": {},
+    "bof-underflow-index-heap": {},
+    "bof-underflow-index-stack": {},
 
     "cpi-modify-func-pointer": {
         "comment": "force revision on function pointers"
@@ -48,21 +14,27 @@
 
     "cfi-call-mid-func": {},
     "cfi-call-mid-instruction": {},
+    "cfi-call-wrong-func-within-static-analysis": {},
+    "cfi-call-wrong-func": {
+        "depends-on": [ "cfi-call-wrong-func-within-static-analysis" ]
+    },
     "cfi-call-wrong-num-arg-func": {},
     "cfi-call-wrong-num-arg-vtable": {},
     "cfi-call-wrong-num-arg-vtable-heap": {},
     "cfi-call-wrong-num-func-vtable": {},
     "cfi-call-wrong-num-func-vtable-heap": {},
-    "cfi-call-wrong-type-arg-int2double-func": {},
+    "cfi-call-wrong-type-arg-int2double-func": {
+        "arguments" : "0 2"
+    },
     "cfi-call-wrong-type-arg-fp2dp-func": {},
-     "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
+    "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
         "depends-on": [ "cfi-call-mid-func" ]
-     },
-     "cfi-call-wrong-type-arg-dp2fp-func-bss": {
+    },
+    "cfi-call-wrong-type-arg-dp2fp-func-data": {
         "depends-on": [ "cfi-call-mid-func" ],
         "results": { "16": "expected excption on the illegal call." }
-     },
-     "cfi-call-wrong-type-arg-dp2fp-func-stack": {
+    },
+    "cfi-call-wrong-type-arg-dp2fp-func-stack": {
         "depends-on": [ "cfi-call-mid-func" ],
         "results": { "16": "expected excption on the illegal call." }
     },
@@ -73,10 +45,8 @@
     "cfi-call-wrong-type-arg-vtable": {},
     "cfi-call-wrong-type-arg-vtable-heap": {},
     "cfi-call-wrong-vtable-heap": {},
-    "cfi-call-instruction-in-rodata": {
-        "results": { "16": "expected excption on the illegal call." }
-    },
-    "cfi-call-instruction-in-bss": {
+    "cfi-call-instruction-in-rodata": {},
+    "cfi-call-instruction-in-data": {
         "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-stack": {
@@ -87,6 +57,21 @@
     },
     "cfi-jump-mid-func": {},
     "cfi-jump-mid-instruction": {},
+    "cfi-jump-instruction-in-rodata": {
+        "depends-on": [ "cfi-jump-mid-func" ]
+    },
+    "cfi-jump-instruction-in-bss": {
+        "depends-on": [ "cfi-jump-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-jump-instruction-in-stack": {
+        "depends-on": [ "cfi-jump-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
+    "cfi-jump-instruction-in-heap": {
+        "depends-on": [ "cfi-jump-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
+    },
     "cfi-return-to-non-call-site": {},
     "cfi-return-to-wrong-call-site": {},
     "cfi-return-to-func": {
@@ -101,7 +86,7 @@
     "cfi-return-to-instruction-in-rodata": {
         "depends-on": [ "cfi-return-to-func" ]
     },
-    "cfi-return-to-instruction-in-bss": {
+    "cfi-return-to-instruction-in-data": {
         "depends-on": [ "cfi-return-to-func" ],
         "results": { "16": "expected excption on the illegal call." }
     },

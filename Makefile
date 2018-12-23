@@ -1,7 +1,8 @@
 SHELL := /bin/bash
 
 # default variables
-CPU_ARCH := $(shell uname -i)
+CPU_ARCH ?= $(shell uname -i)
+CXX ?= g++
 GCC_OPT_LEVEL ?= O2
 
 # define paths and objects
@@ -30,15 +31,16 @@ sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(bof-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
 headers := $(wildcard $(base)/lib/include/*.hpp)
+extra_objects := $(base)/lib/common/signal.o
 
 # conditional variables
 ifeq ($(CPU_ARCH), x86_64)
   headers += $(wildcard $(base)/lib/x86_64/*.hpp)
-#  arch_targets = $(addprefix $(base)/lib/x86_64/, assembly.o)
+  extra_objects += $(addprefix $(base)/lib/x86_64/, assembly.o)
 endif
 
-CXX := g++
-CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall -fno-omit-frame-pointer
+CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall
+# -fno-omit-frame-pointer
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D -l -S
 RUN_SCRIPT := $(base)/script/run-test.py
@@ -55,29 +57,34 @@ $(test-path)/libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
 
 rubbish += $(test-path)/libcfi.so
 
-$(arch_targets): %.o : %.cpp $(headers)
+$(extra_objects): %.o : %.cpp $(headers)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-rubbish += $(arch_targets)
+rubbish += $(extra_objects)
 
-$(bof-tests): $(test-path)/bof-%:$(bof-path)/%.cpp $(arch_targets) $(headers)
-	$(CXX) $(CXXFLAGS) $< $(arch_targets) -o $@
+$(base)/lib/common/bof.o: %.o : %.cpp $(base)/lib/include/bof.hpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+rubbish += $(base)/lib/common/bof.o
+
+$(bof-tests): $(test-path)/bof-%:$(bof-path)/%.cpp $(extra_objects) $(headers) $(base)/lib/common/bof.o
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/bof.o -o $@
 
 rubbish += $(bof-tests)
 
 $(bof-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(arch_targets) $(headers)
-	$(CXX) $(CXXFLAGS) $< $(arch_targets) -o $@
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(headers)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@
 
 rubbish += $(cpi-tests)
 
 $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(arch_targets) $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(arch_targets) -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
 
 rubbish += $(cfi-tests)
 
@@ -109,4 +116,3 @@ doc:
 	cd doc; pdflatex specification
 
 .PHONY: doc
-

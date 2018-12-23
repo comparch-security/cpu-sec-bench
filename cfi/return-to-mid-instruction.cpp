@@ -6,7 +6,9 @@ static volatile int grv = 0;
 void FORCE_NOINLINE helper() {
   grv = 3;
 
-  MOD_RET_LABEL(mid_instruction + 2);
+  volatile long long p;
+  LOAD_LABEL(mid_instruction, p);
+  MOD_RET_DAT(p + 2);
   grv = 0;
 }
 
@@ -27,6 +29,7 @@ void FORCE_NOINLINE helper2()
 
 int main()
 {
+  asm_stack_test();
   helper2();
   DECL_LABEL(ret_address);
   exit(grv);

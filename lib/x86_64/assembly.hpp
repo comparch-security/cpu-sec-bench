@@ -5,19 +5,40 @@
 #define DECL_LABEL(label) \
   asm volatile(#label ":")
 
+// get the address of a label
+#define LOAD_LABEL(label, var)                          \
+  asm volatile(                                         \
+    "lea " #label "(%%rip), %0;"                        \
+    : "=r"(var) :                                       \
+                                                        )
+
+// modify stack
+#define MOD_STACK_LABEL(label, offset)                  \
+  asm volatile(                                         \
+    "lea " #label "(%%rip), %%rax;"                     \
+    "addq %%rsp, %0;"                                   \
+    "movq %%rax, (%0);"                                 \
+    : : "r"(offset)                                     \
+    : "rax"                                             \
+                                                        )
+
+#define MOD_STACK_DAT(dat, offset)                      \
+  asm volatile(                                         \
+    "addq %%rsp, %0;"                                   \
+    "movq %1, (%0);"                                    \
+    : : "r"(offset), "r"(dat)                           \
+                                                        )
+
+// detect the stack
+extern unsigned long long min_stack_size;
+extern void asm_stack_test();
+
 // modify return address to a label
 #define MOD_RET_LABEL(label) \
-  asm volatile( "movq $" #label ", 8(%rbp);" )
+  MOD_STACK_LABEL(label, min_stack_size)
 #define MOD_RET_DAT(dat)     \
-  asm volatile( "movq %0, 8(%%rbp);" : : "r"(dat) )
+  MOD_STACK_DAT(dat, min_stack_size)
 
-// get the address of the return address using a gcc builtin
-// NOTE FOR POSSIBLE SIDE-EFFECT
-//   If this macro is used, the compiler is forced to push %rbp on the stack,
-// which is equivalent to enforce gcc argument -fno-omit-frame-pointer option
-// on the current frame.
-#define GET_RET_ADDR \
-  ((void **)__builtin_frame_address(0) + 1)
 
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)          \
@@ -29,13 +50,37 @@
     : "rax"                           \
                                       )
 
+// call to a pointer
+#define CALL_DAT(ptr)                        \
+  asm volatile(                              \
+    "call *%0;"                              \
+    : : "r" (ptr)                            \
+                                             )
 
-// call a function
-#define CALL_FUNC(pFunc)        \
-  asm volatile(                 \
-    "call *%0;"                 \
-    : : "r" (pFunc)             \
-                                )
+//call to a label
+#define CALL_LABEL(label, offset)            \
+  asm volatile(                              \
+    "lea " #label "(%%rip), %%rax;"          \
+    "add %0, %%rax;"                         \
+    "call *%%rax;"                           \
+    : : "i"(offset) : "rax"                  \
+                                             )
+
+// jump to a pointer
+#define JMP_DAT(ptr)                         \
+  asm volatile(                              \
+    "jmp *%0;"                               \
+    : : "r" (ptr)                            \
+                                             )
+
+// jump to a label
+#define JMP_LABEL(label, offset)             \
+  asm volatile(                              \
+    "lea " #label "(%%rip), %%rax;"          \
+    "add %0, %%rax;"                         \
+    "jmp *%%rax;"                            \
+    : : "i"(offset) : "rax"                  \
+                                             )
 
 // pass a integer argument
 #define PASS_INT_ARG(Idx, arg) \
@@ -55,17 +100,6 @@
     : "rax", "xmm" #Idx                           \
                                                   )
 
-// create a fake return stack
-#define PUSH_FAKE_RET(label)                 \
-  asm volatile(                              \
-    "lea " #label "(%%rip), %%rax;"          \
-    "push %%rax;"                            \
-    "push %0;"                               \
-    : : "r" (__builtin_frame_address(0))     \
-    : "rax"                                  \
-                                             )
-
-
 // push an address
 #define PUSH_LABEL(label)                    \
   asm volatile(                              \
@@ -73,29 +107,19 @@
     "push %%rax;"                            \
     : : : "rax"                              \
                                              )
-
+// create a fake return stack
+#define PUSH_FAKE_RET(label)                 \
+  asm volatile(                              \
+    "lea " #label "(%%rip), %%rax;"          \
+    "push %%rax;"                            \
+    "subq %0, %%rsp;"                        \
+    : : "r"(min_stack_size)                  \
+    : "rax"                                  \
+                                             )
 
 // return
 #define RET \
   asm volatile("ret")
-
-//call to a label
-#define CALL_LABEL(label, offset)            \
-  asm volatile(                              \
-    "lea " #label "(%%rip), %%rax;"          \
-    "add %0, %%rax;"                         \
-    "call *%%rax;"                           \
-    : : "i"(offset) : "rax"                  \
-                                             )
-
-// jump to a label
-#define JMP_LABEL(label, offset)             \
-  asm volatile(                              \
-    "lea " #label "(%%rip), %%rax;"          \
-    "add %0, %%rax;"                         \
-    "jmp *%%rax;"                            \
-    : : "i"(offset) : "rax"                  \
-                                             )
 
 // a instrction that can jmp to the middle
 // 48 05 c3 00 00 00    	add    $0xc3,%rax

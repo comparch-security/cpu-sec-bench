@@ -4,7 +4,7 @@
 int FORCE_NOINLINE helper(unsigned int size)
 {
   volatile charBuffer buffer;   // volatile to avoid compiler optimization
-
+  char_buffer_init(&buffer);
   for(unsigned int i=0; i<size-1; i++)
     buffer.data[i] = 'c';
 
@@ -17,6 +17,5 @@ int FORCE_NOINLINE helper(unsigned int size)
 
 int main()
 {
-	
   return helper(16);
 }

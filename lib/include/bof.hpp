@@ -6,26 +6,9 @@ struct charBuffer
   char underflow[8];
   char data[8];
   char overflow[8];
-
-  charBuffer() {
-    for(unsigned int i=0; i<7; i++) {
-      underflow[i] = 'u';
-      data[i]      = 'd';
-      overflow[i]  = 'o';
-    }
-    underflow[7] = 0;
-    data[7]      = 0;
-    overflow[7]  = 0;
-  }
-
 };
 
-struct charBuffer_data
-{
-  char underflow[8];
-  char data[8];
-  char overflow[8];
-};
+extern void char_buffer_init(volatile charBuffer *);
 
 class buf
 {
@@ -54,4 +37,3 @@ struct buffer_struct
 };
 
 #endif
-

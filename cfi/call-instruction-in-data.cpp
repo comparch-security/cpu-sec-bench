@@ -5,8 +5,8 @@ static unsigned char m[] = FUNC_MACHINE_CODE;
 
 int main()
 {
-  signal(SIGSEGV, sigsegv_handler); // catch SIGSEGV
-  CALL_FUNC(m);
-  signal(SIGSEGV, SIG_DFL);         // uncatch SIGSEGV
+  begin_catch_nx_exception(m);
+  CALL_DAT(m);
+  end_catch_nx_exception();
   return 0;
 }

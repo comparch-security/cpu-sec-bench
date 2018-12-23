@@ -6,9 +6,9 @@ static unsigned int rv = 1;
 typedef unsigned int (*func_type)(void);
 
 void FORCE_NOINLINE helper(func_type fp) {
-  signal(SIGSEGV, sigsegv_handler); // catch SIGSEGV
+  begin_catch_nx_exception((void **)fp);
   rv = fp();
-  signal(SIGSEGV, SIG_DFL);         // uncatch SIGSEGV
+  end_catch_nx_exception();
 }
 
 const unsigned char m[] = FUNC_MACHINE_CODE;

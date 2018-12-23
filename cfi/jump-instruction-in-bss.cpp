@@ -2,22 +2,15 @@
 #include "include/signal.hpp"
 
 static unsigned int rv = 1;
-const unsigned char m[] = FUNC_MACHINE_CODE;
-
-void FORCE_NOINLINE helper(const unsigned char* m) {
-  rv = 1;
-  MOD_RET_DAT(m);
-}
+static unsigned char m[] = FUNC_MACHINE_CODE;
 
 int main()
 {
-  rv = m[0];
-  asm_stack_test();
   PUSH_LABEL(xlabel);
   begin_catch_nx_exception(m);
-  helper(m);
+  JMP_DAT(m);
   DECL_LABEL(xlabel);
   end_catch_nx_exception();
-  return 0;
+  rv--;
+  return rv;
 }
-
