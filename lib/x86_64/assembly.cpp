@@ -12,3 +12,12 @@ void asm_stack_test() {
   asm_stack_test_helper();
   min_stack_size -= (helper_sp + 8);
 }
+
+void replace_got_func(void **org, void **fake) {
+  asm volatile(
+    "mov 0x2(%rdi), %eax;"
+    "add $0x6, %rdi;"
+    "add %rax, %rdi;"
+    "movq %rsi, (%rdi);"
+  );
+}
