@@ -7,6 +7,12 @@
     "bof-underflow-index-data": {},
     "bof-underflow-index-heap": {},
     "bof-underflow-index-stack": {},
+    "bof-overflow-ptr-stack": {},
+    "bof-overflow-ptr-bss": {},
+    "bof-overflow-ptr-heap": {},
+    "bof-underflow-ptr-bss": {},
+    "bof-underflow-ptr-heap": {},
+    "bof-underflow-ptr-stack": {},
 
     "cpi-modify-func-pointer": {
         "comment": "force revision on function pointers"
