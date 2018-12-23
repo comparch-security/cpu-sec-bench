@@ -3,6 +3,8 @@
     "cpi-modify-func-pointer": {
         "comment": "force revision on function pointers"
     },
+    "cpi-modify-GOT":{},
+
     "cfi-call-mid-func": {},
     "cfi-call-mid-instruction": {},
     "cfi-call-wrong-num-arg-func": {},
@@ -84,6 +86,5 @@
     "cfi-return-to-instruction-in-stack": {
         "depends-on": [ "cfi-return-to-func" ],
         "results": { "16": "expected excption on the illegal call." }
-    },
-    "cfi-jump-modify-global-offset-table":{}
+    }
 }
