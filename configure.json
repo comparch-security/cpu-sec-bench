@@ -8,6 +8,10 @@
     "bof-underflow-index-heap": {},
     "bof-underflow-index-stack": {},
 
+    "ptt-ptr-temporal-1": {},
+    "ptt-ptr-temporal-2": {},
+    "ptt-ptr-temporal-3": {},
+
     "cpi-modify-func-pointer": {
         "comment": "force revision on function pointers"
     },
