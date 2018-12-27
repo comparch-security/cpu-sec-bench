@@ -2,19 +2,17 @@
 #include "include/assembly.hpp"
 #include "include/cfi.hpp"
 
-
 class Fake
 {
-  int lvar;
 public:
-    virtual int virtual_func(int new_var) {
-      lvar = new_var;
-      exit(0);
-    }
+  virtual void virtual_func()
+  {
+    exit(0);
+  }
 };
 
 int main() {
-  Helper *orig = new Helper();
+  Base *orig = new Base();
   Fake *fake = new Fake();
 
   // replace the vtable pointer

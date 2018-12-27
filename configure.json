@@ -26,7 +26,9 @@
         "depends-on": [ "cfi-call-wrong-func-within-static-analysis" ]
     },
     "cfi-call-wrong-num-arg-func": {},
-    "cfi-call-wrong-num-arg-vtable": {},
+    "cfi-call-wrong-num-arg-vtable": {
+        "depends-on":[ "cfi-call-non-polymorphic-class-vtable" ]
+    },
     "cfi-call-wrong-num-arg-vtable-heap": {},
     "cfi-call-wrong-num-func-vtable": {},
     "cfi-call-wrong-num-func-vtable-heap": {},
@@ -104,5 +106,6 @@
     "cfi-return-to-instruction-in-stack": {
         "depends-on": [ "cfi-return-to-func" ],
         "results": { "16": "expected excption on the illegal call." }
-    }
+    },
+    "cfi-call-non-polymorphic-class-vtable": {}
 }
