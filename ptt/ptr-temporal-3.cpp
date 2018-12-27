@@ -9,7 +9,7 @@ void foo()
 	t = &c;
 }
 
-int helper()
+int FORCE_NOINLINE helper()
 {
 	foo();
 	if(*t == 'c')  //if pionter temporal protection exist ,it will throw exception here

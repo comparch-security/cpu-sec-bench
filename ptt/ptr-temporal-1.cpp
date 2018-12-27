@@ -1,19 +1,20 @@
 #include "include/gcc_builtin.hpp"
 #include "include/ptt.hpp"
 
-volatile unsigned long addr;
-int helper()
+int FORCE_NOINLINE helper()
 {
+	unsigned int i = 0;
     volatile charBuffer *buffer = new charBuffer;   // volatile to avoid compiler optimization
     char_buffer_init(buffer);
-    addr=(unsigned long)buffer;
 	delete buffer;
-	
-	if((unsigned long)buffer == addr)
-		return 0;
-	else 
+	for(;i<16;i++)                     //if pionter temporal protection exist ,it will throw exception here
+	{
+		if(buffer->data[i] == 'd') 
+			return 0;
+	}
+	if(i == 15)
 		return 1;
-
+	return -1;
 }
 
 
