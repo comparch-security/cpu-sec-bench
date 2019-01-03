@@ -3,7 +3,7 @@
 
 struct charBuffer
 {
-	char data[16];
+  char data[16];
 };
 
 # if __WORDSIZE == 64

@@ -1,4 +1,3 @@
-#include "include/gcc_builtin.hpp"
 #include "include/ptt.hpp"
 
 volatile char *t;
@@ -8,7 +7,7 @@ void foo() {
   t = &c;
 }
 
-int FORCE_NOINLINE helper() {
+int helper() {
   foo();
   if(*t == 'c') // except if pionter temporal protection exists
     return 0;

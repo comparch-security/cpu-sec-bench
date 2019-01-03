@@ -1,7 +1,6 @@
-#include "include/gcc_builtin.hpp"
 #include "include/ptt.hpp"
 
-int FORCE_NOINLINE helper() {
+int helper() {
   volatile charBuffer *t, *a = new charBuffer;
   char_buffer_init(a);
   t = a;
