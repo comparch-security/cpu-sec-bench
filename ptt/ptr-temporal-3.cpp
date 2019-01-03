@@ -1,21 +1,14 @@
-#include "include/ptt.hpp"
+volatile char *buffer;
 
-volatile char *t;
-
-void foo() {
-  volatile char c = 'c';
-  t = &c;
+void helper() {
+  volatile char tmp[16];
+  for(int i=0; i<16; i++) tmp[i] = 'd';
+  buffer = tmp;
 }
 
-int helper() {
-  foo();
-  if(*t == 'c') // except if pionter temporal protection exists
-    return 0;
-  else
-    return 1;
-}
-
-int main()
-{
-  return helper();
+int main() {
+  helper();
+  for(int i=0; i<16; i++) // except if pionter temporal protection exists
+    if(buffer[i] == 'd') return 0;
+  return 1;
 }
