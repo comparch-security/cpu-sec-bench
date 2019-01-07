@@ -14,6 +14,13 @@
     "bof-underflow-ptr-heap": {},
     "bof-underflow-ptr-stack": {},
 
+    "ptt-access-after-free-org-heap": {},
+    "ptt-access-after-free-alias-heap": {},
+    "ptt-access-after-free-alias-stack": {},
+    "ptt-access-after-reclaim-org-heap": {
+        "depends-on": [ "ptt-access-after-free-org-heap" ]
+    },
+
     "cpi-modify-func-pointer": {
         "comment": "force revision on function pointers"
     },
