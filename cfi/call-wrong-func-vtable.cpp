@@ -5,10 +5,7 @@
 class Fake
 {
 public:
-  virtual void virtual_func()
-  {
-    exit(0);
-  }
+  virtual void virtual_func() { exit(0); }
 };
 
 int main() {
