@@ -36,6 +36,9 @@
     "cfi-call-wrong-func-vtable": {
         "depends-on": [ "cfi-call-wrong-func-poly-vtable" ]
     },
+    "cfi-call-wrong-func-offset-vtable": {
+        "depends-on": [ "cfi-call-wrong-func-poly-vtable" ]
+    },
     "cfi-call-wrong-num-arg-func": {},
     "cfi-call-wrong-num-arg-vtable": {
         "depends-on":[ "cfi-call-wrong-func-vtable" ]
