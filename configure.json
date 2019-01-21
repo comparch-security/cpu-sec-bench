@@ -104,5 +104,6 @@
     "cfi-return-to-instruction-in-stack": {
         "depends-on": [ "cfi-return-to-func" ],
         "results": { "16": "expected excption on the illegal call." }
-    }
+    },
+    "cfi-return-to-libc": {}
 }
