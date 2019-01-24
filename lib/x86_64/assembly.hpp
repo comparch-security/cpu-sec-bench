@@ -148,3 +148,5 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
 }
 
 extern void replace_got_func(void **org, void **fake);
+
+#define XOR_RDI_RDI asm("xor %rdi,%rdi")

@@ -1,13 +1,9 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
 
-#include <iostream>
-using namespace std;
-
-
 void FORCE_NOINLINE helper()
 {
-	asm("xor %rdi,%rdi");
+	XOR_RDI_RDI; 
 	MOD_RET_DAT(exit);
 }
 
