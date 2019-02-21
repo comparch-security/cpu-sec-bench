@@ -100,6 +100,9 @@
     "cfi-return-to-func": {
         "depends-on": ["cfi-return-to-non-call-site" ]
     },
+    "cfi-return-to-libc": {
+        "depends-on": [ "cfi-return-to-func" ]
+    },
     "cfi-return-without-call": {},
     "cfi-return-to-mid-instruction": {
         "depends-on": ["cfi-return-to-non-call-site",
