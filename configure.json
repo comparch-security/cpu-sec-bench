@@ -84,6 +84,9 @@
     "cfi-return-to-func": {
         "depends-on": ["cfi-return-to-non-call-site" ]
     },
+    "cfi-return-to-libc": {
+        "depends-on": [ "cfi-return-to-func" ]
+    },
     "cfi-return-without-call": {},
     "cfi-return-to-mid-instruction": {
         "depends-on": ["cfi-return-to-non-call-site",
@@ -104,6 +107,5 @@
     "cfi-return-to-instruction-in-stack": {
         "depends-on": [ "cfi-return-to-func" ],
         "results": { "16": "expected excption on the illegal call." }
-    },
-    "cfi-return-to-libc": {}
+    }
 }

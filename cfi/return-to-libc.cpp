@@ -3,13 +3,14 @@
 
 void FORCE_NOINLINE helper()
 {
-	XOR_RDI_RDI; 
-	MOD_RET_DAT(exit);
+  unsigned long long m = 0;
+  PASS_INT_ARG(0, m);
+  MOD_RET_DAT(exit);
 }
 
 int main()
 {
-	asm_stack_test();
-	helper();
-	return 3;
+  asm_stack_test();
+  helper();
+  return 3;
 }
