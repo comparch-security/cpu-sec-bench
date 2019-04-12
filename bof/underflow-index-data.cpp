@@ -1,6 +1,6 @@
 #include "include/bof.hpp"
 
-charBuffer buffer={"uuuuuuu","ddddddd","ooooooo"};
+charBuffer buffer;
 
 int main()
 {
@@ -8,3 +8,4 @@ int main()
   update_index(buffer, -9, -1);
   return check(buffer.underflow);
 }
+

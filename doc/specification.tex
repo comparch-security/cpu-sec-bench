@@ -32,7 +32,7 @@
 
 \maketitle
 
-\copyright 2017-2018, Institute of Information Engineering, CAS, all right reserved.
+\copyright 2017-2019, Institute of Information Engineering, CAS, all right reserved.
 
 \tableofcontents
 \newpage
@@ -48,7 +48,6 @@
 
 \item Overflow BOF
  \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item[\ref{test-overflow-index-bss}] 		\texttt{overflow-index-bss}
     \item[\ref{test-overflow-index-data}]       \texttt{overflow-index-data}
     \item[\ref{test-overflow-index-heap}]       \texttt{overflow-index-heap}
     \item[\ref{test-overflow-index-stack}] 	    \texttt{overflow-index-stack}
@@ -59,7 +58,6 @@
 
 \item Underflow BOF
  \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item[\ref{test-underflow-index-bss}] 		\texttt{underflow-index-bss}
     \item[\ref{test-underflow-index-data}]      \texttt{underflow-index-data}
     \item[\ref{test-underflow-index-heap}]      \texttt{underflow-index-heap}
     \item[\ref{test-underflow-index-stack}] 	\texttt{underflow-index-stack}
@@ -72,28 +70,20 @@
 
 \newpage
 
-\subsection{\texttt{overflow-index-bss}}\label{test-overflow-index-bss}
-\subsubsection{Description}
-Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{bss}.\subsubsection{Vulnerability}
-Causing \textbf{bss} overflow,resulting in data loss and being exploited by attackers.
-\subsubsection{Test result}
-\begin{tabular}{cl}
-  \toprule
-  \emph{return}  & \emph{description} \\
-  \midrule
-  0              & \textbf{vulnerable} \\
-  other          & might be safe \\
-  \bottomrule
-\end{tabular}
-\subsubsection{Known issues}
-
-\newpage
-
 \subsection{\texttt{overflow-index-data}}\label{test-overflow-index-data}
+
 \subsubsection{Description}
-Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{data}.\subsubsection{Vulnerability}
-Causing \textbf{data} overflow,resulting in data loss and being exploited by attackers.
+
+\textbf{Overflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected array length,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{data} section.
+
+\subsubsection{Vulnerability}
+Generic data overwrite and loss.
+
 \subsubsection{Test result}
+
 \begin{tabular}{cl}
   \toprule
   \emph{return}  & \emph{description} \\
@@ -102,8 +92,10 @@ Causing \textbf{data} overflow,resulting in data loss and being exploited by att
   other          & might be safe \\
   \bottomrule
 \end{tabular}
+
 \subsubsection{Known issues}
 
+None.
 
 \newpage
 

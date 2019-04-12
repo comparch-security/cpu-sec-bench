@@ -1,6 +1,6 @@
 #include "include/bof.hpp"
 
-charBuffer buffer = {"uuuuuuu","ddddddd","ooooooo"};
+charBuffer buffer;
 
 int main()
 {
