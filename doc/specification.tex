@@ -25,10 +25,10 @@
 
 \title{\textbf{A Security Benchmark Suite Exploring the Existing Vulnerabilities of a Computer System} \\ \large{Version: 0.1.0}}
 
-\author{Wei Song, Jiameng Ying and Boya Li\\
+\author{Jiameng Ying, Boya Li, Sihao Shen, and Wei Song$^*$\\
 \small{Institute of Information Engineeringat at the Chinese Academy of Sciences}\\
 \small{89 Minzhuang Road, Haidian, Beijing 100093, P. R. China}\\
-\small{\url{{songwei, yingjiameng, liboya}@iie.ac.cn}}}
+\small{$^*$\url{songwei@iie.ac.cn}}}
 
 \maketitle
 
@@ -43,6 +43,277 @@
 
 \chapter{Description of Test Cases}
 
+\section{Buffer Overflow (BOF)}
+\begin{itemize}[noitemsep]
+
+\item Overflow BOF
+ \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
+    \item[\ref{test-overflow-index-bss}] 		\texttt{overflow-index-bss}
+    \item[\ref{test-overflow-index-data}]       \texttt{overflow-index-data}
+    \item[\ref{test-overflow-index-heap}]       \texttt{overflow-index-heap}
+    \item[\ref{test-overflow-index-stack}] 	    \texttt{overflow-index-stack}
+    \item[\ref{test-overflow-ptr-bss}] 			\texttt{overflow-ptr-bss}   
+    \item[\ref{test-overflow-ptr-heap}] 		\texttt{overflow-ptr-heap}     
+    \item[\ref{test-overflow-index-stack}] 		\texttt{overflow-index-stack}       
+ \end{itemize}
+
+\item Underflow BOF
+ \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
+    \item[\ref{test-underflow-index-bss}] 		\texttt{underflow-index-bss}
+    \item[\ref{test-underflow-index-data}]      \texttt{underflow-index-data}
+    \item[\ref{test-underflow-index-heap}]      \texttt{underflow-index-heap}
+    \item[\ref{test-underflow-index-stack}] 	\texttt{underflow-index-stack}
+    \item[\ref{test-underflow-ptr-bss}] 	    \texttt{underflow-ptr-bss}   
+    \item[\ref{test-underflow-ptr-heap}] 		\texttt{underflow-ptr-heap}     
+    \item[\ref{test-underflow-index-stack}]     \texttt{underflow-index-stack}       
+ \end{itemize}
+
+\end{itemize}
+
+\newpage
+
+\subsection{\texttt{overflow-index-bss}}\label{test-overflow-index-bss}
+\subsubsection{Description}
+Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{bss}.\subsubsection{Vulnerability}
+Causing \textbf{bss} overflow,resulting in data loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+
+\newpage
+
+\subsection{\texttt{overflow-index-data}}\label{test-overflow-index-data}
+\subsubsection{Description}
+Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{data}.\subsubsection{Vulnerability}
+Causing \textbf{data} overflow,resulting in data loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+
+
+\newpage
+
+\subsection{\texttt{overflow-index-heap}}\label{test-overflow-index-heap}
+\subsubsection{Description}
+Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{heap}.\subsubsection{Vulnerability}
+Causing \textbf{heap} overflow,resulting in data loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+\newpage
+
+\subsection{\texttt{overflow-index-stack}}\label{test-overflow-index-stack}
+\subsubsection{Description}
+Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{stack}.
+\subsubsection{Vulnerability}
+Causing \textbf{stack} overflow,resulting in stack loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+\newpage
+
+\subsection{\texttt{overflow-ptr-bss}}\label{test-overflow-ptr-bss}
+\subsubsection{Description}
+Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{bss}.
+
+\subsubsection{Vulnerability}
+Causing \textbf{bss} overflow,resulting in data loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+\newpage
+
+
+\subsection{\texttt{overflow-ptr-heap}}\label{test-overflow-ptr-heap}
+\subsubsection{Description}
+Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{heap}.
+\subsubsection{Vulnerability}
+Causing \textbf{heap} overflow,resulting in data loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+\newpage
+
+
+\subsection{\texttt{overflow-ptr-stack}}\label{test-overflow-ptr-stack}
+\subsubsection{Description}
+Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{stack}.\subsubsection{Vulnerability}
+Causing \textbf{data} overflow,resulting in stack loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+\newpage
+
+\subsection{\texttt{underflow-index-bss}}\label{test-underflow-index-bss}
+\subsubsection{Description}
+Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{bss}.\subsubsection{Vulnerability}
+Causing \textbf{bss} underflow,resulting in data loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+
+\newpage
+
+\subsection{\texttt{underflow-index-data}}\label{test-underflow-index-data}
+\subsubsection{Description}
+Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{data}.\subsubsection{Vulnerability}
+Causing \textbf{data} underflow,resulting in data loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+
+
+\newpage
+
+\subsection{\texttt{underflow-index-heap}}\label{test-underflow-index-heap}
+\subsubsection{Description}
+Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{heap}.\subsubsection{Vulnerability}
+Causing \textbf{heap} underflow,resulting in data loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+\newpage
+
+\subsection{\texttt{underflow-index-stack}}\label{test-underflow-index-stack}
+\subsubsection{Description}
+Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{stack}.
+\subsubsection{Vulnerability}
+Causing \textbf{stack} underflow,resulting in stack loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+\newpage
+
+\subsection{\texttt{underflow-ptr-bss}}\label{test-underflow-ptr-bss}
+\subsubsection{Description}
+Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{bss}.
+
+\subsubsection{Vulnerability}
+Causing \textbf{bss} underflow,resulting in data loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+\newpage
+
+
+\subsection{\texttt{underflow-ptr-heap}}\label{test-underflow-ptr-heap}
+\subsubsection{Description}
+Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{heap}.
+\subsubsection{Vulnerability}
+Causing \textbf{heap} underflow,resulting in data loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+\newpage
+
+
+\subsection{\texttt{underflow-ptr-stack}}\label{test-underflow-ptr-stack}
+\subsubsection{Description}
+Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{stack}.\subsubsection{Vulnerability}
+Causing \textbf{stack} underflow,resulting in stack loss and being exploited by attackers.
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+\subsubsection{Known issues}
+\newpage
+
 \section{Control Flow Integrity (CFI)}
 
 \begin{itemize}[noitemsep]
@@ -50,34 +321,139 @@
   \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
   \item Call
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
+    \item[\ref{test-call-instruction-in-data}]        \texttt{call-instruction-in-data}
+    \item[\ref{test-call-instruction-in-heap}]        \texttt{call-instruction-in-heap}
+    \item[\ref{test-call-instruction-in-rodata}]      \texttt{call-instruction-in-rodata}
+    \item[\ref{test-call-instruction-in-stack}]       \texttt{call-instruction-in-stack}
     \item[\ref{test-call-mid-func}]                   \texttt{call-mid-func}
+    \item[\ref{test-call-mid-instruction}]            \texttt{call-mid-instruction}
+    \item[\ref{test-call-wrong-func-offset-vtable}]   \texttt{call-wrong-func-offset-vtable}
+    \item[\ref{test-call-wrong-func-poly-vtable}]     \texttt{call-wrong-func-poly-vtable}
+    \item[\ref{test-call-wrong-func-vtable}]          \texttt{call-wrong-func-vtable}
+    \item[\ref{test-call-wrong-func-within-static-analysis}]          \texttt{call-wrong-func-within-static-analysis}
+    \item[\ref{test-call-wrong-func}]         \texttt{call-wrong-func}
     \item[\ref{test-call-wrong-num-arg-func}]         \texttt{call-wrong-num-arg-func}
-    \item[\ref{test-call-wrong-type-arg-func}]        \texttt{call-wrong-type-arg-func}
-    \item[\ref{test-call-wrong-num-arg-vtable}]       \texttt{call-wrong-num-arg-vtable}
-    \item[\ref{test-call-wrong-type-arg-vtable}]      \texttt{call-wrong-type-arg-vtable}
-    \item[\ref{test-call-wrong-num-func-vtable}]      \texttt{call-wrong-num-func-vtable}
-    \item[\ref{test-call-wrong-vtable-heap}]          \texttt{call-wrong-vtable-heap}
     \item[\ref{test-call-wrong-num-arg-vtable-heap}]  \texttt{call-wrong-num-arg-vtable-heap}
-    \item[\ref{test-call-wrong-type-arg-vtable-heap}] \texttt{call-wrong-type-arg-func-vtable-heap}
+    \item[\ref{test-call-wrong-num-arg-vtable}]       \texttt{call-wrong-num-arg-vtable}
     \item[\ref{test-call-wrong-num-func-vtable-heap}] \texttt{call-wrong-num-func-vtable-heap}
+    \item[\ref{test-call-wrong-num-func-vtable}]      \texttt{call-wrong-num-func-vtable}
+    \item[\ref{test-call-wrong-type-arg-dp2fp-func-data}]      \texttt{call-wrong-type-arg-dp2fp-func-data}
+    \item[\ref{test-call-wrong-type-arg-dp2fp-func-heap}]      \texttt{call-call-wrong-type-arg-dp2fp-func-heap}
+    \item[\ref{test-call-wrong-type-arg-dp2fp-func-rodata}]    \texttt{call-wrong-type-arg-dp2fp-func-rodata}
+    \item[\ref{test-call-wrong-type-arg-dp2fp-func-stack}]     \texttt{call-wrong-type-arg-dp2fp-func-stack}
+    \item[\ref{test-call-wrong-type-arg-fp2dp-func}]      	   \texttt{call-wrong-type-arg-fp2dp-func}
+    \item[\ref{test-call-wrong-type-arg-int2double-func}]      \texttt{call-wrong-type-arg-int2double-func}
+    \item[\ref{test-call-wrong-type-arg-vtable-heap}] \texttt{call-wrong-type-arg-func-vtable-heap}
+    \item[\ref{test-call-wrong-type-arg-vtable}]      \texttt{call-wrong-type-arg-vtable}
+    \item[\ref{test-call-wrong-type-arg-func}]        \texttt{call-wrong-type-arg-func}
+    \item[\ref{test-call-wrong-vtable-heap}]          \texttt{call-wrong-vtable-heap}
     \end{itemize}
   \item Jump
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item[\ref{test-jump-mid-func}] \texttt{jump-mid-func}
+    \item[\ref{test-jump-instruction-in-bss}] 		\texttt{jump-instruction-in-bss}
+    \item[\ref{test-jump-instruction-in-heap}] 		\texttt{jump-instruction-in-heap}
+    \item[\ref{test-jump-instruction-in-rodata}]    \texttt{jump-instruction-in-rodata}
+    \item[\ref{test-jump-instruction-in-stack}]     \texttt{jump-instruction-in-stack}
+    \item[\ref{test-jump-mid-func}] 			    \texttt{jump-mid-func}
+    \item[\ref{test-jump-mid-instruction}] 			\texttt{jump-mid-instruction}        
     \end{itemize}
   \end{itemize}
 \item Backward-edge CFI
   \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
   \item Return
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item[\ref{test-return-non-call-site}] \texttt{return-non-call-site}
-    \item[\ref{test-return-to-func}]       \texttt{return-to-func}
-    \item[\ref{test-return-without-call}]  \texttt{return-to-without-call}
+    \item[\ref{test-return-to-func}]                  \texttt{return-to-func}
+    \item[\ref{test-return-to-instruction-in-data}]   \texttt{return-to-instruction-in-data}
+    \item[\ref{test-return-to-instruction-in-heap}]   \texttt{return-to-instruction-in-heap}
+    \item[\ref{test-return-to-instruction-in-rodata}] \texttt{return-to-instruction-in-rodata}
+    \item[\ref{test-return-to-instruction-in-stack}]  \texttt{return-to-instruction-in-stack}
+    \item[\ref{test-return-to-libc}]				  \texttt{return-to-libc}
+    \item[\ref{test-return-to-mid-instruction}]		  \texttt{return-to-mid-instruction}
+    \item[\ref{test-return-to-non-call-site}] 		  \texttt{return-to-non-call-site}
+    \item[\ref{test-return-to-wrong-call-site}] 	  \texttt{return-to-wrong-call-site}    
+    \item[\ref{test-return-without-call}] 		      \texttt{return-to-without-call}
     \end{itemize}
   \end{itemize}
 \end{itemize}
 
 \newpage
+\subsection{\texttt{call-instruction-in-data}}\label{test-call-instruction-in-data}
+\subsubsection{Description}
+Illegally call an instruction constructed in \textbf{data}.
+\subsubsection{Vulnerability}
+It’s executable on writable area (data)
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\newpage
+
+\subsection{\texttt{call-instruction-in-heap}}\label{test-call-instruction-in-heap}
+\subsubsection{Description}
+Illegally call an instruction constructed in \textbf{heap}.
+\subsubsection{Vulnerability}
+It’s executable on writable area (\textbf{heap})
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\newpage
+
+\subsection{\texttt{call-instruction-in-rodata}}\label{test-call-instruction-in-rodata}
+\subsubsection{Description}
+Illegally call an instruction constructed in \textbf{rodata}.
+\subsubsection{Vulnerability}
+It’s executable on writable area (\textbf{rodata})
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+\newpage
+
+\subsection{\texttt{call-instruction-in-stack}}\label{test-call-instruction-in-stack}
+\subsubsection{Description}
+Illegally call an instruction constructed in \textbf{stack}.
+\subsubsection{Vulnerability}
+It’s executable on writable area (\textbf{stack})
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\newpage
+
+
 \subsection{\texttt{call-mid-func}}\label{test-call-mid-func}
 
 \subsubsection{Description}
@@ -99,6 +475,136 @@ Illegal callee site.
 \subsubsection{Known issues}
 
 None.
+
+\newpage
+\subsection{\texttt{call-mid-instruction}}\label{test-call-mid-instruction}
+
+\subsubsection{Description}
+Illegally call a fake instruction located at the middle of a function from \texttt{main()}.
+
+\subsubsection{Vulnerability}
+Illegal callee site.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\newpage
+\subsection{\texttt{call-wrong-func-offset-vtable}}\label{test-call-wrong-func-offset-vtable}
+
+\subsubsection{Description}
+Illegally call the wrong virtual function by modifying the offset of the Vtable pointer.
+
+\subsubsection{Vulnerability}
+Modify the offset of the Vatble pointer and call the wrong virtual function.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+\newpage
+
+
+\subsection{\texttt{call-wrong-func-poly-vtable}}\label{test-call-wrong-func-poly-vtable}
+
+\subsubsection{Description}
+Illegally call the wrong virtual function by modifying the poly Vtable pointer.
+
+\subsubsection{Vulnerability}
+Modify the Vtable pointer and call the wrong virtual function.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+None.
+
+\newpage
+
+\subsection{\texttt{call-wrong-func-vtable}}\label{test-call-wrong-func-vtable}
+
+\subsubsection{Description}
+Illegally call the wrong virtual function by modifying the Vtable pointer.
+\subsubsection{Vulnerability}
+Modify the pointer and call the wrong function.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\newpage
+
+\subsection{\texttt{call-wrong-func-within-static-analysis}}\label{test-call-wrong-func-within-static-analysis}
+
+\subsubsection{Description}
+Illegally call the wrong function.
+\subsubsection{Vulnerability}
+Modify the pointer and call the wrong function.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{call-wrong-func}}\label{test-call-wrong-func}
+
+\subsubsection{Description}
+Illegally call the wrong function.
+\subsubsection{Vulnerability}
+Illegally modify the pointer and call the wrong function. 
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
 
 \newpage
 \subsection{\texttt{call-wrong-num-arg-func}}\label{test-call-wrong-num-arg-func}
@@ -123,13 +629,15 @@ Break the function calling convention.
 None.
 
 \newpage
-\subsection{\texttt{call-wrong-type-arg-func}}\label{test-call-wrong-type-arg-func}
+
+\subsection{\texttt{call-wrong-num-arg-vtable-heap}}\label{test-call-wrong-num-arg-vtable-heap}
 
 \subsubsection{Description}
-Illegally call a function with wrong types of arguements.
+Replace the Vtable pointer with a fake Vtable constructed in heap and
+illegally call a virtual function with mismatched number of arguements.
 
 \subsubsection{Vulnerability}
-Break the function calling convention.
+Break the function calling convention, the data integrity of the Vtable pointer and the Vtable itself.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -142,7 +650,9 @@ Break the function calling convention.
 \end{tabular}
 
 \subsubsection{Known issues}
-None.
+
+\textbf{x86\_64}: Currently only works with object allocated on heap.
+
 
 \newpage
 \subsection{\texttt{call-wrong-num-arg-vtable}}\label{test-call-wrong-num-arg-vtable}
@@ -169,13 +679,14 @@ Break the function calling convention and the data integrity of the Vtable point
 
 
 \newpage
-\subsection{\texttt{call-wrong-type-arg-vtable}}\label{test-call-wrong-type-arg-vtable}
+\subsection{\texttt{call-wrong-num-func-vtable-heap}}\label{test-call-wrong-num-func-vtable-heap}
 
 \subsubsection{Description}
-Illegally call a function with wrong types of arguements by modifying the VTable pointer.
+Replace the Vtable pointer with a fake Vtable constructed in heap with different number of virtual functions and
+illegally call a fake virtual function.
 
 \subsubsection{Vulnerability}
-Break the function calling convention and the data integrity of the Vtable pointer.
+Break the data integrity of the Vtable pointer and the Vtable itself.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -188,6 +699,7 @@ Break the function calling convention and the data integrity of the Vtable point
 \end{tabular}
 
 \subsubsection{Known issues}
+
 \textbf{x86\_64}: Currently only works with object allocated on heap.
 
 \newpage
@@ -214,13 +726,13 @@ Break the data integrity of the Vtable pointer.
 \textbf{x86\_64}: Currently only works with object allocated on heap.
 
 \newpage
-\subsection{\texttt{call-wrong-vtable-heap}}\label{test-call-wrong-vtable-heap}
+\subsection{\texttt{call-wrong-type-arg-dp2fp-func-data}}\label{test-call-wrong-type-arg-dp2fp-func-data}
 
 \subsubsection{Description}
-Replace the Vtable pointer with a fake Vtable constructed in heap.
+Illegally call a function with wrong types of arguments constructed in \textbf{data}.
 
 \subsubsection{Vulnerability}
-Break the data integrity of the Vtable pointer and the Vtable itself.
+Break the function calling convention and non-execution on writable area (\textbf{data}).
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -234,18 +746,80 @@ Break the data integrity of the Vtable pointer and the Vtable itself.
 
 \subsubsection{Known issues}
 
-\textbf{x86\_64}: Currently only works with object allocated on heap.
+\newpage
+\subsection{\texttt{call-wrong-type-arg-dp2fp-func-heap}}\label{test-call-wrong-type-arg-dp2fp-func-heap}
+
+\subsubsection{Description}
+Illegally call a function with wrong types of arguments constructed in \textbf{heap}.
+
+\subsubsection{Vulnerability}
+Break the function calling convention and non-execution on writable area (\textbf{heap}).
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+\newpage
+\subsection{\texttt{call-wrong-type-arg-dp2fp-func-rodata}}\label{test-call-wrong-type-arg-dp2fp-func-rodata}
+
+\subsubsection{Description}
+Illegally call a function with wrong types of arguments constructed in \textbf{rodata}.
+
+\subsubsection{Vulnerability}
+Break the function calling convention and it’s excutable on writable area (\textbf{rodata}).
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+\newpage
+
+\subsection{\texttt{call-wrong-type-arg-dp2fp-func-stack}}\label{test-call-wrong-type-arg-dp2fp-func-stack}
+
+\subsubsection{Description}
+Illegally call a function with wrong types of arguments constructed in \textbf{stack}.
+
+\subsubsection{Vulnerability}
+Break the function calling convention and non-execution on writable area (\textbf{stack}).
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
 
 
 \newpage
-\subsection{\texttt{call-wrong-num-arg-vtable-heap}}\label{test-call-wrong-num-arg-vtable-heap}
+
+\subsection{\texttt{call-wrong-type-arg-fp2dp-func}}\label{test-call-wrong-type-arg-fp2dp-func}
 
 \subsubsection{Description}
-Replace the Vtable pointer with a fake Vtable constructed in heap and
-illegally call a virtual function with mismatched number of arguements.
+Illegally call a function with wrong types of argument (dp)  expected to be fp.
 
 \subsubsection{Vulnerability}
-Break the function calling convention, the data integrity of the Vtable pointer and the Vtable itself.
+Break the function calling convention.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -259,8 +833,26 @@ Break the function calling convention, the data integrity of the Vtable pointer 
 
 \subsubsection{Known issues}
 
-\textbf{x86\_64}: Currently only works with object allocated on heap.
+\newpage
+\subsection{\texttt{call-wrong-type-arg-int2double-func}}\label{test-call-wrong-type-arg-int2double-func}
 
+\subsubsection{Description}
+Illegally call a function with wrong types of argument (int) expected to be double.
+
+\subsubsection{Vulnerability}
+Break the function calling convention.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
 
 \newpage
 \subsection{\texttt{call-wrong-type-arg-vtable-heap}}\label{test-call-wrong-type-arg-vtable-heap}
@@ -286,11 +878,56 @@ Break the function calling convention, the data integrity of the Vtable pointer 
 \textbf{x86\_64}: Currently only works with object allocated on heap.
 
 \newpage
-\subsection{\texttt{call-wrong-num-func-vtable-heap}}\label{test-call-wrong-num-func-vtable-heap}
+\subsection{\texttt{call-wrong-type-arg-vtable}}\label{test-call-wrong-type-arg-vtable}
 
 \subsubsection{Description}
-Replace the Vtable pointer with a fake Vtable constructed in heap with different number of virtual functions and
-illegally call a fake virtual function.
+Illegally call a function with wrong types of arguements by modifying the VTable pointer.
+
+\subsubsection{Vulnerability}
+Break the function calling convention and the data integrity of the Vtable pointer.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+\textbf{x86\_64}: Currently only works with object allocated on heap.
+
+\newpage
+
+\subsection{\texttt{call-wrong-type-arg-func}}\label{test-call-wrong-type-arg-func}
+
+\subsubsection{Description}
+Illegally call a function with wrong types of arguements.
+
+\subsubsection{Vulnerability}
+Break the function calling convention.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+None.
+
+\newpage
+
+\subsection{\texttt{call-wrong-vtable-heap}}\label{test-call-wrong-vtable-heap}
+
+\subsubsection{Description}
+Replace the Vtable pointer with a fake Vtable constructed in heap.
 
 \subsubsection{Vulnerability}
 Break the data integrity of the Vtable pointer and the Vtable itself.
@@ -308,6 +945,91 @@ Break the data integrity of the Vtable pointer and the Vtable itself.
 \subsubsection{Known issues}
 
 \textbf{x86\_64}: Currently only works with object allocated on heap.
+\newpage
+\subsection{\texttt{jump-instruction-in-bss}}\label{test-jump-instruction-in-bss}
+
+\subsubsection{Description}
+Illegally jump from a function to an instruction constructed in \textbf{bss}.
+
+\subsubsection{Vulnerability}
+Break the execution compartment complied by most C/C++ programs and non-execution on writable area (\textbf{bss}).
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+
+\newpage
+\subsection{\texttt{jump-instruction-in-heap}}\label{test-jump-instruction-in-heap}
+
+\subsubsection{Description}
+Illegally jump from a function to an instruction constructed in \textbf{heap}.
+
+\subsubsection{Vulnerability}
+Break the execution compartment complied by most C/C++ programs and non-execution on writable area (\textbf{heap}).
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+
+\newpage
+\subsection{\texttt{jump-instruction-in-rodata}}\label{test-jump-instruction-in-rodata}
+
+\subsubsection{Description}
+Illegally jump from a function to an instruction constructed in \textbf{rodata}.
+
+\subsubsection{Vulnerability}
+Break the execution compartment complied by most C/C++ programs and it’s excutable on writable area (\textbf{rodata}).
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\newpage
+\subsection{\texttt{jump-instruction-in-stack}}\label{test-jump-instruction-in-stack}
+
+\subsubsection{Description}
+Illegally jump from a function to an instruction constructed in \textbf{stack}.
+
+\subsubsection{Vulnerability}
+Break the execution compartment complied by most C/C++ programs and non-execution on writable area (\textbf{stack}).
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
 
 \newpage
 \subsection{\texttt{jump-mid-func}}\label{test-jump-mid-func}
@@ -330,16 +1052,16 @@ Break the execution compartment complied by most C/C++ programs.
   
 \subsubsection{Known issues}
 
-None.
+
 
 \newpage
-\subsection{\texttt{return-non-call-site}}\label{test-return-non-call-site}
+\subsection{\texttt{jump-mid-instruction}}\label{test-jump-mid-instruction}
 
 \subsubsection{Description}
-Illegally modify the return address stored on the stack and then return to an none call-site position.
+Illegally jump from a function to the middle of an instruction.
 
 \subsubsection{Vulnerability}
-Break the backward CFI and the integrity of the return address.
+Break the execution compartment complied by most C/C++ programs.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -352,9 +1074,6 @@ Break the backward CFI and the integrity of the return address.
 \end{tabular}
   
 \subsubsection{Known issues}
-
-\textbf{x86\_64}: The \texttt{rbp} register might be (with \texttt{-g}) or not be (with \texttt{-O2}) pushed to the stack.
-The return address is modified by embedded assembly using \texttt{rsp} as the base register. See \texttt{STACK\_STRUCT} in the make file.
 
 \newpage
 \subsection{\texttt{return-to-func}}\label{test-return-to-func}
@@ -378,6 +1097,178 @@ Break the backward CFI and the integrity of the return address.
 \subsubsection{Known issues}
 
 \newpage
+\subsection{\texttt{return-to-instruction-in-data}}\label{test-return-to-instruction-in-data}
+
+\subsubsection{Description}
+Illegally modify the return address stored on the stack and then return to  an instruction constructed in \textbf{data}.
+
+\subsubsection{Vulnerability}
+Break the backward CFI and the integrity of the return address and non-execution on writable area (\textbf{data}).
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\newpage
+\subsection{\texttt{return-to-instruction-in-heap}}\label{test-return-to-instruction-in-heap}
+
+\subsubsection{Description}
+Illegally modify the return address stored on the stack and then return to  an instruction constructed in \textbf{heap}.
+
+\subsubsection{Vulnerability}
+Break the backward CFI and the integrity of the return address and non-execution on writable area (\textbf{heap}).
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\newpage
+\subsection{\texttt{return-to-instruction-in-rodata}}\label{test-return-to-instruction-in-rodata}
+
+\subsubsection{Description}
+Illegally modify the return address stored on the stack and then return to  an instruction constructed in \textbf{rodata}.
+
+\subsubsection{Vulnerability}
+Break the backward CFI and the integrity of the return address and it’s  executable on writable area (\textbf{rodata}).
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\newpage
+\subsection{\texttt{return-to-instruction-in-stack}}\label{test-return-to-instruction-in-stack}
+
+\subsubsection{Description}
+Illegally modify the return address stored on the stack and then return to  an instruction constructed in \textbf{stack}.
+
+\subsubsection{Vulnerability}
+Break the backward CFI and the integrity of the return address and non-execution on writable area (\textbf{stack}).
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+\newpage
+\subsection{\texttt{return-to-libc}}\label{test-return-to-libc}
+
+\subsubsection{Description}
+Illegally modify the return address stored on the stack and then return to a libc.
+
+\subsubsection{Vulnerability}
+Break the backward CFI and the integrity of the return address.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\newpage
+\subsection{\texttt{return-to-mid-instruction}}\label{test-return-to-mid-instruction}
+
+\subsubsection{Description}
+Illegally modify the return address stored on the stack and then return to the middle of an instruction.
+
+\subsubsection{Vulnerability}
+Break the backward CFI and the integrity of the return address.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\newpage
+\subsection{\texttt{return-to-non-call-site}}\label{test-return-to-non-call-site}
+
+\subsubsection{Description}
+Illegally modify the return address stored on the stack and then return to an none call-site position.
+
+\subsubsection{Vulnerability}
+Break the backward CFI and the integrity of the return address.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+\textbf{x86\_64}: The \texttt{rbp} register might be (with \texttt{-g}) or not be (with \texttt{-O2}) pushed to the stack.
+The return address is modified by embedded assembly using \texttt{rsp} as the base register. See \texttt{STACK\_STRUCT} in the make file.
+
+\newpage
+\subsection{\texttt{return-to-wrong-call-site}}\label{test-return-to-wrong-call-site}
+
+\subsubsection{Description}
+Illegally modify the return address stored on the stack and then return to a wrong call-site position.
+
+\subsubsection{Vulnerability}
+Break the backward CFI and the integrity of the return address.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+  
+\subsubsection{Known issues}
+
+
+\newpage
+
 \subsection{\texttt{return-without-call}}\label{test-return-without-call}
 
 \subsubsection{Description}
@@ -413,3 +1304,4 @@ Currently the test works only with \texttt{-O2}.
 \end{itemize}
 
 \end{document}
+\grid
