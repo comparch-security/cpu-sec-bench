@@ -32,7 +32,7 @@
 
 \maketitle
 
-\copyright 2017-2019, Institute of Information Engineering, CAS, all right reserved.
+\copyright 2017-2019, Institute of Information Engineering, CAS, all rights reserved.
 
 \tableofcontents
 \newpage
@@ -46,36 +46,36 @@
 \section{Buffer Overflow (BOF)}
 \begin{itemize}[noitemsep]
 
-\item Overflow BOF
+\item Overflow
  \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item[\ref{test-overflow-index-data}]       \texttt{overflow-index-data}
-    \item[\ref{test-overflow-index-heap}]       \texttt{overflow-index-heap}
-    \item[\ref{test-overflow-index-stack}] 	    \texttt{overflow-index-stack}
-    \item[\ref{test-overflow-ptr-bss}] 			\texttt{overflow-ptr-bss}   
-    \item[\ref{test-overflow-ptr-heap}] 		\texttt{overflow-ptr-heap}     
-    \item[\ref{test-overflow-index-stack}] 		\texttt{overflow-index-stack}       
+    \item[\ref{test-overflow-write-index-data}]       \texttt{overflow-write-index-data}
+    \item[\ref{test-overflow-write-index-heap}]       \texttt{overflow-write-index-heap}
+    \item[\ref{test-overflow-write-index-stack}]      \texttt{overflow-write-index-stack}
+    \item[\ref{test-overflow-write-ptr-data}]         \texttt{overflow-write-ptr-data}
+    \item[\ref{test-overflow-write-ptr-heap}]         \texttt{overflow-write-ptr-heap}
+    \item[\ref{test-overflow-write-ptr-stack}]        \texttt{overflow-write-ptr-stack}
  \end{itemize}
 
-\item Underflow BOF
+\item Underflow
  \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item[\ref{test-underflow-index-data}]      \texttt{underflow-index-data}
-    \item[\ref{test-underflow-index-heap}]      \texttt{underflow-index-heap}
-    \item[\ref{test-underflow-index-stack}] 	\texttt{underflow-index-stack}
-    \item[\ref{test-underflow-ptr-bss}] 	    \texttt{underflow-ptr-bss}   
-    \item[\ref{test-underflow-ptr-heap}] 		\texttt{underflow-ptr-heap}     
-    \item[\ref{test-underflow-index-stack}]     \texttt{underflow-index-stack}       
+    \item[\ref{test-underflow-write-index-data}]      \texttt{underflow-write-index-data}
+    \item[\ref{test-underflow-write-index-heap}]      \texttt{underflow-write-index-heap}
+    \item[\ref{test-underflow-write-index-stack}]     \texttt{underflow-write-index-stack}
+    \item[\ref{test-underflow-write-ptr-data}]        \texttt{underflow-write-ptr-data}
+    \item[\ref{test-underflow-write-ptr-heap}]        \texttt{underflow-write-ptr-heap}
+    \item[\ref{test-underflow-write-ptr-stack}]       \texttt{underflow-write-ptr-stack}
  \end{itemize}
 
 \end{itemize}
 
 \newpage
 
-\subsection{\texttt{overflow-index-data}}\label{test-overflow-index-data}
+\subsection{\texttt{overflow-write-index-data}}\label{test-overflow-write-index-data}
 
 \subsubsection{Description}
 
 \textbf{Overflow} by illegally using the buffer \textbf{index}.
-The index exceeds the expected array length,
+The index exceeds the expected buffer length,
 leading to ilegal write accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{data} section.
 
@@ -99,45 +99,18 @@ None.
 
 \newpage
 
-\subsection{\texttt{overflow-index-heap}}\label{test-overflow-index-heap}
-\subsubsection{Description}
-Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{heap}.\subsubsection{Vulnerability}
-Causing \textbf{heap} overflow,resulting in data loss and being exploited by attackers.
-\subsubsection{Test result}
-\begin{tabular}{cl}
-  \toprule
-  \emph{return}  & \emph{description} \\
-  \midrule
-  0              & \textbf{vulnerable} \\
-  other          & might be safe \\
-  \bottomrule
-\end{tabular}
-\subsubsection{Known issues}
-\newpage
+\subsection{\texttt{overflow-write-index-heap}}\label{test-overflow-write-index-heap}
 
-\subsection{\texttt{overflow-index-stack}}\label{test-overflow-index-stack}
 \subsubsection{Description}
-Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{stack}.
-\subsubsection{Vulnerability}
-Causing \textbf{stack} overflow,resulting in stack loss and being exploited by attackers.
-\subsubsection{Test result}
-\begin{tabular}{cl}
-  \toprule
-  \emph{return}  & \emph{description} \\
-  \midrule
-  0              & \textbf{vulnerable} \\
-  other          & might be safe \\
-  \bottomrule
-\end{tabular}
-\subsubsection{Known issues}
-\newpage
 
-\subsection{\texttt{overflow-ptr-bss}}\label{test-overflow-ptr-bss}
-\subsubsection{Description}
-Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{bss}.
+\textbf{Overflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{heap} (dynamically allocated data).
 
 \subsubsection{Vulnerability}
-Causing \textbf{bss} overflow,resulting in data loss and being exploited by attackers.
+Generic data overwrite and loss.
+
 \subsubsection{Test result}
 \begin{tabular}{cl}
   \toprule
@@ -147,118 +120,25 @@ Causing \textbf{bss} overflow,resulting in data loss and being exploited by atta
   other          & might be safe \\
   \bottomrule
 \end{tabular}
+
 \subsubsection{Known issues}
-\newpage
 
-
-\subsection{\texttt{overflow-ptr-heap}}\label{test-overflow-ptr-heap}
-\subsubsection{Description}
-Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{heap}.
-\subsubsection{Vulnerability}
-Causing \textbf{heap} overflow,resulting in data loss and being exploited by attackers.
-\subsubsection{Test result}
-\begin{tabular}{cl}
-  \toprule
-  \emph{return}  & \emph{description} \\
-  \midrule
-  0              & \textbf{vulnerable} \\
-  other          & might be safe \\
-  \bottomrule
-\end{tabular}
-\subsubsection{Known issues}
-\newpage
-
-
-\subsection{\texttt{overflow-ptr-stack}}\label{test-overflow-ptr-stack}
-\subsubsection{Description}
-Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{stack}.\subsubsection{Vulnerability}
-Causing \textbf{data} overflow,resulting in stack loss and being exploited by attackers.
-\subsubsection{Test result}
-\begin{tabular}{cl}
-  \toprule
-  \emph{return}  & \emph{description} \\
-  \midrule
-  0              & \textbf{vulnerable} \\
-  other          & might be safe \\
-  \bottomrule
-\end{tabular}
-\subsubsection{Known issues}
-\newpage
-
-\subsection{\texttt{underflow-index-bss}}\label{test-underflow-index-bss}
-\subsubsection{Description}
-Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{bss}.\subsubsection{Vulnerability}
-Causing \textbf{bss} underflow,resulting in data loss and being exploited by attackers.
-\subsubsection{Test result}
-\begin{tabular}{cl}
-  \toprule
-  \emph{return}  & \emph{description} \\
-  \midrule
-  0              & \textbf{vulnerable} \\
-  other          & might be safe \\
-  \bottomrule
-\end{tabular}
-\subsubsection{Known issues}
+None.
 
 \newpage
 
-\subsection{\texttt{underflow-index-data}}\label{test-underflow-index-data}
+\subsection{\texttt{overflow-write-index-stack}}\label{test-overflow-write-index-stack}
+
 \subsubsection{Description}
-Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{data}.\subsubsection{Vulnerability}
-Causing \textbf{data} underflow,resulting in data loss and being exploited by attackers.
-\subsubsection{Test result}
-\begin{tabular}{cl}
-  \toprule
-  \emph{return}  & \emph{description} \\
-  \midrule
-  0              & \textbf{vulnerable} \\
-  other          & might be safe \\
-  \bottomrule
-\end{tabular}
-\subsubsection{Known issues}
 
-
-\newpage
-
-\subsection{\texttt{underflow-index-heap}}\label{test-underflow-index-heap}
-\subsubsection{Description}
-Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{heap}.\subsubsection{Vulnerability}
-Causing \textbf{heap} underflow,resulting in data loss and being exploited by attackers.
-\subsubsection{Test result}
-\begin{tabular}{cl}
-  \toprule
-  \emph{return}  & \emph{description} \\
-  \midrule
-  0              & \textbf{vulnerable} \\
-  other          & might be safe \\
-  \bottomrule
-\end{tabular}
-\subsubsection{Known issues}
-\newpage
-
-\subsection{\texttt{underflow-index-stack}}\label{test-underflow-index-stack}
-\subsubsection{Description}
-Illegally use of \textbf{indexs} , which exceed the expected array length,leading to coverage of other data in \textbf{stack}.
-\subsubsection{Vulnerability}
-Causing \textbf{stack} underflow,resulting in stack loss and being exploited by attackers.
-\subsubsection{Test result}
-\begin{tabular}{cl}
-  \toprule
-  \emph{return}  & \emph{description} \\
-  \midrule
-  0              & \textbf{vulnerable} \\
-  other          & might be safe \\
-  \bottomrule
-\end{tabular}
-\subsubsection{Known issues}
-\newpage
-
-\subsection{\texttt{underflow-ptr-bss}}\label{test-underflow-ptr-bss}
-\subsubsection{Description}
-Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{bss}.
+\textbf{Overflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{stack}.
 
 \subsubsection{Vulnerability}
-Causing \textbf{bss} underflow,resulting in data loss and being exploited by attackers.
+Generic data overwrite and loss.
+
 \subsubsection{Test result}
 \begin{tabular}{cl}
   \toprule
@@ -268,15 +148,141 @@ Causing \textbf{bss} underflow,resulting in data loss and being exploited by att
   other          & might be safe \\
   \bottomrule
 \end{tabular}
+
 \subsubsection{Known issues}
+
+None.
+
 \newpage
 
+\subsection{\texttt{overflow-write-ptr-data}}\label{test-overflow-write-ptr-data}
 
-\subsection{\texttt{underflow-ptr-heap}}\label{test-underflow-ptr-heap}
 \subsubsection{Description}
-Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{heap}.
+
+\textbf{Overflow} by illegally using a buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{data} section.
+
 \subsubsection{Vulnerability}
-Causing \textbf{heap} underflow,resulting in data loss and being exploited by attackers.
+Generic data overwrite and loss.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{overflow-write-ptr-heap}}\label{test-overflow-write-ptr-heap}
+
+\subsubsection{Description}
+
+\textbf{Overflow} by illegally using a buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{heap} (dynamically allocated data).
+
+\subsubsection{Vulnerability}
+Generic data overwrite and loss.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{overflow-write-ptr-stack}}\label{test-overflow-write-ptr-stack}
+
+\subsubsection{Description}
+
+\textbf{Overflow} by illegally using a buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{stack}.
+
+\subsubsection{Vulnerability}
+Generic data overwrite and loss.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-write-index-data}}\label{test-underflow-write-index-data}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{data} section.
+
+\subsubsection{Vulnerability}
+Generic data overwrite and loss.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-write-index-heap}}\label{test-underflow-write-index-heap}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{heap} (dynamically allocated data).
+
+\subsubsection{Vulnerability}
+Generic data overwrite and loss.
+
 \subsubsection{Test result}
 \begin{tabular}{cl}
   \toprule
@@ -286,15 +292,85 @@ Causing \textbf{heap} underflow,resulting in data loss and being exploited by at
   other          & might be safe \\
   \bottomrule
 \end{tabular}
+
 \subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-write-index-stack}}\label{test-underflow-write-index-stack}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{stack}.
+
+\subsubsection{Vulnerability}
+Generic data overwrite and loss.
+
+\subsubsection{Test result}
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-write-ptr-data}}\label{test-underflow-write-ptr-data}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using a buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{data} section.
+
+\subsubsection{Vulnerability}
+Generic data overwrite and loss.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
 \newpage
 
 
-\subsection{\texttt{underflow-ptr-stack}}\label{test-underflow-ptr-stack}
+\subsection{\texttt{underflow-write-ptr-heap}}\label{test-underflow-write-ptr-heap}
+
 \subsubsection{Description}
-Illegally use of \textbf{ptrs} , which exceed the expected array length,leading to coverage of other data in \textbf{stack}.\subsubsection{Vulnerability}
-Causing \textbf{stack} underflow,resulting in stack loss and being exploited by attackers.
+
+\textbf{Underflow} by illegally using a buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{heap} (dynamically allocated data).
+
+\subsubsection{Vulnerability}
+Generic data overwrite and loss.
+
 \subsubsection{Test result}
+
 \begin{tabular}{cl}
   \toprule
   \emph{return}  & \emph{description} \\
@@ -303,7 +379,40 @@ Causing \textbf{stack} underflow,resulting in stack loss and being exploited by 
   other          & might be safe \\
   \bottomrule
 \end{tabular}
+
 \subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-write-ptr-stack}}\label{test-underflow-write-ptr-stack}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using a buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal write accesses to the data outside the buffer.
+The overwrite occurs in the \textbf{stack}.
+
+\subsubsection{Vulnerability}
+Generic data overwrite and loss.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
 \newpage
 
 \section{Control Flow Integrity (CFI)}
@@ -333,7 +442,7 @@ Causing \textbf{stack} underflow,resulting in stack loss and being exploited by 
     \item[\ref{test-call-wrong-type-arg-dp2fp-func-heap}]      \texttt{call-call-wrong-type-arg-dp2fp-func-heap}
     \item[\ref{test-call-wrong-type-arg-dp2fp-func-rodata}]    \texttt{call-wrong-type-arg-dp2fp-func-rodata}
     \item[\ref{test-call-wrong-type-arg-dp2fp-func-stack}]     \texttt{call-wrong-type-arg-dp2fp-func-stack}
-    \item[\ref{test-call-wrong-type-arg-fp2dp-func}]      	   \texttt{call-wrong-type-arg-fp2dp-func}
+    \item[\ref{test-call-wrong-type-arg-fp2dp-func}]           \texttt{call-wrong-type-arg-fp2dp-func}
     \item[\ref{test-call-wrong-type-arg-int2double-func}]      \texttt{call-wrong-type-arg-int2double-func}
     \item[\ref{test-call-wrong-type-arg-vtable-heap}] \texttt{call-wrong-type-arg-func-vtable-heap}
     \item[\ref{test-call-wrong-type-arg-vtable}]      \texttt{call-wrong-type-arg-vtable}
@@ -342,12 +451,12 @@ Causing \textbf{stack} underflow,resulting in stack loss and being exploited by 
     \end{itemize}
   \item Jump
     \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
-    \item[\ref{test-jump-instruction-in-bss}] 		\texttt{jump-instruction-in-bss}
-    \item[\ref{test-jump-instruction-in-heap}] 		\texttt{jump-instruction-in-heap}
+    \item[\ref{test-jump-instruction-in-bss}]       \texttt{jump-instruction-in-bss}
+    \item[\ref{test-jump-instruction-in-heap}]      \texttt{jump-instruction-in-heap}
     \item[\ref{test-jump-instruction-in-rodata}]    \texttt{jump-instruction-in-rodata}
     \item[\ref{test-jump-instruction-in-stack}]     \texttt{jump-instruction-in-stack}
-    \item[\ref{test-jump-mid-func}] 			    \texttt{jump-mid-func}
-    \item[\ref{test-jump-mid-instruction}] 			\texttt{jump-mid-instruction}        
+    \item[\ref{test-jump-mid-func}]                 \texttt{jump-mid-func}
+    \item[\ref{test-jump-mid-instruction}]          \texttt{jump-mid-instruction}
     \end{itemize}
   \end{itemize}
 \item Backward-edge CFI
@@ -359,11 +468,11 @@ Causing \textbf{stack} underflow,resulting in stack loss and being exploited by 
     \item[\ref{test-return-to-instruction-in-heap}]   \texttt{return-to-instruction-in-heap}
     \item[\ref{test-return-to-instruction-in-rodata}] \texttt{return-to-instruction-in-rodata}
     \item[\ref{test-return-to-instruction-in-stack}]  \texttt{return-to-instruction-in-stack}
-    \item[\ref{test-return-to-libc}]				  \texttt{return-to-libc}
-    \item[\ref{test-return-to-mid-instruction}]		  \texttt{return-to-mid-instruction}
-    \item[\ref{test-return-to-non-call-site}] 		  \texttt{return-to-non-call-site}
-    \item[\ref{test-return-to-wrong-call-site}] 	  \texttt{return-to-wrong-call-site}    
-    \item[\ref{test-return-without-call}] 		      \texttt{return-to-without-call}
+    \item[\ref{test-return-to-libc}]                  \texttt{return-to-libc}
+    \item[\ref{test-return-to-mid-instruction}]       \texttt{return-to-mid-instruction}
+    \item[\ref{test-return-to-non-call-site}]         \texttt{return-to-non-call-site}
+    \item[\ref{test-return-to-wrong-call-site}]       \texttt{return-to-wrong-call-site}
+    \item[\ref{test-return-without-call}]             \texttt{return-to-without-call}
     \end{itemize}
   \end{itemize}
 \end{itemize}
