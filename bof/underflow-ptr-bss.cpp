@@ -4,7 +4,7 @@ charBuffer buffer;
 
 int main()
 {
-  char_buffer_init(&buffer);
-  update_pointer(buffer.data, -9, -1);
-  return check(buffer.underflow);
+  char_buffer_init(&buffer, 'u', 'd', 'o');
+  update_pointer(buffer.data, -9, -1, 'c');
+  return check(buffer.underflow, 8, 1, 'c');
 }
