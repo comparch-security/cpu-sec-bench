@@ -1,16 +1,14 @@
 {
     "bof-overflow-index-stack": {},
-    "bof-overflow-index-bss": {},
     "bof-overflow-index-data": {},
     "bof-overflow-index-heap": {},
-    "bof-underflow-index-bss": {},
     "bof-underflow-index-data": {},
     "bof-underflow-index-heap": {},
     "bof-underflow-index-stack": {},
     "bof-overflow-ptr-stack": {},
-    "bof-overflow-ptr-bss": {},
+    "bof-overflow-ptr-data": {},
     "bof-overflow-ptr-heap": {},
-    "bof-underflow-ptr-bss": {},
+    "bof-underflow-ptr-data": {},
     "bof-underflow-ptr-heap": {},
     "bof-underflow-ptr-stack": {},
 
