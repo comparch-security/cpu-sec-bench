@@ -455,19 +455,19 @@ None.
     \item[\ref{test-call-wrong-func-offset-vtable}]   \texttt{call-wrong-func-offset-vtable}
     \item[\ref{test-call-wrong-func-poly-vtable}]     \texttt{call-wrong-func-poly-vtable}
     \item[\ref{test-call-wrong-func-vtable}]          \texttt{call-wrong-func-vtable}
-    \item[\ref{test-call-wrong-func-within-static-analysis}]          \texttt{call-wrong-func-within-static-analysis}
-    \item[\ref{test-call-wrong-func}]         \texttt{call-wrong-func}
+    \item[\ref{test-call-wrong-func-within-static-analysis}]  \texttt{call-wrong-func-within-static-analysis}
+    \item[\ref{test-call-wrong-func}]                 \texttt{call-wrong-func}
     \item[\ref{test-call-wrong-num-arg-func}]         \texttt{call-wrong-num-arg-func}
     \item[\ref{test-call-wrong-num-arg-vtable-heap}]  \texttt{call-wrong-num-arg-vtable-heap}
     \item[\ref{test-call-wrong-num-arg-vtable}]       \texttt{call-wrong-num-arg-vtable}
     \item[\ref{test-call-wrong-num-func-vtable-heap}] \texttt{call-wrong-num-func-vtable-heap}
     \item[\ref{test-call-wrong-num-func-vtable}]      \texttt{call-wrong-num-func-vtable}
-    \item[\ref{test-call-wrong-type-arg-dp2fp-func-data}]      \texttt{call-wrong-type-arg-dp2fp-func-data}
-    \item[\ref{test-call-wrong-type-arg-dp2fp-func-heap}]      \texttt{call-call-wrong-type-arg-dp2fp-func-heap}
-    \item[\ref{test-call-wrong-type-arg-dp2fp-func-rodata}]    \texttt{call-wrong-type-arg-dp2fp-func-rodata}
-    \item[\ref{test-call-wrong-type-arg-dp2fp-func-stack}]     \texttt{call-wrong-type-arg-dp2fp-func-stack}
-    \item[\ref{test-call-wrong-type-arg-fp2dp-func}]           \texttt{call-wrong-type-arg-fp2dp-func}
-    \item[\ref{test-call-wrong-type-arg-int2double-func}]      \texttt{call-wrong-type-arg-int2double-func}
+    \item[\ref{test-call-wrong-type-arg-dp2fp-func-data}] \texttt{call-wrong-type-arg-dp2fp-func-data}
+    \item[\ref{test-call-wrong-type-arg-dp2fp-func-heap}] \texttt{call-call-wrong-type-arg-dp2fp-func-heap}
+    \item[\ref{test-call-wrong-type-arg-dp2fp-func-rodata}]   \texttt{call-wrong-type-arg-dp2fp-func-rodata}
+    \item[\ref{test-call-wrong-type-arg-dp2fp-func-stack}]    \texttt{call-wrong-type-arg-dp2fp-func-stack}
+    \item[\ref{test-call-wrong-type-arg-fp2dp-func}]  \texttt{call-wrong-type-arg-fp2dp-func}
+    \item[\ref{test-call-wrong-type-arg-int2double-func}] \texttt{call-wrong-type-arg-int2double-func}
     \item[\ref{test-call-wrong-type-arg-vtable-heap}] \texttt{call-wrong-type-arg-func-vtable-heap}
     \item[\ref{test-call-wrong-type-arg-vtable}]      \texttt{call-wrong-type-arg-vtable}
     \item[\ref{test-call-wrong-type-arg-func}]        \texttt{call-wrong-type-arg-func}
@@ -503,16 +503,20 @@ None.
 
 \newpage
 \subsection{\texttt{call-instruction-in-data}}\label{test-call-instruction-in-data}
+
 \subsubsection{Description}
-Illegally call an instruction constructed in \textbf{data}.
+Call instructions written in the \textbf{data} section.
+
 \subsubsection{Vulnerability}
-It’s executable on writable area (data)
+Execute code in writable memory.
+
 \subsubsection{Test result}
 \begin{tabular}{cl}
   \toprule
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  16             & \textbf{E$\oplus$W protection in place} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
@@ -522,16 +526,20 @@ It’s executable on writable area (data)
 \newpage
 
 \subsection{\texttt{call-instruction-in-heap}}\label{test-call-instruction-in-heap}
+
 \subsubsection{Description}
-Illegally call an instruction constructed in \textbf{heap}.
+Call instructions written in \textbf{heap} (dynamically allocated space).
+
 \subsubsection{Vulnerability}
-It’s executable on writable area (\textbf{heap})
+Execute code in writable memory.
+
 \subsubsection{Test result}
 \begin{tabular}{cl}
   \toprule
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  16             & \textbf{E$\oplus$W protection in place} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
@@ -541,10 +549,13 @@ It’s executable on writable area (\textbf{heap})
 \newpage
 
 \subsection{\texttt{call-instruction-in-rodata}}\label{test-call-instruction-in-rodata}
+
 \subsubsection{Description}
-Illegally call an instruction constructed in \textbf{rodata}.
+Call instructions written in the \textbf{read-only rodata} section.
+
 \subsubsection{Vulnerability}
-It’s executable on writable area (\textbf{rodata})
+Treat read-only data as code.
+
 \subsubsection{Test result}
 \begin{tabular}{cl}
   \toprule
@@ -560,16 +571,20 @@ It’s executable on writable area (\textbf{rodata})
 \newpage
 
 \subsection{\texttt{call-instruction-in-stack}}\label{test-call-instruction-in-stack}
+
 \subsubsection{Description}
-Illegally call an instruction constructed in \textbf{stack}.
+Call instructions written in the \textbf{stack}.
+
 \subsubsection{Vulnerability}
-It’s executable on writable area (\textbf{stack})
+Execute code in writable memory.
+
 \subsubsection{Test result}
 \begin{tabular}{cl}
   \toprule
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  16             & \textbf{E$\oplus$W protection in place} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
