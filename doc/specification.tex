@@ -597,10 +597,13 @@ Execute code in writable memory.
 \subsection{\texttt{call-mid-func}}\label{test-call-mid-func}
 
 \subsubsection{Description}
-Illegally call a fake function located at the middle of a function from \texttt{main()}.
+\textbf{Call} a fake function entry point at the \textbf{middle} of a \textbf{function}.
 
 \subsubsection{Vulnerability}
-Illegal callee site.
+Illegal function entry point.
+
+\subsubsection{Remarks}
+This is a common case for calling (forward-edge) a gadget in a ROP attack.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -620,31 +623,36 @@ None.
 \subsection{\texttt{call-mid-instruction}}\label{test-call-mid-instruction}
 
 \subsubsection{Description}
-Illegally call a fake instruction located at the middle of a function from \texttt{main()}.
+\textbf{Call} a fake instruction located at the \textbf{middle} of an other legal \textbf{instruction}.
 
 \subsubsection{Vulnerability}
-Illegal callee site.
+Illegal function entry point; illegal instruction formation.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
   \toprule
   \emph{return}  & \emph{description} \\
   \midrule
-  0              & \textbf{vulnerable} \\
+  0              & might be \textbf{vulnerable} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
   
 \subsubsection{Known issues}
+
+Currently it is difficult to differentiate the case of a success call to the middle of an instruction
+and the case of fixed return value through compiler optimization.
+
 
 \newpage
 \subsection{\texttt{call-wrong-func-offset-vtable}}\label{test-call-wrong-func-offset-vtable}
 
 \subsubsection{Description}
-Illegally call the wrong virtual function by modifying the offset of the Vtable pointer.
+Modify the \textbf{virtual table} pointer by making it pointing to its own but with an \textbf{offset}.
+\textbf{Call} a \textbf{function} with the \textbf{wrong} virtual table.
 
 \subsubsection{Vulnerability}
-Modify the offset of the Vatble pointer and call the wrong virtual function.
+Modifying virtual table pointer; modifying virtual table pointer by adding an offset.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -652,11 +660,16 @@ Modify the offset of the Vatble pointer and call the wrong virtual function.
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  1              & might be \textbf{blocked by compiler optimization} \\
+  2--4           & \textbf{partially vulnerable} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
   
 \subsubsection{Known issues}
+
+None.
+
 \newpage
 
 
@@ -1175,10 +1188,13 @@ Break the execution compartment complied by most C/C++ programs and non-executio
 \subsection{\texttt{jump-mid-func}}\label{test-jump-mid-func}
 
 \subsubsection{Description}
-Illegally jump from the \texttt{main()} function to the middle of another function.
+\textbf{Jump} to the \textbf{middle} of another \textbf{function}.
 
 \subsubsection{Vulnerability}
-Break the execution compartment complied by most C/C++ programs.
+Illegal jump target; breaking the function execution context.
+
+\subsubsection{Remarks}
+This is a common case for jumping to (forward-edge) a gadget in a JOP attack.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1192,16 +1208,16 @@ Break the execution compartment complied by most C/C++ programs.
   
 \subsubsection{Known issues}
 
-
+None.
 
 \newpage
 \subsection{\texttt{jump-mid-instruction}}\label{test-jump-mid-instruction}
 
 \subsubsection{Description}
-Illegally jump from a function to the middle of an instruction.
+\textbf{Jump} to a fake instruction located at the \textbf{middle} of an other legal \textbf{instruction}.
 
 \subsubsection{Vulnerability}
-Break the execution compartment complied by most C/C++ programs.
+Illegal instruction formation.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1209,11 +1225,14 @@ Break the execution compartment complied by most C/C++ programs.
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  3              & \textbf{partially vulnerable} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
   
 \subsubsection{Known issues}
+
+None.
 
 \newpage
 \subsection{\texttt{return-to-func}}\label{test-return-to-func}
