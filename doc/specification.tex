@@ -70,7 +70,31 @@
 \section{Buffer Overflow (BOF)}
 \begin{itemize}[noitemsep]
 
-\item Overflow
+\item Overflow read
+ \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
+    \item[\ref{test-overflow-read-index-rodata}]      \texttt{overflow-read-index-rodata}
+    \item[\ref{test-overflow-read-index-data}]        \texttt{overflow-read-index-data}
+    \item[\ref{test-overflow-read-index-heap}]        \texttt{overflow-read-index-heap}
+    \item[\ref{test-overflow-read-index-stack}]       \texttt{overflow-read-index-stack}
+    \item[\ref{test-overflow-read-ptr-rodata}]        \texttt{overflow-read-ptr-rodata}
+    \item[\ref{test-overflow-read-ptr-data}]          \texttt{overflow-read-ptr-data}
+    \item[\ref{test-overflow-read-ptr-heap}]          \texttt{overflow-read-ptr-heap}
+    \item[\ref{test-overflow-read-ptr-stack}]         \texttt{overflow-read-ptr-stack}
+ \end{itemize}
+
+\item Underflow read
+ \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
+    \item[\ref{test-underflow-read-index-rodata}]     \texttt{underflow-read-index-rodata}
+    \item[\ref{test-underflow-read-index-data}]       \texttt{underflow-read-index-data}
+    \item[\ref{test-underflow-read-index-heap}]       \texttt{underflow-read-index-heap}
+    \item[\ref{test-underflow-read-index-stack}]      \texttt{underflow-read-index-stack}
+    \item[\ref{test-underflow-read-ptr-rodata}]       \texttt{underflow-read-ptr-rodata}
+    \item[\ref{test-underflow-read-ptr-data}]         \texttt{underflow-read-ptr-data}
+    \item[\ref{test-underflow-read-ptr-heap}]         \texttt{underflow-read-ptr-heap}
+    \item[\ref{test-underflow-read-ptr-stack}]        \texttt{underflow-read-ptr-stack}
+ \end{itemize}
+
+\item Overflow write
  \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
     \item[\ref{test-overflow-write-index-data}]       \texttt{overflow-write-index-data}
     \item[\ref{test-overflow-write-index-heap}]       \texttt{overflow-write-index-heap}
@@ -80,7 +104,7 @@
     \item[\ref{test-overflow-write-ptr-stack}]        \texttt{overflow-write-ptr-stack}
  \end{itemize}
 
-\item Underflow
+\item Underflow write
  \begin{itemize}[noitemsep, nolistsep, leftmargin=1em]
     \item[\ref{test-underflow-write-index-data}]      \texttt{underflow-write-index-data}
     \item[\ref{test-underflow-write-index-heap}]      \texttt{underflow-write-index-heap}
@@ -94,13 +118,477 @@
 
 \newpage
 
+\subsection{\texttt{overflow-read-index-rodata}}\label{test-overflow-read-index-rodata}
+
+\subsubsection{Description}
+
+\textbf{Overflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{read only data} section.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{overflow-read-index-data}}\label{test-overflow-read-index-data}
+
+\subsubsection{Description}
+
+\textbf{Overflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{data} section.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{overflow-read-index-heap}}\label{test-overflow-read-index-heap}
+
+\subsubsection{Description}
+
+\textbf{Overflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{heap} (dynamically allocated data).
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{overflow-read-index-stack}}\label{test-overflow-read-index-stack}
+
+\subsubsection{Description}
+
+\textbf{Overflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{stack}.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{overflow-read-ptr-rodata}}\label{test-overflow-read-ptr-rodata}
+
+\subsubsection{Description}
+
+\textbf{Overflow} by illegally using the buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{read only data} section.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{overflow-read-ptr-data}}\label{test-overflow-read-ptr-data}
+
+\subsubsection{Description}
+
+\textbf{Overflow} by illegally using the buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{data} section.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{overflow-read-ptr-heap}}\label{test-overflow-read-ptr-heap}
+
+\subsubsection{Description}
+
+\textbf{Overflow} by illegally using the buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{heap} (dynamically allocated data).
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{overflow-read-ptr-stack}}\label{test-overflow-read-ptr-stack}
+
+\subsubsection{Description}
+
+\textbf{Overflow} by illegally using the buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{stack}.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-read-index-rodata}}\label{test-underflow-read-index-rodata}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{read only data} section.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-read-index-data}}\label{test-underflow-read-index-data}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{data} section.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-read-index-heap}}\label{test-underflow-read-index-heap}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{heap} (dynamically allocated data).
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-read-index-stack}}\label{test-underflow-read-index-stack}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using the buffer \textbf{index}.
+The index exceeds the expected buffer length,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{stack}.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-read-ptr-rodata}}\label{test-underflow-read-ptr-rodata}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using the buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{read only data} section.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-read-ptr-data}}\label{test-underflow-read-ptr-data}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using the buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{data} section.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-read-ptr-heap}}\label{test-underflow-read-ptr-heap}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using the buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{heap} (dynamically allocated data).
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
+\subsection{\texttt{underflow-read-ptr-stack}}\label{test-underflow-read-ptr-stack}
+
+\subsubsection{Description}
+
+\textbf{Underflow} by illegally using the buffer \textbf{pointer}.
+The pointer is modified to pointing a location outside the buffer,
+leading to ilegal \textbf{read} accesses to the data outside the buffer.
+The accesses occur in the \textbf{stack}.
+
+\subsubsection{Vulnerability}
+Generic data access violation.
+
+\subsubsection{Test result}
+
+\begin{tabular}{cl}
+  \toprule
+  \emph{return}  & \emph{description} \\
+  \midrule
+  0              & \textbf{vulnerable} \\
+  other          & might be safe \\
+  \bottomrule
+\end{tabular}
+
+\subsubsection{Known issues}
+
+None.
+
+\newpage
+
 \subsection{\texttt{overflow-write-index-data}}\label{test-overflow-write-index-data}
 
 \subsubsection{Description}
 
 \textbf{Overflow} by illegally using the buffer \textbf{index}.
 The index exceeds the expected buffer length,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{data} section.
 
 \subsubsection{Vulnerability}
@@ -129,7 +617,7 @@ None.
 
 \textbf{Overflow} by illegally using the buffer \textbf{index}.
 The index exceeds the expected buffer length,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{heap} (dynamically allocated data).
 
 \subsubsection{Vulnerability}
@@ -157,7 +645,7 @@ None.
 
 \textbf{Overflow} by illegally using the buffer \textbf{index}.
 The index exceeds the expected buffer length,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{stack}.
 
 \subsubsection{Vulnerability}
@@ -185,7 +673,7 @@ None.
 
 \textbf{Overflow} by illegally using a buffer \textbf{pointer}.
 The pointer is modified to pointing a location outside the buffer,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{data} section.
 
 \subsubsection{Vulnerability}
@@ -214,7 +702,7 @@ None.
 
 \textbf{Overflow} by illegally using a buffer \textbf{pointer}.
 The pointer is modified to pointing a location outside the buffer,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{heap} (dynamically allocated data).
 
 \subsubsection{Vulnerability}
@@ -243,7 +731,7 @@ None.
 
 \textbf{Overflow} by illegally using a buffer \textbf{pointer}.
 The pointer is modified to pointing a location outside the buffer,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{stack}.
 
 \subsubsection{Vulnerability}
@@ -272,7 +760,7 @@ None.
 
 \textbf{Underflow} by illegally using the buffer \textbf{index}.
 The index exceeds the expected buffer length,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{data} section.
 
 \subsubsection{Vulnerability}
@@ -301,7 +789,7 @@ None.
 
 \textbf{Underflow} by illegally using the buffer \textbf{index}.
 The index exceeds the expected buffer length,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{heap} (dynamically allocated data).
 
 \subsubsection{Vulnerability}
@@ -329,7 +817,7 @@ None.
 
 \textbf{Underflow} by illegally using the buffer \textbf{index}.
 The index exceeds the expected buffer length,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{stack}.
 
 \subsubsection{Vulnerability}
@@ -357,7 +845,7 @@ None.
 
 \textbf{Underflow} by illegally using a buffer \textbf{pointer}.
 The pointer is modified to pointing a location outside the buffer,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{data} section.
 
 \subsubsection{Vulnerability}
@@ -387,7 +875,7 @@ None.
 
 \textbf{Underflow} by illegally using a buffer \textbf{pointer}.
 The pointer is modified to pointing a location outside the buffer,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{heap} (dynamically allocated data).
 
 \subsubsection{Vulnerability}
@@ -416,7 +904,7 @@ None.
 
 \textbf{Underflow} by illegally using a buffer \textbf{pointer}.
 The pointer is modified to pointing a location outside the buffer,
-leading to ilegal write accesses to the data outside the buffer.
+leading to ilegal \textbf{write} accesses to the data outside the buffer.
 The overwrite occurs in the \textbf{stack}.
 
 \subsubsection{Vulnerability}

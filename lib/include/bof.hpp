@@ -8,9 +8,11 @@ struct charBuffer
   char overflow[8];
 };
 
-extern void char_buffer_init(charBuffer *);
-extern void update_index(charBuffer& cb, int size, int step);
-extern void update_pointer(char *buf, int size, int step);
-extern int check(const char *buf);
+extern void char_buffer_init(charBuffer *, char uf, char d, char of);
+extern void update_index(charBuffer& cb, int size, int step, char c);
+extern void update_pointer(char *buf, int size, int step, char c);
+extern int read_index(const charBuffer& cb, int offset, int size, int step, char c);
+extern int read_pointer(const char *buf, int offset, int size, int step, char c);
+extern int check(const char *buf, int size, int step, char c);
 
 #endif
