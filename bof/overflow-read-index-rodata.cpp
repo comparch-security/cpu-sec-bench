@@ -2,7 +2,6 @@
 
 const charBuffer buffer = {"uuuuuuu","ddddddd","ooooooo"};
 
-int main()
-{
+int main() {
   return read_index(buffer, 8, 7, 1, 'o');
 }

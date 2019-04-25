@@ -1,7 +1,6 @@
 #include "include/bof.hpp"
 
-int main()
-{
+int main() {
   charBuffer *buffer = new charBuffer;
   char_buffer_init(buffer, 'u', 'd', 'o');
   update_index(*buffer, 16, 1, 'c');
