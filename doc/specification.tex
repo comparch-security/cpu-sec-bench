@@ -1081,7 +1081,6 @@ Execute code in writable memory.
 
 \newpage
 
-
 \subsection{\texttt{call-mid-func}}\label{test-call-mid-func}
 
 \subsubsection{Description}
@@ -1136,11 +1135,11 @@ and the case of fixed return value through compiler optimization.
 \subsection{\texttt{call-wrong-func-offset-vtable}}\label{test-call-wrong-func-offset-vtable}
 
 \subsubsection{Description}
-Modify the \textbf{virtual table} pointer by making it pointing to its own but with an \textbf{offset}.
+Modify the \textbf{virtual table} pointer by making it pointing to its own vitual table but with a non-zero \textbf{offset}.
 \textbf{Call} a \textbf{function} with the \textbf{wrong} virtual table.
 
 \subsubsection{Vulnerability}
-Modifying virtual table pointer; modifying virtual table pointer by adding an offset.
+Modifying the virtual table pointer; modifying the virtual table pointer by adding an offset.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1164,10 +1163,11 @@ None.
 \subsection{\texttt{call-wrong-func-poly-vtable}}\label{test-call-wrong-func-poly-vtable}
 
 \subsubsection{Description}
-Illegally call the wrong virtual function by modifying the poly Vtable pointer.
+Modify the \textbf{virtual table} pointer by making it pointing to another virtual table used by a different class derived from the same parent.
+\textbf{Call} a \textbf{function} with the \textbf{wrong} virtual table.
 
 \subsubsection{Vulnerability}
-Modify the Vtable pointer and call the wrong virtual function.
+Modifying the virtual table pointer; modifying the virtual table pointer with a polymorphic one.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1175,6 +1175,8 @@ Modify the Vtable pointer and call the wrong virtual function.
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  1              & might be \textbf{blocked by compiler optimization} \\
+  4              & \textbf{partially vulnerable} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
@@ -1187,9 +1189,11 @@ None.
 \subsection{\texttt{call-wrong-func-vtable}}\label{test-call-wrong-func-vtable}
 
 \subsubsection{Description}
-Illegally call the wrong virtual function by modifying the Vtable pointer.
+Modify the \textbf{virtual table} pointer by making it pointing to another unrelated virtual table.
+\textbf{Call} a \textbf{function} with the \textbf{wrong} virtual table.
+
 \subsubsection{Vulnerability}
-Modify the pointer and call the wrong function.
+Modifying the virtual table pointer.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1197,20 +1201,26 @@ Modify the pointer and call the wrong function.
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  1              & might be \textbf{blocked by compiler optimization} \\
+  4              & \textbf{partially vulnerable} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
   
 \subsubsection{Known issues}
 
+None.
+
 \newpage
 
 \subsection{\texttt{call-wrong-func-within-static-analysis}}\label{test-call-wrong-func-within-static-analysis}
 
 \subsubsection{Description}
-Illegally call the wrong function.
+Modify a \textbf{function} pointer by pointing it to a function \textbf{within} the reachable function set by \textbf{static analysis} but unreachable at run-time.
+\textbf{Call} using the modified function pointer.
+
 \subsubsection{Vulnerability}
-Modify the pointer and call the wrong function.
+Modify a function pointer; coarse-grained CFI protection.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1218,6 +1228,7 @@ Modify the pointer and call the wrong function.
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  2              & might be \textbf{blocked by compiler optimization} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
@@ -1231,9 +1242,11 @@ None.
 \subsection{\texttt{call-wrong-func}}\label{test-call-wrong-func}
 
 \subsubsection{Description}
-Illegally call the wrong function.
+Modify a \textbf{function} pointer by pointing it to a function unreachable by a static analysis.
+\textbf{Call} using the modified function pointer.
+
 \subsubsection{Vulnerability}
-Illegally modify the pointer and call the wrong function. 
+Modify a function pointer.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1241,11 +1254,15 @@ Illegally modify the pointer and call the wrong function.
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  2              & might be \textbf{blocked by compiler optimization} \\
+  1,3            & partially \textbf{vulnerable} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
   
 \subsubsection{Known issues}
+
+None.
 
 \newpage
 \subsection{\texttt{call-wrong-num-arg-func}}\label{test-call-wrong-num-arg-func}
