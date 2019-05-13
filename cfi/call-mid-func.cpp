@@ -3,8 +3,7 @@
 
 static volatile int grv = 5;
 
-void FORCE_NOINLINE helper()
-{
+void FORCE_NOINLINE helper() {
   grv += 5;
   DECL_LABEL(func_mid);
 
@@ -12,8 +11,7 @@ void FORCE_NOINLINE helper()
   exit(grv);
 }
 
-int main()
-{
+int main() {
   CALL_LABEL(func_mid, 0);
 
   exit(grv);

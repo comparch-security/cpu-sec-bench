@@ -951,7 +951,7 @@ None.
     \item[\ref{test-call-wrong-num-func-vtable-heap}] \texttt{call-wrong-num-func-vtable-heap}
     \item[\ref{test-call-wrong-num-func-vtable}]      \texttt{call-wrong-num-func-vtable}
     \item[\ref{test-call-wrong-type-arg-dp2fp-func-data}] \texttt{call-wrong-type-arg-dp2fp-func-data}
-    \item[\ref{test-call-wrong-type-arg-dp2fp-func-heap}] \texttt{call-call-wrong-type-arg-dp2fp-func-heap}
+    \item[\ref{test-call-wrong-type-arg-dp2fp-func-heap}] \texttt{call-wrong-type-arg-dp2fp-func-heap}
     \item[\ref{test-call-wrong-type-arg-dp2fp-func-rodata}]   \texttt{call-wrong-type-arg-dp2fp-func-rodata}
     \item[\ref{test-call-wrong-type-arg-dp2fp-func-stack}]    \texttt{call-wrong-type-arg-dp2fp-func-stack}
     \item[\ref{test-call-wrong-type-arg-fp2dp-func}]  \texttt{call-wrong-type-arg-fp2dp-func}
@@ -1011,6 +1011,8 @@ Execute code in writable memory.
   
 \subsubsection{Known issues}
 
+None.
+
 \newpage
 
 \subsection{\texttt{call-instruction-in-heap}}\label{test-call-instruction-in-heap}
@@ -1034,6 +1036,8 @@ Execute code in writable memory.
   
 \subsubsection{Known issues}
 
+None.
+
 \newpage
 
 \subsection{\texttt{call-instruction-in-rodata}}\label{test-call-instruction-in-rodata}
@@ -1055,6 +1059,8 @@ Treat read-only data as code.
 \end{tabular}
 
 \subsubsection{Known issues}
+
+None.
 
 \newpage
 
@@ -1078,6 +1084,8 @@ Execute code in writable memory.
 \end{tabular}
   
 \subsubsection{Known issues}
+
+None.
 
 \newpage
 
@@ -1153,6 +1161,10 @@ Modifying the virtual table pointer; modifying the virtual table pointer by addi
   \bottomrule
 \end{tabular}
   
+\subsubsection{Dependence}
+
+\texttt{call-wrong-func-poly-vtable} [\ref{test-call-wrong-func-poly-vtable}].
+
 \subsubsection{Known issues}
 
 None.
@@ -1349,6 +1361,10 @@ Modifying the virtual table pointer; breaking the function calling convention.
   \bottomrule
 \end{tabular}
 
+\subsubsection{Dependence}
+
+\texttt{call-wrong-func-vtable} [\ref{test-call-wrong-func-vtable}].
+
 \subsubsection{Known issues}
 
 \textbf{x86\_64}: Currently only works with object allocated on heap.
@@ -1399,13 +1415,15 @@ Modifying the virtual table pointer; coarse-grained CFI protection.
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  2              & might be \textbf{blocked by compiler optimization} \\
+  1,3,4          & partially \textbf{vulnerable} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
 
 \subsubsection{Dependence}
 
-\texttt{call-wrong-func-poly-vtable} [\ref{test-call-wrong-func-poly-vtable}].
+\texttt{call-wrong-func-vtable} [\ref{test-call-wrong-func-vtable}].
 
 \subsubsection{Known issues}
 
@@ -1415,10 +1433,11 @@ Modifying the virtual table pointer; coarse-grained CFI protection.
 \subsection{\texttt{call-wrong-type-arg-dp2fp-func-data}}\label{test-call-wrong-type-arg-dp2fp-func-data}
 
 \subsubsection{Description}
-Illegally call a function with wrong types of arguments constructed in \textbf{data}.
+\textbf{Call} a \textbf{function} using a \textbf{data pointer} implicitly as a \textbf{function pointer}.
+The data pointer pointing to a function stored in \textbf{data} section.
 
 \subsubsection{Vulnerability}
-Break the function calling convention and non-execution on writable area (\textbf{data}).
+Implicit argument type conversion; implicitly converting a data pointer to a code pointer; executing code in writable memory.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1426,20 +1445,30 @@ Break the function calling convention and non-execution on writable area (\textb
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  16             & \textbf{safe} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
 
+\subsubsection{Dependence}
+
+\texttt{call-mid-func} [\ref{test-call-mid-func}],
+\texttt{call-instruction-in-data} [\ref{test-call-instruction-in-data}].
+
 \subsubsection{Known issues}
 
+None.
+
 \newpage
+
 \subsection{\texttt{call-wrong-type-arg-dp2fp-func-heap}}\label{test-call-wrong-type-arg-dp2fp-func-heap}
 
 \subsubsection{Description}
-Illegally call a function with wrong types of arguments constructed in \textbf{heap}.
+\textbf{Call} a \textbf{function} using a \textbf{data pointer} implicitly as a \textbf{function pointer}.
+The data pointer pointing to a function stored in \textbf{heap}.
 
 \subsubsection{Vulnerability}
-Break the function calling convention and non-execution on writable area (\textbf{heap}).
+Implicit argument type conversion; implicitly converting a data pointer to a code pointer; executing code in writable memory.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1447,20 +1476,28 @@ Break the function calling convention and non-execution on writable area (\textb
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  16             & \textbf{safe} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
+
+\subsubsection{Dependence}
+
+\texttt{call-mid-func} [\ref{test-call-mid-func}],
+\texttt{call-instruction-in-heap} [\ref{test-call-instruction-in-heap}].
 
 \subsubsection{Known issues}
 
 \newpage
+
 \subsection{\texttt{call-wrong-type-arg-dp2fp-func-rodata}}\label{test-call-wrong-type-arg-dp2fp-func-rodata}
 
 \subsubsection{Description}
-Illegally call a function with wrong types of arguments constructed in \textbf{rodata}.
+\textbf{Call} a \textbf{function} using a \textbf{data pointer} implicitly as a \textbf{function pointer}.
+The data pointer pointing to a function stored in \textbf{read-only data} section.
 
 \subsubsection{Vulnerability}
-Break the function calling convention and it’s excutable on writable area (\textbf{rodata}).
+Implicit argument type conversion; implicitly converting a data pointer to a code pointer; executing code in read-only data memory.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1468,21 +1505,30 @@ Break the function calling convention and it’s excutable on writable area (\te
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  16             & \textbf{safe} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
 
+\subsubsection{Dependence}
+
+\texttt{call-mid-func} [\ref{test-call-mid-func}],
+\texttt{call-instruction-in-rodata} [\ref{test-call-instruction-in-rodata}].
+
 \subsubsection{Known issues}
+
+None.
 
 \newpage
 
 \subsection{\texttt{call-wrong-type-arg-dp2fp-func-stack}}\label{test-call-wrong-type-arg-dp2fp-func-stack}
 
 \subsubsection{Description}
-Illegally call a function with wrong types of arguments constructed in \textbf{stack}.
+\textbf{Call} a \textbf{function} using a \textbf{data pointer} implicitly as a \textbf{function pointer}.
+The data pointer pointing to a function stored in \textbf{stack}.
 
 \subsubsection{Vulnerability}
-Break the function calling convention and non-execution on writable area (\textbf{stack}).
+Implicit argument type conversion; implicitly converting a data pointer to a code pointer; executing code in read-only data memory.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1490,12 +1536,19 @@ Break the function calling convention and non-execution on writable area (\textb
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  16             & \textbf{safe} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
 
+\subsubsection{Dependence}
+
+\texttt{call-mid-func} [\ref{test-call-mid-func}],
+\texttt{call-instruction-in-stack} [\ref{test-call-instruction-in-stack}].
+
 \subsubsection{Known issues}
 
+None.
 
 \newpage
 

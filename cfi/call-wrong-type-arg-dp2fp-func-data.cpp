@@ -13,8 +13,7 @@ void FORCE_NOINLINE helper(func_type fp) {
 
 static unsigned char m[] = FUNC_MACHINE_CODE;
 
-int main()
-{
+int main() {
   rv = m[0];
 
   helper((func_type)(&m));
