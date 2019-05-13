@@ -1207,6 +1207,10 @@ Modifying the virtual table pointer.
   \bottomrule
 \end{tabular}
   
+\subsubsection{Dependence}
+
+\texttt{call-wrong-func-poly-vtable} [\ref{test-call-wrong-func-poly-vtable}].
+
 \subsubsection{Known issues}
 
 None.
@@ -1260,6 +1264,10 @@ Modify a function pointer.
   \bottomrule
 \end{tabular}
   
+\subsubsection{Dependence}
+
+\texttt{call-wrong-func-within-static-analysis} [\ref{test-call-wrong-func-within-static-analysis}].
+
 \subsubsection{Known issues}
 
 None.
@@ -1268,10 +1276,10 @@ None.
 \subsection{\texttt{call-wrong-num-arg-func}}\label{test-call-wrong-num-arg-func}
 
 \subsubsection{Description}
-Illegally call a function with mismatched number of arguements.
+\textbf{Call} a \textbf{function} with the wrong number of arguments.
 
 \subsubsection{Vulnerability}
-Break the function calling convention.
+Breaking the function calling convention.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1284,18 +1292,20 @@ Break the function calling convention.
 \end{tabular}
 
 \subsubsection{Known issues}
-None.
+The current return value comes from the global variable.
+It is better to forge wrong arguments and make a return value from the wrong arguments.
+The issue is, such tests will be ABI dependent.
 
 \newpage
 
 \subsection{\texttt{call-wrong-num-arg-vtable-heap}}\label{test-call-wrong-num-arg-vtable-heap}
 
 \subsubsection{Description}
-Replace the Vtable pointer with a fake Vtable constructed in heap and
-illegally call a virtual function with mismatched number of arguements.
+Replace a \textbf{virtual table} pointer with a fake virtual table constructed in \textbf{heap}.
+\textbf{Call} a virtual function with \textbf{wrong number of arguments}.
 
 \subsubsection{Vulnerability}
-Break the function calling convention, the data integrity of the Vtable pointer and the Vtable itself.
+Modifying the virtual table pointer; virtual table in writable space; breaking the function calling convention.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1303,23 +1313,29 @@ Break the function calling convention, the data integrity of the Vtable pointer 
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  2              & might be \textbf{blocked by compiler optimization} \\
+  4              & partially \textbf{vulnerable} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
 
+\subsubsection{Dependence}
+
+\texttt{call-wrong-num-arg-vtable} [\ref{test-call-wrong-num-arg-vtable}].
+
 \subsubsection{Known issues}
 
 \textbf{x86\_64}: Currently only works with object allocated on heap.
-
 
 \newpage
 \subsection{\texttt{call-wrong-num-arg-vtable}}\label{test-call-wrong-num-arg-vtable}
 
 \subsubsection{Description}
-Illegally call a virtual function with mismatched number of arguements by modifying the VTable pointer.
+Replace a \textbf{virtual table} pointer with a fake virtual table.
+\textbf{Call} a virtual function with \textbf{wrong number of arguments}.
 
 \subsubsection{Vulnerability}
-Break the function calling convention and the data integrity of the Vtable pointer.
+Modifying the virtual table pointer; breaking the function calling convention.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1327,6 +1343,8 @@ Break the function calling convention and the data integrity of the Vtable point
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  2              & might be \textbf{blocked by compiler optimization} \\
+  4              & partially \textbf{vulnerable} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
@@ -1335,16 +1353,15 @@ Break the function calling convention and the data integrity of the Vtable point
 
 \textbf{x86\_64}: Currently only works with object allocated on heap.
 
-
 \newpage
 \subsection{\texttt{call-wrong-num-func-vtable-heap}}\label{test-call-wrong-num-func-vtable-heap}
 
 \subsubsection{Description}
-Replace the Vtable pointer with a fake Vtable constructed in heap with different number of virtual functions and
-illegally call a fake virtual function.
+Replace a \textbf{virtual table} pointer with a fake virtual table constructed in \textbf{heap} which contains \textbf{wrong number of functions}.
+\textbf{Call} a virtual function with the wrong virtual table.
 
 \subsubsection{Vulnerability}
-Break the data integrity of the Vtable pointer and the Vtable itself.
+Modifying the virtual table pointer; virtual table in writable space; coarse-grained CFI protection.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1352,9 +1369,15 @@ Break the data integrity of the Vtable pointer and the Vtable itself.
   \emph{return}  & \emph{description} \\
   \midrule
   0              & \textbf{vulnerable} \\
+  2              & might be \textbf{blocked by compiler optimization} \\
+  4              & partially \textbf{vulnerable} \\
   other          & might be safe \\
   \bottomrule
 \end{tabular}
+
+\subsubsection{Dependence}
+
+\texttt{call-wrong-num-func-vtable} [\ref{test-call-wrong-num-func-vtable}].
 
 \subsubsection{Known issues}
 
@@ -1364,10 +1387,11 @@ Break the data integrity of the Vtable pointer and the Vtable itself.
 \subsection{\texttt{call-wrong-num-func-vtable}}\label{test-call-wrong-num-func-vtable}
 
 \subsubsection{Description}
-Illegally call a fake virtual function with the VTable being replaced with another one of different number of virtual functions.
+Replace a \textbf{virtual table} pointer with a fake virtual table containing \textbf{wrong number of functions}.
+\textbf{Call} a virtual function with the wrong virtual table.
 
 \subsubsection{Vulnerability}
-Break the data integrity of the Vtable pointer.
+Modifying the virtual table pointer; coarse-grained CFI protection.
 
 \subsubsection{Test result}
 \begin{tabular}{cl}
@@ -1378,6 +1402,10 @@ Break the data integrity of the Vtable pointer.
   other          & might be safe \\
   \bottomrule
 \end{tabular}
+
+\subsubsection{Dependence}
+
+\texttt{call-wrong-func-poly-vtable} [\ref{test-call-wrong-func-poly-vtable}].
 
 \subsubsection{Known issues}
 

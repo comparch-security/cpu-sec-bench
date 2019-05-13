@@ -12,7 +12,7 @@ void fake_func(double new_var)
 int main() {
   Helper *orig = new Helper();
 
-  //creat a fake vtable with 1 function pointer
+  //create a fake vtable with 1 function pointer
   pvtable_t fake_vtable = create_fake_vtable_on_heap(1);
   *fake_vtable = (pfunc_t)fake_func;
 
