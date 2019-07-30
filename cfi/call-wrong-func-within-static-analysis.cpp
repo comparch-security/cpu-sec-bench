@@ -15,7 +15,7 @@ int main()
 {
   volatile Fun pFun = grv ? helper1 : helper2;
   Fun tmp = helper2;
-  XCHG_MEM(&tmp, &pFun);
+  XCHG_MEM(&pFun, &tmp);
   pFun();
   return grv;
 }
