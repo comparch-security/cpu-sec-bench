@@ -12,9 +12,9 @@ int main(int argc, char* argv[])
 {
   num1 = argv[1][0] - '0';
   num2 = argv[2][0] - '0';
-  long long tmp = -1;
+  double tmp = 2;
   helper(2.0);
-  PASS_INT_ARG(0, tmp);
+  PASS_DOUBLE_ARG(tmp);
   CALL_DAT(helper);
   return rv;
 }
