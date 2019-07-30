@@ -2,17 +2,11 @@
 // RV64
 
 // declare a label in assembly
-#define DECL_LABEL(label) \
+#define DECL_LABEL(label)                    \
   asm volatile(#label ":")
 
 //call to a label
-#define CALL_LABEL(label)                    \
-  asm volatile(                              \
-    "call " #label ";"                       \
-                                             )
-
-//call to a label with offset
-#define CALL_LABEL_OFFSET(label,offset)      \
+#define CALL_LABEL(label,offset)             \
          asm volatile(                       \
 	"la a0," #label ";"                  \
 	"addi a0,a0,%0;"	             \
@@ -25,13 +19,8 @@
     "jalr ra,0(%0);"                         \
       ::"r"(ptr): "ra"                       )
 
-//jump to a label
-#define JUMP_LABEL(label)                    \
-  asm volatile(                              \
-    "j " #label ";"                          )
-
 //jump to a label with offset
-#define JUMP_LABEL_OFFSET(label,offset)      \
+#define JMP_LABEL(label,offset)              \
          asm volatile(                       \
 	"la a0," #label ";"                  \
 	"addi a0,a0,%0;"	             \
@@ -39,7 +28,7 @@
 	::"i"(offset):                       )
 
 //jump to a pointer
-#define JUMP_DAT(ptr)                        \
+#define JMP_DAT(ptr)                         \
   asm volatile(                              \
     "jalr x0,0(%0);"                         \
       ::"r"(ptr):                            )
@@ -53,9 +42,15 @@
     : "s2"                                   \
                                              )
 //pass an integer arugument
-#define PASS_INT_ARG(arg)                    \
+#define PASS_INT_ARG(Idx, arg)               \
+  PASS_INT_ARG##Idx(arg                      )
+
+#define PASS_INT_ARG0(arg)                   \
   asm volatile(                              \
     "mv a0,%0;" : : "r" (arg): "a0"          )
+#define PASS_INT_ARG1(arg)                   \
+  asm volatile(                              \
+    "mv a1,%0;" : : "r" (arg): "a1"          )
 
 //pass an double arugument
 #define PASS_DOUBLE_ARG(arg)                 \
@@ -69,26 +64,14 @@
     "mv ra,%0;"                              \
     ::"r"(dat):                              )
 
-//modify return address to a label
-#define MOD_RET_LABEL(label)                 \
-  asm volatile(                              \
-    "la ra," #label ";"                      \
-                                             )
 
 //modify return address to a label with offset
-#define MOD_RET_LABEL_(label,offset)         \
+#define MOD_RET_LABEL(label,offset)          \
   asm volatile(                              \
     "la a0," #label ";"                      \
     "addi a0,a0,%0;"                         \
     "sd a0,8(sp);"                           \
-    ::"i"(offset): "ra"                      \
-                                             )
-
-//modify return address to a label while the return address has been defined once
-#define MOD_RET_LABEL_DEFINED(label)         \
-  asm volatile(                              \
-    "la s1," #label ";"                      \
-    "sd s1, 8(sp);"                          \
+    ::"i"(offset):                           \
                                              )
 
 //an instruction the can jump to the middle
@@ -101,3 +84,11 @@
   asm volatile(                              \
     "mv %0,a0;"                              \
     :"=r"(var)::                             )
+
+#define FUNC_MACHINE_CODE                    \
+  {0x80, 0x82}
+
+void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
+  *p++ = 0x80;
+  *p++ = 0x82;
+}
