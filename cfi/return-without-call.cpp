@@ -10,7 +10,8 @@ void FORCE_NOINLINE helper() {
   }
 
   // push the label address
-  PUSH_FAKE_RET(ret_address);
+  //MOD_RET_LABEL_DEFINED(ret_address); 
+  MOD_RET_LABEL(ret_address,0); 
 
   // return to the push adderss
   // although a simple assembly "ret" would work out of the box
@@ -19,7 +20,6 @@ void FORCE_NOINLINE helper() {
 }
 
 int main() {
-  asm_stack_test();
   helper();
   return grv;
 }
