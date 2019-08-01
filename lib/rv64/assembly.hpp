@@ -8,10 +8,10 @@
 //call to a label
 #define CALL_LABEL(label,offset)             \
          asm volatile(                       \
-	"la a0," #label ";"                  \
-	"addi a0,a0,%0;"	             \
-	"jalr ra,a0;"                        \
-	::"i"(offset):                       )
+        "la a0," #label ";"                  \
+        "addi a0,a0,%0;"	             \
+        "jalr ra,a0;"                        \
+        ::"i"(offset):                       )
     
 //call to a pointer
 #define CALL_DAT(ptr)                        \
@@ -22,10 +22,10 @@
 //jump to a label with offset
 #define JMP_LABEL(label,offset)              \
          asm volatile(                       \
-	"la a0," #label ";"                  \
-	"addi a0,a0,%0;"	             \
-	"jalr x0,a0;"                        \
-	::"i"(offset):                       )
+        "la a0," #label ";"                  \
+        "addi a0,a0,%0;"	             \
+        "jalr x0,a0;"                        \
+        ::"i"(offset):                       )
 
 //jump to a pointer
 #define JMP_DAT(ptr)                         \
