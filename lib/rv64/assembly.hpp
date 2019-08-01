@@ -61,7 +61,7 @@
 //modify return address to a pointer
 #define MOD_RET_DAT(dat)                     \
   asm volatile(                              \
-    "mv ra,%0;"                              \
+    "sd %0,-8(s0)"                           \
     ::"r"(dat):                              )
 
 
