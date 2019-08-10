@@ -7,11 +7,11 @@
 
 //call to a label
 #define CALL_LABEL(label,offset)             \
-         asm volatile(                       \
-        "la a0," #label ";"                  \
-        "addi a0,a0,%0;"	             \
-        "jalr ra,a0;"                        \
-        ::"i"(offset):                       )
+  asm volatile(                              \
+   "la t0," #label ";"                       \
+   "addi t0,t0,%0;"                          \
+   "jalr ra,t0;"                             \
+   ::"i"(offset):                            )
     
 //call to a pointer
 #define CALL_DAT(ptr)                        \
@@ -21,11 +21,11 @@
 
 //jump to a label with offset
 #define JMP_LABEL(label,offset)              \
-         asm volatile(                       \
-        "la a0," #label ";"                  \
-        "addi a0,a0,%0;"	             \
-        "jalr x0,a0;"                        \
-        ::"i"(offset):                       )
+  asm volatile(                              \
+    "la t0," #label ";"                      \
+    "addi t0,t0,%0;"                         \
+    "jalr x0,t0;"                            \
+    ::"i"(offset):                           )
 
 //jump to a pointer
 #define JMP_DAT(ptr)                         \
@@ -57,22 +57,19 @@
   asm volatile(                              \
     "fmv.d fa0,%0;" : : "f" (arg): "fa0"     )
 
-
 //modify return address to a pointer
 #define MOD_RET_DAT(dat)                     \
   asm volatile(                              \
     "sd %0,-8(s0)"                           \
     ::"r"(dat):                              )
 
-
 //modify return address to a label with offset
 #define MOD_RET_LABEL(label,offset)          \
   asm volatile(                              \
-    "la a0," #label ";"                      \
-    "addi a0,a0,%0;"                         \
-    "sd a0,8(sp);"                           \
-    ::"i"(offset):                           \
-                                             )
+    "la t0," #label ";"                      \
+    "addi t0,t0,%0;"                         \
+    "sd t0,8(sp);"                           \
+    ::"i"(offset):                           )
 
 //an instruction the can jump to the middle
 #define MID_INSTRUCTION                      \
