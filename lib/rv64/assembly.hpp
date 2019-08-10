@@ -54,9 +54,15 @@
     "mv a1,%0;" : : "r" (arg): "a1"          )
 
 //pass an double arugument
-#define PASS_DOUBLE_ARG(arg)                 \
+#define PASS_DOUBLE_ARG(Idx, arg)            \
+  PASS_DOUBLE_ARG##Idx(arg                   )
+
+#define PASS_DOUBLE_ARG0(arg)                \
   asm volatile(                              \
     "fmv.d fa0,%0;" : : "f" (arg): "fa0"     )
+#define PASS_DOUBLE_ARG1(arg)                \
+  asm volatile(                              \
+    "fmv.d fa1,%0;" : : "f" (arg): "fa1"     )
 
 //modify return address to a pointer
 #define MOD_RET_DAT(dat)                     \
