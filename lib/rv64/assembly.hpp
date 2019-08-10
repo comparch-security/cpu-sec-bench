@@ -36,11 +36,12 @@
 //exchange memory value 
 #define XCHG_MEM(ptrL, ptrR)                 \
   asm volatile(                              \
-    "ld s2,0(%1);"                           \
-    "sd s2,0(%0);"                           \
-    : : "r" (ptrL), "r" (ptrR)               \
-    : "s2"                                   \
-                                             )
+    "ld t0,0(%1);"                           \
+    "ld t1,0(%0);"                           \
+    "sd t1,0(%1);"                           \
+    "sd t0,0(%0);"                           \
+    : : "r" (ptrL), "r" (ptrR) :             )
+
 //pass an integer arugument
 #define PASS_INT_ARG(Idx, arg)               \
   PASS_INT_ARG##Idx(arg                      )
