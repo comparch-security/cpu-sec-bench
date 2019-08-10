@@ -92,6 +92,10 @@
 #define FUNC_MACHINE_CODE                    \
   {0x80, 0x82}
 
+// **detect the stack
+extern unsigned long long min_stack_size;
+extern void asm_stack_test();
+
 void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x80;
   *p++ = 0x82;
