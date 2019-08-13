@@ -6,7 +6,7 @@ void helper(double var) {
   rv = (var != 0.0) ? 0 : 1;
 }
 
-int main(int argc, char* argv[])
+int main()
 {
   long long m = -1;
   PASS_DOUBLE_ARG_FROM_INT(0, m);

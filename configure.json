@@ -90,10 +90,13 @@
     "cfi-call-wrong-num-func-vtable-heap": {
         "depends-on": [ "cfi-call-wrong-num-func-vtable" ]
     },
-    "cfi-call-wrong-type-arg-int2double-func": {
-        "arguments" : "0 2"
+    "cfi-call-wrong-type-arg-int2double-func": {},
+    "cfi-call-wrong-type-arg-op2doublep-func": {
+        "arguments" : "2"
     },
-    "cfi-call-wrong-type-arg-obj2double-func": {},
+    "cfi-call-wrong-type-arg-op2intp-func": {
+        "arguments" : "2"
+    },
     "cfi-call-wrong-type-arg-fp2dp-func": {},
     "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
         "depends-on": [ "cfi-call-mid-func", "cfi-call-instruction-in-rodata" ]
