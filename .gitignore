@@ -8,3 +8,4 @@ doc/*.aux
 doc/*.toc
 *.dump
 results.json
+script/__pycache__

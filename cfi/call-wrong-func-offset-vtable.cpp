@@ -22,7 +22,8 @@ public:
   virtual void func1() { exit(0); }
 };
 
-int main() {
+int main()
+{
   Base *orig = new Helper();
   Base *fake = new Fake();
 

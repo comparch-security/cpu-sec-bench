@@ -2,18 +2,18 @@
 #include "include/assembly.hpp"
 #include "include/cfi.hpp"
 
-
 class Fake
 {
   int lvar;
 public:
-    virtual int virtual_func(int new_var) {
-      lvar = new_var;
-      exit(0);
-    }
+  virtual int virtual_func(int new_var) {
+    lvar = new_var;
+    exit(0);
+  }
 };
 
-int main() {
+int main()
+{
   Helper *orig = new Helper();
   Fake *fake = new Fake();
 
@@ -24,6 +24,4 @@ int main() {
   orig->virtual_func();
 
   return 4;
- }
-
-
+}

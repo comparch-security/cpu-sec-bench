@@ -3,15 +3,16 @@
 #include "include/cfi.hpp"
 
 void fake_func() {
-	exit(0);
+  exit(0);
 }
 
-int main() {
+int main()
+{
   Helper *orig = new Helper();
 
   //create a fake vtable with 3 function pointers
   pvtable_t fake_vtable = create_fake_vtable_on_heap(3);
-  for(int i=0; i<3; i++) 
+  for(int i=0; i<3; i++)
     fake_vtable[i] = fake_func;
 
   // replace the vtable pointer 
@@ -19,4 +20,4 @@ int main() {
   orig->virtual_func();
 
   return 4;
- }
+}

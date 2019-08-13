@@ -18,15 +18,39 @@
     "bof-overflow-write-index-stack": {},
     "bof-overflow-write-index-data": {},
     "bof-overflow-write-index-heap": {},
-    "bof-underflow-write-index-data": {},
-    "bof-underflow-write-index-heap": {},
-    "bof-underflow-write-index-stack": {},
+    "bof-underflow-write-index-data": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
+    "bof-underflow-write-index-heap": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
+    "bof-underflow-write-index-stack": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
     "bof-overflow-write-ptr-stack": {},
     "bof-overflow-write-ptr-data": {},
     "bof-overflow-write-ptr-heap": {},
-    "bof-underflow-write-ptr-data": {},
-    "bof-underflow-write-ptr-heap": {},
-    "bof-underflow-write-ptr-stack": {},
+    "bof-underflow-write-ptr-data": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
+    "bof-underflow-write-ptr-heap": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
+    "bof-underflow-write-ptr-stack": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
 
     "ptt-access-after-free-org-heap": {},
     "ptt-access-after-free-alias-heap": {},

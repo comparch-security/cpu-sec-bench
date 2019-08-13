@@ -6,13 +6,14 @@ class Fake : public Base
 {
   double lvar;
 public:
-    virtual int virtual_func(double new_var) {
-      lvar = new_var;
-      exit(0);
-    }
+  virtual int virtual_func(double new_var) {
+    lvar = new_var;
+    exit(0);
+  }
 };
 
-int main() {
+int main()
+{
   Helper2 *orig = new Helper2();
   Fake *fake = new Fake();
 

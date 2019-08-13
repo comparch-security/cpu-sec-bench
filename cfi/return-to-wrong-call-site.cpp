@@ -14,7 +14,8 @@ void FORCE_NOINLINE helper2() {
   grv = 4;
 }
 
-int main() {
+int main()
+{
   asm_stack_test();
   // call a function but illegally return
   helper();

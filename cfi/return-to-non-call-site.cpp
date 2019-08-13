@@ -10,7 +10,8 @@ void FORCE_NOINLINE helper() {
   grv = 0;
 }
 
-int main() {
+int main()
+{
   asm_stack_test();
 
   // call a function but illegally return

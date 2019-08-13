@@ -7,8 +7,8 @@ int FORCE_NOINLINE helper(int a, int b) {
   return a+b;
 }
 
-int main() {
+int main()
+{
   CALL_DAT(helper);
   return grv;
 }
-

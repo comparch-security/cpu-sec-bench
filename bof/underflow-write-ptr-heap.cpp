@@ -1,6 +1,7 @@
 #include "include/bof.hpp"
 
-int main() {
+int main()
+{
   charBuffer *buffer = new charBuffer;
   char_buffer_init(buffer, 'u', 'd', 'o');
   update_pointer(buffer->data, -9, -1, 'c');

@@ -3,8 +3,7 @@
 
 int volatile grv = 1;
 
-void FORCE_NOINLINE helper()
-{
+void FORCE_NOINLINE helper() {
   // construct a fake return address
   PUSH_LABEL(ret_address);
 

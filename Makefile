@@ -48,7 +48,7 @@ CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall
 # -fno-omit-frame-pointer
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D -l -S
-RUN_SCRIPT := $(base)/script/run-test.py
+RUN_SCRIPT := $(base)/run-test.py
 
 # compile targets
 

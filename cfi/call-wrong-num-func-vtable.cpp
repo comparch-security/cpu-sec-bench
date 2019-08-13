@@ -9,7 +9,8 @@ public:
   virtual void other_func() { exit(3); }
 };
 
-int main() {
+int main()
+{
   Helper *orig = new Helper();
   Fake *fake = new Fake();
 
@@ -19,4 +20,3 @@ int main() {
 
   return 4;
 }
-

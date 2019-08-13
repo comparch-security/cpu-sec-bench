@@ -8,7 +8,8 @@ public:
   virtual void virtual_func() { exit(0); }
 };
 
-int main() {
+int main()
+{
 
   Base *orig = new Base();
   Fake *fake = new Fake();

@@ -18,7 +18,8 @@ void FORCE_NOINLINE helper() {
   return;
 }
 
-int main() {
+int main()
+{
   asm_stack_test();
   helper();
   return grv;

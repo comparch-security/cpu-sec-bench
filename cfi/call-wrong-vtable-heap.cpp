@@ -2,9 +2,10 @@
 #include "include/assembly.hpp"
 #include "include/cfi.hpp"
 
-void fake_func() {exit(0);}
+void fake_func() { exit(0); }
 
-int main() {
+int main()
+{
   Helper *orig = new Helper();
 
   //creat a fake vtable with 1 function pointer
@@ -17,4 +18,4 @@ int main() {
   orig->virtual_func();
 
   return 4;
- }
+}

@@ -3,13 +3,14 @@
 #include "include/cfi.hpp"
 
 double lvar;
-void fake_func(double new_var) 
-{
-	lvar = new_var;
-	exit(0);
+
+void fake_func(double new_var) {
+  lvar = new_var;
+  exit(0);
 }
 
-int main() {
+int main()
+{
   Helper2 *orig = new Helper2();
 
   //creat a fake vtable with 2 function pointer
@@ -22,4 +23,4 @@ int main() {
   orig->virtual_func(1);
 
   return 4;
- }
+}

@@ -14,8 +14,8 @@ void FORCE_NOINLINE helper() {
   JMP_LABEL(main_mid, 0);
 }
 
-int main() {
-
+int main()
+{
   // illegally jump to helper
   JMP_LABEL(helper_mid, 0);
   grv = 1; // failed if runs here
@@ -25,4 +25,3 @@ int main() {
 
   exit(grv);
 }
-

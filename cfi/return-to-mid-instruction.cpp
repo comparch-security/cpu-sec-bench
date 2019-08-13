@@ -12,8 +12,7 @@ void FORCE_NOINLINE helper() {
   grv = 0;
 }
 
-void FORCE_NOINLINE helper2()
-{
+void FORCE_NOINLINE helper2() {
   // construct a fake return address
   PUSH_LABEL(ret_address);
 
