@@ -60,6 +60,9 @@
     },
 
     "cpi-read-vtable-pointer": {},
+    "cpi-write-vtable-pointer": {
+        "depends-on": [ "cpi-read-vtable-pointer" ]
+    },
     "cpi-modify-func-pointer": {
         "comment": "force revision on function pointers"
     },
