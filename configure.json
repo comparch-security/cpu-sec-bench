@@ -59,10 +59,14 @@
         "depends-on": [ "ptt-access-after-free-org-heap" ]
     },
 
+    "cpi-read-vtable-pointer": {},
+    "cpi-write-vtable-pointer": {
+        "depends-on": [ "cpi-read-vtable-pointer" ]
+    },
     "cpi-modify-func-pointer": {
         "comment": "force revision on function pointers"
     },
-    "cpi-modify-GOT":{},
+    "cpi-modify-GOT": {},
 
     "cfi-call-mid-func": {},
     "cfi-call-mid-instruction": {},

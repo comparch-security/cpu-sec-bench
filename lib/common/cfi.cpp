@@ -27,3 +27,15 @@ void memory_exchange(void * a, void * b, int byte) {
   memcpy(a, b, byte);
   memcpy(b, c, byte);
 }
+
+// read write vtable pointer
+
+pvtable_t read_vtable_pointer(Base * p) {
+  pvtable_t *vtp = (pvtable_t *)p;
+  return *vtp;
+}
+
+void write_vtable_pointer(Base * pobj, pvtable_t vtp) {
+  pvtable_t *vtp_orig = (pvtable_t *)pobj;
+  *vtp_orig = vtp;
+}

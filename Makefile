@@ -93,8 +93,8 @@ rubbish += $(ptt-tests)
 $(ptt-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
 
 rubbish += $(cpi-tests)
 
