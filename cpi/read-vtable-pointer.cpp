@@ -1,9 +1,9 @@
 #include "include/cfi.hpp"
+#include <cstddef>
 
 int main()
 {
-  long long var = 0;
   Base *orig = new Helper();
-  long long *vtp = (long long *)(orig);
-  return (*vtp == 0) ? 1 : 0;
+  pvtable_t vtp = read_vtable_pointer(orig);
+  return (vtp == NULL) ? 1 : 0;
 }

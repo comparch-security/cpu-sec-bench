@@ -1,11 +1,11 @@
 #include "include/cfi.hpp"
+#include <cstddef>
 
 int main()
 {
   Base *orig = new Helper();
-  Base *orig1 = new Helper();
-  long long *vtp = (long long *)(orig);
-  long long *vtp1 = (long long *)(orig1);
-  *vtp = *vtp1;  //write a vtable pointer
-  return (*vtp == 0) ? 1 : 0;
+  Base *other = new Helper();
+  write_vtable_pointer(orig, read_vtable_pointer(other));
+  pvtable_t vtp = read_vtable_pointer(orig);
+  return (vtp == NULL) ? 1 : 0;
 }

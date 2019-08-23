@@ -33,4 +33,10 @@ public:
 	virtual void virtual_func(int arg);
 };
 
+// read the vtable pointer of an object
+extern pvtable_t read_vtable_pointer(Base *);
+
+// write the vtable pointer of an object
+extern void write_vtable_pointer(Base *, pvtable_t);
+
 #endif
