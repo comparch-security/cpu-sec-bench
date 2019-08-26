@@ -15,6 +15,34 @@ void Helper2::virtual_func(int arg) {
   exit(3);
 }
 
+void Helper3::virtual_func(double arg) {
+  lvar = arg;
+}
+
+int BaseM::virtual_funcM0() {
+  return 1;
+}
+
+int BaseM::virtual_funcM1() {
+  return 2;
+}
+
+int Helper1M::virtual_funcM0() {
+  return 3;
+}
+
+int Helper1M::virtual_funcM1() {
+  return 4;
+}
+
+int Helper2M::virtual_funcM0() {
+  return 5;
+}
+
+int Helper2M::virtual_funcM1() {
+  return 6;
+}
+
 // Fake Vtable in Heap
 extern pvtable_t create_fake_vtable_on_heap(unsigned int nfunc) {
   pvtable_t addr = (pvtable_t)malloc(nfunc * sizeof(pvtable_t));
@@ -36,6 +64,16 @@ pvtable_t read_vtable_pointer(Base * p) {
 }
 
 void write_vtable_pointer(Base * pobj, pvtable_t vtp) {
+  pvtable_t *vtp_orig = (pvtable_t *)pobj;
+  *vtp_orig = vtp;
+}
+
+pvtable_t read_vtable_pointer(BaseM * p) {
+  pvtable_t *vtp = (pvtable_t *)p;
+  return *vtp;
+}
+
+void write_vtable_pointer(BaseM * pobj, pvtable_t vtp) {
   pvtable_t *vtp_orig = (pvtable_t *)pobj;
   *vtp_orig = vtp;
 }

@@ -119,7 +119,12 @@
         "depends-on": [ "cfi-call-mid-func", "cfi-call-instruction-in-heap" ],
         "results": { "16": "expected excption on the illegal call." }
     },
-    "cfi-call-wrong-type-arg-vtable": {},
+    "cfi-call-wrong-type-arg-vtable": {
+        "depends-on": [ "cfi-call-wrong-type-arg-int2double-func" ]
+    },
+    "cfi-call-wrong-type-arg-vtable-with-data-modification": {
+        "depends-on": [ "cfi-call-wrong-type-arg-vtable" ]
+    },
     "cfi-call-wrong-type-arg-vtable-heap": {},
     "cfi-call-wrong-vtable-heap": {},
     "cfi-call-instruction-in-rodata": {},

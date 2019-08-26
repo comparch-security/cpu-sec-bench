@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
 #include "include/cfi.hpp"
 
 void fake_func() {
@@ -16,7 +15,7 @@ int main()
     fake_vtable[i] = fake_func;
 
   // replace the vtable pointer 
-  XCHG_MEM(orig, &fake_vtable);
+  write_vtable_pointer(orig, fake_vtable);
   orig->virtual_func();
 
   return 4;
