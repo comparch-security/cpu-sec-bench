@@ -74,7 +74,9 @@
     "cfi-call-wrong-func": {
         "depends-on": [ "cfi-call-wrong-func-within-static-analysis" ]
     },
-    "cfi-call-wrong-func-poly-vtable": {},
+    "cfi-call-wrong-func-poly-vtable": {
+        "depends-on": [ "cpi-write-vtable-pointer" ]
+    },
     "cfi-call-wrong-func-vtable": {
         "depends-on": [ "cfi-call-wrong-func-poly-vtable" ]
     },
