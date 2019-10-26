@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
 #include "include/cfi.hpp"
 
 double lvar;
@@ -11,15 +10,9 @@ void fake_func(double new_var) {
 int main()
 {
   Helper *orig = new Helper();
-
-  //create a fake vtable with 1 function pointer
   pvtable_t fake_vtable = create_fake_vtable_on_heap(1);
   *fake_vtable = (pfunc_t)fake_func;
-
-  // replace the vtable pointer 
-  XCHG_MEM(orig, &fake_vtable);
-
+  write_vtable_pointer(orig, fake_vtable);
   orig->virtual_func();
-
   return 4;
 }

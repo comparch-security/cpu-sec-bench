@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
 #include "include/cfi.hpp"
 
 class Fake : public Base
@@ -13,12 +12,7 @@ int main()
 
   Base *orig = new Base();
   Fake *fake = new Fake();
-
-  // replace the vtable pointer
-  XCHG_MEM(orig, fake);
-
-  // call the original virtual function
+  write_vtable_pointer(orig, read_vtable_pointer(fake));
   orig->virtual_func();
-
   return 4;
 }
