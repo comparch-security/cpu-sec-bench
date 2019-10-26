@@ -96,6 +96,9 @@
     "cfi-call-wrong-num-func-vtable-data": {
         "depends-on": [ "cfi-call-wrong-num-func-vtable" ]
     },
+    "cfi-call-wrong-num-func-vtable-stack": {
+        "depends-on": [ "cfi-call-wrong-num-func-vtable" ]
+    },
     "cfi-call-wrong-num-func-vtable-heap": {
         "depends-on": [ "cfi-call-wrong-num-func-vtable" ]
     },
