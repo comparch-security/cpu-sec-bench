@@ -6,12 +6,12 @@ int FORCE_NOINLINE fake_ret() {
 }
 
 void FORCE_NOINLINE helper() {
+  ENFORCE_NON_LEAF_FUNC;
   MOD_RET_DAT(fake_ret);
 }
 
 int main()
 {
-  asm_stack_test();
   helper();
   return 1;
 }

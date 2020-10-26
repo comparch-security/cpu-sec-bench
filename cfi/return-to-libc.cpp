@@ -4,13 +4,13 @@
 void FORCE_NOINLINE helper()
 {
   unsigned long long m = 0;
+  ENFORCE_NON_LEAF_FUNC;
   PASS_INT_ARG(0, m);
   MOD_RET_DAT(exit);
 }
 
 int main()
 {
-  asm_stack_test();
   helper();
   return 3;
 }

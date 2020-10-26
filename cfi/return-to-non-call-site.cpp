@@ -4,6 +4,7 @@
 static volatile int grv = 1;
 
 void FORCE_NOINLINE helper() {
+  ENFORCE_NON_LEAF_FUNC;
   grv = 3;
 
   MOD_RET_LABEL(main_mid);
@@ -12,8 +13,6 @@ void FORCE_NOINLINE helper() {
 
 int main()
 {
-  asm_stack_test();
-
   // call a function but illegally return
   helper();
   grv = 4; // failed if runs here
