@@ -2,8 +2,9 @@
 #include "include/assembly.hpp"
 
 static volatile int grv = 0;
-
+/*
 void FORCE_NOINLINE helper() {
+  ENFORCE_NON_LEAF_FUNC;
   grv = 3;
 
   volatile long long p;
@@ -25,11 +26,10 @@ void FORCE_NOINLINE helper2() {
 
   grv = 4;
 }
-
+*/
 int main()
 {
-  asm_stack_test();
-  helper2();
+  //helper2();
   DECL_LABEL(ret_address);
   exit(grv);
 }
