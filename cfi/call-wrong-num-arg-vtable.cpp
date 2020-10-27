@@ -1,29 +1,21 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
 #include "include/cfi.hpp"
-
 
 class Fake
 {
   int lvar;
 public:
-    virtual int virtual_func(int new_var) {
-      lvar = new_var;
-      exit(0);
-    }
+  virtual int virtual_func(int new_var) {
+    lvar = new_var;
+    exit(0);
+  }
 };
 
-int main() {
+int main()
+{
   Helper *orig = new Helper();
   Fake *fake = new Fake();
-
-  // replace the vtable pointer
-  XCHG_MEM(orig, fake);
-  
-  // call the original virtual function
+  write_vtable_pointer(orig, *((pvtable_t *)fake));
   orig->virtual_func();
-
   return 4;
- }
-
-
+}

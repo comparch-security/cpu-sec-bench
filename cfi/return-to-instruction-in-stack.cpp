@@ -6,6 +6,7 @@ static int helper_num=0;
 
 void FORCE_NOINLINE helper(const unsigned char* m) {
   static int test_num=helper_num;
+  ENFORCE_NON_LEAF_FUNC;
   rv = 1;
   MOD_RET_DAT(m);
 }

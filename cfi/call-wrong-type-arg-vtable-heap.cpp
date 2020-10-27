@@ -1,15 +1,15 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
 #include "include/cfi.hpp"
 
 double lvar;
-void fake_func(double new_var) 
-{
-	lvar = new_var;
-	exit(0);
+
+void fake_func(double new_var) {
+  lvar = new_var;
+  exit(0);
 }
 
-int main() {
+int main()
+{
   Helper2 *orig = new Helper2();
 
   //creat a fake vtable with 2 function pointer
@@ -18,8 +18,8 @@ int main() {
   fake_vtable[1] = (pfunc_t)fake_func;
 
   // replace the vtable pointer 
-  XCHG_MEM(orig, &fake_vtable);
+  write_vtable_pointer(orig, fake_vtable);
   orig->virtual_func(1);
 
   return 4;
- }
+}

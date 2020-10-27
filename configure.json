@@ -18,15 +18,39 @@
     "bof-overflow-write-index-stack": {},
     "bof-overflow-write-index-data": {},
     "bof-overflow-write-index-heap": {},
-    "bof-underflow-write-index-data": {},
-    "bof-underflow-write-index-heap": {},
-    "bof-underflow-write-index-stack": {},
+    "bof-underflow-write-index-data": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
+    "bof-underflow-write-index-heap": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
+    "bof-underflow-write-index-stack": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
     "bof-overflow-write-ptr-stack": {},
     "bof-overflow-write-ptr-data": {},
     "bof-overflow-write-ptr-heap": {},
-    "bof-underflow-write-ptr-data": {},
-    "bof-underflow-write-ptr-heap": {},
-    "bof-underflow-write-ptr-stack": {},
+    "bof-underflow-write-ptr-data": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
+    "bof-underflow-write-ptr-heap": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
+    "bof-underflow-write-ptr-stack": {
+        "parameters": {
+            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+        }
+    },
 
     "ptt-access-after-free-org-heap": {},
     "ptt-access-after-free-alias-heap": {},
@@ -35,10 +59,14 @@
         "depends-on": [ "ptt-access-after-free-org-heap" ]
     },
 
+    "cpi-read-vtable-pointer": {},
+    "cpi-write-vtable-pointer": {
+        "depends-on": [ "cpi-read-vtable-pointer" ]
+    },
     "cpi-modify-func-pointer": {
         "comment": "force revision on function pointers"
     },
-    "cpi-modify-GOT":{},
+    "cpi-modify-GOT": {},
 
     "cfi-call-mid-func": {},
     "cfi-call-mid-instruction": {},
@@ -46,12 +74,20 @@
     "cfi-call-wrong-func": {
         "depends-on": [ "cfi-call-wrong-func-within-static-analysis" ]
     },
-    "cfi-call-wrong-func-poly-vtable": {},
-    "cfi-call-wrong-func-vtable": {
-        "depends-on": [ "cfi-call-wrong-func-poly-vtable" ]
+    "cfi-call-wrong-func-vtable-parent": {
+        "depends-on": [ "cpi-write-vtable-pointer" ]
     },
-    "cfi-call-wrong-func-offset-vtable": {
-        "depends-on": [ "cfi-call-wrong-func-poly-vtable" ]
+    "cfi-call-wrong-func-vtable-sibling": {
+        "depends-on": [ "cpi-write-vtable-pointer" ]
+    },
+    "cfi-call-wrong-func-vtable-child": {
+        "depends-on": [ "cpi-write-vtable-pointer" ]
+    },
+    "cfi-call-wrong-func-vtable-offset": {
+        "depends-on": [ "cpi-write-vtable-pointer" ]
+    },
+    "cfi-call-wrong-func-vtable": {
+        "depends-on": [ "cfi-call-wrong-func-vtable-child" ]
     },
     "cfi-call-wrong-num-arg-func": {},
     "cfi-call-wrong-num-arg-vtable": {
@@ -63,11 +99,21 @@
     "cfi-call-wrong-num-func-vtable": {
         "depends-on": [ "cfi-call-wrong-func-vtable" ]
     },
+    "cfi-call-wrong-num-func-vtable-data": {
+        "depends-on": [ "cfi-call-wrong-num-func-vtable" ]
+    },
+    "cfi-call-wrong-num-func-vtable-stack": {
+        "depends-on": [ "cfi-call-wrong-num-func-vtable" ]
+    },
     "cfi-call-wrong-num-func-vtable-heap": {
         "depends-on": [ "cfi-call-wrong-num-func-vtable" ]
     },
-    "cfi-call-wrong-type-arg-int2double-func": {
-        "arguments" : "0 2"
+    "cfi-call-wrong-type-arg-int2double-func": {},
+    "cfi-call-wrong-type-arg-op2doublep-func": {
+        "arguments" : "2"
+    },
+    "cfi-call-wrong-type-arg-op2intp-func": {
+        "arguments" : "2"
     },
     "cfi-call-wrong-type-arg-fp2dp-func": {},
     "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
@@ -85,7 +131,12 @@
         "depends-on": [ "cfi-call-mid-func", "cfi-call-instruction-in-heap" ],
         "results": { "16": "expected excption on the illegal call." }
     },
-    "cfi-call-wrong-type-arg-vtable": {},
+    "cfi-call-wrong-type-arg-vtable": {
+        "depends-on": [ "cfi-call-wrong-type-arg-int2double-func" ]
+    },
+    "cfi-call-wrong-type-arg-vtable-with-data-modification": {
+        "depends-on": [ "cfi-call-wrong-type-arg-vtable" ]
+    },
     "cfi-call-wrong-type-arg-vtable-heap": {},
     "cfi-call-wrong-vtable-heap": {},
     "cfi-call-instruction-in-rodata": {},

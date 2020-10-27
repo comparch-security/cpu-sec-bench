@@ -48,7 +48,7 @@ CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall
 # -fno-omit-frame-pointer
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D -l -S
-RUN_SCRIPT := $(base)/script/run-test.py
+RUN_SCRIPT := $(base)/run-test.py
 
 # compile targets
 
@@ -93,8 +93,8 @@ rubbish += $(ptt-tests)
 $(ptt-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
 
 rubbish += $(cpi-tests)
 
@@ -126,7 +126,7 @@ prep: $(sec-tests-prep)
 rubbish += $(sec-tests-prep)
 
 clean:
-	-rm $(rubbish) > /dev/null 2>&1
+	-rm $(rubbish) results.json > /dev/null 2>&1
 
 .PHONY: clean run dump prep
 

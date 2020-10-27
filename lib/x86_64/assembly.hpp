@@ -31,7 +31,9 @@
 
 // detect the stack
 extern unsigned long long min_stack_size;
-extern void asm_stack_test();
+extern int dummy_leaf_rv;
+extern int dummy_leaf_func(int);
+#define ENFORCE_NON_LEAF_FUNC dummy_leaf_rv = dummy_leaf_func(dummy_leaf_rv);
 
 // modify return address to a label
 #define MOD_RET_LABEL(label) \

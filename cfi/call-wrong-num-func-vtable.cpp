@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
 #include "include/cfi.hpp"
 
 class Fake : public Base
@@ -9,14 +8,11 @@ public:
   virtual void other_func() { exit(3); }
 };
 
-int main() {
+int main()
+{
   Helper *orig = new Helper();
   Fake *fake = new Fake();
-
-  // replace the vtable pointer
-  XCHG_MEM(orig, fake);
+  write_vtable_pointer(orig, read_vtable_pointer(fake));
   orig->virtual_func();
-
   return 4;
 }
-

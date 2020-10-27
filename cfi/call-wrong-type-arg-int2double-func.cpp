@@ -1,14 +1,12 @@
 #include "include/assembly.hpp"
 
 static unsigned int rv = 1;
-int num1, num2;
 
-void FORCE_NOINLINE helper(const double var) {
-  int d = (int)var;
-  rv = (d == 2) ? num1 : num2;
+void helper(double var) {
+  rv = (var != 0.0) ? 0 : 1;
 }
 
-int main(int argc, char* argv[])
+int main()
 {
   //lp64f:  __riscv_float_abi_single 1
   //lp64d:  __riscv_float_abi_double 1

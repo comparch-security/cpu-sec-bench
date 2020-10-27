@@ -5,12 +5,12 @@ void fake_func() {
   exit(0);
 }
 
-int main()
-{
+static pfunc_t fake_vtable[3];
+
+int main() {
   Helper *orig = new Helper();
 
   //create a fake vtable with 3 function pointers
-  pvtable_t fake_vtable = create_fake_vtable_on_heap(3);
   for(int i=0; i<3; i++)
     fake_vtable[i] = fake_func;
 

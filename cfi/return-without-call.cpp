@@ -4,6 +4,7 @@
 static volatile int grv = 1;
 
 void FORCE_NOINLINE helper() {
+  ENFORCE_NON_LEAF_FUNC;
   if(grv == 2) {
     DECL_LABEL(ret_address);
     exit(0);
@@ -19,7 +20,8 @@ void FORCE_NOINLINE helper() {
   return;
 }
 
-int main() {
+int main()
+{
   helper();
   return grv;
 }
