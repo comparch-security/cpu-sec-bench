@@ -1,14 +1,26 @@
 SHELL := /bin/bash
 
 # default variables
-CPU_ARCH ?= $(shell arch)
-CXX ?= g++
+ARCH ?= $(shell arch)
 GCC_OPT_LEVEL ?= O2
+
+ifeq ($(ARCH), x86_64)
+  # host compilation
+  CXX ?= g++
+  OBJDUMP ?= objdump
+endif
+
+ifeq ($(ARCH), riscv64)
+  # cross-compilation
+  CXX ?= $(RISCV)/bin/riscv64-unknown-linux-gnu-g++
+  OBJDUMP ?= $(RISCV)/bin/riscv64-unknown-linux-gnu-objdump
+endif
+
 
 # define paths and objects
 base = .
 
-test-path = $(base)/test-$(CPU_ARCH)
+test-path = $(base)/test-$(ARCH)
 LD_LIBRARY_PATH=$(test-path)
 
 bof-path  = $(base)/bof
@@ -35,21 +47,11 @@ sec-tests := $(bof-tests) $(ptt-tests) $(cpi-tests) $(cfi-tests)
 sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(bof-cpps-prep) $(ptt-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
-headers := $(wildcard $(base)/lib/include/*.hpp)
-extra_objects := $(base)/lib/common/signal.o
-
-# conditional variables
-#ifeq ($(CPU_ARCH), x86_64)
-#  headers += $(wildcard $(base)/lib/x86_64/*.hpp)
-#  extra_objects += $(addprefix $(base)/lib/x86_64/, assembly.o)
-#endif
-
-headers += $(wildcard $(base)/lib/$(CPU_ARCH)/*.hpp)
-extra_objects += $(addprefix $(base)/lib/$(CPU_ARCH)/, assembly.o)
+headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
+extra_objects := $(base)/lib/common/signal.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
 
 CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall
 # -fno-omit-frame-pointer
-OBJDUMP := objdump
 OBJDUMPFLAGS := -D -l -S
 RUN_SCRIPT := ./run-test.py
 
