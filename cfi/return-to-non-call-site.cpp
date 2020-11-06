@@ -7,7 +7,7 @@ void FORCE_NOINLINE helper() {
   ENFORCE_NON_LEAF_FUNC;
   grv = 3;
 
-  MOD_RET_LABEL(main_mid);
+  MOD_RET_LABEL(main_mid,0);
   grv = 0;
 }
 
@@ -15,7 +15,9 @@ int main()
 {
   // call a function but illegally return
   helper();
-  grv = 4; // failed if runs here
+
+  // failed if runs here
+  grv = 4; 
 
   // the elligal return site
   DECL_LABEL(main_mid);

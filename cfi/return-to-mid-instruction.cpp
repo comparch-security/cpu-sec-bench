@@ -7,9 +7,8 @@ void FORCE_NOINLINE helper() {
   ENFORCE_NON_LEAF_FUNC;
   grv = 3;
 
-  volatile long long p;
-  LOAD_LABEL(mid_instruction, p);
-  MOD_RET_DAT(p + 2);
+  MOD_RET_LABEL(mid_instruction,2);
+
   grv = 0;
 }
 
@@ -19,9 +18,10 @@ void FORCE_NOINLINE helper2() {
 
   // call a function but illegally return
   helper();
-  grv = 1; // failed if runs here
 
-  // a instruction to jump to the middle
+  // failed if runs here
+  grv = 1;
+
   MID_INSTRUCTION;
 
   grv = 4;
