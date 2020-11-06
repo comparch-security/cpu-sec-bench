@@ -29,7 +29,7 @@ def db_set_param(db, test, param, value):
 
 def open_cfg_db():
     global cfgDB
-    cfgDB = open_db("configure.json")
+    cfgDB = open_db("../configure.json")
 
 def write_result_db():
     global resultDB

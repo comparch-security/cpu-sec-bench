@@ -1,11 +1,11 @@
-#!/usr/bin/python3
+#!/usr/bin/python2
 
 import sys
 import os.path
 import subprocess
 from functools import reduce
 
-sys.path.append(os.path.relpath("script"))
+sys.path.append(os.path.relpath("../script"))
 import database
 
 # check the dependence of a tests
@@ -34,7 +34,7 @@ def proc_when_ok(test, dep):
     expected_results = database.cfg_get_expected_results(test)
     try:
         subprocess.check_call(
-            "test/" + test + " " + argument,
+            "./" + test + " " + argument,
             stderr=subprocess.STDOUT,
             shell=True
         )

@@ -1,14 +1,14 @@
 SHELL := /bin/bash
 
 # default variables
-CPU_ARCH ?= $(shell uname -i)
+CPU_ARCH ?= $(shell arch)
 CXX ?= g++
 GCC_OPT_LEVEL ?= O2
 
 # define paths and objects
 base = .
 
-test-path = $(base)/test
+test-path = $(base)/test-$(CPU_ARCH)
 LD_LIBRARY_PATH=$(test-path)
 
 bof-path  = $(base)/bof
@@ -39,16 +39,19 @@ headers := $(wildcard $(base)/lib/include/*.hpp)
 extra_objects := $(base)/lib/common/signal.o
 
 # conditional variables
-ifeq ($(CPU_ARCH), x86_64)
-  headers += $(wildcard $(base)/lib/x86_64/*.hpp)
-  extra_objects += $(addprefix $(base)/lib/x86_64/, assembly.o)
-endif
+#ifeq ($(CPU_ARCH), x86_64)
+#  headers += $(wildcard $(base)/lib/x86_64/*.hpp)
+#  extra_objects += $(addprefix $(base)/lib/x86_64/, assembly.o)
+#endif
+
+headers += $(wildcard $(base)/lib/$(CPU_ARCH)/*.hpp)
+extra_objects += $(addprefix $(base)/lib/$(CPU_ARCH)/, assembly.o)
 
 CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall
 # -fno-omit-frame-pointer
 OBJDUMP := objdump
 OBJDUMPFLAGS := -D -l -S
-RUN_SCRIPT := $(base)/run-test.py
+RUN_SCRIPT := ./run-test.py
 
 # compile targets
 
@@ -94,7 +97,7 @@ $(ptt-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,. -o $@ -lcfi
 
 rubbish += $(cpi-tests)
 
@@ -102,18 +105,15 @@ $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,$(test-path) -o $@ -lcfi
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,. -o $@ -lcfi
 
 rubbish += $(cfi-tests)
 
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-run: $(sec-tests)
-	@echo ===============================
-	@echo Run all tests:
-	@echo -------------------------------
-	@for t in $^; do $(RUN_SCRIPT) $$t; done
+run: $(sec-tests) $(test-path)/$(RUN_SCRIPT)
+	cd $(test-path); $(RUN_SCRIPT)
 
 dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%
@@ -126,7 +126,7 @@ prep: $(sec-tests-prep)
 rubbish += $(sec-tests-prep)
 
 clean:
-	-rm $(rubbish) results.json > /dev/null 2>&1
+	-rm $(rubbish) $(test-path)/results.json > /dev/null 2>&1
 
 .PHONY: clean run dump prep
 
