@@ -2,62 +2,50 @@
 // x86_64
 
 // declare a label in assembly
-#define DECL_LABEL(label) \
+#define DECL_LABEL(label)                    \
   asm volatile(#label ":")
 
-// get the address of a label
-#define LOAD_LABEL(label, var)                          \
-  asm volatile(                                         \
-    "lea " #label "(%%rip), %0;"                        \
-    : "=r"(var) :                                       \
-                                                        )
-
 // modify stack
-#define MOD_STACK_LABEL(label, offset)                  \
-  asm volatile(                                         \
-    "lea " #label "(%%rip), %%rax;"                     \
-    "addq %%rsp, %0;"                                   \
-    "movq %%rax, (%0);"                                 \
-    : : "r"(offset)                                     \
-    : "rax"                                             \
-                                                        )
+#define MOD_STACK_LABEL(label, offset)       \
+  asm volatile(                              \
+    "lea " #label "(%%rip), %%rax;"          \
+    "addq %%rsp, %0;"                        \
+    "movq %%rax, (%0);"                      \
+    : : "r"(offset)                          \
+    : "rax"                                  )
 
-#define MOD_STACK_DAT(dat, offset)                      \
-  asm volatile(                                         \
-    "addq %%rsp, %0;"                                   \
-    "movq %1, (%0);"                                    \
-    : : "r"(offset), "r"(dat)                           \
-                                                        )
+#define MOD_STACK_DAT(dat, offset)           \
+  asm volatile(                              \
+    "addq %%rsp, %0;"                        \
+    "movq %1, (%0);"                         \
+    : : "r"(offset), "r"(dat)                )
 
 // detect the stack
-extern unsigned long long min_stack_size;
 extern int dummy_leaf_rv;
 extern int dummy_leaf_func(int);
 #define ENFORCE_NON_LEAF_FUNC dummy_leaf_rv = dummy_leaf_func(dummy_leaf_rv);
 
 // modify return address to a label
-#define MOD_RET_LABEL(label) \
-  MOD_STACK_LABEL(label, min_stack_size)
-#define MOD_RET_DAT(dat)     \
-  MOD_STACK_DAT(dat, min_stack_size)
+#define MOD_RET_LABEL(label)                 \
+  MOD_STACK_LABEL(label, 8)
+#define MOD_RET_DAT(dat)                     \
+  MOD_STACK_DAT(dat, 8)
 
 
 // exchange memory value
-#define XCHG_MEM(ptrL, ptrR)          \
-  asm volatile(                       \
-    "movq (%0), %%rax;"               \
-    "xchg %%rax, (%1);"               \
-    "movq %%rax, (%0);"               \
-    : : "r" (ptrL), "r" (ptrR)        \
-    : "rax"                           \
-                                      )
+#define XCHG_MEM(ptrL, ptrR)                 \
+  asm volatile(                              \
+    "movq (%0), %%rax;"                      \
+    "xchg %%rax, (%1);"                      \
+    "movq %%rax, (%0);"                      \
+    : : "r" (ptrL), "r" (ptrR)               \
+    : "rax"                                  )
 
 // call to a pointer
 #define CALL_DAT(ptr)                        \
   asm volatile(                              \
     "call *%0;"                              \
-    : : "r" (ptr)                            \
-                                             )
+    : : "r" (ptr)                            )
 
 //call to a label
 #define CALL_LABEL(label, offset)            \
@@ -65,8 +53,7 @@ extern int dummy_leaf_func(int);
     "lea " #label "(%%rip), %%rax;"          \
     "add %0, %%rax;"                         \
     "call *%%rax;"                           \
-    : : "i"(offset) : "rax"                  \
-                                             )
+    : : "i"(offset) : "rax"                  )
 
 // jump to a pointer
 #define JMP_DAT(ptr)                         \
@@ -75,49 +62,45 @@ extern int dummy_leaf_func(int);
     : : "r" (ptr)                            \
                                              )
 
-// jump to a label
+// jump to a label with offset
 #define JMP_LABEL(label, offset)             \
   asm volatile(                              \
     "lea " #label "(%%rip), %%rax;"          \
     "add %0, %%rax;"                         \
     "jmp *%%rax;"                            \
-    : : "i"(offset) : "rax"                  \
-                                             )
+    : : "i"(offset) : "rax"                  )
 
-// pass a integer argument
-#define PASS_INT_ARG(Idx, arg) \
-  PASS_INT_ARG##Idx(arg)
+//pass an integer argument
+#define PASS_INT_ARG(Idx, arg)               \
+  PASS_INT_ARG##Idx(arg                      )
 
-#define PASS_INT_ARG0(arg) \
-  asm volatile("mov %0, %%rdi;" : : "r" (arg))
-#define PASS_INT_ARG1(arg) \
-  asm volatile("mov %0, %%rsi;" : : "r" (arg))
+#define PASS_INT_ARG0(arg)                   \
+  asm volatile("mov %0, %%rdi;" : : "r" (arg) : "rdi")
+#define PASS_INT_ARG1(arg)                   \
+  asm volatile("mov %0, %%rsi;" : : "r" (arg) : "rsi")
 
 // pass a double argument
-#define PASS_DOUBLE_ARG_FROM_INT(Idx, arg)        \
-  asm volatile(                                   \
-    "movq %0, %%rax;"                             \
-    "movq %%rax, %%xmm" #Idx ";"                  \
-    : : "r" (arg)                                 \
-    : "rax", "xmm" #Idx                           \
-                                                  )
+#define PASS_DOUBLE_ARG_FROM_INT(Idx, arg)   \
+  asm volatile(                              \
+    "movq %0, %%rax;"                        \
+    "movq %%rax, %%xmm" #Idx ";"             \
+    : : "r" (arg)                            \
+    : "rax", "xmm" #Idx                      )
 
 // push an address
 #define PUSH_LABEL(label)                    \
   asm volatile(                              \
     "lea " #label "(%%rip), %%rax;"          \
     "push %%rax;"                            \
-    : : : "rax"                              \
-                                             )
+    : : : "rax"                              )
 // create a fake return stack
 #define PUSH_FAKE_RET(label)                 \
   asm volatile(                              \
     "lea " #label "(%%rip), %%rax;"          \
     "push %%rax;"                            \
     "subq %0, %%rsp;"                        \
-    : : "r"(min_stack_size)                  \
-    : "rax"                                  \
-                                             )
+    : : "i"(8)                               \
+    : "rax"                                  )
 
 // return
 #define RET \

@@ -11,8 +11,7 @@ void FORCE_NOINLINE helper() {
   }
 
   // push the label address
-  //MOD_RET_LABEL_DEFINED(ret_address); 
-  MOD_RET_LABEL(ret_address,0); 
+  PUSH_FAKE_RET(ret_address);
 
   // return to the push adderss
   // although a simple assembly "ret" would work out of the box

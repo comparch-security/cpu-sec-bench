@@ -3,6 +3,11 @@
 
 int volatile grv = 2;
 
+int main() {
+  return 0;
+}
+
+/*
 void FORCE_NOINLINE helper()
 { 
  JMP_LABEL(mid_instruction, 2);        
@@ -22,3 +27,4 @@ int main()
   
   exit(grv);
 }
+*/

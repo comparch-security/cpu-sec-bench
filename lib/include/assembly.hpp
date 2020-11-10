@@ -12,4 +12,10 @@
   #include "x86_64/assembly.hpp"
 #endif
 
+#ifdef __riscv
+  #if __riscv_xlen == 64
+    #include "riscv64/assembly.hpp"
+  #endif
+#endif
+
 #endif // ASSEMBLY_HPP_INCLUDED

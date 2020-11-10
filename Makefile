@@ -6,14 +6,14 @@ GCC_OPT_LEVEL ?= O2
 
 ifeq ($(ARCH), x86_64)
   # host compilation
-  CXX ?= g++
-  OBJDUMP ?= objdump
+  CXX = g++
+  OBJDUMP = objdump
 endif
 
 ifeq ($(ARCH), riscv64)
   # cross-compilation
-  CXX ?= $(RISCV)/bin/riscv64-unknown-linux-gnu-g++
-  OBJDUMP ?= $(RISCV)/bin/riscv64-unknown-linux-gnu-objdump
+  CXX = $(RISCV)/bin/riscv64-unknown-linux-gnu-g++
+  OBJDUMP = $(RISCV)/bin/riscv64-unknown-linux-gnu-objdump
 endif
 
 
