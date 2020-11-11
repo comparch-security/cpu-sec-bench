@@ -1,12 +1,10 @@
-#include <cstdlib>
+#include "include/ptt.hpp"
 
 int main() {
-  char *buffer = (char *)malloc(16);
-  for(int i=0; i<16; i++) buffer[i] = 'c';
-  free(buffer);
+  char *buffer;
 
-  char *tmp = (char *)malloc(16);
-  for(int i=0; i<16; i++) tmp[i] = 'd';
+  if(!get_reallocated_block(&buffer, true))
+    return 2;
 
   for(int i=0; i<16; i++) // except if pionter temporal protection exists
     if(buffer[i] == 'd') return 0;

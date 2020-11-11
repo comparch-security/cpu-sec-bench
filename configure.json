@@ -52,11 +52,22 @@
         }
     },
 
-    "ptt-access-after-free-org-heap": {},
-    "ptt-access-after-free-alias-heap": {},
     "ptt-access-after-free-alias-stack": {},
+    "ptt-access-after-free-org-heap": {
+        "results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
+    },
+    "ptt-access-after-free-alias-heap": {
+        "results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
+    },
+    "ptt-reallocate-heap": {
+        "comment": "try to get a block which is previously freed.",
+        "results": { "1": "failed to get a reallocated block after a number of trials." }
+    },
     "ptt-access-after-reclaim-org-heap": {
-        "depends-on": [ "ptt-access-after-free-org-heap" ]
+        "depends-on": [ "ptt-reallocate-heap" ],
+        "results": { "1": "expected when freed space is refilled with rubbish or cleaned.",
+                     "2": "failed to reallocate a block."
+                   }
     },
 
     "cpi-read-vtable-pointer": {},
@@ -64,10 +75,10 @@
         "depends-on": [ "cpi-read-vtable-pointer" ]
     },
     "cpi-modify-func-pointer": {
-        "comment": "force revision on function pointers"
+        "comment": "force revision on function pointers."
     },
     "cpi-modify-GOT": {
-        "TODO" : "this relies on the code is readable"
+        "TODO" : "this relies on the code is readable."
     },
 
     "cfi-call-mid-func": {},
@@ -141,7 +152,9 @@
     },
     "cfi-call-wrong-type-arg-vtable-heap": {},
     "cfi-call-wrong-vtable-heap": {},
-    "cfi-call-instruction-in-rodata": {},
+    "cfi-call-instruction-in-rodata": {
+        "results": { "16": "expected excption on the illegal call." }
+    },
     "cfi-call-instruction-in-data": {
         "results": { "16": "expected excption on the illegal call." }
     },
