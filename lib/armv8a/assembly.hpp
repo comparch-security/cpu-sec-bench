@@ -8,14 +8,14 @@
 // modify stack
 #define MOD_STACK_LABEL(label, offset)       \
   asm volatile(                              \
-    "la  t0," #label ";"                     \
-    "sd  t0, %0(sp);"                        \
+    "adr  x8," #label ";"                    \
+    "str  x8, [sp, %0];"                     \
     : : "i"(offset)                          \
-    : "t0"                                   )
+    : "x8"                                   )
 
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
-    "sd  %1, %0(sp);"                        \
+    "str  %1, [sp, %0];"                     \
     : : "i"(offset), "r"(dat)                )
 
 // detect the stack
@@ -34,40 +34,42 @@ extern int dummy_leaf_func(int);
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)                 \
   asm volatile(                              \
-    "ld t0, 0(%1);"                          \
-    "ld t1, 0(%0);"                          \
-    "sd t1, 0(%1);"                          \
-    "sd t0, 0(%0);"                          \
+    "ldr  x8, [%1];"                         \
+    "ldr  x9, [%0];"                         \
+    "str  x9, [%1];"                         \
+    "str  x8, [%0];"                         \
     : : "r" (ptrL), "r" (ptrR)               \
-    : "t0", "t1"                             )
+    : "x8", "x9"                             )
 
 // call to a pointer
 #define CALL_DAT(ptr)                        \
   asm volatile(                              \
-    "jalr ra, %0, 0;"                        \
+    "blr  %0;"                               \
     : : "r"(ptr)                             \
-    : "ra"                                   )
+    : "x30"                                  )
 
 //call to a label
 #define CALL_LABEL(label, offset)            \
   asm volatile(                              \
-   "la   t0," #label ";"                     \
-   "jalr ra, t0, %0;"                        \
-   : : "i"(offset) : "t0"                    )
+   "adr   x8," #label ";"                    \
+   "add   x8, x8, %0;"                       \
+   "blr   x8;"                               \
+   : : "i"(offset) : "x8"                    )
 
 // jump to a pointer
 #define JMP_DAT(ptr)                         \
   asm volatile(                              \
-    "jalr x0, %0, 0;"                        \
+    "br   %0;"                               \
     : : "r"(ptr)                             \
                                              )
 
 // jump to a label with offset
 #define JMP_LABEL(label, offset)             \
   asm volatile(                              \
-    "la   t0," #label ";"                    \
-    "jalr x0, t0, %0;"                       \
-    : : "i"(offset) : "t0"                   )
+    "adr   x8," #label ";"                   \
+    "add   x8, x8, %0;"                      \
+    "br    x8;"                              \
+    : : "i"(offset) : "x8"                   )
 
 //pass an integer argument
 #define PASS_INT_ARG(Idx, arg)               \
