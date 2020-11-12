@@ -12,10 +12,13 @@
   #include "x86_64/assembly.hpp"
 #endif
 
-#ifdef __riscv
-  #if __riscv_xlen == 64
-    #include "riscv64/assembly.hpp"
-  #endif
+#if defined(__ARM_ARCH_8A__) && defined(__aarch64)
+  #include "armv8a/assembly.hpp"
 #endif
+
+#if defined(__riscv) && __riscv_xlen == 64
+  #include "riscv64/assembly.hpp"
+#endif
+
 
 #endif // ASSEMBLY_HPP_INCLUDED
