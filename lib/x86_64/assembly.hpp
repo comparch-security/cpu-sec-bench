@@ -9,20 +9,18 @@
 #define MOD_STACK_LABEL(label, offset)       \
   asm volatile(                              \
     "lea " #label "(%%rip), %%rax;"          \
-    "addq %%rsp, %0;"                        \
-    "movq %%rax, (%0);"                      \
-    : : "r"(offset)                          \
-    : "rax"                                  )
+    "movq %%rax, " #offset "(%%rsp);"        \
+    : : : "rax"                              )
 
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
-    "addq %%rsp, %0;"                        \
-    "movq %1, (%0);"                         \
-    : : "r"(offset), "r"(dat)                )
+    "movq %0, " #offset "(%%rsp);"           \
+    : : "r"(dat)                             )
 
 // detect the stack
 extern int dummy_leaf_rv;
 extern int dummy_leaf_func(int);
+#define ENFORCE_NON_LEAF_FUNC_VAR(VAR) dummy_leaf_rv = dummy_leaf_func(VAR);
 #define ENFORCE_NON_LEAF_FUNC dummy_leaf_rv = dummy_leaf_func(dummy_leaf_rv);
 
 // modify return address to a label
@@ -44,6 +42,7 @@ extern int dummy_leaf_func(int);
 // call to a pointer
 #define CALL_DAT(ptr)                        \
   asm volatile(                              \
+    "sub  $0x8, %%rsp;"                      \
     "call *%0;"                              \
     : : "r" (ptr)                            )
 
@@ -116,19 +115,20 @@ extern int dummy_leaf_func(int);
 #define POP_STACK \
   asm volatile("pop %%rax" : : : "rax")
 
-// the machine code of a function
-//
-//  unsigned int func() {
-//    return 0;
-//  }
-//  00:       31 c0                   xor    %eax,%eax
-//  02:       c3                      retq
+// the machine code for the following
+//  31 c0                   xor    %eax,%eax
+//  48 83 c4 08             add    $0x8,%rsp
+//  c3                      retq
 #define FUNC_MACHINE_CODE \
-  {0x31, 0xc0, 0xc3}
+  {0x31, 0xc0, 0x48, 0x83, 0xc4, 0x08, 0xc3}
 
 void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x31;
   *p++ = 0xc0;
+  *p++ = 0x48;
+  *p++ = 0x83;
+  *p++ = 0xc4;
+  *p++ = 0x08;
   *p++ = 0xc3;
 }
 
