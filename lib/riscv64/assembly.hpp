@@ -21,6 +21,7 @@
 // detect the stack
 extern int dummy_leaf_rv;
 extern int dummy_leaf_func(int);
+#define ENFORCE_NON_LEAF_FUNC_VAR(VAR) dummy_leaf_rv = dummy_leaf_func(VAR);
 #define ENFORCE_NON_LEAF_FUNC dummy_leaf_rv = dummy_leaf_func(dummy_leaf_rv);
 
 // modify return address to a label
@@ -105,18 +106,17 @@ extern int dummy_leaf_func(int);
 #define RET \
   asm volatile("addi sp, sp, 16; ret")
 
-// the machine code of a function
-//
-//  unsigned int func() {
-//    return 0;
-//  }
+// the machine code for the following
+// 357d                    addiw   a0,a0,-1
 // 60a2                    ld      ra,8(sp)
 // 0141                    addi    sp,sp,16
 // 8082                    ret
 #define FUNC_MACHINE_CODE \
-  {0xa2, 0x60, 0x41, 0x01, 0x82, 0x80}
+  {0x7d, 0x35, 0xa2, 0x60, 0x41, 0x01, 0x82, 0x80}
 
 void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
+  *p++ = 0x7d;
+  *p++ = 0x35;
   *p++ = 0xa2;
   *p++ = 0x60;
   *p++ = 0x41;

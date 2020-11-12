@@ -167,7 +167,8 @@
     "cfi-jump-mid-func": {},
     "cfi-jump-mid-instruction": {},
     "cfi-jump-instruction-in-rodata": {
-        "depends-on": [ "cfi-jump-mid-func" ]
+        "depends-on": [ "cfi-jump-mid-func" ],
+        "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-instruction-in-bss": {
         "depends-on": [ "cfi-jump-mid-func" ],
@@ -196,7 +197,8 @@
                       ]
     },
     "cfi-return-to-instruction-in-rodata": {
-        "depends-on": [ "cfi-return-to-func" ]
+        "depends-on": [ "cfi-return-to-func" ],
+        "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-data": {
         "depends-on": [ "cfi-return-to-func" ],

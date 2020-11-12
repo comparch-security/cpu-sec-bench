@@ -4,8 +4,7 @@
 int dummy_leaf_rv = 0;
 
 int FORCE_NOINLINE dummy_leaf_func(int v) {
-  dummy_leaf_rv += rand();
-  return dummy_leaf_rv;
+  return v + rand();
 }
 
 void replace_got_func(void **org, void **fake) {
