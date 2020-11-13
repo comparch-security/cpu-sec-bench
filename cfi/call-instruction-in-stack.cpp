@@ -12,7 +12,7 @@ int FORCE_NOINLINE helper(const unsigned char* m) {
 
 int main()
 {
-  unsigned char m[] = FUNC_MACHINE_CODE;
+  unsigned char m[] = FUNC_MACHINE_CODE_CALL;
   begin_catch_nx_exception(m);
   int rv = helper(m);
   end_catch_nx_exception();

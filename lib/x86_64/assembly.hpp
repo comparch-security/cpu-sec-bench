@@ -42,7 +42,6 @@ extern int dummy_leaf_func(int);
 // call to a pointer
 #define CALL_DAT(ptr)                        \
   asm volatile(                              \
-    "sub  $0x8, %%rsp;"                      \
     "call *%0;"                              \
     : : "r" (ptr)                            )
 
@@ -131,5 +130,23 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x08;
   *p++ = 0xc3;
 }
+
+// the machine code for the following
+//  31 c0                   xor    %eax,%eax
+//  48 83 c4 18             add    $0x10,%rsp
+//  c3                      retq
+#define FUNC_MACHINE_CODE_CALL \
+  {0x31, 0xc0, 0x48, 0x83, 0xc4, 0x10, 0xc3}
+
+void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
+  *p++ = 0x31;
+  *p++ = 0xc0;
+  *p++ = 0x48;
+  *p++ = 0x83;
+  *p++ = 0xc4;
+  *p++ = 0x10;
+  *p++ = 0xc3;
+}
+
 
 extern void replace_got_func(void **org, void **fake);

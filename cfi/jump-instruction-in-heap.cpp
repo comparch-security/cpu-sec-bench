@@ -7,7 +7,7 @@ int main()
 {
   unsigned char *m = new unsigned char [16];
   assign_fake_machine_code(m);
-  PUSH_LABEL(xlabel);
+  PUSH_FAKE_RET(xlabel);
   begin_catch_nx_exception(m);
   JMP_DAT(m);
   DECL_LABEL(xlabel);

@@ -6,7 +6,7 @@ static unsigned int rv = 1;
 int main()
 {
   unsigned char m[] = FUNC_MACHINE_CODE;
-  PUSH_LABEL(xlabel);
+  PUSH_FAKE_RET(xlabel);
   begin_catch_nx_exception(m);
   JMP_DAT(m);
   DECL_LABEL(xlabel);
