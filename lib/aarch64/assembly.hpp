@@ -8,14 +8,14 @@
 // modify stack
 #define MOD_STACK_LABEL(label, offset)       \
   asm volatile(                              \
-    "la  t0," #label ";"                     \
-    "sd  t0, %0(sp);"                        \
+    "adr  x8," #label ";"                    \
+    "str  x8, [sp, %0];"                     \
     : : "i"(offset)                          \
-    : "t0"                                   )
+    : "x8"                                   )
 
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
-    "sd  %1, %0(sp);"                        \
+    "str  %1, [sp, %0];"                     \
     : : "i"(offset), "r"(dat)                )
 
 // detect the stack
@@ -34,109 +34,116 @@ extern int dummy_leaf_func(int);
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)                 \
   asm volatile(                              \
-    "ld t0, 0(%1);"                          \
-    "ld t1, 0(%0);"                          \
-    "sd t1, 0(%1);"                          \
-    "sd t0, 0(%0);"                          \
+    "ldr  x8, [%1];"                         \
+    "ldr  x9, [%0];"                         \
+    "str  x9, [%1];"                         \
+    "str  x8, [%0];"                         \
     : : "r" (ptrL), "r" (ptrR)               \
-    : "t0", "t1"                             )
+    : "x8", "x9"                             )
 
 // call to a pointer
 #define CALL_DAT(ptr)                        \
   asm volatile(                              \
-    "jalr ra, %0, 0;"                        \
+    "blr  %0;"                               \
     : : "r"(ptr)                             \
-    : "ra"                                   )
+    : "x30"                                  )
 
 //call to a label
 #define CALL_LABEL(label, offset)            \
   asm volatile(                              \
-   "la   t0," #label ";"                     \
-   "jalr ra, t0, %0;"                        \
-   : : "i"(offset) : "t0"                    )
+   "adr   x8," #label ";"                    \
+   "add   x8, x8, %0;"                       \
+   "blr   x8;"                               \
+   : : "i"(offset) : "x8"                    )
 
 // jump to a pointer
 #define JMP_DAT(ptr)                         \
   asm volatile(                              \
-    "jalr x0, %0, 0;"                        \
+    "br   %0;"                               \
     : : "r"(ptr)                             \
                                              )
 
 // jump to a label with offset
 #define JMP_LABEL(label, offset)             \
   asm volatile(                              \
-    "la   t0," #label ";"                    \
-    "jalr x0, t0, %0;"                       \
-    : : "i"(offset) : "t0"                   )
+    "adr   x8," #label ";"                   \
+    "add   x8, x8, %0;"                      \
+    "br    x8;"                              \
+    : : "i"(offset) : "x8"                   )
 
 //pass an integer argument
 #define PASS_INT_ARG(Idx, arg)               \
-  asm volatile("mv a" #Idx ", %0;" : : "r" (arg) : "a0")
+  asm volatile("mov x" #Idx ", %0;" : : "r" (arg) : "a0")
 
 #ifdef __riscv_float_abi_double
 // pass a double argument
 #define PASS_DOUBLE_ARG_FROM_INT(Idx, arg)   \
   asm volatile(                              \
-    "fmv.d.x fa" #Idx ", %0;"                \
+    "fmov d" #Idx ", %0;"                    \
     : : "r" (arg)                            \
-    : "fa" #Idx                              )
+    : "d" #Idx                               )
 #endif
 
 // push an address
 #define PUSH_LABEL(label)                    \
   asm volatile(                              \
-    "la   t0, " #label ";"                   \
-    "addi sp, sp, -16;"                      \
-    "sd   t0, 8(sp);"                        \
-    : : : "t0"                               )
+    "adr  x8, " #label ";"                   \
+    "stp  x29, x8, [sp, -32];"               \
+    "mov  x29, sp;"                          \
+    : : : "x8"                               )
 // create a fake return stack
 #define PUSH_FAKE_RET(label)                 \
   asm volatile(                              \
-    "la   t0, " #label ";"                   \
-    "addi sp, sp, -16;"                      \
-    "sd   t0, 8(sp);"                        \
-    : : : "t0"                               )
+    "adr  x8, " #label ";"                   \
+    "stp  x29, x8, [sp, -32];"               \
+    "mov  x29, sp;"                          \
+    : : : "x8"                               )
 
 // return
 #define RET \
-  asm volatile("addi sp, sp, 16; ret")
+  asm volatile("ldp x29, x30, [sp], 32; ret;")
 
 // the machine code for the following
-// 357d                    addiw   a0,a0,-1
-// 60a2                    ld      ra,8(sp)
-// 0141                    addi    sp,sp,16
-// 8082                    ret
+// d1000400                sub     x0, x0, -1
+// a8c27bfd                ldp     x29, x30, [sp], 32
+// d65f03c0                ret
 #define FUNC_MACHINE_CODE \
-  {0x7d, 0x35, 0xa2, 0x60, 0x41, 0x01, 0x82, 0x80}
+  {0x00, 0x04, 0x00, 0xd1, 0xfd, 0x7b, 0xc2, 0xa8, 0xc0, 0x03, 0x5f, 0xd6}
 
 void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
-  *p++ = 0x7d;
-  *p++ = 0x35;
-  *p++ = 0xa2;
-  *p++ = 0x60;
-  *p++ = 0x41;
-  *p++ = 0x01;
-  *p++ = 0x82;
-  *p++ = 0x80;
+  *p++ = 0x00;
+  *p++ = 0x04;
+  *p++ = 0x00;
+  *p++ = 0xd1;
+  *p++ = 0xfd;
+  *p++ = 0x7b;
+  *p++ = 0xc2;
+  *p++ = 0xa8;
+  *p++ = 0xc0;
+  *p++ = 0x03;
+  *p++ = 0x5f;
+  *p++ = 0xd6;
 }
 
 // the machine code for the following
-// 4501                    li      a0,0
-// 60a2                    ld      ra,8(sp)
-// 0141                    addi    sp,sp,16
-// 8082                    ret
+// d2800000                mov     x0, 0
+// a8c27bfd                ldp     x29, x30, [sp], 32
+// d65f03c0                ret
 #define FUNC_MACHINE_CODE_CALL \
-  {0x01, 0x45, 0xa2, 0x60, 0x41, 0x01, 0x82, 0x80}
+  {0x00, 0x00, 0x80, 0xd2, 0xfd, 0x7b, 0xc2, 0xa8, 0xc0, 0x03, 0x5f, 0xd6}
 
 void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
-  *p++ = 0x01;
-  *p++ = 0x45;
-  *p++ = 0xa2;
-  *p++ = 0x60;
-  *p++ = 0x41;
-  *p++ = 0x01;
-  *p++ = 0x82;
+  *p++ = 0x00;
+  *p++ = 0x00;
   *p++ = 0x80;
+  *p++ = 0xd2;
+  *p++ = 0xfd;
+  *p++ = 0x7b;
+  *p++ = 0xc2;
+  *p++ = 0xa8;
+  *p++ = 0xc0;
+  *p++ = 0x03;
+  *p++ = 0x5f;
+  *p++ = 0xd6;
 }
-
 extern void replace_got_func(void **org, void **fake);

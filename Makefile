@@ -16,6 +16,10 @@ ifeq ($(ARCH), riscv64)
   OBJDUMP = $(RISCV)/bin/riscv64-unknown-linux-gnu-objdump
 endif
 
+ifeq ($(ARCH), aarch64)
+  CXX = g++
+  OBJDUMP = objdump
+endif
 
 # define paths and objects
 base = .
