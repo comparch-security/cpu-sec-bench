@@ -12,8 +12,8 @@
   #include "x86_64/assembly.hpp"
 #endif
 
-#if defined(__ARM_ARCH_8A__) && defined(__aarch64)
-  #include "armv8a/assembly.hpp"
+#if defined(__ARM_ARCH_8A) && defined(__aarch64__)
+  #include "aarch64/assembly.hpp"
 #endif
 
 #if defined(__riscv) && __riscv_xlen == 64

@@ -73,16 +73,20 @@ extern int dummy_leaf_func(int);
 
 //pass an integer argument
 #define PASS_INT_ARG(Idx, arg)               \
-  asm volatile("mov x" #Idx ", %0;" : : "r" (arg) : "a0")
+  asm volatile(                              \
+    "mov x" #Idx ", %0;"                     \
+    : : "r" (arg)                            \
+    : "x" #Idx                               )
 
-#ifdef __riscv_float_abi_double
+#define PASS_INT_ARG0(arg) PASS_INT_ARG(0, arg)
+#define PASS_INT_ARG1(arg) PASS_INT_ARG(1, arg)
+
 // pass a double argument
 #define PASS_DOUBLE_ARG_FROM_INT(Idx, arg)   \
   asm volatile(                              \
     "fmov d" #Idx ", %0;"                    \
     : : "r" (arg)                            \
     : "d" #Idx                               )
-#endif
 
 // push an address
 #define PUSH_LABEL(label)                    \
