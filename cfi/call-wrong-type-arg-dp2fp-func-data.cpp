@@ -1,19 +1,21 @@
+#include <cstdlib>
 #include "include/assembly.hpp"
 #include "include/signal.hpp"
 
-static unsigned int rv = 1;
+static unsigned int gv = 1;
 typedef unsigned int (*func_type)(void);
-static unsigned char m[] = FUNC_MACHINE_CODE;
+static unsigned char m[] = FUNC_MACHINE_CODE_CALL;
 
-void FORCE_NOINLINE helper(func_type fp) {
+int FORCE_NOINLINE helper(func_type fp) {
   begin_catch_nx_exception((void **)fp);
-  rv = fp();
+  gv = fp();
   end_catch_nx_exception();
+  return gv;
 }
 
 int main()
 {
-  rv = m[0];
-  helper((func_type)(&m));
-  return rv;
+  int rv = m[0];
+  rv = helper((func_type)(&m));
+  exit(rv);
 }

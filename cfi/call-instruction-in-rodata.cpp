@@ -3,7 +3,7 @@
 #include "include/signal.hpp"
 
 int gv = 1;
-const unsigned char m[] = FUNC_MACHINE_CODE;
+const unsigned char m[] = FUNC_MACHINE_CODE_CALL;
 
 int FORCE_NOINLINE helper(const unsigned char* m) {
   ENFORCE_NON_LEAF_FUNC_VAR(m[0]);

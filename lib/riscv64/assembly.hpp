@@ -125,4 +125,23 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x80;
 }
 
+// the machine code for the following
+// 4501                    li      a0,0
+// 60a2                    ld      ra,8(sp)
+// 0141                    addi    sp,sp,16
+// 8082                    ret
+#define FUNC_MACHINE_CODE_CALL \
+  {0x01, 0x45, 0xa2, 0x60, 0x41, 0x01, 0x82, 0x80}
+
+void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
+  *p++ = 0x01;
+  *p++ = 0x45;
+  *p++ = 0xa2;
+  *p++ = 0x60;
+  *p++ = 0x41;
+  *p++ = 0x01;
+  *p++ = 0x82;
+  *p++ = 0x80;
+}
+
 extern void replace_got_func(void **org, void **fake);

@@ -170,7 +170,7 @@
         "depends-on": [ "cfi-jump-mid-func" ],
         "results": { "16": "expected excption on the illegal call." }
     },
-    "cfi-jump-instruction-in-bss": {
+    "cfi-jump-instruction-in-data": {
         "depends-on": [ "cfi-jump-mid-func" ],
         "results": { "16": "expected excption on the illegal call." }
     },
