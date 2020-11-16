@@ -72,7 +72,7 @@ extern int dummy_leaf_func(int);
 //pass an integer argument
 #define PASS_INT_ARG(Idx, arg)               \
   asm volatile(                              \
-    "mov a" #Idx ", %0;"                     \
+    "mv a" #Idx ", %0;"                      \
     : : "r" (arg)                            \
     : "a" #Idx                               )
 
