@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
 
-static volatile int grv = 5;
+static volatile int grv = 1;
 
 void FORCE_NOINLINE helper() {
   grv += 5;
@@ -12,6 +12,7 @@ void FORCE_NOINLINE helper() {
 }
 
 int main() {
+  grv = 5;
   CALL_LABEL(func_mid, 0);
   exit(grv);
 }
