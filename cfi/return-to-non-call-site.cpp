@@ -13,6 +13,7 @@ void FORCE_NOINLINE helper() {
 
 int main()
 {
+  grv = 2;
   // call a function but illegally return
   helper();
   grv = 4; // failed if runs here
