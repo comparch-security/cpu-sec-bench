@@ -79,14 +79,17 @@ extern int dummy_leaf_func(int);
 #define PASS_INT_ARG0(arg) PASS_INT_ARG(0, arg)
 #define PASS_INT_ARG1(arg) PASS_INT_ARG(1, arg)
 
+// test whether the machine support hardware FPU
 #ifdef __riscv_float_abi_double
+  #define SUPPORT_FP
+#endif
+
 // pass a double argument
 #define PASS_DOUBLE_ARG_FROM_INT(Idx, arg)   \
   asm volatile(                              \
     "fmv.d.x fa" #Idx ", %0;"                \
     : : "r" (arg)                            \
     : "fa" #Idx                              )
-#endif
 
 // push an address
 #define PUSH_LABEL(label)                    \

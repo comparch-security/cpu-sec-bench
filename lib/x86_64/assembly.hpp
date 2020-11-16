@@ -77,6 +77,9 @@ extern int dummy_leaf_func(int);
 #define PASS_INT_ARG1(arg)                   \
   asm volatile("mov %0, %%rsi;" : : "r" (arg) : "rsi")
 
+// assume x86_64 always support hardware FPU
+#define SUPPORT_FP
+
 // pass a double argument
 #define PASS_DOUBLE_ARG_FROM_INT(Idx, arg)   \
   asm volatile(                              \

@@ -78,6 +78,11 @@ extern int dummy_leaf_func(int);
     : : "r" (arg)                            \
     : "x" #Idx                               )
 
+// test whether the machine support hardware FPU
+#if __ARM_FP >= 8
+  #define SUPPORT_FP
+#endif
+
 #define PASS_INT_ARG0(arg) PASS_INT_ARG(0, arg)
 #define PASS_INT_ARG1(arg) PASS_INT_ARG(1, arg)
 

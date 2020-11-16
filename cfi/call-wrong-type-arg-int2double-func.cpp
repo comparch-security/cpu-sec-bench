@@ -8,14 +8,12 @@ void helper(double var) {
 
 int main()
 {
-#ifdef __riscv
-  #ifndef __riscv_float_abi_double
-    return 0; // bypass when FPU is enabled for RV64/32
-  #endif
-#endif
-
+#ifndef SUPPORT_FP
+  return 0; // bypass when FPU is enabled for RV64/32
+#else
   long long m = -1;
   PASS_DOUBLE_ARG_FROM_INT(0, m);
   CALL_DAT(helper);
   return rv;
+#endif
 }
