@@ -97,14 +97,14 @@ extern int dummy_leaf_func(int);
 #define PUSH_LABEL(label)                    \
   asm volatile(                              \
     "adr  x8, " #label ";"                   \
-    "stp  x29, x8, [sp, -32];"               \
+    "stp  x29, x8, [sp, -32]!;"              \
     "mov  x29, sp;"                          \
     : : : "x8"                               )
 // create a fake return stack
 #define PUSH_FAKE_RET(label)                 \
   asm volatile(                              \
     "adr  x8, " #label ";"                   \
-    "stp  x29, x8, [sp, -32];"               \
+    "stp  x29, x8, [sp, -32]!;"              \
     "mov  x29, sp;"                          \
     : : : "x8"                               )
 

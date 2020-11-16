@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
 
-static volatile int grv = 0;
+static volatile int grv = 3;
 
 void FORCE_NOINLINE helper() {
   grv = 2;
@@ -16,6 +16,7 @@ void FORCE_NOINLINE helper() {
 
 int main()
 {
+  grv = 4;
   // illegally jump to helper
   JMP_LABEL(helper_mid, 0);
   grv = 1; // failed if runs here
