@@ -45,6 +45,13 @@ extern int dummy_leaf_func(int);
     "call *%0;"                              \
     : : "r" (ptr)                            )
 
+#define CALL_DAT_INT(ptr, arg0)              \
+  asm volatile(                              \
+    "mov  %1, %%rdi;"                        \
+    "call  *%0;"                             \
+    : : "r"(ptr), "r"(arg0)                  \
+    : "rdi"                                  )
+
 //call to a label
 #define CALL_LABEL(label, offset)            \
   asm volatile(                              \
