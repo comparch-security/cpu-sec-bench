@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "include/assembly.hpp"
 
 static volatile int grv = 1;
@@ -10,5 +11,5 @@ int FORCE_NOINLINE helper(int a, int b) {
 int main()
 {
   CALL_DAT(helper);
-  return grv;
+  exit(grv);
 }

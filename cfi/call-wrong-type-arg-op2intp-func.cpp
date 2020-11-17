@@ -19,8 +19,7 @@ int main(int argc, char* argv[])
 {
   int num = argv[1][0] - '0';
   IntObj m(num);
-  PASS_INT_ARG0(&m);
-  CALL_DAT(helper);
+  CALL_DAT_INT(helper, &m);
   helper(&(m.xPos));
   return rv;
 }

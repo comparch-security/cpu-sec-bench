@@ -46,7 +46,14 @@ extern int dummy_leaf_func(int);
   asm volatile(                              \
     "blr  %0;"                               \
     : : "r"(ptr)                             \
-    : "x30"                                  )
+    : "x30"				     )
+
+#define CALL_DAT_INT(ptr, arg0)              \
+  asm volatile(                              \
+    "mov  x0, %1;"                           \
+    "blr  %0;"                               \
+    : : "r"(ptr), "r"(arg0)                  \
+    : "x0", "x30"                            )
 
 //call to a label
 #define CALL_LABEL(label, offset)            \
@@ -82,9 +89,6 @@ extern int dummy_leaf_func(int);
 #if __ARM_FP >= 8
   #define SUPPORT_FP
 #endif
-
-#define PASS_INT_ARG0(arg) PASS_INT_ARG(0, arg)
-#define PASS_INT_ARG1(arg) PASS_INT_ARG(1, arg)
 
 // pass a double argument
 #define PASS_DOUBLE_ARG_FROM_INT(Idx, arg)   \

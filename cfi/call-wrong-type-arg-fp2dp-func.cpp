@@ -10,7 +10,6 @@ int main()
 {
   int var = 0;
   helper(&var);
-  PASS_INT_ARG(0, helper);
-  CALL_DAT(helper);
+  CALL_DAT_INT(helper, helper);
   return rv;
 }
