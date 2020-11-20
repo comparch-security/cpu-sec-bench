@@ -1,25 +1,10 @@
 SHELL := /bin/bash
 
 # default variables
-ARCH ?= $(shell arch)
+ARCH          ?= $(shell arch)
 GCC_OPT_LEVEL ?= O2
-
-ifeq ($(ARCH), x86_64)
-  # host compilation
-  CXX = g++
-  OBJDUMP = objdump
-endif
-
-ifeq ($(ARCH), riscv64)
-  # cross-compilation
-  CXX = $(RISCV)/bin/riscv64-unknown-linux-gnu-g++
-  OBJDUMP = $(RISCV)/bin/riscv64-unknown-linux-gnu-objdump
-endif
-
-ifeq ($(ARCH), aarch64)
-  CXX = g++
-  OBJDUMP = objdump
-endif
+CXX           ?= g++
+OBJDUMP       ?= objdump
 
 # define paths and objects
 base = .
