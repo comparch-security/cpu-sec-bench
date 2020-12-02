@@ -1,6 +1,12 @@
 // assembly helper functions
 // riscv64
 
+// load the address of a label to a register
+#define LOAD_LABEL(label, v)                 \
+  asm volatile(                              \
+    "la %0," #label ";"                      \
+    : "+r"(v)                                )
+
 // declare a label in assembly
 #define DECL_LABEL(label)                    \
   asm volatile(#label ":")

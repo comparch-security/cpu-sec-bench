@@ -5,6 +5,10 @@
   #define OFFSET 4
 #endif
 
+#if defined(__riscv) && __riscv_xlen == 64
+  #define OFFSET 0
+#endif
+
 int FORCE_NOINLINE helper(int a) {
   JMP_LABEL(mid_instruction, OFFSET);
   return a+2;
