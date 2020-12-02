@@ -1,30 +1,23 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
 
-int volatile grv = 2;
+#ifdef __x86_64
+  #define OFFSET 4
+#endif
 
-int main() {
-  return 0;
-}
-
-/*
-void FORCE_NOINLINE helper()
-{ 
- JMP_LABEL(mid_instruction, 2);        
+int FORCE_NOINLINE helper(int a) {
+  JMP_LABEL(mid_instruction, OFFSET);
+  return a+2;
 }
 
 
 int main()
 {
-  helper();
-  
-  //wrong if runs here
-  grv=5;
-  
-  MID_INSTRUCTION;
-  
-  PASS_VALUE(grv);
-  
-  exit(grv);
+  int rv = helper(1);
+  DECL_LABEL(mid_instruction);
+#ifdef __x86_64
+  rv += 0xff310000;  // 0xff31 is xor %edi, %edi in x86_64
+#endif
+  exit(rv);
 }
-*/
+

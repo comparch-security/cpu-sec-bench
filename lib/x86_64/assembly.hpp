@@ -1,6 +1,12 @@
 // assembly helper functions
 // x86_64
 
+// load the address of a label to a register
+#define LOAD_LABEL(label, v)                 \
+  asm volatile(                              \
+    "lea " #label "(%%rip), %0;"             \
+    : "+r"(v) :                              )
+
 // declare a label in assembly
 #define DECL_LABEL(label)                    \
   asm volatile(#label ":")
@@ -157,6 +163,5 @@ void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
   *p++ = 0x10;
   *p++ = 0xc3;
 }
-
 
 extern void replace_got_func(void **org, void **fake);

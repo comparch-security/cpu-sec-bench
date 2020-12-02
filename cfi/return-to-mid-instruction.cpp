@@ -1,42 +1,24 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
 
-static volatile int grv = 0;
+#ifdef __x86_64
+  #define OFFSET 4
+#endif
 
-int main() {
-  return 0;
-}
-
-
-/*
-void FORCE_NOINLINE helper() {
+int FORCE_NOINLINE helper(int a) {
   ENFORCE_NON_LEAF_FUNC;
-  grv = 3;
-
-  MOD_RET_LABEL(mid_instruction,2);
-
-  grv = 0;
-}
-
-void FORCE_NOINLINE helper2() {
-  // construct a fake return address
-  PUSH_LABEL(ret_address);
-
-  // call a function but illegally return
-  helper();
-
-  // failed if runs here
-  grv = 1;
-
-  MID_INSTRUCTION;
-
-  grv = 4;
+  unsigned long long t = 0;
+  LOAD_LABEL(mid_instruction, t);
+  MOD_RET_DAT(t+OFFSET);
+  return a+2;
 }
 
 int main()
 {
-  //helper2();
-  DECL_LABEL(ret_address);
-  exit(grv);
+  int rv = helper(1);
+  DECL_LABEL(mid_instruction);
+#ifdef __x86_64
+  rv += 0xff310000;  // 0xff31 is xor %edi, %edi in x86_64
+#endif
+  exit(rv);
 }
-*/
