@@ -2,7 +2,7 @@
 #include "include/assembly.hpp"
 
 #ifdef __x86_64
-  #define OFFSET 4
+  #define OFFSET 3
 #endif
 
 #if defined(__riscv) && __riscv_xlen == 64
@@ -24,7 +24,7 @@ int main()
   DECL_LABEL(mid_instruction);
 
 #ifdef __x86_64
-  rv += 0xff310000;  // 0xff31 is xor %edi, %edi in x86_64
+  rv = 0xff310000;  // 0xff31 is xor %edi, %edi in x86_64
 #endif
 
 #if defined(__riscv) && __riscv_xlen == 64
