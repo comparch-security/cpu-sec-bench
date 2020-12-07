@@ -35,5 +35,9 @@ int main()
   helper_var = 0x45010000;
 #endif
 
+#ifdef CSB_ARMV8_64
+  rv = rv ? 1 : 0;  // it is not easy to form a mid-instruction on ARM v8 yet
+#endif
+
   exit(rv);
 }
