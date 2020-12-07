@@ -1,6 +1,24 @@
 {
-    "bof-overflow-read-index-rodata": {},
-    "bof-overflow-read-index-stack": {},
+    "bof-overflow-read-index-rodata": {
+        "parameters": {
+            "cwe": {
+		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+		"125": "Out-of-bounds Read",
+		"126": "Buffer Over-read",
+		"788": "Access of Memory Location After End of Buffer"
+	    }
+        }
+    },
+    "bof-overflow-read-index-stack": {
+        "parameters": {
+            "cwe": {
+		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+		"125": "Out-of-bounds Read",
+		"126": "Buffer Over-read",
+		"788": "Access of Memory Location After End of Buffer"
+	    }
+        }
+    },
     "bof-overflow-read-index-data": {},
     "bof-overflow-read-index-heap": {},
     "bof-underflow-read-index-rodata": {},
@@ -39,7 +57,17 @@
 	    }
         }
     },
-    "bof-overflow-write-ptr-stack": {},
+    "bof-overflow-write-ptr-stack": {
+        "parameters": {
+            "cwe": {
+		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+		"121": "Stack-based Buffer Overflow",
+		"125": "Out-of-bounds Read",
+		"126": "Buffer Over-read",
+		"788": "Access of Memory Location After End of Buffer"
+	    }
+        }
+    },
     "bof-overflow-write-ptr-data": {},
     "bof-overflow-write-ptr-heap": {},
     "bof-underflow-write-ptr-data": {
