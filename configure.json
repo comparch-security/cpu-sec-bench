@@ -20,17 +20,23 @@
     "bof-overflow-write-index-heap": {},
     "bof-underflow-write-index-data": {
         "parameters": {
-            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+            "cwe": {
+		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	    }
         }
     },
     "bof-underflow-write-index-heap": {
         "parameters": {
-            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+            "cwe": {
+		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	    }
         }
     },
     "bof-underflow-write-index-stack": {
         "parameters": {
-            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+            "cwe": {
+		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	    }
         }
     },
     "bof-overflow-write-ptr-stack": {},
@@ -38,17 +44,23 @@
     "bof-overflow-write-ptr-heap": {},
     "bof-underflow-write-ptr-data": {
         "parameters": {
-            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+            "cwe": {
+		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	    }
         }
     },
     "bof-underflow-write-ptr-heap": {
         "parameters": {
-            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+            "cwe": {
+		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	    }
         }
     },
     "bof-underflow-write-ptr-stack": {
         "parameters": {
-            "cwe": "https://cwe.mitre.org/data/definitions/124.html"
+            "cwe": {
+		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	    }
         }
     },
 
@@ -82,7 +94,10 @@
     },
 
     "cfi-call-mid-func": {},
-    "cfi-call-mid-instruction": {},
+    "cfi-call-mid-instruction": {
+	"depends-on": [ "cfi-call-mid-func" ],
+	"results": { "1": "middle of instruction case not easily available." }
+    },
     "cfi-call-wrong-func-within-static-analysis": {},
     "cfi-call-wrong-func": {
         "depends-on": [ "cfi-call-wrong-func-within-static-analysis" ]
@@ -165,7 +180,10 @@
         "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-mid-func": {},
-    "cfi-jump-mid-instruction": {},
+    "cfi-jump-mid-instruction": {
+        "depends-on": [ "cfi-jump-mid-func" ],
+        "results": { "1": "middle of instruction case not easily available." }
+    },
     "cfi-jump-instruction-in-rodata": {
         "depends-on": [ "cfi-jump-mid-func" ],
         "results": { "16": "expected excption on the illegal call." }
@@ -194,7 +212,8 @@
     "cfi-return-to-mid-instruction": {
         "depends-on": ["cfi-return-to-non-call-site",
                        "cfi-return-without-call"
-                      ]
+                      ],
+	"results": { "1": "middle of instruction case not easily available." }
     },
     "cfi-return-to-instruction-in-rodata": {
         "depends-on": [ "cfi-return-to-func" ],
