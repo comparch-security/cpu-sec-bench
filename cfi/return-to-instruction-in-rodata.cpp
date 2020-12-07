@@ -13,7 +13,7 @@ int FORCE_NOINLINE helper(const unsigned char* m) {
 
 int main()
 {
-#ifdef __x86_64
+#ifdef CSB_X86_64
   PUSH_FAKE_RET(xlabel);
 #endif
   begin_catch_nx_exception(m);

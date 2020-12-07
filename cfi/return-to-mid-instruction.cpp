@@ -1,13 +1,17 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
 
-#ifdef __x86_64
+#ifdef CSB_X86_64
   #define OFFSET 3
 #endif
 
-#if defined(__riscv) && __riscv_xlen == 64
+#ifdef CSB_RV64GC
   #define OFFSET 2
 volatile int helper_var = 0;
+#endif
+
+#ifdef CSB_ARMV8_64
+  #define OFFSET 0
 #endif
 
 unsigned long long FORCE_NOINLINE helper(unsigned long long a) {
@@ -23,11 +27,11 @@ int main()
   rv = helper(rv+OFFSET);
   DECL_LABEL(mid_instruction);
 
-#ifdef __x86_64
+#ifdef CSB_X86_64
   rv = 0xff310000;  // 0xff31 is xor %edi, %edi in x86_64
 #endif
 
-#if defined(__riscv) && __riscv_xlen == 64
+#ifdef CSB_RV64GC
   helper_var = 0x45010000;
 #endif
 
