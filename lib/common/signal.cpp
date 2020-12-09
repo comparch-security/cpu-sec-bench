@@ -14,13 +14,15 @@ void xcpt_nx_handler(int signo, siginfo_t *sinfo, void *context) {
   // check the exception cause
   sigact_record_t *record = sigact_stack.top();
   sigact_stack.pop();
-  if((record->faulty_data_addr != NULL && record->faulty_data_addr != sinfo->si_addr) // faulty addr
-     || sinfo->si_code != SEGV_ACCERR) {                                            // exception cause
-    puts("xcpt_nx_handler(): mismatched SEGV signal.");
-    exit(RT_CODE_MISMATCH);
-  } else {
+  if(sinfo->si_code == SEGV_ACCERR && record->faulty_data_addr != NULL && record->faulty_data_addr == sinfo->si_addr) {
     delete record;
     exit(RT_CODE_NX);
+  } else if(sinfo->si_code == SEGV_ACCERR && record->faulty_data_addr == NULL) {
+    delete record;
+    exit(RT_CODE_NX);
+  } else {
+    puts("xcpt_nx_handler(): mismatched SEGV signal.");
+    exit(RT_CODE_MISMATCH);
   }
 }
 

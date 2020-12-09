@@ -118,7 +118,9 @@
         "comment": "force revision on function pointers."
     },
     "cpi-modify-GOT": {
-        "TODO" : "this relies on the code is readable."
+        "TODO" : "this relies on the code is readable.",
+        "results": { "16": "relocation tables under read-only protection."
+                   }
     },
 
     "cfi-call-mid-func": {},
