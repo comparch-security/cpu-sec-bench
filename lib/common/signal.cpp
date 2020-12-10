@@ -5,8 +5,9 @@
 #include <cstdio>
 #include <stack>
 
-const int RT_CODE_MISMATCH = -1;      // ERROR: mismatched signal
-const int RT_CODE_NX       = 16;      // non-execution on writable pages
+const int RT_CODE_MISMATCH  = -1;      // ERROR: mismatched signal
+const int RT_CODE_MAPERR    = 15;      // address not accessible
+const int RT_CODE_ACCERR    = 16;      // no permission to access
 
 std::stack<sigact_record_t *> sigact_stack;
 
@@ -16,13 +17,17 @@ void xcpt_nx_handler(int signo, siginfo_t *sinfo, void *context) {
   sigact_stack.pop();
   if(sinfo->si_code == SEGV_ACCERR && record->faulty_data_addr != NULL && record->faulty_data_addr == sinfo->si_addr) {
     delete record;
-    exit(RT_CODE_NX);
+    exit(RT_CODE_ACCERR);
   } else if(sinfo->si_code == SEGV_ACCERR && record->faulty_data_addr == NULL) {
     delete record;
-    exit(RT_CODE_NX);
+    exit(RT_CODE_ACCERR);
+  } else if(sinfo->si_code == SEGV_MAPERR) {
+    delete record;
+    exit(RT_CODE_MAPERR);
   } else {
     puts("xcpt_nx_handler(): mismatched SEGV signal.");
     exit(RT_CODE_MISMATCH);
+    //exit(sinfo->si_code);
   }
 }
 

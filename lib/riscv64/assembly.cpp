@@ -7,7 +7,7 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
   return v + rand();
 }
 
-void replace_got_func(void **org, void **fake) {
+void replace_got_func(void **fake) {
   char *pc = NULL;
   unsigned int offset = 0, inst = 0;
 

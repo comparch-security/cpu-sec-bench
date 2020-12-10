@@ -158,4 +158,4 @@ void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
   *p++ = 0x80;
 }
 
-extern void replace_got_func(void **org, void **fake);
+extern void replace_got_func(void **fake);

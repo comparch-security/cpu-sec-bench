@@ -12,7 +12,7 @@ int main()
 {
   grv = helper();
   begin_catch_nx_exception();
-  replace_got_func((void **)rand, (void **)helper);
+  replace_got_func((void **)helper);
   rand();
   end_catch_nx_exception();
   grv -= rand();
