@@ -91,6 +91,7 @@
 	    }
         }
     },
+    "bof-overflow-read-ptr-cross-frame": {},
 
     "ptt-access-after-free-alias-stack": {},
     "ptt-access-after-free-org-heap": {

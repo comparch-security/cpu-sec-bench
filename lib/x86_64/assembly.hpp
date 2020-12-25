@@ -11,6 +11,14 @@
 #define DECL_LABEL(label)                    \
   asm volatile(#label ":")
 
+// get the distance between two pointers
+#define GET_DISTANCE(dis, pa, pb)            \
+  asm volatile(                              \
+    "movq %1, %0;"                           \
+    "subq %2, %0;"                           \
+    : "+r"(dis) : "r" (pa), "r"(pb)          ) 
+
+
 // modify stack
 #define MOD_STACK_LABEL(label, offset)       \
   asm volatile(                              \
