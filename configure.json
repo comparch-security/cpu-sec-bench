@@ -94,6 +94,9 @@
     "bof-read-ptr-cross-frame": {
         "depends-on": [ "bof-underflow-read-ptr-stack" ]
     },
+    "bof-write-ptr-cross-frame": {
+        "depends-on": [ "bof-underflow-write-ptr-stack" ]
+    },
 
     "ptt-access-after-free-alias-stack": {},
     "ptt-access-after-free-org-heap": {

@@ -11,12 +11,13 @@ void char_buffer_init(charBuffer *cb, char uf, char d, char of) {
   cb->overflow[7]  = 0;
 }
 
-void update_by_index(charBuffer& cb, int size, int step, char c) {
-  for(int i=0; i != size; i += step)
+void update_by_index(charBuffer& cb, int offset, int size, int step, char c) {
+  for(int i=offset; i != size+offset; i += step)
     cb.data[i] = c;
 }
 
-void update_by_pointer(char *buf, int size, int step, char c) {
+void update_by_pointer(char *buf, int offset, int size, int step, char c) {
+  buf += offset;
   for(int i=0; i != size; i += step, buf += step)
     *buf = c;
 }
