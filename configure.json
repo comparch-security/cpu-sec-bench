@@ -33,14 +33,38 @@
         "program": "bof-read-by-index",
         "arguments": "3 1"
     },
-    "bof-overflow-read-ptr-rodata": {},
-    "bof-overflow-read-ptr-stack": {},
-    "bof-overflow-read-ptr-data": {},
-    "bof-overflow-read-ptr-heap": {},
-    "bof-underflow-read-ptr-rodata": {},
-    "bof-underflow-read-ptr-stack": {},
-    "bof-underflow-read-ptr-data": {},
-    "bof-underflow-read-ptr-heap": {},
+    "bof-overflow-read-ptr-stack": {
+        "program": "bof-read-by-pointer",
+        "arguments": "0 0"
+    },
+    "bof-overflow-read-ptr-heap": {
+        "program": "bof-read-by-pointer",
+        "arguments": "1 0"
+    },
+    "bof-overflow-read-ptr-data": {
+        "program": "bof-read-by-pointer",
+        "arguments": "2 0"
+    },
+    "bof-overflow-read-ptr-rodata": {
+        "program": "bof-read-by-pointer",
+        "arguments": "3 0"
+    },
+    "bof-underflow-read-ptr-stack": {
+        "program": "bof-read-by-pointer",
+        "arguments": "0 1"
+    },
+    "bof-underflow-read-ptr-heap": {
+        "program": "bof-read-by-pointer",
+        "arguments": "1 1"
+    },
+    "bof-underflow-read-ptr-data": {
+        "program": "bof-read-by-pointer",
+        "arguments": "2 1"
+    },
+    "bof-underflow-read-ptr-rodata": {
+        "program": "bof-read-by-pointer",
+        "arguments": "3 1"
+    },
     "bof-overflow-write-index-stack": {
         "program": "bof-write-by-index",
         "arguments": "0 0"
@@ -69,17 +93,31 @@
         "reference": { "cwe": ["119"] }
     },
     "bof-overflow-write-ptr-stack": {
+        "program": "bof-write-by-pointer",
+        "arguments": "0 0",
         "reference": { "cwe": ["119", "121", "125", "126", "788"] }
     },
-    "bof-overflow-write-ptr-data": {},
-    "bof-overflow-write-ptr-heap": {},
-    "bof-underflow-write-ptr-data": {
+    "bof-overflow-write-ptr-heap": {
+        "program": "bof-write-by-pointer",
+        "arguments": "1 0"
+    },
+    "bof-overflow-write-ptr-data": {
+        "program": "bof-write-by-pointer",
+        "arguments": "2 0"
+    },
+    "bof-underflow-write-ptr-stack": {
+        "program": "bof-write-by-pointer",
+        "arguments": "0 1",
         "reference": { "cwe": ["119"] }
     },
     "bof-underflow-write-ptr-heap": {
+        "program": "bof-write-by-pointer",
+        "arguments": "1 1",
         "reference": { "cwe": ["119"] }
     },
-    "bof-underflow-write-ptr-stack": {
+    "bof-underflow-write-ptr-data": {
+        "program": "bof-write-by-pointer",
+        "arguments": "2 1",
         "reference": { "cwe": ["119"] }
     },
     "bof-read-ptr-cross-frame": {
