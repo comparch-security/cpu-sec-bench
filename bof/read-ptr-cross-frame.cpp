@@ -7,7 +7,7 @@ int FORCE_NOINLINE helper(const char* b) {
   long long delta = 0;
   char dummy = 'a';
   GET_DISTANCE(delta, b, &dummy);
-  return read_pointer(&dummy, delta, 7, 1, 'd');
+  return read_by_pointer(&dummy, delta, 7, 1, 'd');
 }
 
 int main()

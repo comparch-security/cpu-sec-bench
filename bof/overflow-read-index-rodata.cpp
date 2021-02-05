@@ -4,5 +4,5 @@ const charBuffer buffer = {"uuuuuuu","ddddddd","ooooooo"};
 
 int main()
 {
-  return read_index(buffer, 8, 7, 1, 'o');
+  return read_by_index(buffer, 8, 7, 1, 'o');
 }

@@ -2,21 +2,21 @@
     "bof-overflow-read-index-rodata": {
         "parameters": {
             "cwe": {
-		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
-		"125": "Out-of-bounds Read",
-		"126": "Buffer Over-read",
-		"788": "Access of Memory Location After End of Buffer"
-	    }
+		        "119": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+		        "125": "Out-of-bounds Read",
+		        "126": "Buffer Over-read",
+		        "788": "Access of Memory Location After End of Buffer"
+	        }
         }
     },
     "bof-overflow-read-index-stack": {
         "parameters": {
             "cwe": {
-		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
-		"125": "Out-of-bounds Read",
-		"126": "Buffer Over-read",
-		"788": "Access of Memory Location After End of Buffer"
-	    }
+		        "119": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+		        "125": "Out-of-bounds Read",
+		        "126": "Buffer Over-read",
+		        "788": "Access of Memory Location After End of Buffer"
+	        }
         }
     },
     "bof-overflow-read-index-data": {},
@@ -39,33 +39,33 @@
     "bof-underflow-write-index-data": {
         "parameters": {
             "cwe": {
-		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
-	    }
+		        "119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	        }
         }
     },
     "bof-underflow-write-index-heap": {
         "parameters": {
             "cwe": {
-		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
-	    }
+		        "119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	        }
         }
     },
     "bof-underflow-write-index-stack": {
         "parameters": {
             "cwe": {
-		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
-	    }
+		        "119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	        }
         }
     },
     "bof-overflow-write-ptr-stack": {
         "parameters": {
             "cwe": {
-		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
-		"121": "Stack-based Buffer Overflow",
-		"125": "Out-of-bounds Read",
-		"126": "Buffer Over-read",
-		"788": "Access of Memory Location After End of Buffer"
-	    }
+		        "119": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+		        "121": "Stack-based Buffer Overflow",
+		        "125": "Out-of-bounds Read",
+		        "126": "Buffer Over-read",
+		        "788": "Access of Memory Location After End of Buffer"
+	        }
         }
     },
     "bof-overflow-write-ptr-data": {},
@@ -73,25 +73,27 @@
     "bof-underflow-write-ptr-data": {
         "parameters": {
             "cwe": {
-		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
-	    }
+		        "119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	        }
         }
     },
     "bof-underflow-write-ptr-heap": {
         "parameters": {
             "cwe": {
-		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
-	    }
+		        "119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	        }
         }
     },
     "bof-underflow-write-ptr-stack": {
         "parameters": {
             "cwe": {
-		"119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
-	    }
+		        "119": "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+	        }
         }
     },
-    "bof-overflow-read-ptr-cross-frame": {},
+    "bof-read-ptr-cross-frame": {
+        "depends-on": [ "bof-underflow-read-ptr-stack" ]
+    },
 
     "ptt-access-after-free-alias-stack": {},
     "ptt-access-after-free-org-heap": {
