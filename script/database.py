@@ -39,6 +39,10 @@ def cfg_get_arguments(test):
     global cfgDB
     return db_get_param(cfgDB, test, "arguments", "")
 
+def cfg_get_prog(test):
+    global cfgDB
+    return db_get_param(cfgDB, test, "program", test)
+
 def cfg_get_depends(test):
     global cfgDB
     return db_get_param(cfgDB, test, "depends-on", [])

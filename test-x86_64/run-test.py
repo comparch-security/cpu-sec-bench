@@ -30,11 +30,13 @@ def proc_when_fail(test, dep):
 
 # process when dependence checked out ok
 def proc_when_ok(test, dep):
+    test_prog = database.cfg_get_prog(test)
     argument = database.cfg_get_arguments(test)
     expected_results = database.cfg_get_expected_results(test)
     try:
+        print("./" + test_prog + " " + argument)
         subprocess.check_call(
-            "./" + test + " " + argument,
+            "./" + test_prog + " " + argument,
             stderr=subprocess.STDOUT,
             shell=True
         )
