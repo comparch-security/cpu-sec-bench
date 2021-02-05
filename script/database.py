@@ -45,7 +45,7 @@ def cfg_get_prog(test):
 
 def cfg_get_depends(test):
     global cfgDB
-    return db_get_param(cfgDB, test, "depends-on", [])
+    return db_get_param(cfgDB, test, "require", [])
 
 def cfg_get_expected_results(test):
     global cfgDB
