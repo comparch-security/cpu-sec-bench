@@ -236,6 +236,22 @@
         "program": "bof-write-cross-frame-by-pointer",
         "require": [ [ "bof-underflow-write-ptr-stack" ] ]
     },
+    "bof-read-cross-page-index-stack": {
+        "program": "bof-read-cross-page-by-index-in-stack",
+        "require": [ [ "bof-read-cross-frame-index" ] ]
+    },
+    "bof-read-cross-page-ptr-stack": {
+        "program": "bof-read-cross-page-by-pointer-in-stack",
+        "require": [ [ "bof-read-cross-frame-ptr" ] ]
+    },
+    "bof-write-cross-page-index-stack": {
+        "program": "bof-write-cross-page-by-index-in-stack",
+        "require": [ [ "bof-write-cross-frame-index" ] ]
+    },
+    "bof-write-cross-page-ptr-stack": {
+        "program": "bof-write-cross-page-by-pointer-in-stack",
+        "require": [ [ "bof-write-cross-frame-ptr" ] ]
+    },
 
     "ptt-access-after-free-alias-stack": {},
     "ptt-access-after-free-org-heap": {
