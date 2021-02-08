@@ -252,6 +252,33 @@
         "program": "bof-write-cross-page-by-pointer-in-stack",
         "require": [ [ "bof-write-cross-frame-ptr" ] ]
     },
+    "bof-spray-cross-object-stack": {
+        "program": "bof-spray-cross-object",
+        "arguments": "0",
+        "require": [ [ "bof-overflow-write-cross-object-ptr-stack" ], [ "bof-underflow-write-cross-object-ptr-stack" ] ]
+    },
+    "bof-spray-cross-object-heap": {
+        "program": "bof-spray-cross-object",
+        "arguments": "1",
+        "require": [ [ "bof-overflow-write-cross-object-ptr-heap" ], [ "bof-underflow-write-cross-object-ptr-heap" ] ]
+    },
+    "bof-spray-cross-object-data": {
+        "program": "bof-spray-cross-object",
+        "arguments": "2",
+        "require": [ [ "bof-overflow-write-cross-object-ptr-data" ], [ "bof-underflow-write-cross-object-ptr-data" ] ]
+    },
+    "bof-spray-cross-frame": {
+        "program": "bof-spray-cross-frame",
+        "require": [ [ "bof-write-cross-frame-ptr" ] ]
+    },
+    "bof-spray-cross-page-stack": {
+        "program": "bof-spray-cross-page-in-stack",
+        "require": [ [ "bof-write-cross-page-ptr-stack" ] ]
+    },
+    "bof-spray-cross-page-heap": {
+        "program": "bof-spray-cross-page-in-heap",
+        "require": [ [ "bof-spray-cross-object-heap" ] ]
+    },
 
     "ptt-access-after-free-alias-stack": {},
     "ptt-access-after-free-org-heap": {

@@ -16,6 +16,8 @@ def check_requirement_inner(depend_tests):
         return -1;
     if reduce((lambda x, y: x or y), map(lambda x: database.result_get_result(x) == 0, depend_tests)):
         return 0;
+    if reduce((lambda x, y: x or y), map(lambda x: database.result_get_result(x) == -2, depend_tests)):
+        return -2;
     else:
         return 1;
 
@@ -27,6 +29,8 @@ def check_requirement_outer(depend_tests):
         return -1;
     if reduce((lambda x, y: x and y), map(lambda x: x == 0, inner_results)):
         return 0;
+    if reduce((lambda x, y: x or y), map(lambda x: x == -2, inner_results)):
+        return -2;
     else:
         return 1;
 
@@ -63,6 +67,7 @@ def proc_when_ok(test, dep):
 # process when dependence check returns a wrong result
 def proc_when_unknown(test, dep):
     print(test, "** FAIL! ** dependence check returns ", dep)
+    exit()
 
 # dependence dispatcher
 dependence_dispatcher = {

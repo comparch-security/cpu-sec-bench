@@ -1,10 +1,6 @@
 #include "include/bof.hpp"
 #include "include/assembly.hpp"
 
-const charBuffer buffer_rodataU = {"uuuuuuu","ddddddd","ooooooo"};
-const charBuffer buffer_rodataM = {"uuuuuuu","ddddddd","ooooooo"};
-const charBuffer buffer_rodataD = {"uuuuuuu","ddddddd","ooooooo"};
-
 charBuffer buffer_dataU, buffer_dataM, buffer_dataD;
 
 int main(int argc, char* argv[])

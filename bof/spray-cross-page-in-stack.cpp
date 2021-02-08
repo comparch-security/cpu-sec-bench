@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <cstdlib>
 #include "include/bof.hpp"
 #include "include/assembly.hpp"
 
@@ -9,7 +10,8 @@ void FORCE_NOINLINE helper(const char* b, int level) {
     helper(b, level-1);
   else {
     GET_DISTANCE(delta, b, dummy.data);
-    update_by_pointer(dummy.data, delta, 8, 1, 'c');
+    update_by_pointer(dummy.data, 0, delta+8, 1, 'c');
+    exit(check(b, 8, 1, 'c'));
   }
 }
 
@@ -18,5 +20,5 @@ int main(int argc, char* argv[])
   charBuffer buffer;
   char_buffer_init(&buffer, 'l', 'm', 'n');
   helper(buffer.data, sysconf(_SC_PAGESIZE)/(sizeof(charBuffer)+sizeof(long long)+sizeof(void *)) + 1);
-  return check(buffer.data, 8, 1, 'c');
+  return -1;
 }

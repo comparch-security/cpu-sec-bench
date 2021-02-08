@@ -57,6 +57,9 @@ def cfg_get_tests():
 
 def result_get_result(test):
     global resultDB
+    global cfgDB
+    if not test in cfgDB:
+        return -2
     return db_get_param(resultDB, test, "result", -1)
 
 def result_record_result(test, v):
