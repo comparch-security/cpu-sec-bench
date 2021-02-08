@@ -140,35 +140,85 @@
         "arguments": "3",
         "require": [ ["bof-overflow-read-index-rodata", "bof-underflow-read-index-rodata" ] ]
     },
+    "bof-read-cross-object-ptr-stack": {
+        "program": "bof-read-cross-object-by-pointer",
+        "arguments": "0",
+        "require": [ ["bof-overflow-read-ptr-stack", "bof-underflow-read-ptr-stack" ] ]
+    },
+    "bof-read-cross-object-ptr-heap": {
+        "program": "bof-read-cross-object-by-pointer",
+        "arguments": "1",
+        "require": [ ["bof-overflow-read-ptr-heap", "bof-underflow-read-ptr-heap" ] ]
+    },
+    "bof-read-cross-object-ptr-data": {
+        "program": "bof-read-cross-object-by-pointer",
+        "arguments": "2",
+        "require": [ ["bof-overflow-read-ptr-data", "bof-underflow-read-ptr-data" ] ]
+    },
+    "bof-read-cross-object-ptr-rodata": {
+        "program": "bof-read-cross-object-by-pointer",
+        "arguments": "3",
+        "require": [ ["bof-overflow-read-ptr-rodata", "bof-underflow-read-ptr-rodata" ] ]
+    },
     "bof-overflow-write-cross-object-index-stack": {
         "program": "bof-write-cross-object-by-index",
         "arguments": "0 0",
-        "require": [ ["bof-overflow-write-index-stack", "bof-underflow-write-index-stack" ] ]
+        "require": [ ["bof-overflow-write-index-stack"] ]
     },
     "bof-overflow-write-cross-object-index-heap": {
         "program": "bof-write-cross-object-by-index",
         "arguments": "1 0",
-        "require": [ ["bof-overflow-write-index-heap", "bof-underflow-write-index-heap" ] ]
+        "require": [ ["bof-overflow-write-index-heap"] ]
     },
     "bof-overflow-write-cross-object-index-data": {
         "program": "bof-write-cross-object-by-index",
         "arguments": "2 0",
-        "require": [ ["bof-overflow-write-index-data", "bof-underflow-write-index-data" ] ]
+        "require": [ ["bof-overflow-write-index-data"] ]
     },
     "bof-underflow-write-cross-object-index-stack": {
         "program": "bof-write-cross-object-by-index",
         "arguments": "0 1",
-        "require": [ ["bof-overflow-write-index-stack", "bof-underflow-write-index-stack" ] ]
+        "require": [ ["bof-underflow-write-index-stack" ] ]
     },
     "bof-underflow-write-cross-object-index-heap": {
         "program": "bof-write-cross-object-by-index",
         "arguments": "1 1",
-        "require": [ ["bof-overflow-write-index-heap", "bof-underflow-write-index-heap" ] ]
+        "require": [ ["bof-underflow-write-index-heap" ] ]
     },
     "bof-underflow-write-cross-object-index-data": {
         "program": "bof-write-cross-object-by-index",
         "arguments": "2 1",
-        "require": [ ["bof-overflow-write-index-data", "bof-underflow-write-index-data" ] ]
+        "require": [ ["bof-underflow-write-index-data" ] ]
+    },
+    "bof-overflow-write-cross-object-ptr-stack": {
+        "program": "bof-write-cross-object-by-pointer",
+        "arguments": "0 0",
+        "require": [ ["bof-overflow-write-ptr-stack"] ]
+    },
+    "bof-overflow-write-cross-object-ptr-heap": {
+        "program": "bof-write-cross-object-by-pointer",
+        "arguments": "1 0",
+        "require": [ ["bof-overflow-write-ptr-heap"] ]
+    },
+    "bof-overflow-write-cross-object-ptr-data": {
+        "program": "bof-write-cross-object-by-pointer",
+        "arguments": "2 0",
+        "require": [ ["bof-overflow-write-ptr-data"] ]
+    },
+    "bof-underflow-write-cross-object-ptr-stack": {
+        "program": "bof-write-cross-object-by-pointer",
+        "arguments": "0 1",
+        "require": [ ["bof-underflow-write-ptr-stack" ] ]
+    },
+    "bof-underflow-write-cross-object-ptr-heap": {
+        "program": "bof-write-cross-object-by-pointer",
+        "arguments": "1 1",
+        "require": [ ["bof-underflow-write-ptr-heap" ] ]
+    },
+    "bof-underflow-write-cross-object-ptr-data": {
+        "program": "bof-write-cross-object-by-pointer",
+        "arguments": "2 1",
+        "require": [ ["bof-underflow-write-ptr-data" ] ]
     },
     "bof-read-cross-frame-ptr": {
         "program": "bof-read-cross-frame-by-pointer",
