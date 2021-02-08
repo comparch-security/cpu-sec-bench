@@ -1,6 +1,6 @@
-#include "include/bof.hpp"
-#include "include/assembly.hpp"
 #include <unistd.h>
+#include "include/mss.hpp"
+#include "include/assembly.hpp"
 
 void FORCE_NOINLINE helper(const char* b, int level) {
   long long delta = 0;
@@ -9,7 +9,7 @@ void FORCE_NOINLINE helper(const char* b, int level) {
     helper(b, level-1);
   else {
     GET_DISTANCE(delta, b, dummy.data);
-    update_by_index(dummy, delta, 8, 1, 'c');
+    update_by_pointer(dummy.data, delta, 8, 1, 'c');
   }
 }
 

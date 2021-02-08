@@ -12,15 +12,15 @@ base = .
 test-path = $(base)/test-$(ARCH)
 LD_LIBRARY_PATH=$(test-path)
 
-bof-path  = $(base)/bof
-bof-cpps  = $(wildcard $(bof-path)/*.cpp)
-bof-tests = $(addprefix $(test-path)/bof-, $(basename $(notdir $(bof-cpps))))
-bof-cpps-prep = $(addsuffix .prep, $(bof-cpps))
+mss-path  = $(base)/mss
+mss-cpps  = $(wildcard $(mss-path)/*.cpp)
+mss-tests = $(addprefix $(test-path)/mss-, $(basename $(notdir $(mss-cpps))))
+mss-cpps-prep = $(addsuffix .prep, $(mss-cpps))
 
-ptt-path  = $(base)/ptt
-ptt-cpps  = $(wildcard $(ptt-path)/*.cpp)
-ptt-tests = $(addprefix $(test-path)/ptt-, $(basename $(notdir $(ptt-cpps))))
-ptt-cpps-prep = $(addsuffix .prep, $(ptt-cpps))
+mts-path  = $(base)/mts
+mts-cpps  = $(wildcard $(mts-path)/*.cpp)
+mts-tests = $(addprefix $(test-path)/mts-, $(basename $(notdir $(mts-cpps))))
+mts-cpps-prep = $(addsuffix .prep, $(mts-cpps))
 
 cpi-path  = $(base)/cpi
 cpi-cpps  = $(wildcard $(cpi-path)/*.cpp)
@@ -32,9 +32,9 @@ cfi-cpps  = $(wildcard $(cfi-path)/*.cpp)
 cfi-tests = $(addprefix $(test-path)/cfi-, $(basename $(notdir $(cfi-cpps))))
 cfi-cpps-prep = $(addsuffix .prep, $(cfi-cpps))
 
-sec-tests := $(bof-tests) $(ptt-tests) $(cpi-tests) $(cfi-tests)
+sec-tests := $(mss-tests) $(mts-tests) $(cpi-tests) $(cfi-tests)
 sec-tests-dump = $(addsuffix .dump, $(sec-tests))
-sec-tests-prep := $(bof-cpps-prep) $(ptt-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
+sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
 headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
 extra_objects := $(base)/lib/common/signal.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
@@ -61,30 +61,30 @@ $(extra_objects): %.o : %.cpp $(headers)
 
 rubbish += $(extra_objects)
 
-$(base)/lib/common/bof.o: %.o : %.cpp $(base)/lib/include/bof.hpp
+$(base)/lib/common/mss.o: %.o : %.cpp $(base)/lib/include/mss.hpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-rubbish += $(base)/lib/common/bof.o
+rubbish += $(base)/lib/common/mss.o
 
-$(bof-tests): $(test-path)/bof-%:$(bof-path)/%.cpp $(extra_objects) $(headers) $(base)/lib/common/bof.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/bof.o -o $@
+$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(headers) $(base)/lib/common/mss.o
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@
 
-rubbish += $(bof-tests)
+rubbish += $(mss-tests)
 
-$(bof-cpps-prep): %.prep:%
+$(mss-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(base)/lib/common/ptt.o: %.o : %.cpp $(base)/lib/include/ptt.hpp
+$(base)/lib/common/mts.o: %.o : %.cpp $(base)/lib/include/mts.hpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-rubbish += $(base)/lib/common/ptt.o
+rubbish += $(base)/lib/common/mts.o
 
-$(ptt-tests): $(test-path)/ptt-%:$(ptt-path)/%.cpp $(extra_objects) $(headers) $(base)/lib/common/ptt.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/ptt.o -o $@
+$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(headers) $(base)/lib/common/mts.o
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mts.o -o $@
 
-rubbish += $(ptt-tests)
+rubbish += $(mts-tests)
 
-$(ptt-cpps-prep): %.prep:%
+$(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)

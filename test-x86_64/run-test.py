@@ -52,7 +52,7 @@ def proc_when_ok(test, dep):
     argument = database.cfg_get_arguments(test)
     expected_results = database.cfg_get_expected_results(test)
     try:
-        print("./" + test_prog + " " + argument)
+        # print("./" + test_prog + " " + argument)
         subprocess.check_call(
             "./" + test_prog + " " + argument,
             stderr=subprocess.STDOUT,

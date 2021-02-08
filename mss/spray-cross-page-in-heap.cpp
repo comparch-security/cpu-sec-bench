@@ -1,7 +1,7 @@
 #include <set>
 #include <cstdlib>
 #include <unistd.h>
-#include "include/bof.hpp"
+#include "include/mss.hpp"
 #include "include/assembly.hpp"
 
 int main(int argc, char* argv[])

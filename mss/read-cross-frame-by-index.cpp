@@ -1,19 +1,18 @@
-#include "include/bof.hpp"
+#include "include/mss.hpp"
 #include "include/assembly.hpp"
 
 #include <cstdio>
 
-void FORCE_NOINLINE helper(const char* b) {
+int FORCE_NOINLINE helper(const char* b) {
   long long delta = 0;
   charBuffer dummy;
   GET_DISTANCE(delta, b, dummy.data);
-  update_by_index(dummy, delta, 8, 1, 'c');
+  return read_by_index(dummy, delta, 7, 1, 'd');
 }
 
 int main()
 {
   charBuffer buffer;
   char_buffer_init(&buffer, 'u', 'd', 'o');
-  helper(buffer.data);
-  return check(buffer.data, 8, 1, 'c');
+  return helper(buffer.data);
 }

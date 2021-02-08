@@ -1,5 +1,4 @@
-#include <cstdlib>
-#include "include/bof.hpp"
+#include "include/mss.hpp"
 #include "include/assembly.hpp"
 
 #include <cstdio>
@@ -8,8 +7,7 @@ void FORCE_NOINLINE helper(const char* b) {
   long long delta = 0;
   charBuffer dummy;
   GET_DISTANCE(delta, b, dummy.data);
-  update_by_index(dummy, 0, delta+8, 1, 'c');
-  exit(check(b, 8, 1, 'c'));
+  update_by_pointer(dummy.data, delta, 8, 1, 'c');
 }
 
 int main()
@@ -17,5 +15,5 @@ int main()
   charBuffer buffer;
   char_buffer_init(&buffer, 'u', 'd', 'o');
   helper(buffer.data);
-  return -1;
+  return check(buffer.data, 8, 1, 'c');
 }

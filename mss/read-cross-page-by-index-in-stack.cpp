@@ -1,4 +1,4 @@
-#include "include/bof.hpp"
+#include "include/mss.hpp"
 #include "include/assembly.hpp"
 #include <unistd.h>
 
@@ -9,7 +9,7 @@ int FORCE_NOINLINE helper(const char* b, int level) {
     return helper(b, level-1);
   else {
     GET_DISTANCE(delta, b, dummy.data);
-    return read_by_pointer(dummy.data, delta, 7, 1, 'm');
+    return read_by_index(dummy, delta, 7, 1, 'm');
   }
 }
 

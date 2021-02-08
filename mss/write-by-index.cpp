@@ -1,4 +1,4 @@
-#include "include/bof.hpp"
+#include "include/mss.hpp"
 
 const charBuffer buffer_rodata = {"uuuuuuu","ddddddd","ooooooo"};
 charBuffer buffer_data;
@@ -21,21 +21,23 @@ int main(int argc, char* argv[])
 
   switch(store_type*2+flow_type) {
   case 0: // stack overflow
-    return read_by_pointer(buffer_stack.data,   8, 7, 1, 'o');
+    update_by_index(buffer_stack,  0,   16,  1, 'c');
+    return check(buffer_stack.overflow,  8,  1, 'c');
   case 1: // stack underflow
-    return read_by_pointer(buffer_stack.data,  -8, 7, 1, 'u');
+    update_by_index(buffer_stack,  0,   -9, -1, 'c');
+    return check(buffer_stack.underflow, 8,  1, 'c');
   case 2: // heap overflow
-    return read_by_pointer(buffer_heap->data,   8, 7, 1, 'o');
+    update_by_index(*buffer_heap,  0,   16,  1, 'c');
+    return check(buffer_heap->overflow,  8,  1, 'c');
   case 3: // heap underflow
-    return read_by_pointer(buffer_heap->data,  -8, 7, 1, 'u');
+    update_by_index(*buffer_heap,  0,   -9, -1, 'c');
+    return check(buffer_heap->underflow, 8,  1, 'c');
   case 4: // data overflow
-    return read_by_pointer(buffer_data.data,    8, 7, 1, 'o');
+    update_by_index(buffer_data,   0,   16,  1, 'c');
+    return check(buffer_data.overflow,   8,  1, 'c');
   case 5: // data underflow
-    return read_by_pointer(buffer_data.data,   -8, 7, 1, 'u');
-  case 6: // rodata underflow
-    return read_by_pointer(buffer_rodata.data,  8, 7, 1, 'o');
-  case 7: // rodata underflow
-    return read_by_pointer(buffer_rodata.data, -8, 7, 1, 'u');
+    update_by_index(buffer_data,   0,   -9, -1, 'c');
+    return check(buffer_data.underflow,  8,  1, 'c');
   default:
     return -1;
   }

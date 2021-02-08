@@ -1,5 +1,9 @@
-#include "include/bof.hpp"
+#include "include/mss.hpp"
 #include "include/assembly.hpp"
+
+const charBuffer buffer_rodataU = {"uuuuuuu","ddddddd","ooooooo"};
+const charBuffer buffer_rodataM = {"uuuuuuu","ddddddd","ooooooo"};
+const charBuffer buffer_rodataD = {"uuuuuuu","ddddddd","ooooooo"};
 
 charBuffer buffer_dataU, buffer_dataM, buffer_dataD;
 
@@ -37,7 +41,7 @@ int main(int argc, char* argv[])
     GET_DISTANCE(distance_down, buffer_stackD.data, buffer_stackM.data);
     char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_stackU.data : buffer_stackD.data;
     long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up        : distance_down;
-    update_by_pointer(buffer_stackM.data, distance,   8, 1, 'c');
+    update_by_index(buffer_stackM, distance,   8, 1, 'c');
     return check(buf,  8,  1, 'c');
   }
   case 1: { // heap
@@ -45,7 +49,7 @@ int main(int argc, char* argv[])
     GET_DISTANCE(distance_down, buffer_heapD->data, buffer_heapM->data);
     char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_heapU->data : buffer_heapD->data;
     long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up        : distance_down;
-    update_by_pointer(buffer_heapM->data, distance,   8, 1, 'c');
+    update_by_index(*buffer_heapM, distance,   8, 1, 'c');
     return check(buf,  8,  1, 'c');
   }
   case 2: { // data
@@ -53,7 +57,7 @@ int main(int argc, char* argv[])
     GET_DISTANCE(distance_down, buffer_dataD.data, buffer_dataM.data);
     char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_dataU.data : buffer_dataD.data;
     long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up       : distance_down;
-    update_by_pointer(buffer_dataM.data, distance,   8, 1, 'c');
+    update_by_index(buffer_dataM, distance,   8, 1, 'c');
     return check(buf,  8,  1, 'c');
   }
   default:
