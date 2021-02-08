@@ -5,9 +5,9 @@
 
 void FORCE_NOINLINE helper(const char* b) {
   long long delta = 0;
-  char dummy = 'a';
-  GET_DISTANCE(delta, b, &dummy);
-  update_by_pointer(&dummy, delta, 8, 1, 'c');
+  charBuffer dummy;
+  GET_DISTANCE(delta, b, dummy.data);
+  update_by_pointer(dummy.data, delta, 8, 1, 'c');
 }
 
 int main()

@@ -220,9 +220,17 @@
         "arguments": "2 1",
         "require": [ ["bof-underflow-write-ptr-data" ] ]
     },
+    "bof-read-cross-frame-index": {
+        "program": "bof-read-cross-frame-by-index",
+        "require": [ [ "bof-underflow-read-index-stack" ] ]
+    },
     "bof-read-cross-frame-ptr": {
         "program": "bof-read-cross-frame-by-pointer",
         "require": [ [ "bof-underflow-read-ptr-stack" ] ]
+    },
+    "bof-write-cross-frame-index": {
+        "program": "bof-write-cross-frame-by-index",
+        "require": [ [ "bof-underflow-write-index-stack" ] ]
     },
     "bof-write-cross-frame-ptr": {
         "program": "bof-write-cross-frame-by-pointer",
