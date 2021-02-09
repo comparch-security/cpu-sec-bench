@@ -13,7 +13,8 @@ int FORCE_NOINLINE helper(bool option) {
 }
 
 int main() {
-  helper(false);
+  int rv0 = helper(false);
   update_by_pointer(gbuffer->data, 0, 8,  1, 'c');
-  return helper(true);
+  int rv1 = helper(true);
+  return rv0 + rv1;
 }

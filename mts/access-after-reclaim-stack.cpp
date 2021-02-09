@@ -11,6 +11,7 @@ int FORCE_NOINLINE helper(bool option) {
 }
 
 int main() {
-  helper(false);
-  return helper(true);
+  int rv0 = helper(false);
+  int rv1 = helper(true);
+  return rv0+rv1;
 }
