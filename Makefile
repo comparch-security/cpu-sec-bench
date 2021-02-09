@@ -74,13 +74,8 @@ rubbish += $(mss-tests)
 $(mss-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(base)/lib/common/mts.o: %.o : %.cpp $(base)/lib/include/mts.hpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-rubbish += $(base)/lib/common/mts.o
-
-$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(headers) $(base)/lib/common/mts.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mts.o -o $@
+$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(base)/lib/common/mss.o
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@
 
 rubbish += $(mts-tests)
 

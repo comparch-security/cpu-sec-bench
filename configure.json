@@ -281,6 +281,13 @@
     },
 
     "mts-access-after-free-alias-stack": {},
+    "mts-access-after-reclaim-stack": {},
+    "mts-write-after-free-stack": {
+        "require": [ [ "mts-access-after-free-alias-stack" ] ]
+    },
+    "mts-write-before-reclaim-stack": {
+        "require": [ [ "mts-write-after-free-stack" ] ]
+    },
     "mts-access-after-free-org-heap": {
         "results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
     },
@@ -291,7 +298,7 @@
         "comment": "try to get a block which is previously freed.",
         "results": { "1": "failed to get a reallocated block after a number of trials." }
     },
-    "mts-access-after-reclaim-org-heap": {
+    "mts-access-after-reclaim-heap": {
         "require": [ [ "mts-reallocate-heap" ] ],
         "results": { "1": "expected when freed space is refilled with rubbish or cleaned.",
                      "2": "failed to reallocate a block."

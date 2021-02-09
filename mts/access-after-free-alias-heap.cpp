@@ -1,15 +1,12 @@
-#include <cstdlib>
+#include "include/mss.hpp"
 
-char *buffer;
+charBuffer *buffer;
 
 int main() {
-  char *tmp = (char *)malloc(16);
+  charBuffer *tmp = new charBuffer;
   buffer = tmp;
-  for(int i=0; i<16; i++) tmp[i] = 'd';
-  free(tmp);
-
-  for(int i=0; i<16; i++) // except if pionter temporal protection exists
-    if(buffer[i] == 'd') return 0;
-  return 1;
+  char_buffer_init(tmp, 'u', 'd', 'o');
+  delete tmp;
+  return check(buffer->data, 7,  1, 'd');
 }
 

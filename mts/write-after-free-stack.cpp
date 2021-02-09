@@ -1,9 +1,8 @@
-#include "include/gcc_builtin.hpp"
 #include "include/mss.hpp"
 
 charBuffer *gbuffer;
 
-void FORCE_NOINLINE helper() {
+void helper() {
   charBuffer buffer_stack;
   char_buffer_init(&buffer_stack, 'u', 'd', 'o');
   gbuffer = &buffer_stack;
@@ -11,5 +10,6 @@ void FORCE_NOINLINE helper() {
 
 int main() {
   helper();
-  return check(gbuffer->data, 7,  1, 'd');
+  update_by_pointer(gbuffer->data, 0, 8,  1, 'c');
+  return check(gbuffer->data, 8,  1, 'c');
 }
