@@ -42,7 +42,7 @@ extra_objects := $(base)/lib/common/signal.o $(addprefix $(base)/lib/$(ARCH)/, a
 CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall
 # -fno-omit-frame-pointer
 OBJDUMPFLAGS := -D -l -S
-RUN_SCRIPT := ./run-test.py
+RUN_SCRIPT := ../run-test.py
 
 # compile targets
 
