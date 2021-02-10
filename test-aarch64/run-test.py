@@ -9,16 +9,34 @@ sys.path.append(os.path.relpath("../script"))
 import database
 
 # check the dependence of a tests
-def check_dependence(test):
-    depend_tests = database.cfg_get_depends(test)
+def check_requirement_inner(depend_tests):
     if len(depend_tests) == 0:
         return 0
     if reduce((lambda x, y: x or y), map(lambda x: database.result_get_result(x) == -1, depend_tests)):
-        return -1
-    if reduce((lambda x, y: x and y), map(lambda x: database.result_get_result(x) == 0, depend_tests)):
-        return 0
+        return -1;
+    if reduce((lambda x, y: x or y), map(lambda x: database.result_get_result(x) == 0, depend_tests)):
+        return 0;
+    if reduce((lambda x, y: x or y), map(lambda x: database.result_get_result(x) == -2, depend_tests)):
+        return -2;
     else:
-        return 1
+        return 1;
+
+def check_requirement_outer(depend_tests):
+    if len(depend_tests) == 0:
+        return 0
+    inner_results = map(lambda x: check_requirement_inner(x), depend_tests)
+    if reduce((lambda x, y: x or y), map(lambda x: x == -1, inner_results)):
+        return -1;
+    if reduce((lambda x, y: x and y), map(lambda x: x == 0, inner_results)):
+        return 0;
+    if reduce((lambda x, y: x or y), map(lambda x: x == -2, inner_results)):
+        return -2;
+    else:
+        return 1;
+
+def check_dependence(test):
+    depend_tests = database.cfg_get_depends(test)
+    return check_requirement_outer(depend_tests)
 
 # process when the some depended tests are not tested yet
 def proc_when_untested(test, dep):
@@ -34,6 +52,7 @@ def proc_when_ok(test, dep):
     argument = database.cfg_get_arguments(test)
     expected_results = database.cfg_get_expected_results(test)
     try:
+        # print("./" + test_prog + " " + argument)
         subprocess.check_call(
             "./" + test_prog + " " + argument,
             stderr=subprocess.STDOUT,
@@ -42,12 +61,13 @@ def proc_when_ok(test, dep):
         database.result_record_result(test, 0)
     except subprocess.CalledProcessError as e:
         if not str(e.returncode) in expected_results:
-            print(test, "** FAIL! ** return:", e.returncode)
+            print(test + " ** FAIL! ** return: " + str(e.returncode))
         database.result_record_result(test, e.returncode)
 
 # process when dependence check returns a wrong result
 def proc_when_unknown(test, dep):
     print(test, "** FAIL! ** dependence check returns ", dep)
+    exit()
 
 # dependence dispatcher
 dependence_dispatcher = {

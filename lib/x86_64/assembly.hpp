@@ -18,7 +18,6 @@
     "subq %2, %0;"                           \
     : "+r"(dis) : "r" (pa), "r"(pb)          ) 
 
-
 // modify stack
 #define MOD_STACK_LABEL(label, offset)       \
   asm volatile(                              \
