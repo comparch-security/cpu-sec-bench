@@ -505,8 +505,8 @@
 
     "cfi-call-mid-func": {},
     "cfi-call-mid-instruction": {
-	"require": [ [ "cfi-call-mid-func" ] ],
-	"results": { "1": "middle of instruction case not easily available." }
+	    "require": [ [ "cfi-call-mid-func" ] ],
+	    "results": { "1": "middle of instruction case not easily available." }
     },
     "cfi-call-wrong-func-within-static-analysis": {},
     "cfi-call-wrong-func": {
@@ -610,33 +610,38 @@
         "require": [ [ "cfi-jump-mid-func" ] ],
         "results": { "16": "expected excption on the illegal call." }
     },
-    "cfi-return-to-non-call-site": {},
-    "cfi-return-to-wrong-call-site": {},
+    "cfi-return-to-non-call-site": {
+        "require": [ [ "cfi-return-to-wrong-call-site" ] ]
+    },
+    "cfi-return-to-wrong-call-site": {
+        "require": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack",
+                      "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ]
+    },
     "cfi-return-to-func": {
-        "require": [ [ "cfi-return-to-non-call-site" ] ]
+        "require": [ [ "cfi-return-to-wrong-call-site" ] ]
     },
     "cfi-return-to-libc": {
-        "require": [ [ "cfi-return-to-func" ] ]
+        "require": [ [ "cfi-return-to-func", "cfi-return-to-non-call-site" ] ]
     },
     "cfi-return-without-call": {},
     "cfi-return-to-mid-instruction": {
         "require": [ [ "cfi-return-to-non-call-site" ], [ "cfi-return-without-call" ] ],
-	"results": { "1": "middle of instruction case not easily available." }
+	    "results": { "1": "middle of instruction case not easily available." }
     },
     "cfi-return-to-instruction-in-rodata": {
-        "require": [ [ "cfi-return-to-func" ] ],
+        "require": [ [ "cfi-return-to-non-call-site" ] ],
         "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-data": {
-        "require": [ [ "cfi-return-to-func" ] ],
+        "require": [ [ "cfi-return-to-non-call-site" ] ],
         "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-heap": {
-        "require": [ [ "cfi-return-to-func" ] ],
+        "require": [ [ "cfi-return-to-non-call-site" ] ],
         "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-stack": {
-        "require": [ [ "cfi-return-to-func" ] ],
+        "require": [ [ "cfi-return-to-non-call-site" ] ],
         "results": { "16": "expected excption on the illegal call." }
     }
 }
