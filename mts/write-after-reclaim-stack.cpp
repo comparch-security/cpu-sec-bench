@@ -6,7 +6,8 @@ charBuffer *pb;
 int FORCE_NOINLINE helper(bool option) {
   charBuffer buffer;
   if(option) {
-    return check(buffer.data, 7,  1, 'd');
+    update_by_pointer(pb->data, 0, 8,  1, 'c');
+    return check(buffer.data, 7,  1, 'c');
   } else {
     pb = &buffer;
     char_buffer_init(&buffer, 'u', 'd', 'o');

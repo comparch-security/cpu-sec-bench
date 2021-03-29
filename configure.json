@@ -461,10 +461,16 @@
     },
 
     "mts-access-after-free-alias-stack": {},
-    "mts-access-after-reclaim-stack": {},
+    "mts-reallocate-stack": {},
+    "mts-access-after-reclaim-stack": {
+        "require": [ ["mts-reallocate-stack"] ]
+    },
     "mts-write-after-free-stack": {},
     "mts-write-before-reclaim-stack": {
-        "require": [ [ "mts-write-after-free-stack" ] ]
+        "require": [ [ "mts-write-after-free-stack" ], ["mts-reallocate-stack"] ]
+    },
+    "mts-write-after-reclaim-stack": {
+        "require": [ ["mts-reallocate-stack"] ]
     },
     "mts-access-after-free-org-heap": {
         "results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
@@ -484,10 +490,13 @@
     },
     "mts-write-after-free-heap": {},
     "mts-write-before-reclaim-heap": {
-        "require": [ [ "mts-write-after-free-heap" ] ],
+        "require": [ [ "mts-write-after-free-heap" ], ["mts-reallocate-heap"] ],
         "results": { "1": "expected when allocated space is refilled with rubbish or cleaned.",
                      "2": "failed to reallocate a block."
                    }
+    },
+    "mts-write-after-reclaim-heap": {
+        "require": [ [ "mts-reallocate-heap" ] ]
     },
 
     "cpi-read-vtable-pointer": {},
