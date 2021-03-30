@@ -627,9 +627,12 @@
     "cfi-return-to-non-call-site": {
         "require": [ [ "cfi-return-to-wrong-call-site" ] ]
     },
-    "cfi-return-to-wrong-call-site": {
+    "cfi-return-to-wrong-call-site-within-static-analysis": {
         "require": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack",
                       "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ]
+    },
+    "cfi-return-to-wrong-call-site": {
+        "require": [ [ "cfi-return-to-wrong-call-site-within-static-analysis" ] ]
     },
     "cfi-return-to-func": {
         "require": [ [ "cfi-return-to-wrong-call-site" ] ]
