@@ -498,6 +498,10 @@
     "mts-write-after-reclaim-heap": {
         "require": [ [ "mts-reallocate-heap" ] ]
     },
+    "acc-check-ASLR": {
+        "results": { "1": "ASLR enabled."}
+    },
+    "acc-read-func": {},
 
     "cpi-read-vtable-pointer": {},
     "cpi-write-vtable-pointer": {
