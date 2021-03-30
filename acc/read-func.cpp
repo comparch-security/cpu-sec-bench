@@ -9,8 +9,14 @@
 
 #ifdef CSB_RV64GC
   #define CHECK_LEN 6
-  const unsigned int  helper_pos[CHECK_LEN]  = {0, 4, 5, 6, 7, 9};
+  const unsigned int  helper_pos[CHECK_LEN]  = {0, 4, 5, 6, 7, 8};
   const unsigned char helper_code[CHECK_LEN] = {0x63, 0x1b, 0x86, 0xf5, 0xff, 0x02};
+#endif
+
+#ifdef CSB_ARMV8_64
+  #define CHECK_LEN 6
+  const unsigned int  helper_pos[CHECK_LEN]  = {0, 1, 2, 3, 4, 5};
+  const unsigned char helper_code[CHECK_LEN] = {0x3f, 0x00, 0x00, 0x71, 0x4d, 0x02};
 #endif
 
 int FORCE_NOINLINE helper(unsigned char *p, int len) {
