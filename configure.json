@@ -507,8 +507,9 @@
     "cpi-write-vtable-pointer": {
         "require": [ [ "cpi-read-vtable-pointer" ] ]
     },
-    "cpi-modify-func-pointer": {
-        "comment": "force revision on function pointers."
+    "cpi-func-pointer-assign": {},
+    "cpi-func-pointer-arithmetic": {
+        "require": [ [ "cpi-func-pointer-assign" ] ]
     },
     "cpi-modify-GOT": {
         "TODO" : "this relies on the code is readable.",
