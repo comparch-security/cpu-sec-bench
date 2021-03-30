@@ -12,6 +12,7 @@ int main()
 {
   Base *orig = new Base();
   Fake *fake = new Fake();
+  delete fake;
   write_vtable_pointer(orig, *((pvtable_t *)fake));
   orig->virtual_func();
   return 4;

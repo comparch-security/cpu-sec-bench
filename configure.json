@@ -541,6 +541,9 @@
     "cfi-call-wrong-func-vtable": {
         "require": [ [ "cfi-call-wrong-func-vtable-child" ] ]
     },
+    "cfi-call-wrong-func-vtable-released": {
+        "require": [ [ "cfi-call-wrong-func-vtable" ] ]
+    },
     "cfi-call-wrong-num-arg-func": {},
     "cfi-call-wrong-num-arg-vtable": {
         "require": [ [ "cfi-call-wrong-func-vtable" ] ]
