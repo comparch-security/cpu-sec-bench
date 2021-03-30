@@ -22,6 +22,11 @@ mts-cpps  = $(wildcard $(mts-path)/*.cpp)
 mts-tests = $(addprefix $(test-path)/mts-, $(basename $(notdir $(mts-cpps))))
 mts-cpps-prep = $(addsuffix .prep, $(mts-cpps))
 
+acc-path  = $(base)/acc
+acc-cpps  = $(wildcard $(acc-path)/*.cpp)
+acc-tests = $(addprefix $(test-path)/acc-, $(basename $(notdir $(acc-cpps))))
+acc-cpps-prep = $(addsuffix .prep, $(acc-cpps))
+
 cpi-path  = $(base)/cpi
 cpi-cpps  = $(wildcard $(cpi-path)/*.cpp)
 cpi-tests = $(addprefix $(test-path)/cpi-, $(basename $(notdir $(cpi-cpps))))
@@ -32,9 +37,9 @@ cfi-cpps  = $(wildcard $(cfi-path)/*.cpp)
 cfi-tests = $(addprefix $(test-path)/cfi-, $(basename $(notdir $(cfi-cpps))))
 cfi-cpps-prep = $(addsuffix .prep, $(cfi-cpps))
 
-sec-tests := $(mss-tests) $(mts-tests) $(cpi-tests) $(cfi-tests)
+sec-tests := $(mss-tests) $(mts-tests) $(acc-tests) $(cpi-tests) $(cfi-tests)
 sec-tests-dump = $(addsuffix .dump, $(sec-tests))
-sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
+sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
 headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
 extra_objects := $(base)/lib/common/signal.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
@@ -80,6 +85,14 @@ $(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(base)/lib/
 rubbish += $(mts-tests)
 
 $(mts-cpps-prep): %.prep:%
+	$(CXX) -E $(CXXFLAGS) $< > $@
+
+$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@
+
+rubbish += $(acc-tests)
+
+$(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)

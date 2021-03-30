@@ -1,4 +1,4 @@
-#include <stdlib.h>
+#include <cstdlib>
 #include "include/assembly.hpp"
 #include "include/signal.hpp"
 

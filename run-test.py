@@ -24,7 +24,7 @@ def check_requirement_inner(depend_tests):
 def check_requirement_outer(depend_tests):
     if len(depend_tests) == 0:
         return 0
-    inner_results = map(lambda x: check_requirement_inner(x), depend_tests)
+    inner_results = list(map(lambda x: check_requirement_inner(x), depend_tests))
     if reduce((lambda x, y: x or y), map(lambda x: x == -1, inner_results)):
         return -1;
     if reduce((lambda x, y: x and y), map(lambda x: x == 0, inner_results)):
