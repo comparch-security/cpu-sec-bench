@@ -44,7 +44,7 @@ sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-
 headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
 extra_objects := $(base)/lib/common/signal.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
 
-CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -Wall
+CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -std=c++11 -Wall
 # -fno-omit-frame-pointer
 OBJDUMPFLAGS := -D -l -S
 RUN_SCRIPT := ../run-test.py
