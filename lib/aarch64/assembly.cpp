@@ -42,7 +42,7 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
   asm volatile(                        \
     "ldr  w8, [%1, #4];"               \
     "mov  %0, x8;"                     \
-    : "+r"(inst) : "r"(pcc) : : "x8"   \
+    : "+r"(inst) : "r"(pcc) : "x8"     \
   );                                   \
   offset = ((inst & 0x3ffc00) >> 10) << 3; \
   pc += offset;                        \
