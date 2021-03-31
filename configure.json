@@ -502,6 +502,7 @@
         "results": { "1": "ASLR enabled."}
     },
     "acc-read-func": {},
+    "acc-read-GOT": {},
 
     "cpi-read-vtable-pointer": {},
     "cpi-write-vtable-pointer": {
@@ -512,7 +513,7 @@
         "require": [ [ "cpi-func-pointer-assign" ] ]
     },
     "cpi-modify-GOT": {
-        "TODO" : "this relies on the code is readable.",
+        "require": [ [ "acc-read-GOT" ] ],
         "results": { "16": "relocation tables under read-only protection."
                    }
     },
@@ -542,7 +543,8 @@
         "require": [ [ "cfi-call-wrong-func-vtable-child" ] ]
     },
     "cfi-call-wrong-func-vtable-released": {
-        "require": [ [ "cfi-call-wrong-func-vtable" ] ]
+        "require": [ [ "cfi-call-wrong-func-vtable" ] ],
+        "results": { "15": "vtable pointer is cleaned after release."}
     },
     "cfi-call-wrong-num-arg-func": {},
     "cfi-call-wrong-num-arg-vtable": {
