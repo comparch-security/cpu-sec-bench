@@ -34,7 +34,7 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
     : "+r"(pc)                                  \
   );                                            \
 
-void replace_got_func(void **gotp) {
+void get_got_func(void **gotp) {
   char *pc = NULL;
   unsigned int offset = 0, inst = 0;
 
