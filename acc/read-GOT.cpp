@@ -13,6 +13,7 @@ int main()
   get_got_func(&got);
   rand();
   end_catch_nx_exception();
+  mbarrier;
   fp_t fp = &rand;
   fp();
   std::cout << std::hex << (uintptr_t)(fp) << "==" << *(uintptr_t *)got << std::endl;
