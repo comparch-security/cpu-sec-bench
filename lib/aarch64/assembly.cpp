@@ -12,9 +12,9 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
 #define GET_GOT_LOC                    \
   asm volatile(                        \
     "mov  %0, x30;"                    \
-    "ldr  w0, [x30];"                  \
-    "mov  %1,x0;"                      \
-    : "+r"(pc), "+r"(inst)             \
+    "ldr  w8, [x30];"                  \
+    "mov  %1,x8;"                      \
+    : "+r"(pc), "+r"(inst) : : "x8"    \
   );                                   \
   offset = (inst & 0x03ffffff) << 2;   \
   if(offset & 0x08000000) {            \
@@ -25,11 +25,11 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
     pc += offset;                      \
   pcc = pc;                            \
   asm volatile(                        \
-    "ldr  w0, [%1];"                   \
-    "mov  %0, x0;"                     \
+    "ldr  w8, [%1];"                   \
+    "mov  %0, x8;"                     \
     "lsr  %1, %1, #12;"                \
     "lsl  %1, %1, #12;"                \
-    : "+r"(inst), "+r"(pc)             \
+    : "+r"(inst), "+r"(pc) : : "x8"    \
   );                                   \
   offset = (inst & 0xffffe0) << 9;     \
   offset |= (inst & 0x60000000) >> 17; \
@@ -40,9 +40,9 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
   } else                               \
     pc += offset;                      \
   asm volatile(                        \
-    "ldr  w0, [%1, #4];"               \
-    "mov  %0, x0;"                     \
-    : "+r"(inst) : "r"(pcc)            \
+    "ldr  w8, [%1, #4];"               \
+    "mov  %0, x8;"                     \
+    : "+r"(inst) : "r"(pcc) : : "x8"   \
   );                                   \
   offset = ((inst & 0x3ffc00) >> 10) << 3; \
   pc += offset;                        \
