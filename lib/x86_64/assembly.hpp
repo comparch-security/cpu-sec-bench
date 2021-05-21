@@ -22,13 +22,21 @@
 #define MOD_STACK_LABEL(label, offset)       \
   asm volatile(                              \
     "lea " #label "(%%rip), %%rax;"          \
-    "movq %%rax, " #offset "(%%rsp);"        \
-    : : : "rax"                              )
+    "movl %0, %%ecx;"                        \
+    "movslq %%ecx, %%rcx;"                   \
+    "addq %%rsp, %%rcx;"                     \
+    "movq %%rax, (%%rcx);"                   \
+    : : "r"(offset)                          \
+    : "rax", "rcx"                           )
 
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
-    "movq %0, " #offset "(%%rsp);"           \
-    : : "r"(dat)                             )
+    "movl %1, %%ecx;"                        \
+    "movslq %%ecx, %%rcx;"                   \
+    "addq %%rsp, %%rcx;"                     \
+    "movq %0, (%%rcx);"                      \
+    : : "r"(dat), "r"(offset)                \
+    : "rcx"                                  )
 
 // detect the stack
 extern int dummy_leaf_rv;
