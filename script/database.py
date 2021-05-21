@@ -35,6 +35,14 @@ def write_result_db():
     global resultDB
     write_db("results.json", resultDB)
 
+def write_result():
+    global resultDB
+    cases = sorted(resultDB)
+    result = open("results.dat", 'w')
+    for c in cases:
+        result.write(c + " " + str(resultDB[c]["result"]) + "\n");
+    result.close()
+
 def cfg_get_arguments(test):
     global cfgDB
     return db_get_param(cfgDB, test, "arguments", "")

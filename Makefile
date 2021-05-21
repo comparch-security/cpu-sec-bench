@@ -5,6 +5,16 @@ ARCH          ?= $(shell arch)
 GCC_OPT_LEVEL ?= O2
 CXX           ?= g++
 OBJDUMP       ?= objdump
+RUN_SCRIPT    ?= ../run-test.py
+
+# extra security features (comment them out if not needed)
+#enable_aslr_protection         = yes
+#enable_got_protection          = yes
+#enable_stack_protection        = yes
+#enable_vtable_verify           = yes
+#enable_control_flow_protection = yes
+#enable_stack_clash_protection  = yes
+#enable_address_sanitizer       = yes
 
 # define paths and objects
 base = .
@@ -12,6 +22,44 @@ base = .
 test-path = $(base)/test-$(ARCH)
 LD_LIBRARY_PATH=$(test-path)
 
+# define compiling flags
+CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -std=c++11 -Wall
+LDFLAGS  :=
+OBJDUMPFLAGS := -D -l -S
+
+ifdef enable_aslr_protection
+CXXFLAGS += -pie -fPIE
+endif
+
+ifdef enable_got_protection
+LDFLAGS  += -Wl,-z,relro,-z,now
+endif
+
+ifdef enable_stack_protection
+CXXFLAGS += -Wstack-protector -fstack-protector-all
+ifeq ($(ARCH), "x86_64")
+CXXFLAGS += -mstack-protector-guard=tls
+endif
+endif
+
+ifdef enable_vtable_verify
+CXXFLAGS += -fvtable-verify=std
+endif
+
+ifdef enable_control_flow_protection
+CXXFLAGS += -fcf-protection=full
+endif
+
+ifdef enable_stack_clash_protection
+CXXFLAGS += -fstack-clash-protection
+endif
+
+ifdef enable_address_sanitizer
+CXXFLAGS += -fsanitize=address --param=asan-stack=1
+LDFLAGS  += -static-libasan
+endif
+
+# define cases
 mss-path  = $(base)/mss
 mss-cpps  = $(wildcard $(mss-path)/*.cpp)
 mss-tests = $(addprefix $(test-path)/mss-, $(basename $(notdir $(mss-cpps))))
@@ -44,11 +92,6 @@ sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-
 headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
 extra_objects := $(base)/lib/common/signal.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
 
-CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -std=c++11 -Wall
-# -fno-omit-frame-pointer
-OBJDUMPFLAGS := -D -l -S
-RUN_SCRIPT := ../run-test.py
-
 # compile targets
 
 all: $(test-path) $(sec-tests)
@@ -72,7 +115,7 @@ $(base)/lib/common/mss.o: %.o : %.cpp $(base)/lib/include/mss.hpp
 rubbish += $(base)/lib/common/mss.o
 
 $(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(headers) $(base)/lib/common/mss.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@ $(LDFLAGS)
 
 rubbish += $(mss-tests)
 
@@ -80,7 +123,7 @@ $(mss-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(base)/lib/common/mss.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@ $(LDFLAGS)
 
 rubbish += $(mts-tests)
 
@@ -88,7 +131,7 @@ $(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@ $(LDFLAGS)
 
 rubbish += $(acc-tests)
 
@@ -96,7 +139,7 @@ $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,. -o $@ -lcfi
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cpi-tests)
 
@@ -104,7 +147,7 @@ $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,. -o $@ -lcfi
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cfi-tests)
 
@@ -112,7 +155,9 @@ $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 run: $(sec-tests) $(test-path)/$(RUN_SCRIPT)
-	cd $(test-path); $(RUN_SCRIPT)
+	cd $(test-path); RUN_PRELOAD=$(RUN_PRELOAD) $(RUN_SCRIPT)
+
+rubbish += $(test-path)/results.json $(test-path)/results.dat
 
 dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%
@@ -125,7 +170,7 @@ prep: $(sec-tests-prep)
 rubbish += $(sec-tests-prep)
 
 clean:
-	-rm $(rubbish) $(test-path)/results.json > /dev/null 2>&1
+	-rm $(rubbish)  > /dev/null 2>&1
 
 .PHONY: clean run dump prep
 

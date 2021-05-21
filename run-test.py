@@ -4,6 +4,12 @@ import sys
 import os.path
 import subprocess
 from functools import reduce
+from os import getenv
+
+# get some env variables
+run_preload = os.getenv("RUN_PRELOAD")
+if run_preload:
+    run_preload += " "
 
 sys.path.append(os.path.relpath("../script"))
 import database
@@ -52,9 +58,9 @@ def proc_when_ok(test, dep):
     argument = database.cfg_get_arguments(test)
     expected_results = database.cfg_get_expected_results(test)
     try:
-        # print("./" + test_prog + " " + argument)
+        #print(run_preload + "./" + test_prog + " " + argument)
         subprocess.check_call(
-            "./" + test_prog + " " + argument,
+            run_preload + "./" + test_prog + " " + argument,
             stderr=subprocess.STDOUT,
             shell=True
         )
@@ -90,3 +96,4 @@ while (len(tests) > 0):
 
 # write out the result
 database.write_result_db()
+database.write_result()
