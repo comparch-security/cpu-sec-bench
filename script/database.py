@@ -15,6 +15,11 @@ def write_db(fname, db):
     with open(fname, "w") as write_file:
         json.dump(db, write_file, indent=2, separators=(',', ': '), sort_keys=True)
 
+def db_has_param(db, test, param):
+    if not test in db:
+        return false;
+    return param in db[test];
+
 def db_get_param(db, test, param, default_value):
     if not test in db:
         return default_value
@@ -58,6 +63,14 @@ def cfg_get_depends(test):
 def cfg_get_expected_results(test):
     global cfgDB
     return db_get_param(cfgDB, test, "results", {})
+
+def cfg_has_param(test, pname):
+    global cfgDB
+    return db_has_param(cfgDB, test, pname)
+
+def cfg_get_param(test, pname, dvalue):
+    global cfgDB
+    return db_get_param(cfgDB, test, pname, dvalue)
 
 def cfg_get_tests():
     global cfgDB

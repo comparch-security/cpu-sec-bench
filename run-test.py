@@ -6,6 +6,8 @@ import subprocess
 from functools import reduce
 from os import getenv
 
+runtime_db = {}
+
 # get some env variables
 run_preload = os.getenv("RUN_PRELOAD")
 if run_preload:
@@ -45,8 +47,37 @@ def check_dependence(test):
     return check_requirement_outer(depend_tests)
 
 def get_test_argument_list(test):
-    argument = " ".join(database.cfg_get_arguments(test))
-    return argument
+    argument = database.cfg_get_arguments(test)
+    alist = [""]
+    for a in argument:
+        if a[0] == '-' and len(a) > 2:
+            if a[1] == 'r' and database.cfg_has_param(test, a[2:]):  # range
+                ar = database.cfg_get_param(test, a[2:], [0, 0, 0])
+                ar = range(ar[0], ar[1], ar[2])
+                new_alist = []
+                for l in alist:
+                    for n in ar:
+                        new_alist.append(l + " " + str(n))
+                alist = new_alist
+                continue
+            elif a[1] == 'l' and database.cfg_has_param(test, a[2:]): # list
+                al = database.cfg_get_param(test, a[1:], [])
+                for l in alist:
+                    for m in al:
+                        new_alist.append(l + " " + str(m))
+                alist = new_alist
+                continue
+            elif a[1] == 'v': # variable
+                new_alist = []
+                for l in alist:
+                    new_alist.append(l + " " + str(runtime_db[a[2:]]))
+                alist = new_alist
+                continue
+        new_alist = []
+        for l in alist:
+            new_alist.append(l + " " + a)
+        alist = new_alist
+    return alist
 
 # process when the some depended tests are not tested yet
 def proc_when_untested(test, dep):
@@ -59,20 +90,28 @@ def proc_when_fail(test, dep):
 # process when dependence checked out ok
 def proc_when_ok(test, dep):
     test_prog = database.cfg_get_prog(test)
-    argument = get_test_argument_list(test)
+    argument_list = get_test_argument_list(test)
     expected_results = database.cfg_get_expected_results(test)
-    try:
-        # print(run_preload + "./" + test_prog + " " + argument)
-        subprocess.check_call(
-            run_preload + "./" + test_prog + " " + argument,
-            stderr=subprocess.STDOUT,
-            shell=True
-        )
-        database.result_record_result(test, 0)
-    except subprocess.CalledProcessError as e:
-        if not str(e.returncode) in expected_results:
-            print(test + " ** FAIL! ** return: " + str(e.returncode))
-        database.result_record_result(test, e.returncode)
+    trials = 0
+    for al in argument_list:
+        try:
+            # print(run_preload + "./" + test_prog + al)
+            subprocess.check_call(
+                run_preload + "./" + test_prog + al,
+                stderr=subprocess.STDOUT,
+                shell=True
+            )
+            database.result_record_result(test, 0)
+            if database.cfg_has_param(test, "set-var"):
+               runtime_db[database.cfg_get_param(test, "set-var", "")] = trials
+               print("set runtime variable " + database.cfg_get_param(test, "set-var", "") + " to " + str(trials))
+            break
+        except subprocess.CalledProcessError as e:
+            if not str(e.returncode) in expected_results:
+                print(test + " ** FAIL! ** with return value " + str(e.returncode))
+                print("  " + test_prog + al)
+            database.result_record_result(test, e.returncode)
+        trials += 1
 
 # process when dependence check returns a wrong result
 def proc_when_unknown(test, dep):
@@ -101,3 +140,5 @@ while (len(tests) > 0):
 # write out the result
 database.write_result_db()
 database.write_result()
+
+print(runtime_db)

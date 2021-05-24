@@ -44,13 +44,6 @@ extern int dummy_leaf_func(int);
 #define ENFORCE_NON_LEAF_FUNC_VAR(VAR) dummy_leaf_rv = dummy_leaf_func(VAR);
 #define ENFORCE_NON_LEAF_FUNC dummy_leaf_rv = dummy_leaf_func(dummy_leaf_rv);
 
-// modify return address to a label
-#define MOD_RET_LABEL(label)                 \
-  MOD_STACK_LABEL(label, 8)
-#define MOD_RET_DAT(dat)                     \
-  MOD_STACK_DAT(dat, 8)
-
-
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)                 \
   asm volatile(                              \

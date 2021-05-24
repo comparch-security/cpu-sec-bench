@@ -514,8 +514,7 @@
     },
     "cpi-modify-GOT": {
         "require": [ [ "acc-read-GOT" ] ],
-        "results": { "16": "relocation tables under read-only protection."
-                   }
+        "results": { "16": "relocation tables under read-only protection." }
     },
 
     "cfi-call-mid-func": {},
@@ -630,41 +629,52 @@
         "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-non-call-site": {
-        "require": [ [ "cfi-return-to-wrong-call-site" ] ]
+        "require": [ [ "cfi-return-to-wrong-call-site" ] ],
+        "arguments": ["-vstack-offset"]
     },
     "cfi-return-to-wrong-call-site-within-static-analysis": {
         "require": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack",
                       "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ],
-        "arguments": ["3"]
+        "arguments": ["-roffset"],
+        "offset": [1, 8, 1],
+        "set-var": "stack-offset"
     },
     "cfi-return-to-wrong-call-site": {
-        "require": [ [ "cfi-return-to-wrong-call-site-within-static-analysis" ] ]
+        "require": [ [ "cfi-return-to-wrong-call-site-within-static-analysis" ] ],
+        "arguments": ["-vstack-offset"]
     },
     "cfi-return-to-func": {
-        "require": [ [ "cfi-return-to-wrong-call-site" ] ]
+        "require": [ [ "cfi-return-to-wrong-call-site" ] ],
+        "arguments": ["-vstack-offset"]
     },
     "cfi-return-to-libc": {
-        "require": [ [ "cfi-return-to-func", "cfi-return-to-non-call-site" ] ]
+        "require": [ [ "cfi-return-to-func", "cfi-return-to-non-call-site" ] ],
+        "arguments": ["-vstack-offset"]
     },
     "cfi-return-without-call": {},
     "cfi-return-to-mid-instruction": {
         "require": [ [ "cfi-return-to-non-call-site" ], [ "cfi-return-without-call" ] ],
+        "arguments": ["-vstack-offset"],
 	    "results": { "1": "middle of instruction case not easily available." }
     },
     "cfi-return-to-instruction-in-rodata": {
         "require": [ [ "cfi-return-to-non-call-site" ] ],
+        "arguments": ["-vstack-offset"],
         "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-data": {
         "require": [ [ "cfi-return-to-non-call-site" ] ],
+        "arguments": ["-vstack-offset"],
         "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-heap": {
         "require": [ [ "cfi-return-to-non-call-site" ] ],
+        "arguments": ["-vstack-offset"],
         "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-stack": {
         "require": [ [ "cfi-return-to-non-call-site" ] ],
+        "arguments": ["-vstack-offset"],
         "results": { "16": "expected excption on the illegal call." }
     }
 }

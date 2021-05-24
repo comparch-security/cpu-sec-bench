@@ -14,14 +14,19 @@ volatile int helper_var = 0;
   #define OFFSET 0
 #endif
 
+int stack_offset = 0;
+
 unsigned long long FORCE_NOINLINE helper(unsigned long long a) {
   ENFORCE_NON_LEAF_FUNC_VAR(a);
-  MOD_RET_DAT(a);
+  MOD_STACK_DAT(a, stack_offset);
   return a+2;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+  // get the offset of RA on stack
+  stack_offset = 8 * (argv[1][0] - '0' + 1);
+
   unsigned long long rv = 0;
   LOAD_LABEL(mid_instruction, rv);      
   rv = helper(rv+OFFSET);
