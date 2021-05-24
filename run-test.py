@@ -44,6 +44,10 @@ def check_dependence(test):
     depend_tests = database.cfg_get_depends(test)
     return check_requirement_outer(depend_tests)
 
+def get_test_argument_list(test):
+    argument = " ".join(database.cfg_get_arguments(test))
+    return argument
+
 # process when the some depended tests are not tested yet
 def proc_when_untested(test, dep):
     tests.append(test)
@@ -55,10 +59,10 @@ def proc_when_fail(test, dep):
 # process when dependence checked out ok
 def proc_when_ok(test, dep):
     test_prog = database.cfg_get_prog(test)
-    argument = database.cfg_get_arguments(test)
+    argument = get_test_argument_list(test)
     expected_results = database.cfg_get_expected_results(test)
     try:
-        #print(run_preload + "./" + test_prog + " " + argument)
+        # print(run_preload + "./" + test_prog + " " + argument)
         subprocess.check_call(
             run_preload + "./" + test_prog + " " + argument,
             stderr=subprocess.STDOUT,

@@ -1,223 +1,223 @@
 {
     "mss-overflow-read-index-stack": {
         "program": "mss-read-by-index",
-        "arguments": "0 0",
+        "arguments": ["0", "0"],
         "reference": { "cwe": ["119", "125", "126", "788"] }
     },
     "mss-overflow-read-index-heap": {
         "program": "mss-read-by-index",
-        "arguments": "1 0"
+        "arguments": ["1", "0"]
     },
     "mss-overflow-read-index-data": {
         "program": "mss-read-by-index",
-        "arguments": "2 0"
+        "arguments": ["2", "0"]
     },
     "mss-overflow-read-index-rodata": {
         "program": "mss-read-by-index",
-        "arguments": "3 0",
+        "arguments": ["3", "0"],
         "reference": { "cwe": ["119", "125", "126", "788"] }
     },
     "mss-underflow-read-index-stack": {
         "program": "mss-read-by-index",
-        "arguments": "0 1"
+        "arguments": ["0", "1"]
     },
     "mss-underflow-read-index-heap": {
         "program": "mss-read-by-index",
-        "arguments": "1 1"
+        "arguments": ["1", "1"]
     },
     "mss-underflow-read-index-data": {
         "program": "mss-read-by-index",
-        "arguments": "2 1"
+        "arguments": ["2", "1"]
     },
     "mss-underflow-read-index-rodata": {
         "program": "mss-read-by-index",
-        "arguments": "3 1"
+        "arguments": ["3", "1"]
     },
     "mss-overflow-read-ptr-stack": {
         "program": "mss-read-by-pointer",
-        "arguments": "0 0"
+        "arguments": ["0", "0"]
     },
     "mss-overflow-read-ptr-heap": {
         "program": "mss-read-by-pointer",
-        "arguments": "1 0"
+        "arguments": ["1", "0"]
     },
     "mss-overflow-read-ptr-data": {
         "program": "mss-read-by-pointer",
-        "arguments": "2 0"
+        "arguments": ["2", "0"]
     },
     "mss-overflow-read-ptr-rodata": {
         "program": "mss-read-by-pointer",
-        "arguments": "3 0"
+        "arguments": ["3", "0"]
     },
     "mss-underflow-read-ptr-stack": {
         "program": "mss-read-by-pointer",
-        "arguments": "0 1"
+        "arguments": ["0", "1"]
     },
     "mss-underflow-read-ptr-heap": {
         "program": "mss-read-by-pointer",
-        "arguments": "1 1"
+        "arguments": ["1", "1"]
     },
     "mss-underflow-read-ptr-data": {
         "program": "mss-read-by-pointer",
-        "arguments": "2 1"
+        "arguments": ["2", "1"]
     },
     "mss-underflow-read-ptr-rodata": {
         "program": "mss-read-by-pointer",
-        "arguments": "3 1"
+        "arguments": ["3", "1"]
     },
     "mss-overflow-write-index-stack": {
         "program": "mss-write-by-index",
-        "arguments": "0 0"
+        "arguments": ["0", "0"]
     },
     "mss-overflow-write-index-heap": {
         "program": "mss-write-by-index",
-        "arguments": "1 0"
+        "arguments": ["1", "0"]
     },
     "mss-overflow-write-index-data": {
         "program": "mss-write-by-index",
-        "arguments": "2 0"
+        "arguments": ["2", "0"]
     },
     "mss-underflow-write-index-stack": {
         "program": "mss-write-by-index",
-        "arguments": "0 1",
+        "arguments": ["0", "1"],
         "reference": { "cwe": ["119"] }
     },
     "mss-underflow-write-index-heap": {
         "program": "mss-write-by-index",
-        "arguments": "1 1",
+        "arguments": ["1", "1"],
         "reference": { "cwe": ["119"] }
     },
     "mss-underflow-write-index-data": {
         "program": "mss-write-by-index",
-        "arguments": "2 1",
+        "arguments": ["2", "1"],
         "reference": { "cwe": ["119"] }
     },
     "mss-overflow-write-ptr-stack": {
         "program": "mss-write-by-pointer",
-        "arguments": "0 0",
+        "arguments": ["0", "0"],
         "reference": { "cwe": ["119", "121", "125", "126", "788"] }
     },
     "mss-overflow-write-ptr-heap": {
         "program": "mss-write-by-pointer",
-        "arguments": "1 0"
+        "arguments": ["1", "0"]
     },
     "mss-overflow-write-ptr-data": {
         "program": "mss-write-by-pointer",
-        "arguments": "2 0"
+        "arguments": ["2", "0"]
     },
     "mss-underflow-write-ptr-stack": {
         "program": "mss-write-by-pointer",
-        "arguments": "0 1",
+        "arguments": ["0", "1"],
         "reference": { "cwe": ["119"] }
     },
     "mss-underflow-write-ptr-heap": {
         "program": "mss-write-by-pointer",
-        "arguments": "1 1",
+        "arguments": ["1", "1"],
         "reference": { "cwe": ["119"] }
     },
     "mss-underflow-write-ptr-data": {
         "program": "mss-write-by-pointer",
-        "arguments": "2 1",
+        "arguments": ["2", "1"],
         "reference": { "cwe": ["119"] }
     },
     "mss-read-cross-object-index-stack": {
         "program": "mss-read-cross-object-by-index",
-        "arguments": "0",
+        "arguments": ["0"],
         "require": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack" ] ]
     },
     "mss-read-cross-object-index-heap": {
         "program": "mss-read-cross-object-by-index",
-        "arguments": "1",
+        "arguments": ["1"],
         "require": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap" ] ]
     },
     "mss-read-cross-object-index-data": {
         "program": "mss-read-cross-object-by-index",
-        "arguments": "2",
+        "arguments": ["2"],
         "require": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data" ] ]
     },
     "mss-read-cross-object-index-rodata": {
         "program": "mss-read-cross-object-by-index",
-        "arguments": "3",
+        "arguments": ["3"],
         "require": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata" ] ]
     },
     "mss-read-cross-object-ptr-stack": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": "0",
+        "arguments": ["0"],
         "require": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack" ] ]
     },
     "mss-read-cross-object-ptr-heap": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": "1",
+        "arguments": ["1"],
         "require": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap" ] ]
     },
     "mss-read-cross-object-ptr-data": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": "2",
+        "arguments": ["2"],
         "require": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data" ] ]
     },
     "mss-read-cross-object-ptr-rodata": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": "3",
+        "arguments": ["3"],
         "require": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata" ] ]
     },
     "mss-overflow-write-cross-object-index-stack": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": "0 0",
+        "arguments": ["0", "0"],
         "require": [ ["mss-overflow-write-index-stack"] ]
     },
     "mss-overflow-write-cross-object-index-heap": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": "1 0",
+        "arguments": ["1", "0"],
         "require": [ ["mss-overflow-write-index-heap"] ]
     },
     "mss-overflow-write-cross-object-index-data": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": "2 0",
+        "arguments": ["2", "0"],
         "require": [ ["mss-overflow-write-index-data"] ]
     },
     "mss-underflow-write-cross-object-index-stack": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": "0 1",
+        "arguments": ["0", "1"],
         "require": [ ["mss-underflow-write-index-stack" ] ]
     },
     "mss-underflow-write-cross-object-index-heap": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": "1 1",
+        "arguments": ["1", "1"],
         "require": [ ["mss-underflow-write-index-heap" ] ]
     },
     "mss-underflow-write-cross-object-index-data": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": "2 1",
+        "arguments": ["2", "1"],
         "require": [ ["mss-underflow-write-index-data" ] ]
     },
     "mss-overflow-write-cross-object-ptr-stack": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": "0 0",
+        "arguments": ["0", "0"],
         "require": [ ["mss-overflow-write-ptr-stack"] ]
     },
     "mss-overflow-write-cross-object-ptr-heap": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": "1 0",
+        "arguments": ["1", "0"],
         "require": [ ["mss-overflow-write-ptr-heap"] ]
     },
     "mss-overflow-write-cross-object-ptr-data": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": "2 0",
+        "arguments": ["2", "0"],
         "require": [ ["mss-overflow-write-ptr-data"] ]
     },
     "mss-underflow-write-cross-object-ptr-stack": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": "0 1",
+        "arguments": ["0", "1"],
         "require": [ ["mss-underflow-write-ptr-stack" ] ]
     },
     "mss-underflow-write-cross-object-ptr-heap": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": "1 1",
+        "arguments": ["1", "1"],
         "require": [ ["mss-underflow-write-ptr-heap" ] ]
     },
     "mss-underflow-write-cross-object-ptr-data": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": "2 1",
+        "arguments": ["2", "1"],
         "require": [ ["mss-underflow-write-ptr-data" ] ]
     },
     "mss-read-cross-frame-index": {
@@ -254,197 +254,197 @@
     },
     "mss-read-cross-segment-stack-to-heap-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "0 1 0",
+        "arguments": ["0", "1", "0"],
         "require": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ]
     },
     "mss-read-cross-segment-stack-to-heap-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "0 1 1",
+        "arguments": ["0","1","1"],
         "require": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ]
     },
     "mss-read-cross-segment-stack-to-data-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "0 2 0",
+        "arguments": ["0", "2", "0"],
         "require": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ]
     },
     "mss-read-cross-segment-stack-to-data-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "0 2 1",
+        "arguments": ["0", "2", "1"],
         "require": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ]
     },
     "mss-read-cross-segment-stack-to-rodata-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "0 3 0",
+        "arguments": ["0", "3", "0"],
         "require": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ]
     },
     "mss-read-cross-segment-stack-to-rodata-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "0 3 1",
+        "arguments": ["0", "3", "1"],
         "require": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ]
     },
     "mss-read-cross-segment-heap-to-stack-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "1 0 0",
+        "arguments": ["1", "0", "0"],
         "require": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ]
     },
     "mss-read-cross-segment-heap-to-stack-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "1 0 1",
+        "arguments": ["1", "0", "1"],
         "require": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ]
     },
     "mss-read-cross-segment-heap-to-data-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "1 2 0",
+        "arguments": ["1", "2", "0"],
         "require": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ]
     },
     "mss-read-cross-segment-heap-to-data-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "1 2 1",
+        "arguments": ["1", "2", "1"],
         "require": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ]
     },
     "mss-read-cross-segment-heap-to-rodata-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "1 3 0",
+        "arguments": ["1", "3", "0"],
         "require": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ]
     },
     "mss-read-cross-segment-heap-to-rodata-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "1 3 1",
+        "arguments": ["1", "3", "1"],
         "require": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ]
     },
     "mss-read-cross-segment-data-to-stack-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "2 0 0",
+        "arguments": ["2", "0", "0"],
         "require": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ]
     },
     "mss-read-cross-segment-data-to-stack-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "2 0 1",
+        "arguments": ["2", "0", "1"],
         "require": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ]
     },
     "mss-read-cross-segment-data-to-heap-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "2 1 0",
+        "arguments": ["2", "1", "0"],
         "require": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ]
     },
     "mss-read-cross-segment-data-to-heap-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "2 1 1",
+        "arguments": ["2", "1", "1"],
         "require": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ]
     },
     "mss-read-cross-segment-data-to-rodata-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "2 3 0",
+        "arguments": ["2", "3", "0"],
         "require": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ]
     },
     "mss-read-cross-segment-data-to-rodata-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "2 3 1",
+        "arguments": ["2", "3", "1"],
         "require": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ]
     },
     "mss-read-cross-segment-rodata-to-stack-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "3 0 0",
+        "arguments": ["3", "0", "0"],
         "require": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ]
     },
     "mss-read-cross-segment-rodata-to-stack-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "3 0 1",
+        "arguments": ["3", "0", "1"],
         "require": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ]
     },
     "mss-read-cross-segment-rodata-to-heap-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "3 1 0",
+        "arguments": ["3", "1", "0"],
         "require": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ]
     },
     "mss-read-cross-segment-rodata-to-heap-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "3 1 1",
+        "arguments": ["3", "1", "1"],
         "require": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ]
     },
     "mss-read-cross-segment-rodata-to-data-index": {
         "program": "mss-read-cross-segment",
-        "arguments": "3 2 0",
+        "arguments": ["3", "2", "0"],
         "require": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ]
     },
     "mss-read-cross-segment-rodata-to-data-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": "3 2 1",
+        "arguments": ["3", "2", "1"],
         "require": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ]
     },
     "mss-write-cross-segment-stack-to-heap-index": {
         "program": "mss-write-cross-segment",
-        "arguments": "0 1 0",
+        "arguments": ["0", "1", "0"],
         "require": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack"] ]
     },
     "mss-write-cross-segment-stack-to-heap-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": "0 1 1",
+        "arguments": ["0", "1", "1"],
         "require": [ ["mss-overflow-write-ptr-stack", "mss-underflow-write-ptr-stack"] ]
     },
     "mss-write-cross-segment-stack-to-data-index": {
         "program": "mss-write-cross-segment",
-        "arguments": "0 2 0",
+        "arguments": ["0", "2", "0"],
         "require": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack"] ]
     },
     "mss-write-cross-segment-stack-to-data-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": "0 2 1",
+        "arguments": ["0", "2", "1"],
         "require": [ ["mss-overflow-write-ptr-stack", "mss-underflow-write-ptr-stack"] ]
     },
     "mss-write-cross-segment-heap-to-stack-index": {
         "program": "mss-write-cross-segment",
-        "arguments": "1 0 0",
+        "arguments": ["1", "0", "0"],
         "require": [ ["mss-overflow-write-index-heap", "mss-underflow-write-index-heap"] ]
     },
     "mss-write-cross-segment-heap-to-stack-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": "1 0 1",
+        "arguments": ["1", "0", "1"],
         "require": [ ["mss-overflow-write-ptr-heap", "mss-underflow-write-ptr-heap"] ]
     },
     "mss-write-cross-segment-heap-to-data-index": {
         "program": "mss-write-cross-segment",
-        "arguments": "1 2 0",
+        "arguments": ["1", "2", "0"],
         "require": [ ["mss-overflow-write-index-heap", "mss-underflow-write-index-heap"] ]
     },
     "mss-write-cross-segment-heap-to-data-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": "1 2 1",
+        "arguments": ["1", "2", "1"],
         "require": [ ["mss-overflow-write-ptr-heap", "mss-underflow-write-ptr-heap"] ]
     },
     "mss-write-cross-segment-data-to-stack-index": {
         "program": "mss-write-cross-segment",
-        "arguments": "2 0 0",
+        "arguments": ["2", "0", "0"],
         "require": [ ["mss-overflow-write-index-data", "mss-underflow-write-index-data"] ]
     },
     "mss-write-cross-segment-data-to-stack-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": "2 0 1",
+        "arguments": ["2", "0", "1"],
         "require": [ ["mss-overflow-write-ptr-data", "mss-underflow-write-ptr-data"] ]
     },
     "mss-write-cross-segment-data-to-heap-index": {
         "program": "mss-write-cross-segment",
-        "arguments": "2 1 0",
+        "arguments": ["2", "1", "0"],
         "require": [ ["mss-overflow-write-index-data", "mss-underflow-write-index-data"] ]
     },
     "mss-write-cross-segment-data-to-heap-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": "2 1 1",
+        "arguments": ["2", "1", "1"],
         "require": [ ["mss-overflow-write-ptr-data", "mss-underflow-write-ptr-data"] ]
     },
     "mss-spray-cross-object-stack": {
         "program": "mss-spray-cross-object",
-        "arguments": "0",
+        "arguments": ["0"],
         "require": [ [ "mss-overflow-write-cross-object-ptr-stack" ], [ "mss-underflow-write-cross-object-ptr-stack" ] ]
     },
     "mss-spray-cross-object-heap": {
         "program": "mss-spray-cross-object",
-        "arguments": "1",
+        "arguments": ["1"],
         "require": [ [ "mss-overflow-write-cross-object-ptr-heap" ], [ "mss-underflow-write-cross-object-ptr-heap" ] ]
     },
     "mss-spray-cross-object-data": {
         "program": "mss-spray-cross-object",
-        "arguments": "2",
+        "arguments": ["2"],
         "require": [ [ "mss-overflow-write-cross-object-ptr-data" ], [ "mss-underflow-write-cross-object-ptr-data" ] ]
     },
     "mss-spray-cross-frame": {
@@ -567,10 +567,10 @@
     },
     "cfi-call-wrong-type-arg-int2double-func": {},
     "cfi-call-wrong-type-arg-op2doublep-func": {
-        "arguments" : "2"
+        "arguments" : ["2"]
     },
     "cfi-call-wrong-type-arg-op2intp-func": {
-        "arguments" : "2"
+        "arguments" : ["2"]
     },
     "cfi-call-wrong-type-arg-fp2dp-func": {},
     "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
@@ -634,7 +634,8 @@
     },
     "cfi-return-to-wrong-call-site-within-static-analysis": {
         "require": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack",
-                      "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ]
+                      "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ],
+        "arguments": ["3"]
     },
     "cfi-return-to-wrong-call-site": {
         "require": [ [ "cfi-return-to-wrong-call-site-within-static-analysis" ] ]
