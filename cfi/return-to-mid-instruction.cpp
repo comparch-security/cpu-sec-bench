@@ -25,7 +25,7 @@ unsigned long long FORCE_NOINLINE helper(unsigned long long a) {
 int main(int argc, char* argv[])
 {
   // get the offset of RA on stack
-  stack_offset = 8 * (argv[1][0] - '0' + 1);
+  stack_offset = 8 * (argv[1][0] - '0');
 
   unsigned long long rv = 0;
   LOAD_LABEL(mid_instruction, rv);      

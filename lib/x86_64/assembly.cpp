@@ -11,11 +11,16 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
 
 // we know rand is call immediately afterwards
 // so get the plt address from ra
-#define GET_GOT_LOC                 \
+#define GET_GOT_LOC(stack_offset)   \
   asm volatile(                     \
-    "mov  (%%rsp), %0;"             \
+    "movl %2, %%ecx;"               \
+    "movslq %%ecx, %%rcx;"          \
+    "addq %%rsp, %%rcx;"            \
+    "mov  (%%rcx), %0;"             \
     "mov  0x1(%0), %1;"             \
     : "+r"(pc), "+r"(offset)        \
+    : "r"(stack_offset)             \
+    : "rcx"                         \
   );                                \
   pc += 5;                          \
   pc += offset;                     \
@@ -26,21 +31,20 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
     : "+r"(pc) : : "rax"            \
   );
 
-void get_got_func(void **gotp) {
+void get_got_func(void **gotp, int stack_offset) {
   char *pc = NULL;
   int offset = 0;
 
-  GET_GOT_LOC
+  GET_GOT_LOC(stack_offset)
 
   *gotp = pc;
 }
 
-void replace_got_func(void **fake) {
-  
+void replace_got_func(void **fake, int stack_offset) {
   char *pc = NULL;
   int offset = 0;
 
-  GET_GOT_LOC
+  GET_GOT_LOC(stack_offset)
 
   asm volatile(
     "movq %1, (%0);" // replace the GPT entry

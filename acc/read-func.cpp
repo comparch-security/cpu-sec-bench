@@ -2,9 +2,9 @@
 #include "include/assembly.hpp"
 
 #ifdef CSB_X86_64
-  #define CHECK_LEN 3
-  const unsigned int  helper_pos[CHECK_LEN]  = {0, 1, 2};
-  const unsigned char helper_code[CHECK_LEN] = {0x85, 0xf6, 0x7e};
+  #define CHECK_LEN 2
+  const unsigned int  helper_pos[CHECK_LEN]  = {0, 1};
+  const unsigned char helper_code[CHECK_LEN] = {0x85, 0xf6};
 #endif
 
 #ifdef CSB_RV64GC

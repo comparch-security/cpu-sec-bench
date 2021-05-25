@@ -14,7 +14,7 @@ void FORCE_NOINLINE helper()
 int main(int argc, char* argv[])
 {
   // get the offset of RA on stack
-  stack_offset = 8 * (argv[1][0] - '0' + 1);
+  stack_offset = 8 * (argv[1][0] - '0');
 
   helper();
   return 3;

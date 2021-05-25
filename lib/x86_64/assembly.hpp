@@ -172,5 +172,5 @@ void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
   *p++ = 0xc3;
 }
 
-extern void get_got_func(void **gotp);
-extern void replace_got_func(void **fake);
+extern void get_got_func(void **gotp, int stack_offset);
+extern void replace_got_func(void **fake, int stack_offset);

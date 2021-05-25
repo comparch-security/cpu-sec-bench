@@ -15,7 +15,7 @@ int FORCE_NOINLINE helper(const unsigned char* m) {
 int main(int argc, char* argv[])
 {
   // get the offset of RA on stack
-  stack_offset = 8 * (argv[1][0] - '0' + 1);
+  stack_offset = 8 * (argv[1][0] - '0');
 
   PUSH_FAKE_RET(xlabel);
   begin_catch_nx_exception(m);

@@ -502,7 +502,10 @@
         "results": { "1": "ASLR enabled."}
     },
     "acc-read-func": {},
-    "acc-read-GOT": {},
+    "acc-read-GOT": {
+        "arguments": ["-roffset"],
+        "offset": [0, 8, 1]
+    },
 
     "cpi-read-vtable-pointer": {},
     "cpi-write-vtable-pointer": {
@@ -514,6 +517,8 @@
     },
     "cpi-modify-GOT": {
         "require": [ [ "acc-read-GOT" ] ],
+        "arguments": ["-roffset"],
+        "offset": [0, 8, 1],
         "results": { "16": "relocation tables under read-only protection." }
     },
 
@@ -636,7 +641,7 @@
         "require": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack",
                       "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ],
         "arguments": ["-roffset"],
-        "offset": [1, 8, 1],
+        "offset": [0, 8, 1],
         "set-var": "stack-offset"
     },
     "cfi-return-to-wrong-call-site": {
