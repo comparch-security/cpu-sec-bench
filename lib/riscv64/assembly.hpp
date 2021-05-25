@@ -21,27 +21,22 @@
 #define MOD_STACK_LABEL(label, offset)       \
   asm volatile(                              \
     "la  t0," #label ";"                     \
-    "sd  t0, %0(sp);"                        \
-    : : "i"(offset)                          \
+    "add %0, %0, sp;"                        \
+    "sd  t0, (%0);"                          \
+    : : "r"(offset)                          \
     : "t0"                                   )
 
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
-    "sd  %1, %0(sp);"                        \
-    : : "i"(offset), "r"(dat)                )
+    "add %0, %0, sp;"                        \
+    "sd  %1, (%0);"                          \
+    : : "r"(offset), "r"(dat)                )
 
 // detect the stack
 extern int dummy_leaf_rv;
 extern int dummy_leaf_func(int);
 #define ENFORCE_NON_LEAF_FUNC_VAR(VAR) dummy_leaf_rv = dummy_leaf_func(VAR);
 #define ENFORCE_NON_LEAF_FUNC dummy_leaf_rv = dummy_leaf_func(dummy_leaf_rv);
-
-// modify return address to a label
-#define MOD_RET_LABEL(label)                 \
-  MOD_STACK_LABEL(label, 8)
-#define MOD_RET_DAT(dat)                     \
-  MOD_STACK_DAT(dat, 8)
-
 
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)                 \
@@ -164,5 +159,5 @@ void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
   *p++ = 0x80;
 }
 
-extern void get_got_func(void **gotp);
-extern void replace_got_func(void **fake);
+extern void get_got_func(void **gotp, int stack_offset);
+extern void replace_got_func(void **fake, int stack_offset);
