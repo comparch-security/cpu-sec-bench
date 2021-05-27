@@ -17,8 +17,10 @@ int main(int argc, char* argv[])
   stack_offset = 8 * (argv[1][0] - '0');
 
   unsigned char m[] = FUNC_MACHINE_CODE_RETURN;
-  begin_catch_exception(m);
+  begin_catch_exception(m, SEGV_ACCERR);
+  begin_catch_exception((void *)NULL, SI_KERNEL, 0);
   int rv = helper(m);
+  end_catch_exception();
   end_catch_exception();
   exit(rv);
 }

@@ -17,11 +17,11 @@ int main(int argc, char* argv[])
   stack_offset = 8 * (argv[1][0] - '0');
 
   unsigned char *m = new unsigned char [16];
-  assign_fake_machine_code(m);
-  PUSH_FAKE_RET(xlabel);
+  assign_fake_machine_code_return(m);
   begin_catch_exception(m, SEGV_ACCERR);
+  begin_catch_exception((void *)NULL, SI_KERNEL, 0);
   int rv = helper(m);
   end_catch_exception();
-  DECL_LABEL(xlabel);
+  end_catch_exception();
   exit(rv);
 }
