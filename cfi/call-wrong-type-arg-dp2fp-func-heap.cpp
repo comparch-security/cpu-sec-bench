@@ -17,6 +17,6 @@ int main()
   unsigned char *m = new unsigned char [16];
   assign_fake_machine_code_call(m);
   int rv = m[0];
-  rv = helper((func_type)(&m));
+  rv = helper((func_type)(m));
   exit(rv);
 }

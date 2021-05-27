@@ -8,6 +8,8 @@ OBJDUMP       ?= objdump
 RUN_SCRIPT    ?= ../run-test.py
 
 # extra security features (comment them out if not needed)
+disable_stack_nx_protection    = yes
+#disable_stack_protection       = yes
 #enable_aslr_protection         = yes
 #enable_got_protection          = yes
 #enable_stack_protection        = yes
@@ -26,6 +28,14 @@ LD_LIBRARY_PATH=$(test-path)
 CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -std=c++11 -Wall
 LDFLAGS  :=
 OBJDUMPFLAGS := -D -l -S
+
+ifdef disable_stack_nx_protection
+CXXFLAGS += -z execstack
+endif
+
+ifdef disable_stack_protection
+CXXFLAGS += -fno-stack-protector
+endif
 
 ifdef enable_aslr_protection
 CXXFLAGS += -pie -fPIE
