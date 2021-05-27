@@ -16,11 +16,9 @@ int main(int argc, char* argv[])
   // get the offset of RA on stack
   stack_offset = 8 * (argv[1][0] - '0');
 
-  unsigned char m[] = FUNC_MACHINE_CODE;
-  PUSH_FAKE_RET(xlabel);
-  begin_catch_nx_exception(m);
+  unsigned char m[] = FUNC_MACHINE_CODE_RETURN;
+  begin_catch_exception(m);
   int rv = helper(m);
-  end_catch_nx_exception();
-  DECL_LABEL(xlabel);
+  end_catch_exception();
   exit(rv);
 }

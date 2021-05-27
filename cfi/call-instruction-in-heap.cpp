@@ -14,8 +14,8 @@ int main()
 {
   unsigned char *m = new unsigned char [16];
   assign_fake_machine_code_call(m);
-  begin_catch_nx_exception(m);
+  begin_catch_exception(m);
   int rv = helper(m);
-  end_catch_nx_exception();
+  end_catch_exception();
   exit(rv);
 }

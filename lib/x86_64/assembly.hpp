@@ -145,6 +145,13 @@ extern int dummy_leaf_func(int);
 #define FUNC_MACHINE_CODE \
   {0x31, 0xc0, 0x48, 0x83, 0xc4, 0x08, 0xc3}
 
+// the machine code for the following
+//  66 0f ef c9             pxor %xmm1, %xmm1
+//  f3 0f 5e c1             divss %xmm1, %xmm0
+//  c3                      retq
+#define FUNC_MACHINE_CODE_RETURN \
+  {0x66, 0x0f, 0xef, 0xc9, 0xf3, 0x0f, 0x5e, 0xc1, 0xc3}
+
 void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x31;
   *p++ = 0xc0;
@@ -173,4 +180,4 @@ void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
 }
 
 extern void get_got_func(void **gotp, int stack_offset);
-extern void replace_got_func(void **fake, int stack_offset);
+extern void replace_got_func(void **fake, void *got);

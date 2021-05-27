@@ -1,40 +1,40 @@
 #include "include/signal.hpp"
 #include "include/gcc_builtin.hpp"
-#include <csignal>
 #include <cstdlib>
 #include <cstdio>
-#include <stack>
+#include <vector>
 
-const int RT_CODE_MISMATCH  = -1;      // ERROR: mismatched signal
-const int RT_CODE_MAPERR    = 15;      // address not accessible
-const int RT_CODE_ACCERR    = 16;      // no permission to access
+// information recorded for exception checking
+struct sigact_record_t {
+  union {
+    // faulty memory location: SIGILL, SIGFPE, SIGSEGV, SIGBUS, and SIGTRAP
+    const void *daddr;
+    const void **faddr;
+  };
+  int err_code;
+  int rv_code;
+};
 
-std::stack<sigact_record_t *> sigact_stack;
+// use local pool to avoid affecting the heap
+static std::vector<sigact_record_t> sigact_stack(16);
+static int svp = -1;
 
-void xcpt_nx_handler(int signo, siginfo_t *sinfo, void *context) {
+void xcpt_handler(int signo, siginfo_t *sinfo, void *context) {
   // check the exception cause
-  sigact_record_t *record = sigact_stack.top();
-  sigact_stack.pop();
-  if(sinfo->si_code == SEGV_ACCERR && record->faulty_data_addr != NULL && record->faulty_data_addr == sinfo->si_addr) {
-    delete record;
-    exit(RT_CODE_ACCERR);
-  } else if(sinfo->si_code == SEGV_ACCERR && record->faulty_data_addr == NULL) {
-    delete record;
-    exit(RT_CODE_ACCERR);
-  } else if(sinfo->si_code == SEGV_MAPERR) {
-    delete record;
-    exit(RT_CODE_MAPERR);
-  } else {
-    puts("xcpt_nx_handler(): mismatched SEGV signal.");
-    exit(RT_CODE_MISMATCH);
-    //exit(sinfo->si_code);
+  for(int i=svp; i>=0; i--) {
+    if((sigact_stack[i].err_code == 0 || sinfo->si_code == sigact_stack[i].err_code) &&
+      (sigact_stack[i].daddr == sinfo->si_addr))
+      exit(sigact_stack[i].rv_code);
   }
+
+  fprintf(stderr, "xcpt_handler(): mismatched SEGV signal with si_code = %d and fault-addr = 0x%p\n", sinfo->si_code, sinfo->si_addr);
+  exit(RT_CODE_MISMATCH);
 }
 
-void FORCE_INLINE begin_catch_nx_exception_common(sigact_record_t *record) {
+void FORCE_INLINE begin_catch_exception_common() {
   // construct the signal action
   struct sigaction act;
-  act.sa_sigaction = xcpt_nx_handler;
+  act.sa_sigaction = xcpt_handler;
   sigemptyset(&act.sa_mask);
   act.sa_flags = SA_SIGINFO;
 
@@ -42,48 +42,32 @@ void FORCE_INLINE begin_catch_nx_exception_common(sigact_record_t *record) {
   if(-1 == sigaction(SIGSEGV, &act, NULL)) {
     perror("begin_catch_nx_exception()");
     exit(-1);
-  } else {
-    sigact_stack.push(record);
   }
 }
 
-void begin_catch_nx_exception(const void *expected_faulty_addr) {
-  // construct the sigact environment
-  sigact_record_t *record = new sigact_record_t;
-  record->faulty_data_addr = expected_faulty_addr;
-
-  begin_catch_nx_exception_common(record);
+void begin_catch_exception(const void *expected_faulty_addr, int err_code, int rv_code) {
+  if(svp < 0) begin_catch_exception_common();
+  sigact_stack[++svp] = {expected_faulty_addr, err_code, rv_code};
 }
 
-void begin_catch_nx_exception(const void **expected_faulty_addr) {
-  // construct the sigact environment
-  sigact_record_t *record = new sigact_record_t;
-  record->faulty_func_addr = expected_faulty_addr;
-
-  begin_catch_nx_exception_common(record);
+void begin_catch_exception(const void **expected_faulty_addr, int err_code, int rv_code) {
+  if(svp < 0) begin_catch_exception_common();
+  sigact_stack[++svp] = {expected_faulty_addr, err_code, rv_code};
 }
 
-void begin_catch_nx_exception() {
-  // construct the sigact environment
-  sigact_record_t *record = new sigact_record_t;
-  record->faulty_data_addr = NULL;
+void end_catch_exception() {
+  --svp;
+  if(svp < 0) {
+    // construct a default signal action
+    struct sigaction act;
+    act.sa_handler = SIG_DFL;
+    sigemptyset(&act.sa_mask);
+    act.sa_flags = 0;
 
-  begin_catch_nx_exception_common(record);
-}
-
-void end_catch_nx_exception() {
-  // construct a default signal action
-  struct sigaction act;
-  act.sa_handler = SIG_DFL;
-  sigemptyset(&act.sa_mask);
-  act.sa_flags = 0;
-
-  // install the default signal action
-  if(-1 == sigaction(SIGSEGV, &act, NULL)) {
-    perror("end_catch_nx_exception()");
-    exit(-1);
-  } else {
-    delete sigact_stack.top();
-    sigact_stack.pop();
-  }   
+    // install the default signal action
+    if(-1 == sigaction(SIGSEGV, &act, NULL)) {
+      perror("end_catch_nx_exception()");
+      exit(-1);
+    }
+  }
 }

@@ -6,9 +6,9 @@ static unsigned int gv = 1;
 typedef unsigned int (*func_type)(void);
 
 int FORCE_NOINLINE helper(func_type fp) {
-  begin_catch_nx_exception((void **)fp);
+  begin_catch_exception((void **)fp);
   gv = fp();
-  end_catch_nx_exception();
+  end_catch_exception();
   return gv;
 }
 

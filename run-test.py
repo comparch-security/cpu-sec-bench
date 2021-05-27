@@ -107,10 +107,13 @@ def proc_when_ok(test, dep):
                print("set runtime variable " + database.cfg_get_param(test, "set-var", "") + " to " + str(trials))
             break
         except subprocess.CalledProcessError as e:
-            if not str(e.returncode) in expected_results:
-                print(test + " ** FAIL! ** with return value " + str(e.returncode))
-                print("  " + test_prog + al)
-            database.result_record_result(test, e.returncode)
+            if str(database.result_get_result(test)) not in expected_results:
+                if str(e.returncode) not in expected_results:
+                    print(test + " ** FAIL! ** with return value " + str(e.returncode))
+                    print("  " + test_prog + al)
+                database.result_record_result(test, e.returncode)
+            elif str(e.returncode) in expected_results:
+                database.result_record_result(test, e.returncode)
         trials += 1
 
 # process when dependence check returns a wrong result

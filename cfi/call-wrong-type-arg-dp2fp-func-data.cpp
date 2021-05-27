@@ -7,9 +7,9 @@ typedef unsigned int (*func_type)(void);
 static unsigned char m[] = FUNC_MACHINE_CODE_CALL;
 
 int FORCE_NOINLINE helper(func_type fp) {
-  begin_catch_nx_exception((void **)fp);
+  begin_catch_exception((void **)fp);
   gv = fp();
-  end_catch_nx_exception();
+  end_catch_exception();
   return gv;
 }
 

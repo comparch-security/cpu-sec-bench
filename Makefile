@@ -8,7 +8,7 @@ OBJDUMP       ?= objdump
 RUN_SCRIPT    ?= ../run-test.py
 
 # extra security features (comment them out if not needed)
-disable_stack_nx_protection    = yes
+#disable_stack_nx_protection    = yes
 #disable_stack_protection       = yes
 #enable_aslr_protection         = yes
 #enable_got_protection          = yes

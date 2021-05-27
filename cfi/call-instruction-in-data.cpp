@@ -13,8 +13,8 @@ int FORCE_NOINLINE helper(const unsigned char* m) {
 
 int main()
 {
-  begin_catch_nx_exception(m);
+  begin_catch_exception(m);
   int rv = helper(m);
-  end_catch_nx_exception();
+  end_catch_exception();
   exit(rv);
 }

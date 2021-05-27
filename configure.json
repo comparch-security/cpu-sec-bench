@@ -548,7 +548,7 @@
     },
     "cfi-call-wrong-func-vtable-released": {
         "require": [ [ "cfi-call-wrong-func-vtable" ] ],
-        "results": { "15": "vtable pointer is cleaned after release."}
+        "results": { "1": "vtable pointer is cleaned after release."}
     },
     "cfi-call-wrong-num-arg-func": {},
     "cfi-call-wrong-num-arg-vtable": {

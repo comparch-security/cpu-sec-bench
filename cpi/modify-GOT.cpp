@@ -15,10 +15,15 @@ int main(int argc, char* argv[])
   stack_offset = 8 * (argv[1][0] - '0');
 
   grv = helper();
-  begin_catch_nx_exception();
-  replace_got_func((void **)helper, stack_offset);
+  void *got = NULL;
+  get_got_func(&got, stack_offset);
   rand();
-  end_catch_nx_exception();
+  mbarrier;
+
+  begin_catch_exception(got, SEGV_ACCERR);
+  replace_got_func((void **)helper, got);
+  end_catch_exception();
+
   grv -= rand();
   return grv;
 }

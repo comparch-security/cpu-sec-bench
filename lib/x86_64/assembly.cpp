@@ -40,15 +40,10 @@ void get_got_func(void **gotp, int stack_offset) {
   *gotp = pc;
 }
 
-void replace_got_func(void **fake, int stack_offset) {
-  char *pc = NULL;
-  int offset = 0;
-
-  GET_GOT_LOC(stack_offset)
-
+void replace_got_func(void **fake, void *got) {
   asm volatile(
     "movq %1, (%0);" // replace the GPT entry
-    : : "r"(pc), "r"(fake) : "rax"
+    : : "r"(got), "r"(fake)
   );
 }
 

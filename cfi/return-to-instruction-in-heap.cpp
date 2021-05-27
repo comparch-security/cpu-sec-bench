@@ -19,9 +19,9 @@ int main(int argc, char* argv[])
   unsigned char *m = new unsigned char [16];
   assign_fake_machine_code(m);
   PUSH_FAKE_RET(xlabel);
-  begin_catch_nx_exception(m);
+  begin_catch_exception(m, SEGV_ACCERR);
   int rv = helper(m);
-  end_catch_nx_exception();
+  end_catch_exception();
   DECL_LABEL(xlabel);
   exit(rv);
 }

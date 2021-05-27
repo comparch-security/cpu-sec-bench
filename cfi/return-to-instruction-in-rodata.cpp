@@ -20,9 +20,9 @@ int main(int argc, char* argv[])
 #ifdef CSB_X86_64
   PUSH_FAKE_RET(xlabel);
 #endif
-  begin_catch_nx_exception(m);
+  begin_catch_exception(m);
   int rv = helper(m);
-  end_catch_nx_exception();
+  end_catch_exception();
   DECL_LABEL(xlabel);
   exit(rv);
 }

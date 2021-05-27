@@ -18,9 +18,9 @@ int main(int argc, char* argv[])
   stack_offset = 8 * (argv[1][0] - '0');
 
   PUSH_FAKE_RET(xlabel);
-  begin_catch_nx_exception(m);
+  begin_catch_exception(m);
   int rv = helper(m);
-  end_catch_nx_exception();
+  end_catch_exception();
   DECL_LABEL(xlabel);
   exit(rv);
 }
