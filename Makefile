@@ -8,7 +8,7 @@ OBJDUMP       ?= objdump
 RUN_SCRIPT    ?= ../run-test.py
 
 # extra security features (comment them out if not needed)
-disable_stack_nx_protection    = yes
+#disable_stack_nx_protection    = yes
 #disable_stack_protection       = yes
 #enable_aslr_protection         = yes
 #enable_got_protection          = yes
@@ -39,6 +39,7 @@ endif
 
 ifdef enable_aslr_protection
 CXXFLAGS += -pie -fPIE
+LDFLAGS  += -Wl,-pie
 endif
 
 ifdef enable_got_protection
@@ -58,6 +59,9 @@ endif
 
 ifdef enable_control_flow_protection
 CXXFLAGS += -fcf-protection=full
+ifeq ($(ARCH), "x86_64")
+CXXFLAGS += -mcet
+endif
 endif
 
 ifdef enable_stack_clash_protection
