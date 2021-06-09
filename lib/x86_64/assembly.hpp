@@ -38,12 +38,6 @@
     : : "r"(dat), "r"(offset)                \
     : "rcx"                                  )
 
-// detect the stack
-extern int dummy_leaf_rv;
-extern int dummy_leaf_func(int);
-#define ENFORCE_NON_LEAF_FUNC_VAR(VAR) dummy_leaf_rv = dummy_leaf_func(VAR);
-#define ENFORCE_NON_LEAF_FUNC dummy_leaf_rv = dummy_leaf_func(dummy_leaf_rv);
-
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)                 \
   asm volatile(                              \
@@ -109,12 +103,6 @@ extern int dummy_leaf_func(int);
     : : "r" (arg)                            \
     : "rax", "xmm" #Idx                      )
 
-// push an address
-#define PUSH_LABEL(label)                    \
-  asm volatile(                              \
-    "lea " #label "(%%rip), %%rax;"          \
-    "push %%rax;"                            \
-    : : : "rax"                              )
 // create a fake return stack
 #define PUSH_FAKE_RET(label)                 \
   asm volatile(                              \
@@ -124,19 +112,12 @@ extern int dummy_leaf_func(int);
     : : "i"(8)                               \
     : "rax"                                  )
 
-// return
-#define RET \
-  asm volatile("ret")
-
 // a instrction that can jmp to the middle
 // 48 05 c3 00 00 00    	add    $0xc3,%rax
 // c3 retq
 // offset = 2
 #define MID_INSTRUCTION \
   asm volatile("mid_instruction: add $0xc3, %%rax;" : : : "rax")
-
-#define POP_STACK \
-  asm volatile("pop %%rax" : : : "rax")
 
 // the machine code for the following
 //  31 c0                   xor    %eax,%eax
