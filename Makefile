@@ -58,9 +58,8 @@ CXXFLAGS += -fvtable-verify=std
 endif
 
 ifdef enable_control_flow_protection
-CXXFLAGS += -fcf-protection=full
 ifeq ($(ARCH), "x86_64")
-CXXFLAGS += -mcet
+CXXFLAGS += -fcf-protection=full -mcet
 endif
 endif
 

@@ -47,7 +47,7 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
   offset = ((inst & 0x3ffc00) >> 10) << 3; \
   pc += offset;                        \
 
-void get_got_func(void **gotp) {
+void get_got_func(void **gotp, int stack_offset) {
   char *pc = NULL, *pcc = NULL;
   unsigned int inst = 0;
   unsigned long long offset;
@@ -57,16 +57,10 @@ void get_got_func(void **gotp) {
   *gotp = pc;
 }
 
-void replace_got_func(void **fake) {
-  char *pc = NULL, *pcc = NULL;
-  unsigned int inst = 0;
-  unsigned long long offset;
-
-  GET_GOT_LOC
-
+void replace_got_func(void **fake, void *got) {
   asm volatile(
     "str  %0, [%1];"   // replace the GOT entry
-    : : "r"(fake), "r"(pc)
+    : : "r"(fake), "r"(got)
   );
 
 }

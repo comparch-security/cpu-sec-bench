@@ -523,10 +523,6 @@
     },
 
     "cfi-call-mid-func": {},
-    "cfi-call-mid-instruction": {
-	    "require": [ [ "cfi-call-mid-func" ] ],
-	    "results": { "1": "middle of instruction case not easily available." }
-    },
     "cfi-call-wrong-func-within-static-analysis": {},
     "cfi-call-wrong-func": {
         "require": [ [ "cfi-call-wrong-func-within-static-analysis" ] ]
@@ -613,10 +609,6 @@
         "results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-mid-func": {},
-    "cfi-jump-mid-instruction": {
-        "require": [ [ "cfi-jump-mid-func" ] ],
-        "results": { "1": "middle of instruction case not easily available." }
-    },
     "cfi-jump-instruction-in-rodata": {
         "require": [ [ "cfi-jump-mid-func" ] ],
         "results": { "16": "expected excption on the illegal call." }
@@ -657,11 +649,6 @@
         "arguments": ["-vstack-offset"]
     },
     "cfi-return-without-call": {},
-    "cfi-return-to-mid-instruction": {
-        "require": [ [ "cfi-return-to-non-call-site" ], [ "cfi-return-without-call" ] ],
-        "arguments": ["-vstack-offset"],
-	    "results": { "1": "middle of instruction case not easily available." }
-    },
     "cfi-return-to-instruction-in-rodata": {
         "require": [ [ "cfi-return-to-non-call-site" ] ],
         "arguments": ["-vstack-offset"],

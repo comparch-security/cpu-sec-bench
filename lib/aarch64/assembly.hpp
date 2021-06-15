@@ -21,27 +21,16 @@
 #define MOD_STACK_LABEL(label, offset)       \
   asm volatile(                              \
     "adr  x8," #label ";"                    \
-    "str  x8, [sp, %0];"                     \
-    : : "i"(offset)                          \
+    "add  %0, sp, %0;"                       \
+    "str  x8, [%0];"                         \
+    : : "r"(offset)                          \
     : "x8"                                   )
 
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
-    "str  %1, [sp, %0];"                     \
-    : : "i"(offset), "r"(dat)                )
-
-// detect the stack
-extern int dummy_leaf_rv;
-extern int dummy_leaf_func(int);
-#define ENFORCE_NON_LEAF_FUNC_VAR(VAR) dummy_leaf_rv = dummy_leaf_func(VAR);
-#define ENFORCE_NON_LEAF_FUNC dummy_leaf_rv = dummy_leaf_func(dummy_leaf_rv);
-
-// modify return address to a label
-#define MOD_RET_LABEL(label)                 \
-  MOD_STACK_LABEL(label, 8)
-#define MOD_RET_DAT(dat)                     \
-  MOD_STACK_DAT(dat, 8)
-
+    "add  %0, sp, %0;"                       \
+    "str  %1, [%0];"                         \
+    : : "r"(offset), "r"(dat)                )
 
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)                 \
@@ -109,13 +98,6 @@ extern int dummy_leaf_func(int);
     : : "r" (arg)                            \
     : "d" #Idx                               )
 
-// push an address
-#define PUSH_LABEL(label)                    \
-  asm volatile(                              \
-    "adr  x8, " #label ";"                   \
-    "stp  x29, x8, [sp, -32]!;"              \
-    "mov  x29, sp;"                          \
-    : : : "x8"                               )
 // create a fake return stack
 #define PUSH_FAKE_RET(label)                 \
   asm volatile(                              \
@@ -151,6 +133,28 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
 }
 
 // the machine code for the following
+//  d2800000                mov  x0, 0
+//  9e670000                fmov d0, x0
+//  1e601800                fdiv d0, d0, d0
+#define FUNC_MACHINE_CODE_RETURN \
+  {0x00, 0x00, 0x80, 0xd2, 0x00, 0x00, 0x67, 0x9e, 0x00, 0x18, 0x60, 0x1e}
+
+void FORCE_INLINE assign_fake_machine_code_return(unsigned char *p) {
+  *p++ = 0x00;
+  *p++ = 0x00;
+  *p++ = 0x80;
+  *p++ = 0xd2;
+  *p++ = 0x00;
+  *p++ = 0x00;
+  *p++ = 0x67;
+  *p++ = 0x9e;
+  *p++ = 0x00;
+  *p++ = 0x18;
+  *p++ = 0x60;
+  *p++ = 0x1e;
+}
+
+// the machine code for the following
 // d2800000                mov     x0, 0
 // a8c27bfd                ldp     x29, x30, [sp], 32
 // d65f03c0                ret
@@ -172,5 +176,5 @@ void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
   *p++ = 0xd6;
 }
 
-extern void get_got_func(void **gotp);
-extern void replace_got_func(void **fake);
+extern void get_got_func(void **gotp, int stack_offset);
+extern void replace_got_func(void **fake, void *got);
