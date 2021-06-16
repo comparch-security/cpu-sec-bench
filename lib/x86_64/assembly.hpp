@@ -130,11 +130,9 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x31;
   *p++ = 0xc0;
   *p++ = 0x31;
-  *p++ = 0xc0;
-  *p++ = 0x00;
-  *p++ = 0x00;
-  *p++ = 0x00;
-  *p++ = 0x00;
+  *p++ = 0xf6;
+  *p++ = 0xf7;
+  *p++ = 0xfe;
 }
 
 extern void get_got_func(void **gotp, int stack_offset);
