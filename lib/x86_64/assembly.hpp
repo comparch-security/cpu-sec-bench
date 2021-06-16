@@ -88,9 +88,9 @@
   PASS_INT_ARG##Idx(arg                      )
 
 #define PASS_INT_ARG0(arg)                   \
-  asm volatile("mov %0, %%rdi;" : : "r" (arg) : "rdi")
+  asm volatile("mov %0, %%rdi;" : : "r" (arg))
 #define PASS_INT_ARG1(arg)                   \
-  asm volatile("mov %0, %%rsi;" : : "r" (arg) : "rsi")
+  asm volatile("mov %0, %%rsi;" : : "r" (arg))
 
 // assume x86_64 always support hardware FPU
 #define SUPPORT_FP
@@ -101,7 +101,7 @@
     "movq %0, %%rax;"                        \
     "movq %%rax, %%xmm" #Idx ";"             \
     : : "r" (arg)                            \
-    : "rax", "xmm" #Idx                      )
+    : "rax"                                  )
 
 // create a fake return stack
 #define PUSH_FAKE_RET(label)                 \
@@ -121,55 +121,20 @@
 
 // the machine code for the following
 //  31 c0                   xor    %eax,%eax
-//  48 83 c4 08             add    $0x8,%rsp
-//  c3                      retq
+//  31 c0                   xor    %eax,%eax
+//  00 00 00 00             illegal instruction
 #define FUNC_MACHINE_CODE \
-  {0x31, 0xc0, 0x48, 0x83, 0xc4, 0x08, 0xc3}
+  {0x31, 0xc0, 0x31, 0xc0, 0x00, 0x00, 0x00, 0x00}
 
 void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x31;
   *p++ = 0xc0;
-  *p++ = 0x48;
-  *p++ = 0x83;
-  *p++ = 0xc4;
-  *p++ = 0x08;
-  *p++ = 0xc3;
-}
-
-// the machine code for the following
-//  66 0f ef c9             pxor %xmm1, %xmm1
-//  f3 0f 5e c1             divss %xmm1, %xmm0
-//  c3                      retq
-#define FUNC_MACHINE_CODE_RETURN \
-  {0x66, 0x0f, 0xef, 0xc9, 0xf3, 0x0f, 0x5e, 0xc1, 0xc3}
-
-void FORCE_INLINE assign_fake_machine_code_return(unsigned char *p) {
-  *p++ = 0x66;
-  *p++ = 0x0f;
-  *p++ = 0xef;
-  *p++ = 0xc9;
-  *p++ = 0xf3;
-  *p++ = 0x0f;
-  *p++ = 0x5e;
-  *p++ = 0xc1;
-  *p++ = 0xc3;
-}
-
-// the machine code for the following
-//  31 c0                   xor    %eax,%eax
-//  48 83 c4 18             add    $0x10,%rsp
-//  c3                      retq
-#define FUNC_MACHINE_CODE_CALL \
-  {0x31, 0xc0, 0x48, 0x83, 0xc4, 0x10, 0xc3}
-
-void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
   *p++ = 0x31;
   *p++ = 0xc0;
-  *p++ = 0x48;
-  *p++ = 0x83;
-  *p++ = 0xc4;
-  *p++ = 0x10;
-  *p++ = 0xc3;
+  *p++ = 0x00;
+  *p++ = 0x00;
+  *p++ = 0x00;
+  *p++ = 0x00;
 }
 
 extern void get_got_func(void **gotp, int stack_offset);
