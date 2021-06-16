@@ -1,14 +1,15 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
 
-static volatile int grv = 3;
+static volatile int grv = 2;
 
 void FORCE_NOINLINE helper() {
-  grv = 2;
+  grv++;
 
   // illegal jump target
   DECL_LABEL(helper_mid);
-  grv = 0;
+  COMPILER_BARRIER;
+  grv--;
 
   // illegal jump back to main
   JMP_LABEL(main_mid, 0);
@@ -16,10 +17,10 @@ void FORCE_NOINLINE helper() {
 
 int main()
 {
-  grv = 4;
+  grv--;
   // illegally jump to helper
   JMP_LABEL(helper_mid, 0);
-  grv = 1; // failed if runs here
+  grv++; // failed if runs here
 
   // illegal jump target
   DECL_LABEL(main_mid);

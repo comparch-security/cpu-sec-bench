@@ -3,9 +3,10 @@
 charBuffer *gbuffer;
 
 void helper() {
-  charBuffer buffer_stack;
-  char_buffer_init(&buffer_stack, 'u', 'd', 'o');
-  gbuffer = &buffer_stack;
+  charBuffer buffer_stack[80];
+  for(int i=0; i<80; i++)
+    char_buffer_init(buffer_stack+i, 'u', 'd', 'o');
+  gbuffer = buffer_stack+40;
 }
 
 int main() {

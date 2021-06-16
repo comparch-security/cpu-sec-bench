@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
 #include "include/signal.hpp"
+#include <cstdio>
 
 static unsigned int gv = 1;
 int stack_offset = 0;
@@ -17,9 +18,10 @@ int main(int argc, char* argv[])
   stack_offset = 8 * (argv[1][0] - '0');
 
   unsigned char *m = new unsigned char [16];
-  assign_fake_machine_code_return(m);
+  assign_fake_machine_code(m);
+  printf("dummy print: m = %p\n", m);
   begin_catch_exception(m, SEGV_ACCERR);
-  begin_catch_exception((void *)NULL, SI_KERNEL, 0);
+  begin_catch_exception(m+4, 0, 0, SIGILL);
   int rv = helper(m);
   end_catch_exception();
   end_catch_exception();

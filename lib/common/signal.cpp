@@ -11,7 +11,8 @@ struct sigact_record_t {
     const void *daddr;
     const void **faddr;
   };
-  int err_code;
+  int si_signo;
+  int si_code;
   int rv_code;
 };
 
@@ -22,12 +23,17 @@ static int svp = -1;
 void xcpt_handler(int signo, siginfo_t *sinfo, void *context) {
   // check the exception cause
   for(int i=svp; i>=0; i--) {
-    if((sigact_stack[i].err_code == 0 || sinfo->si_code == sigact_stack[i].err_code) &&
-      (sigact_stack[i].daddr == sinfo->si_addr))
+    if((sigact_stack[i].si_signo == sinfo->si_signo) &&
+       (sigact_stack[i].si_code == 0 || sinfo->si_code == sigact_stack[i].si_code) &&
+      (sigact_stack[i].daddr == NULL || sigact_stack[i].daddr == sinfo->si_addr))
       exit(sigact_stack[i].rv_code);
   }
 
-  fprintf(stderr, "xcpt_handler(): mismatched SEGV signal with si_code = %d and fault-addr = 0x%p\n", sinfo->si_code, sinfo->si_addr);
+  fprintf(stderr, "xcpt_handler(): mismatched signal with si_signo = %d, si_code = %d and fault-addr = 0x%p\n", sinfo->si_signo, sinfo->si_code, sinfo->si_addr);
+  //if(sinfo->si_addr != NULL) fprintf(stderr, "bad data = 0x%lx\n", *(unsigned int *)sinfo->si_addr);
+  //for(int i=svp; i>=0; i--) {
+  //  fprintf(stderr, "registered sigact: si_signo = %d, si_code = %d and fault-addr = 0x%p\n", sigact_stack[i].si_signo, sigact_stack[i].si_code, sigact_stack[i].daddr);
+  //}
   exit(RT_CODE_MISMATCH);
 }
 
@@ -40,19 +46,24 @@ void FORCE_INLINE begin_catch_exception_common() {
 
   // install the signal action
   if(-1 == sigaction(SIGSEGV, &act, NULL)) {
-    perror("begin_catch_nx_exception()");
+    perror("begin_catch_nx_exception() fails to catch SIGSEGV!");
+    exit(-1);
+  }
+
+  if(-1 == sigaction(SIGILL, &act, NULL)) {
+    perror("begin_catch_nx_exception() fails to catch SIGILL!");
     exit(-1);
   }
 }
 
-void begin_catch_exception(const void *expected_faulty_addr, int err_code, int rv_code) {
+void begin_catch_exception(const void *expected_faulty_addr, int si_code, int rv_code, int si_signo) {
   if(svp < 0) begin_catch_exception_common();
-  sigact_stack[++svp] = {expected_faulty_addr, err_code, rv_code};
+  sigact_stack[++svp] = {expected_faulty_addr, si_signo, si_code, rv_code};
 }
 
-void begin_catch_exception(const void **expected_faulty_addr, int err_code, int rv_code) {
+void begin_catch_exception(const void **expected_faulty_addr, int si_code, int rv_code, int si_signo) {
   if(svp < 0) begin_catch_exception_common();
-  sigact_stack[++svp] = {expected_faulty_addr, err_code, rv_code};
+  sigact_stack[++svp] = {expected_faulty_addr, si_signo, si_code, rv_code};
 }
 
 void end_catch_exception() {
@@ -66,7 +77,11 @@ void end_catch_exception() {
 
     // install the default signal action
     if(-1 == sigaction(SIGSEGV, &act, NULL)) {
-      perror("end_catch_nx_exception()");
+      perror("end_catch_nx_exception() fails to reset SIGSEGV!");
+      exit(-1);
+    }
+    if(-1 == sigaction(SIGILL, &act, NULL)) {
+      perror("end_catch_nx_exception() fails to reset SIGILL");
       exit(-1);
     }
   }

@@ -4,18 +4,20 @@
 
 static unsigned int gv = 1;
 typedef unsigned int (*func_type)(void);
-const unsigned char m[] = FUNC_MACHINE_CODE_CALL;
+const unsigned char m[] = FUNC_MACHINE_CODE;
 
 int FORCE_NOINLINE helper(func_type fp) {
-  begin_catch_exception((void **)fp);
   gv = fp();
-  end_catch_exception();
   return gv;
 }
 
 int main()
 {
   int rv = m[0];
+  begin_catch_exception(m, SEGV_ACCERR);
+  begin_catch_exception(m+4, 0, 0, SIGILL);
   rv = helper((func_type)(&m));
+  end_catch_exception();
+  end_catch_exception();
   exit(rv);
 }

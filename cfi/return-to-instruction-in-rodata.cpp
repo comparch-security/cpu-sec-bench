@@ -3,7 +3,7 @@
 #include "include/signal.hpp"
 
 static unsigned int gv = 1;
-const unsigned char m[] = FUNC_MACHINE_CODE_RETURN;
+const unsigned char m[] = FUNC_MACHINE_CODE;
 int stack_offset = 0;
 
 int FORCE_NOINLINE helper(const unsigned char* m) {
@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
   stack_offset = 8 * (argv[1][0] - '0');
 
   begin_catch_exception(m, SEGV_ACCERR);
-  begin_catch_exception((void *)NULL, SI_KERNEL, 0);
+  begin_catch_exception(m+4, 0, 0, SIGILL);
   int rv = helper(m);
   end_catch_exception();
   end_catch_exception();

@@ -1,5 +1,6 @@
 #include "include/assembly.hpp"
 #include "include/signal.hpp"
+#include <cstdio>
 
 static unsigned int rv = 1;
 
@@ -9,11 +10,11 @@ int main()
 {
   unsigned char m[64] = FUNC_MACHINE_CODE;
   mm = m;
-  PUSH_FAKE_RET(xlabel);
-  begin_catch_exception(mm);
+  printf("dummy print: m = %p\n", m);
+  begin_catch_exception(mm, SEGV_ACCERR);
+  begin_catch_exception(mm+4, 0, 0, SIGILL);
   JMP_DAT(mm);
-  DECL_LABEL(xlabel);
   end_catch_exception();
-  rv--;
+  end_catch_exception();
   return rv;
 }

@@ -5,9 +5,10 @@ int stack_offset = 0;
 
 void FORCE_NOINLINE helper()
 {
-  unsigned long long m = 0;
   ENFORCE_NON_LEAF_FUNC;
   MOD_STACK_DAT(exit, stack_offset);
+  COMPILER_BARRIER;
+  unsigned long long m = 0;
   PASS_INT_ARG(0, m);
 }
 

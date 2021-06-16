@@ -83,8 +83,7 @@
 #define PASS_INT_ARG(Idx, arg)               \
   asm volatile(                              \
     "mov x" #Idx ", %0;"                     \
-    : : "r" (arg)                            \
-    : "x" #Idx                               )
+    : : "r" (arg)                            )
 
 // test whether the machine support hardware FPU
 #if __ARM_FP >= 8
@@ -95,8 +94,7 @@
 #define PASS_DOUBLE_ARG_FROM_INT(Idx, arg)   \
   asm volatile(                              \
     "fmov d" #Idx ", %0;"                    \
-    : : "r" (arg)                            \
-    : "d" #Idx                               )
+    : : "r" (arg)                            )
 
 // create a fake return stack
 #define PUSH_FAKE_RET(label)                 \
@@ -111,69 +109,20 @@
   asm volatile("ldp x29, x30, [sp], 32; ret;")
 
 // the machine code for the following
-// d1000400                sub     x0, x0, -1
-// a8c27bfd                ldp     x29, x30, [sp], 32
-// d65f03c0                ret
+//  d503201f                nop
+//  00000000                illegal instruction
 #define FUNC_MACHINE_CODE \
-  {0x00, 0x04, 0x00, 0xd1, 0xfd, 0x7b, 0xc2, 0xa8, 0xc0, 0x03, 0x5f, 0xd6}
+  {0x1f, 0x20, 0x03, 0xd5, 0x00, 0x00, 0x00, 0x00}
 
 void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x00;
-  *p++ = 0x04;
-  *p++ = 0x00;
-  *p++ = 0xd1;
-  *p++ = 0xfd;
-  *p++ = 0x7b;
-  *p++ = 0xc2;
-  *p++ = 0xa8;
-  *p++ = 0xc0;
-  *p++ = 0x03;
-  *p++ = 0x5f;
-  *p++ = 0xd6;
-}
-
-// the machine code for the following
-//  d2800000                mov  x0, 0
-//  9e670000                fmov d0, x0
-//  1e601800                fdiv d0, d0, d0
-#define FUNC_MACHINE_CODE_RETURN \
-  {0x00, 0x00, 0x80, 0xd2, 0x00, 0x00, 0x67, 0x9e, 0x00, 0x18, 0x60, 0x1e}
-
-void FORCE_INLINE assign_fake_machine_code_return(unsigned char *p) {
-  *p++ = 0x00;
   *p++ = 0x00;
   *p++ = 0x80;
   *p++ = 0xd2;
   *p++ = 0x00;
   *p++ = 0x00;
-  *p++ = 0x67;
-  *p++ = 0x9e;
-  *p++ = 0x00;
-  *p++ = 0x18;
-  *p++ = 0x60;
-  *p++ = 0x1e;
-}
-
-// the machine code for the following
-// d2800000                mov     x0, 0
-// a8c27bfd                ldp     x29, x30, [sp], 32
-// d65f03c0                ret
-#define FUNC_MACHINE_CODE_CALL \
-  {0x00, 0x00, 0x80, 0xd2, 0xfd, 0x7b, 0xc2, 0xa8, 0xc0, 0x03, 0x5f, 0xd6}
-
-void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
   *p++ = 0x00;
   *p++ = 0x00;
-  *p++ = 0x80;
-  *p++ = 0xd2;
-  *p++ = 0xfd;
-  *p++ = 0x7b;
-  *p++ = 0xc2;
-  *p++ = 0xa8;
-  *p++ = 0xc0;
-  *p++ = 0x03;
-  *p++ = 0x5f;
-  *p++ = 0xd6;
 }
 
 extern void get_got_func(void **gotp, int stack_offset);

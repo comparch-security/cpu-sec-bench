@@ -4,11 +4,11 @@
 charBuffer *gbuffer;
 
 int FORCE_NOINLINE helper(bool option) {
-  charBuffer buffer;
+  charBuffer buffer[80];
   if(option)
-    return check(buffer.data, 8,  1, 'c');
+    return check(buffer[40].data, 8,  1, 'c');
   else
-    gbuffer = &buffer;
+    gbuffer = buffer+40;
   return 0;
 }
 
