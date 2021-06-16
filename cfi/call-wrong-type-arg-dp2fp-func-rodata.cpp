@@ -16,7 +16,9 @@ int main()
   int rv = m[0];
   begin_catch_exception(m, SEGV_ACCERR);
   begin_catch_exception(m+4, 0, 0, SIGILL);
+  begin_catch_exception(m+4, 0, 0, SIGFPE);
   rv = helper((func_type)(&m));
+  end_catch_exception();
   end_catch_exception();
   end_catch_exception();
   exit(rv);

@@ -121,10 +121,10 @@
 
 // the machine code for the following
 //  31 c0                   xor    %eax,%eax
-//  31 c0                   xor    %eax,%eax
-//  00 00 00 00             illegal instruction
+//  31 f6                   xor    %esi,%esi
+//  f7 fe                   idiv   %esi
 #define FUNC_MACHINE_CODE \
-  {0x31, 0xc0, 0x31, 0xc0, 0x00, 0x00, 0x00, 0x00}
+  {0x31, 0xc0, 0x31, 0xf6, 0xf7, 0xfe, 0x00, 0x00}
 
 void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x31;

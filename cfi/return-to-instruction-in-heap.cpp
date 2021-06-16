@@ -21,8 +21,10 @@ int main(int argc, char* argv[])
   assign_fake_machine_code(m);
   printf("dummy print: m = %p\n", m);
   begin_catch_exception(m, SEGV_ACCERR);
+  begin_catch_exception(m+4, 0, 0, SIGFPE);
   begin_catch_exception(m+4, 0, 0, SIGILL);
   int rv = helper(m);
+  end_catch_exception();
   end_catch_exception();
   end_catch_exception();
   exit(rv);

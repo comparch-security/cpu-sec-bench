@@ -13,7 +13,9 @@ int main()
   printf("dummy print: m = %p\n", m);
   begin_catch_exception(mm, SEGV_ACCERR);
   begin_catch_exception(mm+4, 0, 0, SIGILL);
+  begin_catch_exception(mm+4, 0, 0, SIGFPE);
   JMP_DAT(mm);
+  end_catch_exception();
   end_catch_exception();
   end_catch_exception();
   return rv;
