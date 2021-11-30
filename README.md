@@ -26,3 +26,13 @@ See [LICENSE](LICENSE.md) for more details.
 - README.md: this readme file.
 - configure.json: the configuration parameters recorded in JSON.
 - run-test.py: script to run the test suite.
+
+#### References:
+
+1. Wei Song, Jiameng Ying, Sihao Shen, Boya Li, Hao Ma, Peng Liu.
+   _A comprehensive and cross-platform test suite for memory safety -- Towards an open framework for testing processor hardware supported security extensions_.
+   [arXiv:2111.14072](https://arxiv.org/abs/2111.14072), November 2021.
+2. Jianping Zhu, Wei Song, Ziyuan Zhu, Jiameng Ying, Boya Li, Bibo Tu, Gang Shi, Rui Hou, and Dan Meng.
+   _[CPU security benchmark](https://wsong83.github.io/publication/comparch/secarch2018.pdf)_.
+   In Proceedings of the 1st Workshop on Security-Oriented Designs of Computer Architectures and Processors,
+   Toronto, ON, Canada, pp. 8–14, 2018.
