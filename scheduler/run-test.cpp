@@ -19,8 +19,8 @@ char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
 char * gargv[33];
 
 // json related functions
-bool read_json(json &db, const std::string& fn, bool notice = true);
-bool dump_json(json &db, const std::string& fn, bool notice = true);
+bool read_json(json &db, const std::string& fn, bool notice);
+bool dump_json(json &db, const std::string& fn, bool notice);
 
 // test case related
 extern char **environ; // especially required by spawn
@@ -36,10 +36,9 @@ int main(int argc, char* argv[]) {
   // parse argument
 
   // read the configure file
-  if(!read_json(config_db, "configure.json")) return 1;
+  if(!read_json(config_db, "configure.json", false)) return 1;
 
   run_tests(collect_case_list());
-  
 
   return 0;
 }
@@ -231,18 +230,21 @@ bool run_tests(std::list<std::string> cases) {
       } else { // run the test case
         int index = 0;
         for(auto arg:alist) {
-          cmd = "\ntest/" + prog;
-          std::cerr << cmd; for(auto a:arg) std::cerr << " " << a; std::cerr << std::endl;
+          cmd = "test/" + prog;
+          std::cerr << "\n" << cmd; for(auto a:arg) std::cerr << " " << a; std::cerr << std::endl;
           rv = run_cmd(argv_conv(cmd, arg));
           if(0 == rv) break;
           else index++;
         }
-        result_db[cn]["result"] = rv; dump_json(result_db, "results.json");
+        result_db[cn]["result"] = rv; dump_json(result_db, "results.json", false);
         if(!gvar.empty()) var_db[gvar] = index;
-        if(rv) return false;
+        if(rv) {
+          std::cerr << "test " << cn << " failed with exit value " << rv << std::endl;
+          return false;
+        }
       }
-      dump_json(result_db, "results.json", false);
     } else
       cases.push_back(cn);
   }
+  return true;
 }
