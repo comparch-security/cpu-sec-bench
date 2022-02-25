@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <set>
 #include <list>
 
 // POSIX APIs (linux variant)
@@ -27,7 +28,7 @@ extern char **environ; // especially required by spawn
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
-bool case_parser(const std::string& cn, str_list_t& arg_list, std::string& vn);
+bool case_parser(const std::string& cn, str_list_t& arg_list, std::string& vn, std::set<int> &results);
 char ** argv_conv(const std::string &cmd, const str_list_t &args);
 int run_cmd(const char *argv[]);
 bool run_tests(std::list<std::string> cases);
@@ -46,7 +47,7 @@ int main(int argc, char* argv[]) {
 bool read_json(json &db, const std::string& fn, bool notice) {
   std::ifstream db_file(fn);
   if(db_file.good()) {
-    if(notice) std::cerr << "read json file " << fn << std::endl;
+    if(notice) std::cout << "read json file " << fn << std::endl;
     db_file >> db;
     db_file.close();
   } else {
@@ -58,7 +59,7 @@ bool read_json(json &db, const std::string& fn, bool notice) {
 bool dump_json(json &db, const std::string& fn, bool notice) {
   std::ofstream db_file(fn);
   if(!db_file.fail()) {
-    if(notice) std::cerr << "dump json " << fn << std::endl;
+    if(notice) std::cout << "dump json " << fn << std::endl;
     db_file << db.dump(4);
     db_file.close();
     return true;
@@ -75,7 +76,7 @@ std::list<std::string> collect_case_list() {
   return rv;
 }
 
-bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, std::string& vn) {
+bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, std::string& vn, std::set<int> &results) {
   // check whether the case exist
   if(!config_db.count(cn)) {
     std::cerr << "Fail to parse test case " << cn << std::endl;
@@ -90,7 +91,7 @@ bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, 
     for(auto and_conds : require_list) {
       bool to_test = false;
       for(auto or_cond : and_conds) {
-        if(result_db.count(or_cond) && 0 == result_db[or_cond].get<int>())
+        if(result_db.count(or_cond) && 0 == result_db[or_cond]["result"].get<int>())
           to_test = true;
       }
       if(!to_test) return false;
@@ -170,6 +171,14 @@ bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, 
   } else
     vn.clear();
 
+  // collect the known exit code other than 0
+  results.clear();
+  if(tcase.count("results")) {
+    for(auto r: tcase["results"].get<std::map<std::string, json> >()) {
+      results.insert(std::stoi(r.first));
+    }
+  }
+
   return true;
 }
 
@@ -195,8 +204,8 @@ int run_cmd(char *argv[]) {
   } while (!WIFEXITED(status) && !WIFSIGNALED(status));
 
   if(WIFSIGNALED(status)) {
-    std::cerr << argv[0] << " terminated with signal " << WIFSIGNALED(status) << std::endl;
-    return WIFSIGNALED(status);
+    std::cout << argv[0] << " terminated with signal " << WIFSIGNALED(status) << std::endl;
+    return 256+WIFSIGNALED(status);
   }
   if(WIFEXITED(status))
     return WEXITSTATUS(status);
@@ -216,31 +225,31 @@ bool run_tests(std::list<std::string> cases) {
   std::string prog, cmd;
   str_llist_t alist;
   std::string gvar;
+  std::set<int> results;
   while(!cases.empty()) {
     auto cn = cases.front();
     cases.pop_front();
-    if(case_parser(cn, prog, alist, gvar)) {
-      std::cerr << "\n========== " << cn << " =========" << std::endl;
-      std::cerr << "make test/" << prog << std::endl;
+    if(case_parser(cn, prog, alist, gvar, results)) {
+      std::cout << "\n========== " << cn << " =========" << std::endl;
+      std::cout << "make test/" << prog << std::endl;
       int rv = 0;
       rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)));
       if(rv){
-        std::cerr << "fail to make " << prog << " with error status " << rv << std::endl;
+        std::cout << "fail to make " << prog << " with error status " << rv << std::endl;
         result_db[cn]["result"] = -1;
       } else { // run the test case
         int index = 0;
         for(auto arg:alist) {
           cmd = "test/" + prog;
-          std::cerr << "\n" << cmd; for(auto a:arg) std::cerr << " " << a; std::cerr << std::endl;
+          std::cout << "\n" << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
           rv = run_cmd(argv_conv(cmd, arg));
           if(0 == rv) break;
           else index++;
         }
         result_db[cn]["result"] = rv; dump_json(result_db, "results.json", false);
         if(!gvar.empty()) var_db[gvar] = index;
-        if(rv) {
-          std::cerr << "test " << cn << " failed with exit value " << rv << std::endl;
-          return false;
+        if(rv != 0 && !results.count(rv)) {
+          std::cerr << "\n!! ATTN: test " << cn << " failed with unexpected exit value " << rv << std::endl;
         }
       }
     } else
