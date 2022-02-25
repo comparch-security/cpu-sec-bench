@@ -1,5 +1,6 @@
 Copyright (c) 2017-2022 [Wei Song](mailto:wsong83@gmail.com)
-at the Institute of Information Engineering,
+the State Key Laboratory of Information Security,
+the Institute of Information Engineering,
 Chinese Academy of Sciences.
 
 This file is part of "cpu-sec-bench": 
@@ -22,7 +23,7 @@ along with "cpu-sec-bench".  If not, see <https://www.gnu.org/licenses/>.
 
 Files with other license agreements
 
-## lib/include/json.hpp
+## scheduler/json.hpp
 
 Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 SPDX-License-Identifier: MIT
