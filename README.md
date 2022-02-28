@@ -27,6 +27,17 @@ See [LICENSE](LICENSE.md) for more details.
 - configure.json: the configuration parameters recorded in JSON.
 - run-test.py: script to run the test suite.
 
+#### Contributors
+
+In the alphabet order:
+
+- Boya Li
+- Da Xie
+- Hao Ma
+- Jiameng Ying
+- Sihao Shen
+- Wei Song
+
 #### References:
 
 1. Wei Song, Jiameng Ying, Sihao Shen, Boya Li, Hao Ma, Peng Liu.
