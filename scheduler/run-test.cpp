@@ -32,7 +32,7 @@ extern char **environ; // especially required by spawn
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
-bool case_parser(const std::string& cn, str_list_t& arg_list, std::string& vn, std::set<int> &results);
+int case_parser(const std::string& cn, str_list_t& arg_list, std::string& vn, std::set<int> &results);
 char ** argv_conv(const std::string &cmd, const str_list_t &args);
 int run_cmd(const char *argv[]);
 bool run_tests(std::list<std::string> cases);
@@ -83,12 +83,12 @@ std::list<std::string> collect_case_list() {
   return rv;
 }
 
-bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, std::string& vn,
+int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, std::string& vn,
                  std::set<int> &expect_results, std::set<int> &retry_results) {
   // check whether the case exist
   if(!config_db.count(cn)) {
     std::cerr << "Fail to parse test case " << cn << std::endl;
-    return false;
+    return -1;
   }
 
   auto tcase = config_db[cn];
@@ -96,13 +96,17 @@ bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, 
   // check requirement
   if(tcase.count("require")) {
     auto require_list = tcase["require"].get<str_llist_t>();
+    for(auto and_conds : require_list)
+      for(auto or_cond : and_conds)
+        if(!result_db.count(or_cond))
+          return 1;
     for(auto and_conds : require_list) {
-      bool to_test = false;
+      bool can_test = false;
       for(auto or_cond : and_conds) {
         if(result_db.count(or_cond) && 0 == result_db[or_cond]["result"].get<int>())
-          to_test = true;
+          can_test = true;
       }
-      if(!to_test) return false;
+      if(!can_test) return 1024;
     }
   }
 
@@ -186,7 +190,7 @@ bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, 
     }
   }
 
-  return true;
+  return 0;
 }
 
 int run_cmd(char *argv[]) {
@@ -236,7 +240,8 @@ bool run_tests(std::list<std::string> cases) {
   while(!cases.empty()) {
     auto cn = cases.front();
     cases.pop_front();
-    if(case_parser(cn, prog, alist, gvar, expect_results, retry_results)) {
+    int test_cond = case_parser(cn, prog, alist, gvar, expect_results, retry_results);
+    if(test_cond == 0) {
       std::cout << "\n========== " << cn << " =========" << std::endl;
       std::cout << "make test/" << prog << std::endl;
       int rv = 0;
@@ -275,8 +280,14 @@ bool run_tests(std::list<std::string> cases) {
         std::cerr << "Test abnormality: " << cn << " failed with unexpected exit value " << rv << std::endl;
         if(debug_run) exit(1);
       }
-    } else
+    } else if(test_cond == 1)
       cases.push_back(cn);
+    else if(test_cond == -1) {
+        std::cerr << "Test abnormality: " << cn << " does not exist in the configure.json file." << std::endl;
+        if(debug_run) exit(1);      
+    } else {
+      result_db[cn]["result"] = test_cond; dump_json(result_db, "results.json", false);
+    }
   }
   return true;
 }
