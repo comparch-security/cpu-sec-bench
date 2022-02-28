@@ -473,25 +473,25 @@
         "require": [ ["mts-reallocate-stack"] ]
     },
     "mts-access-after-free-org-heap": {
-        "results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
+        "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
     },
     "mts-access-after-free-alias-heap": {
-        "results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
+        "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
     },
     "mts-reallocate-heap": {
         "comment": "try to get a block which is previously freed.",
-        "results": { "1": "failed to get a reallocated block after a number of trials." }
+        "expect-results": { "1": "failed to get a reallocated block after a number of trials." }
     },
     "mts-access-after-reclaim-heap": {
         "require": [ [ "mts-reallocate-heap" ] ],
-        "results": { "1": "expected when freed space is refilled with rubbish or cleaned.",
+        "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned.",
                      "2": "failed to reallocate a block."
                    }
     },
     "mts-write-after-free-heap": {},
     "mts-write-before-reclaim-heap": {
         "require": [ [ "mts-write-after-free-heap" ], ["mts-reallocate-heap"] ],
-        "results": { "1": "expected when allocated space is refilled with rubbish or cleaned.",
+        "expect-results": { "1": "expected when allocated space is refilled with rubbish or cleaned.",
                      "2": "failed to reallocate a block."
                    }
     },
@@ -499,7 +499,7 @@
         "require": [ [ "mts-reallocate-heap" ] ]
     },
     "acc-check-ASLR": {
-        "results": { "1": "ASLR enabled."}
+        "expect-results": { "1": "ASLR enabled."}
     },
     "acc-read-func": {},
     "acc-read-GOT": {
@@ -519,7 +519,8 @@
         "require": [ [ "acc-read-GOT" ] ],
         "arguments": ["-roffset"],
         "offset": [0, 8, 1],
-        "results": { "16": "relocation tables under read-only protection." }
+        "expect-results": { "16": "relocation tables under read-only protection." },
+        "retry-results":  {"257": "failed trial due to wrong offset."}
     },
 
     "cfi-call-mid-func": {},
@@ -544,7 +545,7 @@
     },
     "cfi-call-wrong-func-vtable-released": {
         "require": [ [ "cfi-call-wrong-func-vtable" ] ],
-        "results": { "1": "vtable pointer is cleaned after release."}
+        "expect-results": { "1": "vtable pointer is cleaned after release."}
     },
     "cfi-call-wrong-num-arg-func": {},
     "cfi-call-wrong-num-func-vtable": {
@@ -575,50 +576,50 @@
     },
     "cfi-call-wrong-type-arg-dp2fp-func-data": {
         "require": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-data" ] ],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-wrong-type-arg-dp2fp-func-stack": {
         "require": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-stack" ] ],
         "arguments": ["-rmultitry"],
         "multitry": [0, 8, 1],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-wrong-type-arg-dp2fp-func-heap": {
         "require": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-heap" ] ],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-rodata": {
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-data": {
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-stack": {
         "arguments": ["-rmultitry"],
         "multitry": [0, 8, 1],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-heap": {
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-mid-func": {},
     "cfi-jump-instruction-in-rodata": {
         "require": [ [ "cfi-jump-mid-func" ] ],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-instruction-in-data": {
         "require": [ [ "cfi-jump-mid-func" ] ],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-instruction-in-stack": {
         "require": [ [ "cfi-jump-mid-func" ] ],
         "arguments": ["-rmultitry"],
         "multitry": [0, 8, 1],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-instruction-in-heap": {
         "require": [ [ "cfi-jump-mid-func" ] ],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-non-call-site": {
         "require": [ [ "cfi-return-to-wrong-call-site" ] ],
@@ -647,22 +648,22 @@
     "cfi-return-to-instruction-in-rodata": {
         "require": [ [ "cfi-return-to-non-call-site" ] ],
         "arguments": ["-vstack-offset"],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-data": {
         "require": [ [ "cfi-return-to-non-call-site" ] ],
         "arguments": ["-vstack-offset"],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-heap": {
         "require": [ [ "cfi-return-to-non-call-site" ] ],
         "arguments": ["-vstack-offset"],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-stack": {
         "require": [ [ "cfi-return-to-non-call-site" ] ],
         "arguments": ["-vstack-offset", "-rmultitry"],
         "multitry": [0, 8, 1],
-        "results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call." }
     }
 }

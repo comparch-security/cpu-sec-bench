@@ -19,6 +19,10 @@ std::map<std::string, int> var_db;
 char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
 char * gargv[33];
 
+// global configure parameters
+bool debug_run = false;
+
+
 // json related functions
 bool read_json(json &db, const std::string& fn, bool notice);
 bool dump_json(json &db, const std::string& fn, bool notice);
@@ -35,6 +39,9 @@ bool run_tests(std::list<std::string> cases);
 
 int main(int argc, char* argv[]) {
   // parse argument
+  for(int i=1; i<argc; i++) {
+    if(std::string(argv[i]) == "debug") debug_run = true;
+  }
 
   // read the configure file
   if(!read_json(config_db, "configure.json", false)) return 1;
@@ -76,7 +83,8 @@ std::list<std::string> collect_case_list() {
   return rv;
 }
 
-bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, std::string& vn, std::set<int> &results) {
+bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, std::string& vn,
+                 std::set<int> &expect_results, std::set<int> &retry_results) {
   // check whether the case exist
   if(!config_db.count(cn)) {
     std::cerr << "Fail to parse test case " << cn << std::endl;
@@ -112,7 +120,6 @@ bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, 
     for(auto arg : arguments) {
       if(arg.size() >= 3) {
         auto atype = arg.substr(0,2);
-
         if(atype == "-r") { // range
           auto range_name = arg.substr(2);
           if(tcase.count(range_name)) {
@@ -128,11 +135,9 @@ bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, 
               }
             }
           } else // fallback
-            for(auto ale : arg_list) ale.push_back(arg);
-        }
-
-        else if(atype == "-l") { // list
-          auto list_name = arg.substr(0,2);
+            for(auto &ale : arg_list) ale.push_back(arg);
+        } else if(atype == "-l") { // list
+          auto list_name = arg.substr(2);
           if(tcase.count(list_name)) {
             auto list_value = tcase[list_name].get<std::vector<int> >();
             auto arg_list_size_org = arg_list.size();
@@ -146,22 +151,18 @@ bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, 
               }
             }
           } else // fallback
-            for(auto ale : arg_list) ale.push_back(arg);
-        }
-
-        else if(atype == "-v") { // variable
-          auto var_name = arg.substr(0,2);
+            for(auto &ale : arg_list) ale.push_back(arg);
+        } else if(atype == "-v") { // variable
+          auto var_name = arg.substr(2);
           if(var_db.count(var_name))
-            for(auto ale : arg_list) ale.push_back(std::to_string(var_db[var_name]));
+            for(auto &ale : arg_list) ale.push_back(std::to_string(var_db[var_name]));
           else // fallback
-            for(auto ale : arg_list) ale.push_back(arg);
+            for(auto &ale : arg_list) ale.push_back(arg);
         }
-
         else // other, fallback
-          for(auto ale : arg_list) ale.push_back(arg);
-
+          for(auto &ale : arg_list) ale.push_back(arg);
       } else
-        for(auto ale : arg_list) ale.push_back(arg);
+        for(auto &ale : arg_list) ale.push_back(arg);
     }
   }
 
@@ -172,10 +173,16 @@ bool case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, 
     vn.clear();
 
   // collect the known exit code other than 0
-  results.clear();
-  if(tcase.count("results")) {
-    for(auto r: tcase["results"].get<std::map<std::string, json> >()) {
-      results.insert(std::stoi(r.first));
+  expect_results.clear();
+  if(tcase.count("expect-results")) {
+    for(auto r: tcase["expect-results"].get<std::map<std::string, json> >()) {
+      expect_results.insert(std::stoi(r.first));
+    }
+  }
+  retry_results.clear();
+  if(tcase.count("retry-results")) {
+    for(auto r: tcase["retry-results"].get<std::map<std::string, json> >()) {
+      retry_results.insert(std::stoi(r.first));
     }
   }
 
@@ -225,32 +232,48 @@ bool run_tests(std::list<std::string> cases) {
   std::string prog, cmd;
   str_llist_t alist;
   std::string gvar;
-  std::set<int> results;
+  std::set<int> expect_results, retry_results, rvs;
   while(!cases.empty()) {
     auto cn = cases.front();
     cases.pop_front();
-    if(case_parser(cn, prog, alist, gvar, results)) {
+    if(case_parser(cn, prog, alist, gvar, expect_results, retry_results)) {
       std::cout << "\n========== " << cn << " =========" << std::endl;
       std::cout << "make test/" << prog << std::endl;
       int rv = 0;
+      int index = 0;
+      rvs.clear();
       rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)));
       if(rv){
         std::cout << "fail to make " << prog << " with error status " << rv << std::endl;
-        result_db[cn]["result"] = -1;
+        rv = -1;
       } else { // run the test case
-        int index = 0;
         for(auto arg:alist) {
           cmd = "test/" + prog;
           std::cout << "\n" << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
           rv = run_cmd(argv_conv(cmd, arg));
           if(0 == rv) break;
-          else index++;
+          else {
+            rvs.insert(rv);
+            index++;
+          }
         }
-        result_db[cn]["result"] = rv; dump_json(result_db, "results.json", false);
-        if(!gvar.empty()) var_db[gvar] = index;
-        if(rv != 0 && !results.count(rv)) {
-          std::cerr << "\n!! ATTN: test " << cn << " failed with unexpected exit value " << rv << std::endl;
+        if(rv != 0) {
+          for(auto v:rvs) {
+            if(expect_results.count(v)) rv = v;
+            else if(!retry_results.count(v)) rv = v;
+          }
         }
+      }
+
+      // record
+      result_db[cn]["result"] = rv; dump_json(result_db, "results.json", false);
+      if(!gvar.empty()) {
+        std::cerr << "set runtime variable " << gvar << " to " << index << std::endl;
+        var_db[gvar] = index;
+      }
+      if(rv != 0 && !expect_results.count(rv)) {
+        std::cerr << "Test abnormality: " << cn << " failed with unexpected exit value " << rv << std::endl;
+        if(debug_run) exit(1);
       }
     } else
       cases.push_back(cn);

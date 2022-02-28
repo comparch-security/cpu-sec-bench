@@ -109,14 +109,14 @@ extra_objects := $(base)/lib/common/signal.o $(addprefix $(base)/lib/$(ARCH)/, a
 all: run-test
 
 run-test: $(base)/scheduler/run-test.cpp $(base)/scheduler/json.hpp | $(test-path)
-	$(CXX) -O2 -I. $< -o $@
+	$(CXX) -O1 -g -I. $< -o $@
 
 rubbish += run-test
 
 $(test-path):
 	-mkdir -p $@
 
-$(test-path)/libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
+libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
 	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@
 
 rubbish += $(test-path)/libcfi.so
@@ -155,16 +155,16 @@ rubbish += $(acc-tests)
 $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cpi-tests)
 
 $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cfi-tests)
 
