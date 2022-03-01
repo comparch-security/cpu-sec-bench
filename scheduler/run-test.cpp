@@ -20,12 +20,16 @@ char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
 char * gargv[33];
 
 // global configure parameters
+bool cond_run = false;
 bool debug_run = false;
-
+bool make_run = true;
+bool test_run = true;
+bool report_run = false;
 
 // json related functions
 bool read_json(json &db, const std::string& fn, bool notice);
 bool dump_json(json &db, const std::string& fn, bool notice);
+void report_gen();
 
 // test case related
 extern char **environ; // especially required by spawn
@@ -40,13 +44,39 @@ bool run_tests(std::list<std::string> cases);
 int main(int argc, char* argv[]) {
   // parse argument
   for(int i=1; i<argc; i++) {
-    if(std::string(argv[i]) == "debug") debug_run = true;
+    std::string param(argv[i]);
+
+    if(param == "help") {
+      std::cout << "Usage: ./run-test [OPTION]" << std::endl;
+      std::cout << "Run Script for the Security Test Benchmark." << std::endl;
+      std::cout << std::endl;
+      std::cout << "Possible parameters:" << std::endl;
+      std::cout << "  help        Show this help information." << std::endl;
+      std::cout << "  continue    Continue a previous test by reading the results.json file first." << std::endl;
+      std::cout << "  debug       Stop testing on the first unexpected exit status." << std::endl;
+      std::cout << "  make-only   Make the test cases without running them." << std::endl;
+      std::cout << "  no-make     Due to make the test cases as they are made aleady." << std::endl;
+      std::cout << "  report      Generate a report after finishing all test cases." << std::endl;
+      return 0;
+    }
+
+    if(param == "continue")  cond_run   = true;
+    if(param == "debug")     debug_run  = true;
+    if(param == "make-only") test_run   = false;
+    if(param == "no-make")   make_run   = false;
+    if(param == "report")    report_run = true;
   }
 
   // read the configure file
   if(!read_json(config_db, "configure.json", false)) return 1;
 
+  // potentially read the results.json
+  if(cond_run)
+    if(!read_json(result_db, "results.json", false)) return 1;
+
   run_tests(collect_case_list());
+
+  if(report_run) report_gen();
 
   return 0;
 }
@@ -76,10 +106,17 @@ bool dump_json(json &db, const std::string& fn, bool notice) {
   }
 }
 
+void report_gen() {
+  std::ofstream report_file("results.dat");
+  for(auto record: result_db.get<std::map<std::string, json> >())
+    report_file << record.first << " " << record.second["result"] << std::endl;
+  report_file.close();  
+}
+
 std::list<std::string> collect_case_list() {
   std::list<std::string> rv;
   for(auto record: config_db.get<std::map<std::string, json> >())
-    rv.push_back(record.first);
+    if(!result_db.count(record.first)) rv.push_back(record.first);
   return rv;
 }
 
@@ -241,17 +278,21 @@ bool run_tests(std::list<std::string> cases) {
     auto cn = cases.front();
     cases.pop_front();
     int test_cond = case_parser(cn, prog, alist, gvar, expect_results, retry_results);
-    if(test_cond == 0) {
+    if(!test_run || test_cond == 0) {
       std::cout << "\n========== " << cn << " =========" << std::endl;
       std::cout << "make test/" << prog << std::endl;
       int rv = 0;
       int index = 0;
       rvs.clear();
-      rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)));
-      if(rv){
-        std::cout << "fail to make " << prog << " with error status " << rv << std::endl;
-        rv = -1;
-      } else { // run the test case
+      if(0 == rv && make_run) {
+        rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)));
+        if(rv){
+          std::cout << "fail to make " << prog << " with error status " << rv << std::endl;
+          rv = -1;
+        }
+      }
+
+      if(0 == rv && test_run) { // run the test case
         for(auto arg:alist) {
           cmd = "test/" + prog;
           std::cout << "\n" << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
@@ -280,12 +321,12 @@ bool run_tests(std::list<std::string> cases) {
         std::cerr << "Test abnormality: " << cn << " failed with unexpected exit value " << rv << std::endl;
         if(debug_run) exit(1);
       }
-    } else if(test_cond == 1)
+    } else if(test_run && test_cond == 1)
       cases.push_back(cn);
-    else if(test_cond == -1) {
+    else if(test_run && test_cond == -1) {
         std::cerr << "Test abnormality: " << cn << " does not exist in the configure.json file." << std::endl;
         if(debug_run) exit(1);      
-    } else {
+    } else if(test_run) {
       result_db[cn]["result"] = test_cond; dump_json(result_db, "results.json", false);
     }
   }
