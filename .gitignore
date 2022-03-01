@@ -1,4 +1,4 @@
-test*/*
+test/*
 *~
 *.o
 *.so
@@ -8,5 +8,5 @@ doc/*.aux
 doc/*.toc
 *.dump
 results.json
-script/__pycache__
-script/database.pyc
+results.dat
+run-test

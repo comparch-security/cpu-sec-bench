@@ -13,6 +13,43 @@ Chinese Academy of Sciences.
 The software can be distributed under GNU General Public License version 3.
 See [LICENSE](LICENSE.md) for more details.
 
+#### Usage
+
+* Make the C++ `run-test` helper program
+
+~~~bash
+  make
+~~~
+
+* Run the test bench with a report
+
+~~~bash
+  ./run-test report
+~~~
+
+* Extra functions provided by the `run-test` helper
+
+~~~text
+Usage: ./run-test [OPTION]
+Run Script for the Security Test Benchmark.
+
+Possible parameters:
+  help        Show this help information.
+  continue    Continue a previous test by reading the results.json file first.
+  debug       Stop testing on the first unexpected exit status.
+  make-only   Make the test cases without running them.
+  no-make     Due to make the test cases as they are made aleady.
+  report      Generate a report after finishing all test cases.
+~~~
+
+* Extra targets provided by the `Makefile` script
+
+~~~text
+dump        Generate a dissambly dump for all test cases.
+prep        Generate the preprocessed C++ files (resolving all macros) for all test cases.
+clean       Clean up the test environment for a fresh test.
+~~~
+
 #### Content of the repo:
 - **acc**: test cases related to memory access control.
 - **cfi**: test cases related to control flow integrity.
@@ -25,7 +62,6 @@ See [LICENSE](LICENSE.md) for more details.
 - Makefile: auto make script.
 - README.md: this readme file.
 - configure.json: the configuration parameters recorded in JSON.
-- run-test.py: script to run the test suite.
 
 #### Contributors
 

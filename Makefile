@@ -5,7 +5,6 @@ ARCH          ?= $(shell arch)
 GCC_OPT_LEVEL ?= O2
 CXX           ?= g++
 OBJDUMP       ?= objdump
-RUN_SCRIPT    ?= ../run-test.py
 
 # extra security features (comment them out if not needed)
 #disable_stack_nx_protection    = yes
@@ -21,7 +20,7 @@ RUN_SCRIPT    ?= ../run-test.py
 # define paths and objects
 base = .
 
-test-path = $(base)/test-$(ARCH)
+test-path = $(base)/test
 LD_LIBRARY_PATH=$(test-path)
 
 # define compiling flags
@@ -107,12 +106,17 @@ extra_objects := $(base)/lib/common/signal.o $(addprefix $(base)/lib/$(ARCH)/, a
 
 # compile targets
 
-all: $(test-path) $(sec-tests)
+all: run-test
+
+run-test: $(base)/scheduler/run-test.cpp $(base)/scheduler/json.hpp | $(test-path)
+	$(CXX) -O1 -g -I. $< -o $@
+
+rubbish += run-test
 
 $(test-path):
 	-mkdir -p $@
 
-$(test-path)/libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
+libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
 	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@
 
 rubbish += $(test-path)/libcfi.so
@@ -151,24 +155,21 @@ rubbish += $(acc-tests)
 $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cpi-tests)
 
 $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) $(test-path)/libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L$(test-path) -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cfi-tests)
 
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
-
-run: $(sec-tests) $(test-path)/$(RUN_SCRIPT)
-	cd $(test-path); RUN_PRELOAD=$(RUN_PRELOAD) $(RUN_SCRIPT)
 
 rubbish += $(test-path)/results.json $(test-path)/results.dat
 

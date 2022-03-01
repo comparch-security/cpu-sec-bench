@@ -1,5 +1,7 @@
-Copyright (c) 2017-2022 [Wei Song](mailto:wsong83@gmail.com) at the Institute of
-Information Engineering, Chinese Academy of Sciences.
+Copyright (c) 2017-2022 [Wei Song](mailto:wsong83@gmail.com)
+the State Key Laboratory of Information Security,
+the Institute of Information Engineering,
+Chinese Academy of Sciences.
 
 This file is part of "cpu-sec-bench": 
 **A Security Test Benchmark for Computer Architectures**.
@@ -16,3 +18,13 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with "cpu-sec-bench".  If not, see <https://www.gnu.org/licenses/>.
+
+=====================
+
+Files with other license agreements
+
+## scheduler/json.hpp
+
+Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+SPDX-License-Identifier: MIT
+Copyright (c) 2013-2022 Niels Lohmann <http://nlohmann.me>.
