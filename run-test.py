@@ -12,6 +12,8 @@ runtime_db = {}
 run_preload = os.getenv("RUN_PRELOAD")
 if run_preload:
     run_preload += " "
+else:
+    run_preload = ""
 
 sys.path.append(os.path.relpath("../script"))
 import database

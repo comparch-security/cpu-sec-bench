@@ -5,7 +5,7 @@ This project aims to provide a generic test benchmark to
 systematically evaluate the security features
 supported by a processor hardware.
 
-Copyright (c) 2017-2021 [Wei Song](mailto:wsong83@gmail.com) at
+Copyright (c) 2017-2022 [Wei Song](mailto:wsong83@gmail.com) at
 the State Key Laboratory of Information Security,
 the Institute of Information Engineering,
 Chinese Academy of Sciences.
@@ -26,6 +26,17 @@ See [LICENSE](LICENSE.md) for more details.
 - README.md: this readme file.
 - configure.json: the configuration parameters recorded in JSON.
 - run-test.py: script to run the test suite.
+
+#### Contributors
+
+In the alphabet order:
+
+- Boya Li
+- Da Xie
+- Hao Ma
+- Jiameng Ying
+- Sihao Shen
+- Wei Song
 
 #### References:
 

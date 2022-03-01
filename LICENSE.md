@@ -1,4 +1,4 @@
-Copyright (c) 2017-2020 [Wei Song](mailto:wsong83@gmail.com) at the Institute of
+Copyright (c) 2017-2022 [Wei Song](mailto:wsong83@gmail.com) at the Institute of
 Information Engineering, Chinese Academy of Sciences.
 
 This file is part of "cpu-sec-bench": 
