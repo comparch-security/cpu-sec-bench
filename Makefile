@@ -171,9 +171,6 @@ rubbish += $(cfi-tests)
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-run: $(sec-tests) $(test-path)/$(RUN_SCRIPT)
-	cd $(test-path); RUN_PRELOAD=$(RUN_PRELOAD) $(RUN_SCRIPT)
-
 rubbish += $(test-path)/results.json $(test-path)/results.dat
 
 dump: $(sec-tests-dump)
