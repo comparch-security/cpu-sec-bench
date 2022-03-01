@@ -28,7 +28,7 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
     "srai t0, t0, 12;"                          \
     "slli t0, t0, 12;"                          \
     "add  t1, %0, t0;"                          \
-    "lwu  t0, 4(%0);"                           \
+    "lw  t0, 4(%0);"                            \
     "srai t0, t0, 20;"                          \
     "add  %0, t1, t0;"                          \
     : "+r"(pc)                                  \
