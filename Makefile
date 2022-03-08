@@ -107,7 +107,7 @@ sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
 headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
-extra_objects := $(base)/lib/common/signal.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
+extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
 
 # compile targets
 
