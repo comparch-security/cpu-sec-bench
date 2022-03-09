@@ -122,22 +122,22 @@ extern int dummy_leaf_func(int);
   asm volatile("addi sp, sp, 16; ret")
 
 // the machine code for the following
-// 357d                    addiw   a0,a0,-1
-// 60a2                    ld      ra,8(sp)
-// 0141                    addi    sp,sp,16
-// 8082                    ret
+// 0001                    nop
+// 0001                    nop
+// 0000                    illegal instruction
+// 0000                    illegal instruction
 #define FUNC_MACHINE_CODE \
-  {0x7d, 0x35, 0xa2, 0x60, 0x41, 0x01, 0x82, 0x80}
+  {0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00}
 
 void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
-  *p++ = 0x7d;
-  *p++ = 0x35;
-  *p++ = 0xa2;
-  *p++ = 0x60;
-  *p++ = 0x41;
   *p++ = 0x01;
-  *p++ = 0x82;
-  *p++ = 0x80;
+  *p++ = 0x00;
+  *p++ = 0x01;
+  *p++ = 0x00;
+  *p++ = 0x00;
+  *p++ = 0x00;
+  *p++ = 0x00;
+  *p++ = 0x00;
 }
 
 // the machine code for the following
