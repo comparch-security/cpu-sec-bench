@@ -606,7 +606,9 @@
     "cfi-call-instruction-in-heap": {
         "expect-results": { "16": "expected excption on the illegal call." }
     },
-    "cfi-jump-mid-func": {},
+    "cfi-jump-mid-func": {
+        "arguments": ["1"]
+    },
     "cfi-jump-instruction-in-rodata": {
         "require": [ [ "cfi-jump-mid-func" ] ],
         "expect-results": { "16": "expected excption on the illegal call." }
