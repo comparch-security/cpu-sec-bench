@@ -484,16 +484,18 @@
     },
     "mts-access-after-reclaim-heap": {
         "require": [ [ "mts-reallocate-heap" ] ],
-        "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned.",
-                     "2": "failed to reallocate a block."
-                   }
+        "expect-results": {
+            "1": "expected when freed space is refilled with rubbish or cleaned.",
+            "2": "failed to reallocate a block."
+        }
     },
     "mts-write-after-free-heap": {},
     "mts-write-before-reclaim-heap": {
         "require": [ [ "mts-write-after-free-heap" ], ["mts-reallocate-heap"] ],
-        "expect-results": { "1": "expected when allocated space is refilled with rubbish or cleaned.",
-                     "2": "failed to reallocate a block."
-                   }
+        "expect-results": {
+            "1": "expected when allocated space is refilled with rubbish or cleaned.",
+            "2": "failed to reallocate a block."
+        }
     },
     "mts-write-after-reclaim-heap": {
         "require": [ [ "mts-reallocate-heap" ] ]
