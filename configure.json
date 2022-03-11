@@ -526,7 +526,9 @@
     },
 
     "cfi-call-mid-func": {},
-    "cfi-call-wrong-func-within-static-analysis": {},
+    "cfi-call-wrong-func-within-static-analysis": {
+        "arguments": ["1"]
+    },
     "cfi-call-wrong-func": {
         "require": [ [ "cfi-call-wrong-func-within-static-analysis" ] ]
     },
