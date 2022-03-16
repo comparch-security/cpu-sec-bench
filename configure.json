@@ -484,16 +484,18 @@
     },
     "mts-access-after-reclaim-heap": {
         "require": [ [ "mts-reallocate-heap" ] ],
-        "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned.",
-                     "2": "failed to reallocate a block."
-                   }
+        "expect-results": {
+            "1": "expected when freed space is refilled with rubbish or cleaned.",
+            "2": "failed to reallocate a block."
+        }
     },
     "mts-write-after-free-heap": {},
     "mts-write-before-reclaim-heap": {
         "require": [ [ "mts-write-after-free-heap" ], ["mts-reallocate-heap"] ],
-        "expect-results": { "1": "expected when allocated space is refilled with rubbish or cleaned.",
-                     "2": "failed to reallocate a block."
-                   }
+        "expect-results": {
+            "1": "expected when allocated space is refilled with rubbish or cleaned.",
+            "2": "failed to reallocate a block."
+        }
     },
     "mts-write-after-reclaim-heap": {
         "require": [ [ "mts-reallocate-heap" ] ]
@@ -524,7 +526,9 @@
     },
 
     "cfi-call-mid-func": {},
-    "cfi-call-wrong-func-within-static-analysis": {},
+    "cfi-call-wrong-func-within-static-analysis": {
+        "arguments": ["1"]
+    },
     "cfi-call-wrong-func": {
         "require": [ [ "cfi-call-wrong-func-within-static-analysis" ] ]
     },
@@ -602,7 +606,9 @@
     "cfi-call-instruction-in-heap": {
         "expect-results": { "16": "expected excption on the illegal call." }
     },
-    "cfi-jump-mid-func": {},
+    "cfi-jump-mid-func": {
+        "arguments": ["1"]
+    },
     "cfi-jump-instruction-in-rodata": {
         "require": [ [ "cfi-jump-mid-func" ] ],
         "expect-results": { "16": "expected excption on the illegal call." }

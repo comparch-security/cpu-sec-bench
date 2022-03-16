@@ -19,7 +19,7 @@ extern int dummy_leaf_func(int);
   #include "x86_64/assembly.hpp"
 #endif
 
-#if defined(__ARM_ARCH_8A) && defined(__aarch64__)
+#if defined(__ARM_ARCH) && __ARM_ARCH >= 8 && defined(__aarch64__)
   #define CSB_ARMV8_64
   #include "aarch64/assembly.hpp"
 #endif

@@ -87,6 +87,7 @@ bool read_json(json &db, const std::string& fn, bool notice) {
     if(notice) std::cout << "read json file " << fn << std::endl;
     db_file >> db;
     db_file.close();
+    return true;
   } else {
     std::cerr << "Fail to open json file `" << fn << "'" << std::endl;
     return false;
@@ -255,8 +256,11 @@ int run_cmd(char *argv[]) {
     std::cout << argv[0] << " terminated with signal " << WIFSIGNALED(status) << std::endl;
     return 256+WIFSIGNALED(status);
   }
+
   if(WIFEXITED(status))
     return WEXITSTATUS(status);
+
+  return -2;  // should not run here!
 }
 
 char ** argv_conv(const std::string &cmd, const str_list_t &args) {

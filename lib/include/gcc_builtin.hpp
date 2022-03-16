@@ -6,4 +6,7 @@
 #define FORCE_NOINLINE __attribute__((noinline))
 #define mbarrier asm volatile("": : :"memory")
 
+// code/data alignment
+#define ALIGN(NByte) __attribute__ ((aligned (NByte)))
+
 #endif

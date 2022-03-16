@@ -1,21 +1,32 @@
+#include "include/global_var.hpp"
 #include "include/assembly.hpp"
 
-static volatile int grv = 1;
 typedef void (*Fun)(void);
 
 void FORCE_NOINLINE helper1() {
-  grv = 2;
+  gvar_init(2);
 }
 
 void FORCE_NOINLINE helper2() {
-  grv = 0;
+  gvar_init(0);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-  volatile Fun pFun = grv ? helper1 : helper2;
-  Fun tmp = helper2;
-  XCHG_MEM(&tmp, &pFun);
+  gvar_init(argv[1][0] - '0');
+  volatile Fun pFun = gvar() ? helper1 : helper2;
+  volatile Fun tmp = helper2;
+  SET_MEM(&pFun, tmp);
   pFun();
-  return grv;
+  return gvar();
 }
+
+
+/** dev log
+ *
+ * wsong83 2022.03.10
+ * On Apple M1 Darwin 20.6.0 clang 12.0.5:
+ * Strangely most instructions of the XCHG_MEM macro are optimized by the clang (linker maybe)
+ * Instead of using a memory exchange, now we directly set the wrong value to the victim (function pointer)
+ * Seems the compiler is then happy with it.
+ */

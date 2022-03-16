@@ -42,6 +42,11 @@
     : : "r" (ptrL), "r" (ptrR)               \
     : "x8", "x9"                             )
 
+#define SET_MEM(ptr, var)                    \
+  asm volatile(                              \
+    "str %1, [%0];"                          \
+    : : "r" (ptr), "r" (var)                 )
+
 // call to a pointer
 #define CALL_DAT(ptr)                        \
   asm volatile(                              \
