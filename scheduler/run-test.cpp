@@ -132,20 +132,50 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   auto tcase = config_db[cn];
 
   // check requirement
+  int req_case = 0;
+  std::string req_case_str = "0";
   if(tcase.count("require")) {
-    auto require_list = tcase["require"].get<str_llist_t>();
-    for(auto and_conds : require_list)
-      for(auto or_cond : and_conds)
-        if(!result_db.count(or_cond))
-          return 1;
-    for(auto and_conds : require_list) {
-      bool can_test = false;
-      for(auto or_cond : and_conds) {
-        if(result_db.count(or_cond) && 0 == result_db[or_cond]["result"].get<int>())
-          can_test = true;
+    bool req_case_all_tested = true;
+    bool req_case_tested = false;
+    bool req_case_ok = false;
+    do {
+      req_case_str = std::to_string(req_case++);
+      if(!tcase["require"].count(req_case_str)) break;
+      req_case_tested = true;
+
+      // get the prerequisit list
+      auto require_list = tcase["require"][req_case_str].get<str_llist_t>();
+
+      // check whether the required test cases are tested
+      for(auto and_conds : require_list) {
+        if(!req_case_tested) break;
+        for(auto or_cond : and_conds) {
+          if(!result_db.count(or_cond)) {
+            req_case_tested = false;
+            req_case_all_tested = false;
+            break;
+          }
+        }
       }
-      if(!can_test) return 1024;
-    }
+
+      // if tested, check the test condition is met
+      if(req_case_tested) {
+        req_case_ok = true;
+        for(auto and_conds : require_list) {
+          bool or_cond_ok = false;
+          for(auto or_cond : and_conds)
+            if(result_db.count(or_cond) && 0 == result_db[or_cond]["result"].get<int>())
+              or_cond_ok = true;
+          if(!or_cond_ok) {
+            req_case_ok = false;
+            break;
+          }
+        }
+      }
+    } while(!req_case_tested || !req_case_ok);
+
+    if(!req_case_all_tested) return 1; // prerequisit not tested yet
+    if(!req_case_ok) return 1024; // no need to test as all prerequisit tested and failed
   }
 
   // get the program name
@@ -158,7 +188,7 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   arg_list.clear();
   arg_list.push_back(str_list_t());
   if(tcase.count("arguments")) {
-    auto arguments = tcase["arguments"].get<str_list_t>();
+    auto arguments = tcase["arguments"][req_case_str].get<str_list_t>();
     for(auto arg : arguments) {
       if(arg.size() >= 3) {
         auto atype = arg.substr(0,2);
@@ -209,8 +239,8 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   }
 
   // check whether the case store a global variable
-  if(tcase.count("set-var")) {
-    vn = tcase["set-var"].get<std::string>();
+  if(tcase.count("set-var") && tcase["set-var"].count(req_case_str)) {
+    vn = tcase["set-var"][req_case_str].get<std::string>();
   } else
     vn.clear();
 
@@ -281,6 +311,7 @@ bool run_tests(std::list<std::string> cases) {
   while(!cases.empty()) {
     auto cn = cases.front();
     cases.pop_front();
+    //std::cerr << "case: " << cn << std::endl; // keep in case needed in debug
     int test_cond = case_parser(cn, prog, alist, gvar, expect_results, retry_results);
     if(!test_run || test_cond == 0) {
       std::cout << "\n========== " << cn << " =========" << std::endl;
