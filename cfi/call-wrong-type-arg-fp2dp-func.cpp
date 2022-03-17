@@ -5,15 +5,22 @@ void FORCE_NOINLINE helper(int* var) {
   gvar_init((*var == 0) ? 1 : 0 );
 }
 
+static int var = 0;
+
 int main()
 {
-  int var = 0;
   SET_MEM(&var, helper);
   helper(&var);
   return gvar();
 }
 
 /** dev log
+ * wsong83 2022.03.17
+ * On Xeon 5220 Ubuntu 18.04 g++ 7.5.0
+ * Since the local var is initialized to 0 and no compiler observable modification,
+ * no stack space is allocated for it and the SET_MEM macro actully rewrite the canary added by the compiler,
+ * which leads to stack smatching detection.
+ * Declare the variable as a static global one instead.
  *
  * wsong83 2022.03.11
  * On Apple M1 Darwin 20.6.0 clang 12.0.5:

@@ -47,6 +47,11 @@
     : : "r" (ptrL), "r" (ptrR)               \
     : "rax"                                  )
 
+#define SET_MEM(ptr, var)                    \
+  asm volatile(                              \
+    "movq %1, (%0);"                         \
+    : : "r" (ptr), "r" (var)                 )
+
 // call to a pointer
 #define CALL_DAT(ptr)                        \
   asm volatile(                              \
