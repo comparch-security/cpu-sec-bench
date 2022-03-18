@@ -16,7 +16,7 @@ int FORCE_NOINLINE helper(const unsigned char* m) {
 int main(int argc, char* argv[])
 {
   // get the offset of RA on stack
-  stack_offset = 8 * (argv[1][0] - '0');
+  stack_offset = 4 * (argv[1][0] - '0');
 
   printf("dummy print: m = %p\n", m);
   begin_catch_exception(m, SEGV_ACCERR);

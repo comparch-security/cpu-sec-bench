@@ -17,14 +17,14 @@ void FORCE_NOINLINE helper() {
 int main(int argc, char* argv[])
 {
   // get the offset of RA on stack
-  stack_offset = 8 * (argv[1][0] - '0');
+  stack_offset = 4 * (argv[1][0] - '0');
 
   // call a function but illegally return
   helper();
   // the elligal return site
   DECL_LABEL(helper2_ret);
   if(grv == 0)
-    exit(grv);
+    exit(stack_offset/4 + 32);
   helper();
   helper();
   return grv;

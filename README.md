@@ -63,6 +63,20 @@ clean       Clean up the test environment for a fresh test.
 - README.md: this readme file.
 - configure.json: the configuration parameters recorded in JSON.
 
+#### Test results
+
+The results of individual test cases are recorded in a generated file `results.json`.
+The meaning of the result integer:
+
+* 0: the test case passed and supposedly a vulnerability is expoited.
+* [1-15]: A predefined error number is returned.
+* [16-31]: An expected exception is catched and a predefined error number is then returned.
+* [32-63]: A run-time parameter (`n-32`) is found and returned by the test case.
+* [256-511]: An exception is raised but uncatched with the signal number as `n-256`.
+* 1024: Test case directly failed due to failure in prerequisite cases.
+* -1: configuration error which needs to be fixed.
+* other: Something is wrong and need investigation.
+
 #### Contributors
 
 In the alphabet order:
