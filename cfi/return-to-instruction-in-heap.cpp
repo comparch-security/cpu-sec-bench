@@ -15,7 +15,7 @@ int FORCE_NOINLINE helper(const unsigned char* m) {
 int main(int argc, char* argv[])
 {
   // get the offset of RA on stack
-  stack_offset = 8 * (argv[1][0] - '0');
+  stack_offset = 4 * (argv[1][0] - '0');
 
   unsigned char *m = new unsigned char [16];
   assign_fake_machine_code(m);

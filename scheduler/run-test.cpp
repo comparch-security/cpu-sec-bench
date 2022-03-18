@@ -328,7 +328,6 @@ bool run_tests(std::list<std::string> cases) {
       std::cout << "\n========== " << cn << " =========" << std::endl;
       std::cout << "make test/" << prog << std::endl;
       int rv = 0;
-      int index = 0;
       rvs.clear();
       if(0 == rv && make_run) {
         rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)));
@@ -343,26 +342,31 @@ bool run_tests(std::list<std::string> cases) {
           cmd = "test/" + prog;
           std::cout << "\n" << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
           rv = run_cmd(argv_conv(cmd, arg));
+
+          // record run-time parameter
+          if(!gvar.empty() && rv >= 32 && rv < 64) { // successfully find a run-time parameter
+            std::cerr << "set runtime variable " << gvar << " to " << rv - 32 << std::endl;
+            var_db[gvar] = rv-32; dump_json(var_db, "variables.json", false);
+            rv = 0;
+          }
+
           if(0 == rv) break;
-          else {
-            rvs.insert(rv);
-            index++;
+          else rvs.insert(rv);
+
+          if(!expect_results.count(rv) && !retry_results.count(rv)) {
+            std::cerr << "Test abnormality: " << cn << " failed with unexpected exit value " << rv << std::endl;
+            if(debug_run) exit(1);
           }
         }
+
         if(rv != 0) {
-          for(auto v:rvs) {
-            if(expect_results.count(v)) rv = v;
-            else if(!retry_results.count(v)) rv = v;
-          }
+          for(auto v:rvs) if(retry_results.count(v)) rv = v;
+          for(auto v:rvs) if(expect_results.count(v)) rv = v;
+          for(auto v:rvs) if(!expect_results.count(v) && !retry_results.count(v)) rv = v;
         }
       }
 
-      // record
       result_db[cn]["result"] = rv; dump_json(result_db, "results.json", false);
-      if(!gvar.empty()) {
-        std::cerr << "set runtime variable " << gvar << " to " << index << std::endl;
-        var_db[gvar] = index; dump_json(var_db, "variables.json", false);
-      }
       if(rv != 0 && !expect_results.count(rv)) {
         std::cerr << "Test abnormality: " << cn << " failed with unexpected exit value " << rv << std::endl;
         if(debug_run) exit(1);

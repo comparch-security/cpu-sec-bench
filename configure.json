@@ -636,7 +636,10 @@
                              "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ] },
         "arguments": { "0": ["-roffset"] },
         "offset": [0, 8, 1],
-        "set-var": { "0": "stack-offset" }
+        "set-var": { "0": "stack-offset" },
+        "retry-results": { "1": "failed to change RA on stack at all, normal return.",
+                           "257": "Some segment error triggered either by stack protection or totally wrong RA."
+                         }
     },
     "cfi-return-to-wrong-call-site": {
         "require": { "0": [ [ "cfi-return-to-wrong-call-site-within-static-analysis" ] ] },
