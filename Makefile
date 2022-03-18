@@ -178,7 +178,7 @@ rubbish += $(cfi-tests)
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-rubbish += $(test-path)/results.json $(test-path)/results.dat
+rubbish += results.json results.json results.dat variables.json
 
 dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%

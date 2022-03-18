@@ -14,8 +14,7 @@
 #include "scheduler/json.hpp"
 
 using json = nlohmann::basic_json<nlohmann::ordered_map>;
-static json config_db, result_db;
-std::map<std::string, int> var_db;
+static json config_db, result_db, var_db;
 char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
 char * gargv[33];
 
@@ -27,6 +26,7 @@ bool test_run = true;
 bool report_run = false;
 
 // json related functions
+bool file_exist(const std::string& fn);
 bool read_json(json &db, const std::string& fn, bool notice);
 bool dump_json(json &db, const std::string& fn, bool notice);
 void report_gen();
@@ -71,14 +71,25 @@ int main(int argc, char* argv[]) {
   if(!read_json(config_db, "configure.json", false)) return 1;
 
   // potentially read the results.json
-  if(cond_run)
-    if(!read_json(result_db, "results.json", false)) return 1;
+  if(cond_run) {
+    if(file_exist("results.json") && !read_json(result_db, "results.json", false)) return 1;
+    if(file_exist("variables.json") && !read_json(result_db, "variables.json", false)) return 1;
+  }
 
   run_tests(collect_case_list());
 
   if(report_run) report_gen();
 
   return 0;
+}
+
+bool file_exist(const std::string& fn) {
+  std::ifstream file(fn);
+  if(file.is_open()) {
+    file.close();
+    return true;
+  } else
+    return false;
 }
 
 bool read_json(json &db, const std::string& fn, bool notice) {
@@ -227,7 +238,7 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
         } else if(atype == "-v") { // variable
           auto var_name = arg.substr(2);
           if(var_db.count(var_name))
-            for(auto &ale : arg_list) ale.push_back(std::to_string(var_db[var_name]));
+            for(auto &ale : arg_list) ale.push_back(std::to_string(var_db[var_name].get<int>()));
           else // fallback
             for(auto &ale : arg_list) ale.push_back(arg);
         }
@@ -350,7 +361,7 @@ bool run_tests(std::list<std::string> cases) {
       result_db[cn]["result"] = rv; dump_json(result_db, "results.json", false);
       if(!gvar.empty()) {
         std::cerr << "set runtime variable " << gvar << " to " << index << std::endl;
-        var_db[gvar] = index;
+        var_db[gvar] = index; dump_json(var_db, "variables.json", false);
       }
       if(rv != 0 && !expect_results.count(rv)) {
         std::cerr << "Test abnormality: " << cn << " failed with unexpected exit value " << rv << std::endl;

@@ -9,4 +9,5 @@ doc/*.toc
 *.dump
 results.json
 results.dat
+variables.json
 run-test
