@@ -5,7 +5,7 @@
 #define LOAD_LABEL(label, v)                 \
   asm volatile(                              \
     "lea " #label "(%%rip), %0;"             \
-    : "+r"(v) :                              )
+    : "=r"(v) :                              )
 
 // declare a label in assembly
 #define DECL_LABEL(label)                    \
@@ -28,6 +28,20 @@
     "movq %%rax, (%%rcx);"                   \
     : : "r"(offset)                          \
     : "rax", "rcx"                           )
+
+#define READ_STACK_DAT(dat, offset)          \
+  asm volatile(                              \
+    "movl %1, %%ecx;"                        \
+    "movslq %%ecx, %%rcx;"                   \
+    "addq %%rsp, %%rcx;"                     \
+    "movq (%%rcx), %0;"                      \
+    : "+r"(dat) : "r"(offset)                \
+    : "rcx"                                  )
+
+#define READ_STACK_DAT_IMM(dat, offset)      \
+  asm volatile(                              \
+    "movq " #offset "(%%rsp), %0;"           \
+    : "=r"(dat)                              )
 
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \

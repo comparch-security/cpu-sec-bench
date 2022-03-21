@@ -504,6 +504,10 @@
         "expect-results": { "1": "ASLR enabled."}
     },
     "acc-read-func": {},
+    "acc-get-ra-offset": {
+        "arguments": { "0": ["1"] },
+        "set-var": { "0": "stack-offset" }
+    },
     "acc-read-GOT": {
         "arguments": { "0": ["-roffset"] },
         "offset": [0, 8, 1]
@@ -633,8 +637,12 @@
     },
     "cfi-return-to-wrong-call-site-within-static-analysis": {
         "require": { "0": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack",
-                             "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ] },
-        "arguments": { "0": ["-roffset"] },
+                             "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ],
+                     "1": [ [ "acc-get-ra-offset" ] ]
+                   },
+        "arguments": { "0": ["-roffset"],
+                       "1": ["-vstack-offset"]
+                     },
         "offset": [0, 8, 1],
         "set-var": { "0": "stack-offset" },
         "retry-results": { "1": "failed to change RA on stack at all, normal return.",
