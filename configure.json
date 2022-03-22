@@ -508,6 +508,9 @@
         "arguments": { "0": ["1"] },
         "set-var": { "0": "stack-offset" }
     },
+    "acc-get-frame-size": {
+        "set-var": { "0": "frame-size" }
+    },
     "acc-read-GOT": {
         "arguments": { "0": ["-roffset"] },
         "offset": [0, 8, 1]
