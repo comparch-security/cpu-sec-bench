@@ -1,5 +1,5 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
+#include "include/global_var.hpp"
 #include "include/signal.hpp"
 
 volatile int grv = 1;
@@ -11,12 +11,16 @@ int FORCE_NOINLINE helper() {
 
 int main(int argc, char* argv[])
 {
-  // get the offset of RA on stack
-  stack_offset = 8 * (argv[1][0] - '0');
+  int cet_enabled = argv[1][0] - '0';
+  void *rand_label = &&RAND_CALL;
+  gvar_init(helper());
 
-  grv = helper();
+  if(cet_enabled == -1) goto *rand_label;   // impossible to happen
+
   void *got = NULL;
-  get_got_func(&got, stack_offset);
+  get_got_func(&got, rand_label, cet_enabled);
+  COMPILER_BARRIER;
+ RAND_CALL:
   rand();
   mbarrier;
 
@@ -25,5 +29,5 @@ int main(int argc, char* argv[])
   end_catch_exception();
 
   grv -= rand();
-  return grv;
+  return gvar();
 }

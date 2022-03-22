@@ -11,19 +11,7 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
 
 // we know rand is call immediately afterwards
 // so get the plt address from ra
-#define GET_GOT_LOC(stack_offset)   \
-  asm volatile(                     \
-    "movl %2, %%ecx;"               \
-    "movslq %%ecx, %%rcx;"          \
-    "addq %%rsp, %%rcx;"            \
-    "mov  (%%rcx), %0;"             \
-    "mov  0x1(%0), %1;"             \
-    : "+r"(pc), "+r"(offset)        \
-    : "r"(stack_offset)             \
-    : "rcx"                         \
-  );                                \
-  pc += 5;                          \
-  pc += offset;                     \
+#define GET_GOT_LOC(offset)         \
   asm volatile(                     \
     "mov 0x2(%0), %%eax;"           \
     "add $0x6, %0;"                 \
@@ -31,11 +19,20 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
     : "+r"(pc) : : "rax"            \
   );
 
-void get_got_func(void **gotp, int stack_offset) {
-  char *pc = NULL;
-  int offset = 0;
+void get_got_func(void **gotp, void *label, int cet) {
+  char *pc = (char *)label;
+  if(cet) pc += 4; //bypass endbr64
+  int offset = *(int *)(pc+1);
+  pc += 5 + offset; // point to 1st instruction in plt
 
-  GET_GOT_LOC(stack_offset)
+  if(cet) {
+    pc += 4; // bypass endbr64
+    offset = *(int *)(pc+3);
+    pc += 7 + offset;
+  } else {
+    offset = *(int *)(pc+2);
+    pc += 6 + offset;
+  }
 
   *gotp = pc;
 }
