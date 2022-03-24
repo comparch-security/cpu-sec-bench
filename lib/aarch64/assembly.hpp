@@ -26,11 +26,22 @@
     : : "r"(offset)                          \
     : "x8"                                   )
 
+#define READ_STACK_DAT(dat, offset)          \
+  asm volatile(                              \
+    "add  %0, sp, %0;"                       \
+    "ldr  %1, [%0];"                         \
+    : "+r"(offset), "=r"(dat)                )
+
+#define READ_STACK_DAT_IMM(dat, offset)      \
+  asm volatile(                              \
+    "ldr %0, [sp, #" #offset "];"            \
+    : "=r"(dat)                              )
+
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
     "add  %0, sp, %0;"                       \
     "str  %1, [%0];"                         \
-    : : "r"(offset), "r"(dat)                )
+    : "+r"(offset) : "r"(dat)                )
 
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)                 \
@@ -51,8 +62,7 @@
 #define CALL_DAT(ptr)                        \
   asm volatile(                              \
     "blr  %0;"                               \
-    : : "r"(ptr)                             \
-    : "x30"				     )
+    : : "r"(ptr)                             )
 
 #define CALL_DAT_INT(ptr, arg0)              \
   asm volatile(                              \
@@ -102,12 +112,14 @@
     : : "r" (arg)                            )
 
 // create a fake return stack
-#define PUSH_FAKE_RET(label)                 \
+#define PUSH_FAKE_RET(ra, offset)            \
+  for(int i=0; i<offset; i++)                \
+    asm volatile("str %0, [sp, #-8]!;"       \
+                 : : "r"(ra));               \
   asm volatile(                              \
-    "adr  x8, " #label ";"                   \
-    "stp  x29, x8, [sp, -32]!;"              \
-    "mov  x29, sp;"                          \
-    : : : "x8"                               )
+    "str x29, [sp, #8];"                     \
+    "mov x29, sp;"                           )
+
 
 // return
 #define RET \
@@ -129,6 +141,3 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x00;
   *p++ = 0x00;
 }
-
-extern void get_got_func(void **gotp, int stack_offset);
-extern void replace_got_func(void **fake, void *got);

@@ -1,23 +1,18 @@
 #include "include/assembly.hpp"
 #include <stdlib.h>
 
+//#define DEBUG_READ_GOT
+
+#ifdef DEBUG_READ_GOT
+#include <iostream>
+#endif
+
 int dummy_leaf_rv = 0;
 
 int FORCE_NOINLINE dummy_leaf_func(int v) {
   dummy_leaf_rv += rand();
   return dummy_leaf_rv;
 }
-
-
-// we know rand is call immediately afterwards
-// so get the plt address from ra
-#define GET_GOT_LOC(offset)         \
-  asm volatile(                     \
-    "mov 0x2(%0), %%eax;"           \
-    "add $0x6, %0;"                 \
-    "add %%rax, %0;"                \
-    : "+r"(pc) : : "rax"            \
-  );
 
 void get_got_func(void **gotp, void *label, int cet) {
   char *pc = (char *)label;
@@ -35,6 +30,10 @@ void get_got_func(void **gotp, void *label, int cet) {
   }
 
   *gotp = pc;
+
+#ifdef DEBUG_READ_GOT
+  std::cout << "instruction at the entry of rand(): " << std::hex << **((int **)pc) << std::endl; // this instruction should remain even with ASLR  
+#endif
 }
 
 void replace_got_func(void **fake, void *got) {
@@ -44,5 +43,4 @@ void replace_got_func(void **fake, void *got) {
   );
 }
 
-#undef GET_GOT_LOC
 

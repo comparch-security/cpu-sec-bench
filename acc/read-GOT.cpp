@@ -11,9 +11,11 @@ int main(int argc, char* argv[])
 
   void *rand_label = &&RAND_CALL;
 
+  // In LLVM, goto is not allow to jump over declaration of local variables.
+  void *got = NULL;
+
   if(cet_enabled == -1) goto *rand_label;   // impossible to happen
 
-  void *got = NULL;
   get_got_func(&got, rand_label, cet_enabled);
   COMPILER_BARRIER;
  RAND_CALL:

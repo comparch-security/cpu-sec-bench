@@ -1,26 +1,29 @@
 #include <cstdlib>
+#include "include/global_var.hpp"
 #include "include/assembly.hpp"
 
-static volatile int grv = 1;
+int stack_offset = 0;
 
 void FORCE_NOINLINE helper() {
   ENFORCE_NON_LEAF_FUNC;
-  if(grv == 2) {
-    DECL_LABEL(ret_address);
-    exit(0);
+  switch(gvar()) {
+  case 2: goto exit_label;
+  case 0: gvar_incr();
   }
 
-  // push the label address
-  PUSH_FAKE_RET(ret_address);
-
-  // return to the push adderss
-  // although a simple assembly "ret" would work out of the box
-  // we use the normal return to mimic a more genuine case
+  gvar_decr();
+  COMPILER_BARRIER;
+  PUSH_FAKE_RET(&&exit_label, stack_offset);
   return;
+
+exit_label:
+  exit(gvar());
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+  gvar_init(argv[1][0] - '0');
+  stack_offset = (argv[2][0] - '0');
   helper();
-  return grv;
+  return gvar();
 }

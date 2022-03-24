@@ -153,6 +153,3 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0xf7;
   *p++ = 0xfe;
 }
-
-extern void get_got_func(void **gotp, void *label, int cet);
-extern void replace_got_func(void **fake, void *got);

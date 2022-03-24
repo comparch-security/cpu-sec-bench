@@ -35,5 +35,7 @@ extern int dummy_leaf_func(int);
   #include "riscv64/assembly.hpp"
 #endif
 
+extern void get_got_func(void **gotp, void *label, int cet);
+extern void replace_got_func(void **fake, void *got);
 
 #endif // ASSEMBLY_HPP_INCLUDED
