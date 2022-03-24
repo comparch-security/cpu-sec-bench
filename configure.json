@@ -608,9 +608,9 @@
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-stack": {
-        "arguments": { "0": ["-rmultitry"] },
-        "multitry": [0, 8, 1],
-        "expect-results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call.",
+                            "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)"
+			  }
     },
     "cfi-call-instruction-in-heap": {
         "expect-results": { "16": "expected excption on the illegal call." }
@@ -650,9 +650,7 @@
                      },
         "offset": [0, 8, 1],
         "set-var": { "0": "stack-offset" },
-        "retry-results": { "1": "failed to change RA on stack at all, normal return.",
-                           "257": "Some segment error triggered either by stack protection or totally wrong RA."
-                         }
+        "retry-results": { "1": "failed to change RA on stack at all, normal return."}
     },
     "cfi-return-to-wrong-call-site": {
         "require": { "0": [ [ "cfi-return-to-wrong-call-site-within-static-analysis" ] ] },

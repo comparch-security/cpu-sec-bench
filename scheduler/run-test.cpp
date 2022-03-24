@@ -294,8 +294,8 @@ int run_cmd(char *argv[]) {
   } while (!WIFEXITED(status) && !WIFSIGNALED(status));
 
   if(WIFSIGNALED(status)) {
-    std::cout << argv[0] << " terminated with signal " << WIFSIGNALED(status) << std::endl;
-    return 256+WIFSIGNALED(status);
+    std::cout << argv[0] << " terminated with signal " << WTERMSIG(status) << std::endl;
+    return 256+WTERMSIG(status);
   }
 
   if(WIFEXITED(status))
