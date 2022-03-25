@@ -664,7 +664,11 @@
         "require": { "0": [ [ "cfi-return-to-func", "cfi-return-to-non-call-site" ] ] },
         "arguments": { "0": ["-vstack-offset"] }
     },
-    "cfi-return-without-call": {},
+    "cfi-return-without-call": {
+        "require": { "0": [ [ "acc-get-frame-size" ] ] },
+	"arguments": { "0": ["1", "-vframe-size"] },
+	"expect-results": { "266": "illegally push stack out of the frame raises bus error" }
+    },
     "cfi-return-to-instruction-in-rodata": {
         "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
         "arguments": { "0": ["-vstack-offset"] },

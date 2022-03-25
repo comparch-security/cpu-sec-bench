@@ -1,29 +1,23 @@
 #include <cstdlib>
 #include "include/global_var.hpp"
-#include "include/assembly.hpp"
 
-int stack_offset = 0;
+void FORCE_NOINLINE helper(arch_int_t fsize) {
+  void *exit_label = &&EXIT_POS;
 
-void FORCE_NOINLINE helper() {
-  ENFORCE_NON_LEAF_FUNC;
-  switch(gvar()) {
-  case 2: goto exit_label;
-  case 0: gvar_incr();
-  }
+  if(2 == gvar()) goto *exit_label; // impossible to go here
 
-  gvar_decr();
-  COMPILER_BARRIER;
-  PUSH_FAKE_RET(&&exit_label, stack_offset);
+  PUSH_FAKE_RET(exit_label, fsize);
   return;
 
-exit_label:
+EXIT_POS:
+  gvar_decr();
   exit(gvar());
 }
 
 int main(int argc, char* argv[])
 {
   gvar_init(argv[1][0] - '0');
-  stack_offset = (argv[2][0] - '0');
-  helper();
+  arch_int_t fsize = (argv[2][0] - '0') * 4 / sizeof(arch_int_t);
+  helper(fsize);
   return gvar();
 }

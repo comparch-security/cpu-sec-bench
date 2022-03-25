@@ -112,14 +112,10 @@
     : : "r" (arg)                            )
 
 // create a fake return stack
-#define PUSH_FAKE_RET(ra, offset)            \
-  for(int i=0; i<offset; i++)                \
+#define PUSH_FAKE_RET(ra, fsize)             \
+  while(fsize--)                             \
     asm volatile("str %0, [sp, #-8]!;"       \
-                 : : "r"(ra));               \
-  asm volatile(                              \
-    "str x29, [sp, #8];"                     \
-    "mov x29, sp;"                           )
-
+      : : "r"(ra)                            )
 
 // return
 #define RET \
