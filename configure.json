@@ -621,20 +621,22 @@
     },
     "cfi-jump-instruction-in-rodata": {
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
+	"arguments": { "0": ["0"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-instruction-in-data": {
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
+	"arguments": { "0": ["0"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-instruction-in-stack": {
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
-        "arguments": { "0": ["-rmultitry"] },
-        "multitry": [0, 8, 1],
+        "arguments": { "0": ["0"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-instruction-in-heap": {
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
+	"arguments": { "0": ["0"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-non-call-site": {
