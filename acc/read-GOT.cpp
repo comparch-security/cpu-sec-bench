@@ -1,9 +1,6 @@
 #include <cstdlib>
 #include <cstdint>
 #include "include/assembly.hpp"
-#include "include/signal.hpp"
-
-int stack_offset = 0;
 
 int main(int argc, char* argv[])
 {
