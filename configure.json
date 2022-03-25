@@ -539,7 +539,8 @@
         "arguments": { "0": ["1"] }
     },
     "cfi-call-wrong-func": {
-        "require": { "0": [ [ "cfi-call-wrong-func-within-static-analysis" ] ] }
+        "require": { "0": [ [ "cfi-call-wrong-func-within-static-analysis" ] ] },
+	"arguments": { "0": ["1"] }
     },
     "cfi-call-wrong-func-vtable-parent": {
         "require": { "0": [ [ "cpi-write-vtable-pointer" ] ] }
