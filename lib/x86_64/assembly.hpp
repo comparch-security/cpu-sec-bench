@@ -123,13 +123,10 @@
     : "rax"                                  )
 
 // create a fake return stack
-#define PUSH_FAKE_RET(label)                 \
-  asm volatile(                              \
-    "lea " #label "(%%rip), %%rax;"          \
-    "push %%rax;"                            \
-    "subq %0, %%rsp;"                        \
-    : : "i"(8)                               \
-    : "rax"                                  )
+#define PUSH_FAKE_RET(ra, fsize)             \
+  while(fsize--)                             \
+    asm volatile("push %0;"                  \
+      : : "r"(ra)                            )
 
 // a instrction that can jmp to the middle
 // 48 05 c3 00 00 00    	add    $0xc3,%rax
