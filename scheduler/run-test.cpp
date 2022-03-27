@@ -269,6 +269,7 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
     }
   }
 
+  //std::cout << "\nrun " << cn << " with requirements case " << req_case_str << std::endl;
   return 0;
 }
 

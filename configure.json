@@ -644,16 +644,20 @@
         "arguments": { "0": ["-vstack-offset"] }
     },
     "cfi-return-to-wrong-call-site-within-static-analysis": {
-        "require": { "0": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack",
-                             "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ],
-                     "1": [ [ "acc-get-ra-offset" ] ]
+        "require": { "0": [ [ "acc-get-ra-offset" ] ],
+                     "1": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack",
+                             "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ]
                    },
-        "arguments": { "0": ["-roffset"],
-                       "1": ["-vstack-offset"]
+        "arguments": { "0": ["-vstack-offset"],
+                       "1": ["-roffset"]
                      },
         "offset": [0, 8, 1],
-        "set-var": { "0": "stack-offset" },
-        "retry-results": { "1": "failed to change RA on stack at all, normal return."}
+        "set-var": { "0": "stack-offset",
+                     "1": "stack-offset"
+                   },
+        "retry-results": { "1": "failed to change RA on stack at all, normal return.",
+                           "267": "RA is partially written leading to a segment error due to wrong RA."
+                         }
     },
     "cfi-return-to-wrong-call-site": {
         "require": { "0": [ [ "cfi-return-to-wrong-call-site-within-static-analysis" ] ] },
