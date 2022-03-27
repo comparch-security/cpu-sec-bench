@@ -117,10 +117,6 @@
     asm volatile("str %0, [sp, #-8]!;"       \
       : : "r"(ra)                            )
 
-// return
-#define RET \
-  asm volatile("ldp x29, x30, [sp], 32; ret;")
-
 // the machine code for the following
 //  d503201f                nop
 //  00000000                illegal instruction

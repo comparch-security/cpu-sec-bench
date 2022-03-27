@@ -117,10 +117,6 @@ extern int dummy_leaf_func(int);
     "sd   t0, 8(sp);"                        \
     : : : "t0"                               )
 
-// return
-#define RET \
-  asm volatile("addi sp, sp, 16; ret")
-
 // the machine code for the following
 // 357d                    addiw   a0,a0,-1
 // 60a2                    ld      ra,8(sp)
