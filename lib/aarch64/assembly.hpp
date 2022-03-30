@@ -49,7 +49,7 @@
   asm volatile(                              \
     "add  %0, sp, %0;"                       \
     : "+r"(offset));                         \
-  *((void **)offset) = dat                   \
+  *((void **)offset) = (void *)dat           \
 
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)                 \

@@ -1,22 +1,23 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
+#include "include/global_var.hpp"
 
-int stack_offset = 0;
+volatile arch_int_t stack_offset = 0;
 
 int FORCE_NOINLINE fake_ret() {
-  exit(0);
+  exit(gvar());
 }
 
-void FORCE_NOINLINE helper() {
-  ENFORCE_NON_LEAF_FUNC;
-  MOD_STACK_DAT(fake_ret, stack_offset);
+void FORCE_NOINLINE helper(void * label) {
+  gvar_init(0);
+  MOD_STACK_DAT(label, stack_offset);
 }
 
 int main(int argc, char* argv[])
 {
   // get the offset of RA on stack
   stack_offset = 4 * (argv[1][0] - '0');
+  void *label = (void *)(fake_ret);
 
-  helper();
+  helper(label);
   return 1;
 }
