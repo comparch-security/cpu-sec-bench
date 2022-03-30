@@ -632,7 +632,9 @@
     "cfi-jump-instruction-in-stack": {
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
         "arguments": { "0": ["0"] },
-        "expect-results": { "16": "expected excption on the illegal call." }
+        "expect-results": { "16": "expected excption on the illegal call.",
+                            "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)"
+                          }
     },
     "cfi-jump-instruction-in-heap": {
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
