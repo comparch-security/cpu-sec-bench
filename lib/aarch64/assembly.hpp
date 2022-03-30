@@ -28,20 +28,28 @@
 
 #define READ_STACK_DAT(dat, offset)          \
   asm volatile(                              \
-    "add  %0, sp, %0;"                       \
-    "ldr  %1, [%0];"                         \
-    : "+r"(offset), "=r"(dat)                )
+    "add  %1, sp, %1;"                       \
+    "ldr  %0, [%1];"                         \
+    : "=r"(dat) : "r"(offset)                )
 
 #define READ_STACK_DAT_IMM(dat, offset)      \
   asm volatile(                              \
     "ldr %0, [sp, #" #offset "];"            \
     : "=r"(dat)                              )
 
+/* On MAC M1 Clang 12.0.5
+ * The `str %1, [%0]' in macro `MOD_STACK_DAT'
+ * Has been removed by the compiler even `memory'
+ * is added in the clobber list.
+ * To cope with this, an explicit C assignement
+ * is used instead.
+ */
+
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
     "add  %0, sp, %0;"                       \
-    "str  %1, [%0];"                         \
-    : "+r"(offset) : "r"(dat)                )
+    : "+r"(offset));                         \
+  *((void **)offset) = dat                   \
 
 // exchange memory value
 #define XCHG_MEM(ptrL, ptrR)                 \
