@@ -526,7 +526,8 @@
     },
     "cpi-func-pointer-assign": {},
     "cpi-func-pointer-arithmetic": {
-        "require": { "0": [ [ "cpi-func-pointer-assign" ] ] }
+        "require": { "0": [ [ "cpi-func-pointer-assign" ] ] },
+        "expect-results": { "-1": "arithmetic on a pointer to the function pointer is prohibited on Clang 12." }
     },
     "cpi-modify-GOT": {
         "require": { "0": [ [ "acc-read-GOT" ] ] },
@@ -559,7 +560,9 @@
     },
     "cfi-call-wrong-func-vtable-released": {
         "require": { "0": [ [ "cfi-call-wrong-func-vtable" ] ] },
-        "expect-results": { "1": "vtable pointer is cleaned after release."}
+        "expect-results": { "17": "vtable pointer is cleaned after release (SEGV_MAPERR).",
+                            "18": "vtable pointer is cleaned after release (SEGV_ACCERR)."
+                          }
     },
     "cfi-call-wrong-num-arg-func": {},
     "cfi-call-wrong-num-func-vtable": {
