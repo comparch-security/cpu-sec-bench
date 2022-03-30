@@ -31,8 +31,7 @@
 
 #define READ_STACK_DAT(dat, offset)          \
   asm volatile(                              \
-    "movl %1, %%ecx;"                        \
-    "movslq %%ecx, %%rcx;"                   \
+    "movq %1, %%rcx;"                        \
     "addq %%rsp, %%rcx;"                     \
     "movq (%%rcx), %0;"                      \
     : "+r"(dat) : "r"(offset)                \
@@ -45,8 +44,7 @@
 
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
-    "movl %1, %%ecx;"                        \
-    "movslq %%ecx, %%rcx;"                   \
+    "movq %1, %%rcx;"                        \
     "addq %%rsp, %%rcx;"                     \
     "movq %0, (%%rcx);"                      \
     : : "r"(dat), "r"(offset)                \

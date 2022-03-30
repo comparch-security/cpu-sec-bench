@@ -5,7 +5,7 @@
 
 static unsigned int gv = 1;
 static unsigned char m[] = FUNC_MACHINE_CODE;
-int stack_offset = 0;
+volatile arch_int_t stack_offset;
 
 int FORCE_NOINLINE helper(const unsigned char* m) {
   ENFORCE_NON_LEAF_FUNC_VAR(m[0]);
