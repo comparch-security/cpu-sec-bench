@@ -1,31 +1,31 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
+#include "include/global_var.hpp"
 
-static volatile int grv = 1;
-int stack_offset = 0;
+volatile arch_int_t offset;
 
-void FORCE_NOINLINE helper() {
-  ENFORCE_NON_LEAF_FUNC;
-  grv = 3;
-
-  MOD_STACK_LABEL(helper2_ret, stack_offset);
-  grv = 0;
+void FORCE_NOINLINE helper(void *label) {
+  gvar_init(3);
+  COMPILER_BARRIER;
+  MOD_STACK_DAT(label, offset);
+  gvar_init(0);
 }
 
 void FORCE_NOINLINE helper2() {
-  grv = 4;
+  gvar_init(4);
 }
 
 int main(int argc, char* argv[])
 {
   // get the offset of RA on stack
-  stack_offset = 4 * (argv[1][0] - '0');
+  offset = 4 * (argv[1][0] - '0');
+  void *ret_label = &&RET_POS;
+  if(offset == -1) goto *ret_label;  // impossible to run here                                                                                      
 
   // call a function but illegally return
-  helper();
+  helper(ret_label);
   helper2();// failed if runs here
+  COMPILER_BARRIER;
   // the elligal return site
-  DECL_LABEL(helper2_ret);
-
-  exit(grv);
+ RET_POS:
+  exit(gvar());
 }

@@ -12,7 +12,7 @@ void FORCE_NOINLINE helper(void *label) {
      * As a result, we borrow gvar to deliver the final offset
      * as used by the later exit() after EXIT_POS.
      */
-    gvar_init(-offset);
+    gvar_init(-offset/4);
     MOD_STACK_DAT(label, offset);
   }
 }
