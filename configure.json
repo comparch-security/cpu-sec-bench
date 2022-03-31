@@ -606,42 +606,54 @@
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-rodata": {
+	"program": "cfi-code-injection",
+	"arguments": { "0": [ "1", "0" ] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-data": {
+	"program": "cfi-code-injection",
+        "arguments": { "0": [ "1", "1" ] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-stack": {
+	"program": "cfi-code-injection",
+        "arguments": { "0": [ "1", "2" ] },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)"
 			  }
     },
     "cfi-call-instruction-in-heap": {
+	"program": "cfi-code-injection",
+        "arguments": { "0": [ "1", "3" ] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-mid-func": {
         "arguments": { "0": ["1"] }
     },
     "cfi-jump-instruction-in-rodata": {
+	"program": "cfi-code-injection",
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
-	"arguments": { "0": ["0"] },
+	"arguments": { "0": ["2", "0", "0"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-instruction-in-data": {
+	"program": "cfi-code-injection",
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
-	"arguments": { "0": ["0"] },
+	"arguments": { "0": ["2", "1", "0"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-instruction-in-stack": {
+	"program": "cfi-code-injection",
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
-        "arguments": { "0": ["0"] },
+        "arguments": { "0": ["2", "2", "0"] },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)"
                           }
     },
     "cfi-jump-instruction-in-heap": {
+	"program": "cfi-code-injection",
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
-	"arguments": { "0": ["0"] },
+	"arguments": { "0": ["2", "3", "0"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-non-call-site": {
@@ -682,24 +694,29 @@
 	"expect-results": { "266": "illegally push stack out of the frame raises bus error" }
     },
     "cfi-return-to-instruction-in-rodata": {
+	"program": "cfi-code-injection",
         "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
-        "arguments": { "0": ["-vstack-offset"] },
+        "arguments": { "0": ["0", "0", "-vstack-offset"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-data": {
+	"program": "cfi-code-injection",
         "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
-        "arguments": { "0": ["-vstack-offset"] },
-        "expect-results": { "16": "expected excption on the illegal call." }
-    },
-    "cfi-return-to-instruction-in-heap": {
-        "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
-        "arguments": { "0": ["-vstack-offset"] },
+        "arguments": { "0": ["0", "1", "-vstack-offset"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-stack": {
+	"program": "cfi-code-injection",
         "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
-        "arguments": { "0": ["-vstack-offset", "-rmultitry"] },
-        "multitry": [0, 8, 1],
-        "expect-results": { "16": "expected excption on the illegal call." }
+        "arguments": { "0": ["0", "2", "-vstack-offset"] },
+        "expect-results": { "16": "expected excption on the illegal call.",
+                            "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)"
+                          }
+    },
+    "cfi-return-to-instruction-in-heap": {
+	"program": "cfi-code-injection",
+        "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
+        "arguments": { "0": ["0", "3", "-vstack-offset"] },
+        "expect-results": { "16": "expected excption on the illegal call."}
     }
 }
