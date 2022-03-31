@@ -1,22 +1,22 @@
 #include <cstdlib>
 #include "include/assembly.hpp"
 
-int stack_offset = 0;
+volatile arch_int_t offset;
 
-void FORCE_NOINLINE helper()
-{
+void FORCE_NOINLINE helper(void *label) {
   ENFORCE_NON_LEAF_FUNC;
-  MOD_STACK_DAT(exit, stack_offset);
+  arch_int_t m = 0;
+  MOD_STACK_DAT(label, offset);
   COMPILER_BARRIER;
-  unsigned long long m = 0;
   PASS_INT_ARG(0, m);
 }
 
 int main(int argc, char* argv[])
 {
   // get the offset of RA on stack
-  stack_offset = 4 * (argv[1][0] - '0');
+  offset = 4 * (argv[1][0] - '0');
 
-  helper();
+  void *label = (void *)exit;
+  helper(label);
   return 3;
 }
