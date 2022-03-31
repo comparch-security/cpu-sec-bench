@@ -14,9 +14,9 @@
 #endif
 
 #ifdef CSB_ARMV8_64
-  #define CHECK_LEN 6
-  const unsigned int  helper_pos[CHECK_LEN]  = {0, 1, 2, 3, 4, 5};
-  const unsigned char helper_code[CHECK_LEN] = {0x3f, 0x00, 0x00, 0x71, 0x4d, 0x02};
+  #define CHECK_LEN 3
+  const unsigned int  helper_pos[CHECK_LEN]  = {0,    2,    3};
+  const unsigned char helper_code[CHECK_LEN] = {0x3f, 0x00, 0x71};
 #endif
 
 int FORCE_NOINLINE helper(unsigned char **p, int len) {
@@ -28,7 +28,7 @@ int FORCE_NOINLINE helper(unsigned char **p, int len) {
 
   DECL_LABEL("normal_compare");
   for(int i=0; i<len; i++) {
-    if((*p)[helper_pos[i]] != helper_code[i]) return i;
+    if((*p)[helper_pos[i]] != helper_code[i]) return 2+i;
   }
   return 0;
 }

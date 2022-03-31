@@ -14,8 +14,7 @@
 #include "scheduler/json.hpp"
 
 using json = nlohmann::basic_json<nlohmann::ordered_map>;
-static json config_db, result_db;
-std::map<std::string, int> var_db;
+static json config_db, result_db, var_db;
 char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
 char * gargv[33];
 
@@ -27,6 +26,7 @@ bool test_run = true;
 bool report_run = false;
 
 // json related functions
+bool file_exist(const std::string& fn);
 bool read_json(json &db, const std::string& fn, bool notice);
 bool dump_json(json &db, const std::string& fn, bool notice);
 void report_gen();
@@ -71,8 +71,10 @@ int main(int argc, char* argv[]) {
   if(!read_json(config_db, "configure.json", false)) return 1;
 
   // potentially read the results.json
-  if(cond_run)
-    if(!read_json(result_db, "results.json", false)) return 1;
+  if(cond_run) {
+    if(file_exist("results.json") && !read_json(result_db, "results.json", false)) return 1;
+    if(file_exist("variables.json") && !read_json(result_db, "variables.json", false)) return 1;
+  }
 
   run_tests(collect_case_list());
 
@@ -81,12 +83,22 @@ int main(int argc, char* argv[]) {
   return 0;
 }
 
+bool file_exist(const std::string& fn) {
+  std::ifstream file(fn);
+  if(file.is_open()) {
+    file.close();
+    return true;
+  } else
+    return false;
+}
+
 bool read_json(json &db, const std::string& fn, bool notice) {
   std::ifstream db_file(fn);
   if(db_file.good()) {
     if(notice) std::cout << "read json file " << fn << std::endl;
     db_file >> db;
     db_file.close();
+    return true;
   } else {
     std::cerr << "Fail to open json file `" << fn << "'" << std::endl;
     return false;
@@ -131,20 +143,50 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   auto tcase = config_db[cn];
 
   // check requirement
+  int req_case = 0;
+  std::string req_case_str = "0";
   if(tcase.count("require")) {
-    auto require_list = tcase["require"].get<str_llist_t>();
-    for(auto and_conds : require_list)
-      for(auto or_cond : and_conds)
-        if(!result_db.count(or_cond))
-          return 1;
-    for(auto and_conds : require_list) {
-      bool can_test = false;
-      for(auto or_cond : and_conds) {
-        if(result_db.count(or_cond) && 0 == result_db[or_cond]["result"].get<int>())
-          can_test = true;
+    bool req_case_all_tested = true;
+    bool req_case_tested = false;
+    bool req_case_ok = false;
+    do {
+      req_case_str = std::to_string(req_case++);
+      if(!tcase["require"].count(req_case_str)) break;
+      req_case_tested = true;
+
+      // get the prerequisit list
+      auto require_list = tcase["require"][req_case_str].get<str_llist_t>();
+
+      // check whether the required test cases are tested
+      for(auto and_conds : require_list) {
+        if(!req_case_tested) break;
+        for(auto or_cond : and_conds) {
+          if(!result_db.count(or_cond)) {
+            req_case_tested = false;
+            req_case_all_tested = false;
+            break;
+          }
+        }
       }
-      if(!can_test) return 1024;
-    }
+
+      // if tested, check the test condition is met
+      if(req_case_tested) {
+        req_case_ok = true;
+        for(auto and_conds : require_list) {
+          bool or_cond_ok = false;
+          for(auto or_cond : and_conds)
+            if(result_db.count(or_cond) && 0 == result_db[or_cond]["result"].get<int>())
+              or_cond_ok = true;
+          if(!or_cond_ok) {
+            req_case_ok = false;
+            break;
+          }
+        }
+      }
+    } while(!req_case_tested || !req_case_ok);
+
+    if(!req_case_all_tested) return 1; // prerequisit not tested yet
+    if(!req_case_ok) return 1024; // no need to test as all prerequisit tested and failed
   }
 
   // get the program name
@@ -157,7 +199,7 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   arg_list.clear();
   arg_list.push_back(str_list_t());
   if(tcase.count("arguments")) {
-    auto arguments = tcase["arguments"].get<str_list_t>();
+    auto arguments = tcase["arguments"][req_case_str].get<str_list_t>();
     for(auto arg : arguments) {
       if(arg.size() >= 3) {
         auto atype = arg.substr(0,2);
@@ -196,7 +238,7 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
         } else if(atype == "-v") { // variable
           auto var_name = arg.substr(2);
           if(var_db.count(var_name))
-            for(auto &ale : arg_list) ale.push_back(std::to_string(var_db[var_name]));
+            for(auto &ale : arg_list) ale.push_back(std::to_string(var_db[var_name].get<int>()));
           else // fallback
             for(auto &ale : arg_list) ale.push_back(arg);
         }
@@ -208,8 +250,8 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   }
 
   // check whether the case store a global variable
-  if(tcase.count("set-var")) {
-    vn = tcase["set-var"].get<std::string>();
+  if(tcase.count("set-var") && tcase["set-var"].count(req_case_str)) {
+    vn = tcase["set-var"][req_case_str].get<std::string>();
   } else
     vn.clear();
 
@@ -227,6 +269,7 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
     }
   }
 
+  //std::cout << "\nrun " << cn << " with requirements case " << req_case_str << std::endl;
   return 0;
 }
 
@@ -252,11 +295,14 @@ int run_cmd(char *argv[]) {
   } while (!WIFEXITED(status) && !WIFSIGNALED(status));
 
   if(WIFSIGNALED(status)) {
-    std::cout << argv[0] << " terminated with signal " << WIFSIGNALED(status) << std::endl;
-    return 256+WIFSIGNALED(status);
+    std::cout << argv[0] << " terminated with signal " << WTERMSIG(status) << std::endl;
+    return 256+WTERMSIG(status);
   }
+
   if(WIFEXITED(status))
     return WEXITSTATUS(status);
+
+  return -2;  // should not run here!
 }
 
 char ** argv_conv(const std::string &cmd, const str_list_t &args) {
@@ -277,12 +323,12 @@ bool run_tests(std::list<std::string> cases) {
   while(!cases.empty()) {
     auto cn = cases.front();
     cases.pop_front();
+    //std::cerr << "case: " << cn << std::endl; // keep in case needed in debug
     int test_cond = case_parser(cn, prog, alist, gvar, expect_results, retry_results);
     if(!test_run || test_cond == 0) {
       std::cout << "\n========== " << cn << " =========" << std::endl;
       std::cout << "make test/" << prog << std::endl;
       int rv = 0;
-      int index = 0;
       rvs.clear();
       if(0 == rv && make_run) {
         rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)));
@@ -297,26 +343,31 @@ bool run_tests(std::list<std::string> cases) {
           cmd = "test/" + prog;
           std::cout << "\n" << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
           rv = run_cmd(argv_conv(cmd, arg));
+
+          // record run-time parameter
+          if(!gvar.empty() && rv >= 32 && rv < 64) { // successfully find a run-time parameter
+            std::cerr << "set runtime variable " << gvar << " to " << rv - 32 << std::endl;
+            var_db[gvar] = rv-32; dump_json(var_db, "variables.json", false);
+            rv = 0;
+          }
+
           if(0 == rv) break;
-          else {
-            rvs.insert(rv);
-            index++;
+          else rvs.insert(rv);
+
+          if(!expect_results.count(rv) && !retry_results.count(rv)) {
+            std::cerr << "Test abnormality: " << cn << " failed with unexpected exit value " << rv << std::endl;
+            if(debug_run) exit(1);
           }
         }
+
         if(rv != 0) {
-          for(auto v:rvs) {
-            if(expect_results.count(v)) rv = v;
-            else if(!retry_results.count(v)) rv = v;
-          }
+          for(auto v:rvs) if(retry_results.count(v)) rv = v;
+          for(auto v:rvs) if(expect_results.count(v)) rv = v;
+          for(auto v:rvs) if(!expect_results.count(v) && !retry_results.count(v)) rv = v;
         }
       }
 
-      // record
       result_db[cn]["result"] = rv; dump_json(result_db, "results.json", false);
-      if(!gvar.empty()) {
-        std::cerr << "set runtime variable " << gvar << " to " << index << std::endl;
-        var_db[gvar] = index;
-      }
       if(rv != 0 && !expect_results.count(rv)) {
         std::cerr << "Test abnormality: " << cn << " failed with unexpected exit value " << rv << std::endl;
         if(debug_run) exit(1);

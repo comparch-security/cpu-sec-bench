@@ -1,25 +1,24 @@
-#include "include/assembly.hpp"
+#include "include/global_var.hpp"
 
-static volatile int grv = 1;
 typedef void (*Fun)(void);
 
 void FORCE_NOINLINE helper1() {
-  grv = 2;
+  gvar_init(2);
 }
 
 void FORCE_NOINLINE helper2() {
-  grv = 3;
+  gvar_init(3);
 }
 
 void FORCE_NOINLINE helper3() {
-  grv = 0;
+  gvar_init(0);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-  volatile Fun pFun = grv ? helper1 : helper2;
+  volatile Fun pFun = argv[1][0] - '0' ? helper1 : helper2;
   Fun tmp = helper3;
-  XCHG_MEM(&tmp, &pFun);
+  SET_MEM(&pFun, tmp);
   pFun();
-  return grv;
+  return gvar();
 }

@@ -117,10 +117,6 @@ extern int dummy_leaf_func(int);
     "sd   t0, 8(sp);"                        \
     : : : "t0"                               )
 
-// return
-#define RET \
-  asm volatile("addi sp, sp, 16; ret")
-
 // the machine code for the following
 // 0001                    nop
 // 0001                    nop
@@ -158,6 +154,3 @@ void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
   *p++ = 0x82;
   *p++ = 0x80;
 }
-
-extern void get_got_func(void **gotp, int stack_offset);
-extern void replace_got_func(void **fake, void * got);

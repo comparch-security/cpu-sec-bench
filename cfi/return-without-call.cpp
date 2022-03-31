@@ -1,26 +1,23 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
+#include "include/global_var.hpp"
 
-static volatile int grv = 1;
+void FORCE_NOINLINE helper(arch_int_t fsize) {
+  void *exit_label = &&EXIT_POS;
 
-void FORCE_NOINLINE helper() {
-  ENFORCE_NON_LEAF_FUNC;
-  if(grv == 2) {
-    DECL_LABEL(ret_address);
-    exit(0);
-  }
+  if(2 == gvar()) goto *exit_label; // impossible to go here
 
-  // push the label address
-  PUSH_FAKE_RET(ret_address);
-
-  // return to the push adderss
-  // although a simple assembly "ret" would work out of the box
-  // we use the normal return to mimic a more genuine case
+  PUSH_FAKE_RET(exit_label, fsize);
   return;
+
+EXIT_POS:
+  gvar_decr();
+  exit(gvar());
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-  helper();
-  return grv;
+  gvar_init(argv[1][0] - '0');
+  arch_int_t fsize = (argv[2][0] - '0') * 4 / sizeof(arch_int_t);
+  helper(fsize);
+  return gvar();
 }

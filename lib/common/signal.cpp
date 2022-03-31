@@ -50,6 +50,11 @@ void FORCE_INLINE begin_catch_exception_common() {
     exit(-1);
   }
 
+  if(-1 == sigaction(SIGBUS, &act, NULL)) {
+    perror("begin_catch_nx_exception() fails to catch SIGBUS!");
+    exit(-1);
+  }
+
   if(-1 == sigaction(SIGFPE, &act, NULL)) {
     perror("begin_catch_nx_exception() fails to catch SIGFPE!");
     exit(-1);
@@ -82,6 +87,10 @@ void end_catch_exception() {
     // install the default signal action
     if(-1 == sigaction(SIGSEGV, &act, NULL)) {
       perror("end_catch_nx_exception() fails to reset SIGSEGV!");
+      exit(-1);
+    }
+    if(-1 == sigaction(SIGBUS, &act, NULL)) {
+      perror("end_catch_nx_exxception() fails to reset SIGBUS!");
       exit(-1);
     }
     if(-1 == sigaction(SIGFPE, &act, NULL)) {

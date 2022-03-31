@@ -1,476 +1,476 @@
 {
     "mss-overflow-read-index-stack": {
         "program": "mss-read-by-index",
-        "arguments": ["0", "0"],
+        "arguments": { "0": ["0", "0"] },
         "reference": { "cwe": ["119", "125", "126", "788"] }
     },
     "mss-overflow-read-index-heap": {
         "program": "mss-read-by-index",
-        "arguments": ["1", "0"]
+        "arguments": { "0": ["1", "0"] }
     },
     "mss-overflow-read-index-data": {
         "program": "mss-read-by-index",
-        "arguments": ["2", "0"]
+        "arguments": { "0": ["2", "0"] }
     },
     "mss-overflow-read-index-rodata": {
         "program": "mss-read-by-index",
-        "arguments": ["3", "0"],
+        "arguments": { "0": ["3", "0"] },
         "reference": { "cwe": ["119", "125", "126", "788"] }
     },
     "mss-underflow-read-index-stack": {
         "program": "mss-read-by-index",
-        "arguments": ["0", "1"]
+        "arguments": { "0": ["0", "1"] }
     },
     "mss-underflow-read-index-heap": {
         "program": "mss-read-by-index",
-        "arguments": ["1", "1"]
+        "arguments": { "0": ["1", "1"] }
     },
     "mss-underflow-read-index-data": {
         "program": "mss-read-by-index",
-        "arguments": ["2", "1"]
+        "arguments": { "0": ["2", "1"] }
     },
     "mss-underflow-read-index-rodata": {
         "program": "mss-read-by-index",
-        "arguments": ["3", "1"]
+        "arguments": { "0": ["3", "1"] }
     },
     "mss-overflow-read-ptr-stack": {
         "program": "mss-read-by-pointer",
-        "arguments": ["0", "0"]
+        "arguments": { "0": ["0", "0"] }
     },
     "mss-overflow-read-ptr-heap": {
         "program": "mss-read-by-pointer",
-        "arguments": ["1", "0"]
+        "arguments": { "0": ["1", "0"] }
     },
     "mss-overflow-read-ptr-data": {
         "program": "mss-read-by-pointer",
-        "arguments": ["2", "0"]
+        "arguments": { "0": ["2", "0"] }
     },
     "mss-overflow-read-ptr-rodata": {
         "program": "mss-read-by-pointer",
-        "arguments": ["3", "0"]
+        "arguments": { "0": ["3", "0"] }
     },
     "mss-underflow-read-ptr-stack": {
         "program": "mss-read-by-pointer",
-        "arguments": ["0", "1"]
+        "arguments": { "0": ["0", "1"] }
     },
     "mss-underflow-read-ptr-heap": {
         "program": "mss-read-by-pointer",
-        "arguments": ["1", "1"]
+        "arguments": { "0": ["1", "1"] }
     },
     "mss-underflow-read-ptr-data": {
         "program": "mss-read-by-pointer",
-        "arguments": ["2", "1"]
+        "arguments": { "0": ["2", "1"] }
     },
     "mss-underflow-read-ptr-rodata": {
         "program": "mss-read-by-pointer",
-        "arguments": ["3", "1"]
+        "arguments": { "0": ["3", "1"] }
     },
     "mss-overflow-write-index-stack": {
         "program": "mss-write-by-index",
-        "arguments": ["0", "0"]
+        "arguments": { "0": ["0", "0"] }
     },
     "mss-overflow-write-index-heap": {
         "program": "mss-write-by-index",
-        "arguments": ["1", "0"]
+        "arguments": { "0": ["1", "0"] }
     },
     "mss-overflow-write-index-data": {
         "program": "mss-write-by-index",
-        "arguments": ["2", "0"]
+        "arguments": { "0": ["2", "0"] }
     },
     "mss-underflow-write-index-stack": {
         "program": "mss-write-by-index",
-        "arguments": ["0", "1"],
+        "arguments": { "0": ["0", "1"] },
         "reference": { "cwe": ["119"] }
     },
     "mss-underflow-write-index-heap": {
         "program": "mss-write-by-index",
-        "arguments": ["1", "1"],
+        "arguments": { "0": ["1", "1"] },
         "reference": { "cwe": ["119"] }
     },
     "mss-underflow-write-index-data": {
         "program": "mss-write-by-index",
-        "arguments": ["2", "1"],
+        "arguments": { "0": ["2", "1"] },
         "reference": { "cwe": ["119"] }
     },
     "mss-overflow-write-ptr-stack": {
         "program": "mss-write-by-pointer",
-        "arguments": ["0", "0"],
+        "arguments": { "0": ["0", "0"] },
         "reference": { "cwe": ["119", "121", "125", "126", "788"] }
     },
     "mss-overflow-write-ptr-heap": {
         "program": "mss-write-by-pointer",
-        "arguments": ["1", "0"]
+        "arguments": { "0": ["1", "0"] }
     },
     "mss-overflow-write-ptr-data": {
         "program": "mss-write-by-pointer",
-        "arguments": ["2", "0"]
+        "arguments": { "0": ["2", "0"] }
     },
     "mss-underflow-write-ptr-stack": {
         "program": "mss-write-by-pointer",
-        "arguments": ["0", "1"],
+        "arguments": { "0": ["0", "1"] },
         "reference": { "cwe": ["119"] }
     },
     "mss-underflow-write-ptr-heap": {
         "program": "mss-write-by-pointer",
-        "arguments": ["1", "1"],
+        "arguments": { "0": ["1", "1"] },
         "reference": { "cwe": ["119"] }
     },
     "mss-underflow-write-ptr-data": {
         "program": "mss-write-by-pointer",
-        "arguments": ["2", "1"],
+        "arguments": { "0": ["2", "1"] },
         "reference": { "cwe": ["119"] }
     },
     "mss-read-cross-object-index-stack": {
         "program": "mss-read-cross-object-by-index",
-        "arguments": ["0"],
-        "require": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack" ] ]
+        "arguments": { "0": ["0"] },
+        "require": { "0": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack" ] ] }
     },
     "mss-read-cross-object-index-heap": {
         "program": "mss-read-cross-object-by-index",
-        "arguments": ["1"],
-        "require": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap" ] ]
+        "arguments": { "0": ["1"] },
+        "require": { "0": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap" ] ] }
     },
     "mss-read-cross-object-index-data": {
         "program": "mss-read-cross-object-by-index",
-        "arguments": ["2"],
-        "require": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data" ] ]
+        "arguments": { "0": ["2"] },
+        "require": { "0": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data" ] ] }
     },
     "mss-read-cross-object-index-rodata": {
         "program": "mss-read-cross-object-by-index",
-        "arguments": ["3"],
-        "require": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata" ] ]
+        "arguments": { "0": ["3"] },
+        "require": { "0": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata" ] ] }
     },
     "mss-read-cross-object-ptr-stack": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": ["0"],
-        "require": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack" ] ]
+        "arguments": { "0": ["0"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack" ] ] }
     },
     "mss-read-cross-object-ptr-heap": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": ["1"],
-        "require": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap" ] ]
+        "arguments": { "0": ["1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap" ] ] }
     },
     "mss-read-cross-object-ptr-data": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": ["2"],
-        "require": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data" ] ]
+        "arguments": { "0": ["2"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data" ] ] }
     },
     "mss-read-cross-object-ptr-rodata": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": ["3"],
-        "require": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata" ] ]
+        "arguments": { "0": ["3"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata" ] ] }
     },
     "mss-overflow-write-cross-object-index-stack": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": ["0", "0"],
-        "require": [ ["mss-overflow-write-index-stack"] ]
+        "arguments": { "0": ["0", "0"] },
+        "require": { "0": [ ["mss-overflow-write-index-stack"] ] }
     },
     "mss-overflow-write-cross-object-index-heap": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": ["1", "0"],
-        "require": [ ["mss-overflow-write-index-heap"] ]
+        "arguments": { "0": ["1", "0"] },
+        "require": { "0": [ ["mss-overflow-write-index-heap"] ] }
     },
     "mss-overflow-write-cross-object-index-data": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": ["2", "0"],
-        "require": [ ["mss-overflow-write-index-data"] ]
+        "arguments": { "0": ["2", "0"] },
+        "require": { "0": [ ["mss-overflow-write-index-data"] ] }
     },
     "mss-underflow-write-cross-object-index-stack": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": ["0", "1"],
-        "require": [ ["mss-underflow-write-index-stack" ] ]
+        "arguments": { "0": ["0", "1"] },
+        "require": { "0": [ ["mss-underflow-write-index-stack" ] ] }
     },
     "mss-underflow-write-cross-object-index-heap": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": ["1", "1"],
-        "require": [ ["mss-underflow-write-index-heap" ] ]
+        "arguments": { "0": ["1", "1"] },
+        "require": { "0": [ ["mss-underflow-write-index-heap" ] ] }
     },
     "mss-underflow-write-cross-object-index-data": {
         "program": "mss-write-cross-object-by-index",
-        "arguments": ["2", "1"],
-        "require": [ ["mss-underflow-write-index-data" ] ]
+        "arguments": { "0": ["2", "1"] },
+        "require": { "0": [ ["mss-underflow-write-index-data" ] ] }
     },
     "mss-overflow-write-cross-object-ptr-stack": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": ["0", "0"],
-        "require": [ ["mss-overflow-write-ptr-stack"] ]
+        "arguments": { "0": ["0", "0"] },
+        "require": { "0": [ ["mss-overflow-write-ptr-stack"] ] }
     },
     "mss-overflow-write-cross-object-ptr-heap": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": ["1", "0"],
-        "require": [ ["mss-overflow-write-ptr-heap"] ]
+        "arguments": { "0": ["1", "0"] },
+        "require": { "0": [ ["mss-overflow-write-ptr-heap"] ] }
     },
     "mss-overflow-write-cross-object-ptr-data": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": ["2", "0"],
-        "require": [ ["mss-overflow-write-ptr-data"] ]
+        "arguments": { "0": ["2", "0"] },
+        "require": { "0": [ ["mss-overflow-write-ptr-data"] ] }
     },
     "mss-underflow-write-cross-object-ptr-stack": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": ["0", "1"],
-        "require": [ ["mss-underflow-write-ptr-stack" ] ]
+        "arguments": { "0": ["0", "1"] },
+        "require": { "0": [ ["mss-underflow-write-ptr-stack" ] ] }
     },
     "mss-underflow-write-cross-object-ptr-heap": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": ["1", "1"],
-        "require": [ ["mss-underflow-write-ptr-heap" ] ]
+        "arguments": { "0": ["1", "1"] },
+        "require": { "0": [ ["mss-underflow-write-ptr-heap" ] ] }
     },
     "mss-underflow-write-cross-object-ptr-data": {
         "program": "mss-write-cross-object-by-pointer",
-        "arguments": ["2", "1"],
-        "require": [ ["mss-underflow-write-ptr-data" ] ]
+        "arguments": { "0": ["2", "1"] },
+        "require": { "0": [ ["mss-underflow-write-ptr-data" ] ] }
     },
     "mss-read-cross-frame-index": {
         "program": "mss-read-cross-frame-by-index",
-        "require": [ [ "mss-underflow-read-index-stack" ] ]
+        "require": { "0": [ [ "mss-underflow-read-index-stack" ] ] }
     },
     "mss-read-cross-frame-ptr": {
         "program": "mss-read-cross-frame-by-pointer",
-        "require": [ [ "mss-underflow-read-ptr-stack" ] ]
+        "require": { "0": [ [ "mss-underflow-read-ptr-stack" ] ] }
     },
     "mss-write-cross-frame-index": {
         "program": "mss-write-cross-frame-by-index",
-        "require": [ [ "mss-underflow-write-index-stack" ] ]
+        "require": { "0": [ [ "mss-underflow-write-index-stack" ] ] }
     },
     "mss-write-cross-frame-ptr": {
         "program": "mss-write-cross-frame-by-pointer",
-        "require": [ [ "mss-underflow-write-ptr-stack" ] ]
+        "require": { "0": [ [ "mss-underflow-write-ptr-stack" ] ] }
     },
     "mss-read-cross-page-index-stack": {
         "program": "mss-read-cross-page-by-index-in-stack",
-        "require": [ [ "mss-read-cross-frame-index" ] ]
+        "require": { "0": [ [ "mss-read-cross-frame-index" ] ] }
     },
     "mss-read-cross-page-ptr-stack": {
         "program": "mss-read-cross-page-by-pointer-in-stack",
-        "require": [ [ "mss-read-cross-frame-ptr" ] ]
+        "require": { "0": [ [ "mss-read-cross-frame-ptr" ] ] }
     },
     "mss-write-cross-page-index-stack": {
         "program": "mss-write-cross-page-by-index-in-stack",
-        "require": [ [ "mss-write-cross-frame-index" ] ]
+        "require": { "0": [ [ "mss-write-cross-frame-index" ] ] }
     },
     "mss-write-cross-page-ptr-stack": {
         "program": "mss-write-cross-page-by-pointer-in-stack",
-        "require": [ [ "mss-write-cross-frame-ptr" ] ]
+        "require": { "0": [ [ "mss-write-cross-frame-ptr" ] ] }
     },
     "mss-read-cross-segment-stack-to-heap-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["0", "1", "0"],
-        "require": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ]
+        "arguments": { "0": ["0", "1", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ] }
     },
     "mss-read-cross-segment-stack-to-heap-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["0","1","1"],
-        "require": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ]
+        "arguments": { "0": ["0", "1", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ] }
     },
     "mss-read-cross-segment-stack-to-data-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["0", "2", "0"],
-        "require": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ]
+        "arguments": { "0": ["0", "2", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ] }
     },
     "mss-read-cross-segment-stack-to-data-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["0", "2", "1"],
-        "require": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ]
+        "arguments": { "0": ["0", "2", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ] }
     },
     "mss-read-cross-segment-stack-to-rodata-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["0", "3", "0"],
-        "require": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ]
+        "arguments": { "0": ["0", "3", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ] }
     },
     "mss-read-cross-segment-stack-to-rodata-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["0", "3", "1"],
-        "require": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ]
+        "arguments": { "0": ["0", "3", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ] }
     },
     "mss-read-cross-segment-heap-to-stack-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["1", "0", "0"],
-        "require": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ]
+        "arguments": { "0": ["1", "0", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ] }
     },
     "mss-read-cross-segment-heap-to-stack-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["1", "0", "1"],
-        "require": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ]
+        "arguments": { "0": ["1", "0", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ] }
     },
     "mss-read-cross-segment-heap-to-data-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["1", "2", "0"],
-        "require": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ]
+        "arguments": { "0": ["1", "2", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ] }
     },
     "mss-read-cross-segment-heap-to-data-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["1", "2", "1"],
-        "require": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ]
+        "arguments": { "0": ["1", "2", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ] }
     },
     "mss-read-cross-segment-heap-to-rodata-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["1", "3", "0"],
-        "require": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ]
+        "arguments": { "0": ["1", "3", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ] }
     },
     "mss-read-cross-segment-heap-to-rodata-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["1", "3", "1"],
-        "require": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ]
+        "arguments": { "0": ["1", "3", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ] }
     },
     "mss-read-cross-segment-data-to-stack-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["2", "0", "0"],
-        "require": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ]
+        "arguments": { "0": ["2", "0", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ] }
     },
     "mss-read-cross-segment-data-to-stack-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["2", "0", "1"],
-        "require": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ]
+        "arguments": { "0": ["2", "0", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ] }
     },
     "mss-read-cross-segment-data-to-heap-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["2", "1", "0"],
-        "require": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ]
+        "arguments": { "0": ["2", "1", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ] }
     },
     "mss-read-cross-segment-data-to-heap-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["2", "1", "1"],
-        "require": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ]
+        "arguments": { "0": ["2", "1", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ] }
     },
     "mss-read-cross-segment-data-to-rodata-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["2", "3", "0"],
-        "require": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ]
+        "arguments": { "0": ["2", "3", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ] }
     },
     "mss-read-cross-segment-data-to-rodata-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["2", "3", "1"],
-        "require": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ]
+        "arguments": { "0": ["2", "3", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ] }
     },
     "mss-read-cross-segment-rodata-to-stack-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["3", "0", "0"],
-        "require": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ]
+        "arguments": { "0": ["3", "0", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ] }
     },
     "mss-read-cross-segment-rodata-to-stack-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["3", "0", "1"],
-        "require": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ]
+        "arguments": { "0": ["3", "0", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ] }
     },
     "mss-read-cross-segment-rodata-to-heap-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["3", "1", "0"],
-        "require": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ]
+        "arguments": { "0": ["3", "1", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ] }
     },
     "mss-read-cross-segment-rodata-to-heap-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["3", "1", "1"],
-        "require": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ]
+        "arguments": { "0": ["3", "1", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ] }
     },
     "mss-read-cross-segment-rodata-to-data-index": {
         "program": "mss-read-cross-segment",
-        "arguments": ["3", "2", "0"],
-        "require": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ]
+        "arguments": { "0": ["3", "2", "0"] },
+        "require": { "0": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ] }
     },
     "mss-read-cross-segment-rodata-to-data-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": ["3", "2", "1"],
-        "require": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ]
+        "arguments": { "0": ["3", "2", "1"] },
+        "require": { "0": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ] }
     },
     "mss-write-cross-segment-stack-to-heap-index": {
         "program": "mss-write-cross-segment",
-        "arguments": ["0", "1", "0"],
-        "require": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack"] ]
+        "arguments": { "0": ["0", "1", "0"] },
+        "require": { "0": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack"] ] }
     },
     "mss-write-cross-segment-stack-to-heap-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": ["0", "1", "1"],
-        "require": [ ["mss-overflow-write-ptr-stack", "mss-underflow-write-ptr-stack"] ]
+        "arguments": { "0": ["0", "1", "1"] },
+        "require": { "0": [ ["mss-overflow-write-ptr-stack", "mss-underflow-write-ptr-stack"] ] }
     },
     "mss-write-cross-segment-stack-to-data-index": {
         "program": "mss-write-cross-segment",
-        "arguments": ["0", "2", "0"],
-        "require": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack"] ]
+        "arguments": { "0": ["0", "2", "0"] },
+        "require": { "0": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack"] ] }
     },
     "mss-write-cross-segment-stack-to-data-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": ["0", "2", "1"],
-        "require": [ ["mss-overflow-write-ptr-stack", "mss-underflow-write-ptr-stack"] ]
+        "arguments": { "0": ["0", "2", "1"] },
+        "require": { "0": [ ["mss-overflow-write-ptr-stack", "mss-underflow-write-ptr-stack"] ] }
     },
     "mss-write-cross-segment-heap-to-stack-index": {
         "program": "mss-write-cross-segment",
-        "arguments": ["1", "0", "0"],
-        "require": [ ["mss-overflow-write-index-heap", "mss-underflow-write-index-heap"] ]
+        "arguments": { "0": ["1", "0", "0"] },
+        "require": { "0": [ ["mss-overflow-write-index-heap", "mss-underflow-write-index-heap"] ] }
     },
     "mss-write-cross-segment-heap-to-stack-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": ["1", "0", "1"],
-        "require": [ ["mss-overflow-write-ptr-heap", "mss-underflow-write-ptr-heap"] ]
+        "arguments": { "0": ["1", "0", "1"] },
+        "require": { "0": [ ["mss-overflow-write-ptr-heap", "mss-underflow-write-ptr-heap"] ] }
     },
     "mss-write-cross-segment-heap-to-data-index": {
         "program": "mss-write-cross-segment",
-        "arguments": ["1", "2", "0"],
-        "require": [ ["mss-overflow-write-index-heap", "mss-underflow-write-index-heap"] ]
+        "arguments": { "0": ["1", "2", "0"] },
+        "require": { "0": [ ["mss-overflow-write-index-heap", "mss-underflow-write-index-heap"] ] }
     },
     "mss-write-cross-segment-heap-to-data-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": ["1", "2", "1"],
-        "require": [ ["mss-overflow-write-ptr-heap", "mss-underflow-write-ptr-heap"] ]
+        "arguments": { "0": ["1", "2", "1"] },
+        "require": { "0": [ ["mss-overflow-write-ptr-heap", "mss-underflow-write-ptr-heap"] ] }
     },
     "mss-write-cross-segment-data-to-stack-index": {
         "program": "mss-write-cross-segment",
-        "arguments": ["2", "0", "0"],
-        "require": [ ["mss-overflow-write-index-data", "mss-underflow-write-index-data"] ]
+        "arguments": { "0": ["2", "0", "0"] },
+        "require": { "0": [ ["mss-overflow-write-index-data", "mss-underflow-write-index-data"] ] }
     },
     "mss-write-cross-segment-data-to-stack-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": ["2", "0", "1"],
-        "require": [ ["mss-overflow-write-ptr-data", "mss-underflow-write-ptr-data"] ]
+        "arguments": { "0": ["2", "0", "1"] },
+        "require": { "0": [ ["mss-overflow-write-ptr-data", "mss-underflow-write-ptr-data"] ] }
     },
     "mss-write-cross-segment-data-to-heap-index": {
         "program": "mss-write-cross-segment",
-        "arguments": ["2", "1", "0"],
-        "require": [ ["mss-overflow-write-index-data", "mss-underflow-write-index-data"] ]
+        "arguments": { "0": ["2", "1", "0"] },
+        "require": { "0": [ ["mss-overflow-write-index-data", "mss-underflow-write-index-data"] ] }
     },
     "mss-write-cross-segment-data-to-heap-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": ["2", "1", "1"],
-        "require": [ ["mss-overflow-write-ptr-data", "mss-underflow-write-ptr-data"] ]
+        "arguments": { "0": ["2", "1", "1"] },
+        "require": { "0": [ ["mss-overflow-write-ptr-data", "mss-underflow-write-ptr-data"] ] }
     },
     "mss-spray-cross-object-stack": {
         "program": "mss-spray-cross-object",
-        "arguments": ["0"],
-        "require": [ [ "mss-overflow-write-cross-object-ptr-stack" ], [ "mss-underflow-write-cross-object-ptr-stack" ] ]
+        "arguments": { "0": ["0"] },
+        "require": { "0": [ [ "mss-overflow-write-cross-object-ptr-stack" ], [ "mss-underflow-write-cross-object-ptr-stack" ] ] }
     },
     "mss-spray-cross-object-heap": {
         "program": "mss-spray-cross-object",
-        "arguments": ["1"],
-        "require": [ [ "mss-overflow-write-cross-object-ptr-heap" ], [ "mss-underflow-write-cross-object-ptr-heap" ] ]
+        "arguments": { "0": ["1"] },
+        "require": { "0": [ [ "mss-overflow-write-cross-object-ptr-heap" ], [ "mss-underflow-write-cross-object-ptr-heap" ] ] }
     },
     "mss-spray-cross-object-data": {
         "program": "mss-spray-cross-object",
-        "arguments": ["2"],
-        "require": [ [ "mss-overflow-write-cross-object-ptr-data" ], [ "mss-underflow-write-cross-object-ptr-data" ] ]
+        "arguments": { "0": ["2"] },
+        "require": { "0": [ [ "mss-overflow-write-cross-object-ptr-data" ], [ "mss-underflow-write-cross-object-ptr-data" ] ] }
     },
     "mss-spray-cross-frame": {
         "program": "mss-spray-cross-frame",
-        "require": [ [ "mss-write-cross-frame-ptr" ] ]
+        "require": { "0": [ [ "mss-write-cross-frame-ptr" ] ] }
     },
     "mss-spray-cross-page-stack": {
         "program": "mss-spray-cross-page-in-stack",
-        "require": [ [ "mss-write-cross-page-ptr-stack" ] ]
+        "require": { "0": [ [ "mss-write-cross-page-ptr-stack" ] ] }
     },
     "mss-spray-cross-page-heap": {
         "program": "mss-spray-cross-page-in-heap",
-        "require": [ [ "mss-spray-cross-object-heap" ] ]
+        "require": { "0": [ [ "mss-spray-cross-object-heap" ] ] }
     },
 
     "mts-access-after-free-alias-stack": {},
     "mts-reallocate-stack": {},
     "mts-access-after-reclaim-stack": {
-        "require": [ ["mts-reallocate-stack"] ]
+        "require": { "0": [ ["mts-reallocate-stack"] ] }
     },
     "mts-write-after-free-stack": {},
     "mts-write-before-reclaim-stack": {
-        "require": [ [ "mts-write-after-free-stack" ], ["mts-reallocate-stack"] ]
+        "require": { "0": [ [ "mts-write-after-free-stack" ], ["mts-reallocate-stack"] ] }
     },
     "mts-write-after-reclaim-stack": {
-        "require": [ ["mts-reallocate-stack"] ]
+        "require": { "0": [ ["mts-reallocate-stack"] ] }
     },
     "mts-access-after-free-org-heap": {
         "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
@@ -483,187 +483,240 @@
         "expect-results": { "1": "failed to get a reallocated block after a number of trials." }
     },
     "mts-access-after-reclaim-heap": {
-        "require": [ [ "mts-reallocate-heap" ] ],
-        "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned.",
-                     "2": "failed to reallocate a block."
-                   }
+        "require": { "0": [ [ "mts-reallocate-heap" ] ] },
+        "expect-results": {
+            "1": "expected when freed space is refilled with rubbish or cleaned.",
+            "2": "failed to reallocate a block."
+        }
     },
     "mts-write-after-free-heap": {},
     "mts-write-before-reclaim-heap": {
-        "require": [ [ "mts-write-after-free-heap" ], ["mts-reallocate-heap"] ],
-        "expect-results": { "1": "expected when allocated space is refilled with rubbish or cleaned.",
-                     "2": "failed to reallocate a block."
-                   }
+        "require": { "0": [ [ "mts-write-after-free-heap" ], ["mts-reallocate-heap"] ] },
+        "expect-results": {
+            "1": "expected when allocated space is refilled with rubbish or cleaned.",
+            "2": "failed to reallocate a block."
+        }
     },
     "mts-write-after-reclaim-heap": {
-        "require": [ [ "mts-reallocate-heap" ] ]
+        "require": { "0": [ [ "mts-reallocate-heap" ] ] }
     },
     "acc-check-ASLR": {
         "expect-results": { "1": "ASLR enabled."}
     },
     "acc-read-func": {},
+    "acc-get-ra-offset": {
+        "arguments": { "0": ["1"] },
+        "set-var": { "0": "stack-offset" }
+    },
+    "acc-get-frame-size": {
+        "set-var": { "0": "frame-size" }
+    },
+    "acc-check-CET": {
+        "arguments": { "0": ["1"] },
+        "set-var": { "0": "cet-enabled" }
+    },
     "acc-read-GOT": {
-        "arguments": ["-roffset"],
-        "offset": [0, 8, 1]
+        "require": { "0": [ [ "acc-check-CET" ] ] },
+        "arguments": { "0": ["-vcet-enabled"] }
     },
 
     "cpi-read-vtable-pointer": {},
     "cpi-write-vtable-pointer": {
-        "require": [ [ "cpi-read-vtable-pointer" ] ]
+        "require": { "0": [ [ "cpi-read-vtable-pointer" ] ] }
     },
     "cpi-func-pointer-assign": {},
     "cpi-func-pointer-arithmetic": {
-        "require": [ [ "cpi-func-pointer-assign" ] ]
+        "require": { "0": [ [ "cpi-func-pointer-assign" ] ] },
+        "expect-results": { "-1": "arithmetic on a pointer to the function pointer is prohibited on Clang 12." }
     },
     "cpi-modify-GOT": {
-        "require": [ [ "acc-read-GOT" ] ],
-        "arguments": ["-roffset"],
-        "offset": [0, 8, 1],
-        "expect-results": { "16": "relocation tables under read-only protection." },
-        "retry-results":  {"257": "failed trial due to wrong offset."}
+        "require": { "0": [ [ "acc-read-GOT" ] ] },
+        "arguments": { "0": ["-vcet-enabled"] },
+        "expect-results": { "16": "relocation tables under read-only protection." }
     },
 
     "cfi-call-mid-func": {},
-    "cfi-call-wrong-func-within-static-analysis": {},
+    "cfi-call-wrong-func-within-static-analysis": {
+        "arguments": { "0": ["1"] }
+    },
     "cfi-call-wrong-func": {
-        "require": [ [ "cfi-call-wrong-func-within-static-analysis" ] ]
+        "require": { "0": [ [ "cfi-call-wrong-func-within-static-analysis" ] ] },
+	"arguments": { "0": ["1"] }
     },
     "cfi-call-wrong-func-vtable-parent": {
-        "require": [ [ "cpi-write-vtable-pointer" ] ]
+        "require": { "0": [ [ "cpi-write-vtable-pointer" ] ] }
     },
     "cfi-call-wrong-func-vtable-sibling": {
-        "require": [ [ "cpi-write-vtable-pointer" ] ]
+        "require": { "0": [ [ "cpi-write-vtable-pointer" ] ] }
     },
     "cfi-call-wrong-func-vtable-child": {
-        "require": [ [ "cpi-write-vtable-pointer" ] ]
+        "require": { "0": [ [ "cpi-write-vtable-pointer" ] ] }
     },
     "cfi-call-wrong-func-vtable-offset": {
-        "require": [ [ "cpi-write-vtable-pointer" ] ]
+        "require": { "0": [ [ "cpi-write-vtable-pointer" ] ] }
     },
     "cfi-call-wrong-func-vtable": {
-        "require": [ [ "cfi-call-wrong-func-vtable-child" ] ]
+        "require": { "0": [ [ "cfi-call-wrong-func-vtable-child" ] ] }
     },
     "cfi-call-wrong-func-vtable-released": {
-        "require": [ [ "cfi-call-wrong-func-vtable" ] ],
-        "expect-results": { "1": "vtable pointer is cleaned after release."}
+        "require": { "0": [ [ "cfi-call-wrong-func-vtable" ] ] },
+        "expect-results": { "17": "vtable pointer is cleaned after release (SEGV_MAPERR).",
+                            "18": "vtable pointer is cleaned after release (SEGV_ACCERR)."
+                          }
     },
     "cfi-call-wrong-num-arg-func": {},
     "cfi-call-wrong-num-func-vtable": {
-        "require": [ [ "cfi-call-wrong-func-vtable" ] ]
+        "require": { "0": [ [ "cfi-call-wrong-func-vtable" ] ] }
     },
     "cfi-call-wrong-num-arg-vtable": {
-        "require": [ [ "cfi-call-wrong-func-vtable" ] ]
+        "require": { "0": [ [ "cfi-call-wrong-func-vtable" ] ] }
     },
     "cfi-call-wrong-num-func-vtable-data": {
-        "require": [ [ "cfi-call-wrong-num-func-vtable" ] ]
+        "require": { "0": [ [ "cfi-call-wrong-num-func-vtable" ] ] }
     },
     "cfi-call-wrong-num-func-vtable-stack": {
-        "require": [ [ "cfi-call-wrong-num-func-vtable" ] ]
+        "require": { "0": [ [ "cfi-call-wrong-num-func-vtable" ] ] }
     },
     "cfi-call-wrong-num-func-vtable-heap": {
-        "require": [ [ "cfi-call-wrong-num-func-vtable" ] ]
+        "require": { "0": [ [ "cfi-call-wrong-num-func-vtable" ] ] }
     },
     "cfi-call-wrong-type-arg-int2double-func": {},
     "cfi-call-wrong-type-arg-op2doublep-func": {
-        "arguments" : ["2"]
+        "arguments": { "0": ["2"] }
     },
     "cfi-call-wrong-type-arg-op2intp-func": {
-        "arguments" : ["2"]
+        "arguments": { "0": ["2"] }
     },
     "cfi-call-wrong-type-arg-fp2dp-func": {},
     "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
-        "require": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-rodata" ] ]
+        "require": { "0": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-rodata" ] ] }
     },
     "cfi-call-wrong-type-arg-dp2fp-func-data": {
-        "require": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-data" ] ],
+        "require": { "0": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-data" ] ] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-wrong-type-arg-dp2fp-func-stack": {
-        "require": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-stack" ] ],
-        "arguments": ["-rmultitry"],
+        "require": { "0": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-stack" ] ] },
+        "arguments": { "0": ["-rmultitry"] },
         "multitry": [0, 8, 1],
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-wrong-type-arg-dp2fp-func-heap": {
-        "require": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-heap" ] ],
+        "require": { "0": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-heap" ] ] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-rodata": {
+	"program": "cfi-code-injection",
+	"arguments": { "0": [ "1", "0" ] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-data": {
+	"program": "cfi-code-injection",
+        "arguments": { "0": [ "1", "1" ] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-call-instruction-in-stack": {
-        "arguments": ["-rmultitry"],
-        "multitry": [0, 8, 1],
-        "expect-results": { "16": "expected excption on the illegal call." }
+	"program": "cfi-code-injection",
+        "arguments": { "0": [ "1", "2" ] },
+        "expect-results": { "16": "expected excption on the illegal call.",
+                            "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)"
+			  }
     },
     "cfi-call-instruction-in-heap": {
+	"program": "cfi-code-injection",
+        "arguments": { "0": [ "1", "3" ] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
-    "cfi-jump-mid-func": {},
+    "cfi-jump-mid-func": {
+        "arguments": { "0": ["1"] }
+    },
     "cfi-jump-instruction-in-rodata": {
-        "require": [ [ "cfi-jump-mid-func" ] ],
+	"program": "cfi-code-injection",
+        "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
+	"arguments": { "0": ["2", "0", "0"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-instruction-in-data": {
-        "require": [ [ "cfi-jump-mid-func" ] ],
+	"program": "cfi-code-injection",
+        "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
+	"arguments": { "0": ["2", "1", "0"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-instruction-in-stack": {
-        "require": [ [ "cfi-jump-mid-func" ] ],
-        "arguments": ["-rmultitry"],
-        "multitry": [0, 8, 1],
-        "expect-results": { "16": "expected excption on the illegal call." }
+	"program": "cfi-code-injection",
+        "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
+        "arguments": { "0": ["2", "2", "0"] },
+        "expect-results": { "16": "expected excption on the illegal call.",
+                            "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)"
+                          }
     },
     "cfi-jump-instruction-in-heap": {
-        "require": [ [ "cfi-jump-mid-func" ] ],
+	"program": "cfi-code-injection",
+        "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
+	"arguments": { "0": ["2", "3", "0"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-non-call-site": {
-        "require": [ [ "cfi-return-to-wrong-call-site" ] ],
-        "arguments": ["-vstack-offset"]
+        "require": { "0": [ [ "cfi-return-to-wrong-call-site" ] ] },
+        "arguments": { "0": ["-vstack-offset"] }
     },
     "cfi-return-to-wrong-call-site-within-static-analysis": {
-        "require": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack",
-                      "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ],
-        "arguments": ["-roffset"],
+        "require": { "0": [ [ "acc-get-ra-offset" ] ],
+                     "1": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack",
+                             "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ]
+                   },
+        "arguments": { "0": ["-vstack-offset"],
+                       "1": ["-roffset"]
+                     },
         "offset": [0, 8, 1],
-        "set-var": "stack-offset"
+        "set-var": { "0": "stack-offset",
+                     "1": "stack-offset"
+                   },
+        "retry-results": { "1": "failed to change RA on stack at all, normal return.",
+                           "267": "RA is partially written leading to a segment error due to wrong RA."
+                         }
     },
     "cfi-return-to-wrong-call-site": {
-        "require": [ [ "cfi-return-to-wrong-call-site-within-static-analysis" ] ],
-        "arguments": ["-vstack-offset"]
+        "require": { "0": [ [ "cfi-return-to-wrong-call-site-within-static-analysis" ] ] },
+        "arguments": { "0": ["-vstack-offset"] }
     },
     "cfi-return-to-func": {
-        "require": [ [ "cfi-return-to-wrong-call-site" ] ],
-        "arguments": ["-vstack-offset"]
+        "require": { "0": [ [ "cfi-return-to-wrong-call-site" ] ] },
+        "arguments": { "0": ["-vstack-offset"] }
     },
     "cfi-return-to-libc": {
-        "require": [ [ "cfi-return-to-func", "cfi-return-to-non-call-site" ] ],
-        "arguments": ["-vstack-offset"]
+        "require": { "0": [ [ "cfi-return-to-func", "cfi-return-to-non-call-site" ] ] },
+        "arguments": { "0": ["-vstack-offset"] }
     },
-    "cfi-return-without-call": {},
+    "cfi-return-without-call": {
+        "require": { "0": [ [ "acc-get-frame-size" ] ] },
+	"arguments": { "0": ["1", "-vframe-size"] },
+	"expect-results": { "266": "illegally push stack out of the frame raises bus error" }
+    },
     "cfi-return-to-instruction-in-rodata": {
-        "require": [ [ "cfi-return-to-non-call-site" ] ],
-        "arguments": ["-vstack-offset"],
+	"program": "cfi-code-injection",
+        "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
+        "arguments": { "0": ["0", "0", "-vstack-offset"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-data": {
-        "require": [ [ "cfi-return-to-non-call-site" ] ],
-        "arguments": ["-vstack-offset"],
-        "expect-results": { "16": "expected excption on the illegal call." }
-    },
-    "cfi-return-to-instruction-in-heap": {
-        "require": [ [ "cfi-return-to-non-call-site" ] ],
-        "arguments": ["-vstack-offset"],
+	"program": "cfi-code-injection",
+        "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
+        "arguments": { "0": ["0", "1", "-vstack-offset"] },
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-return-to-instruction-in-stack": {
-        "require": [ [ "cfi-return-to-non-call-site" ] ],
-        "arguments": ["-vstack-offset", "-rmultitry"],
-        "multitry": [0, 8, 1],
-        "expect-results": { "16": "expected excption on the illegal call." }
+	"program": "cfi-code-injection",
+        "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
+        "arguments": { "0": ["0", "2", "-vstack-offset"] },
+        "expect-results": { "16": "expected excption on the illegal call.",
+                            "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)"
+                          }
+    },
+    "cfi-return-to-instruction-in-heap": {
+	"program": "cfi-code-injection",
+        "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
+        "arguments": { "0": ["0", "3", "-vstack-offset"] },
+        "expect-results": { "16": "expected excption on the illegal call."}
     }
 }

@@ -5,7 +5,7 @@
 #define LOAD_LABEL(label, v)                 \
   asm volatile(                              \
     "lea " #label "(%%rip), %0;"             \
-    : "+r"(v) :                              )
+    : "=r"(v) :                              )
 
 // declare a label in assembly
 #define DECL_LABEL(label)                    \
@@ -29,10 +29,22 @@
     : : "r"(offset)                          \
     : "rax", "rcx"                           )
 
+#define READ_STACK_DAT(dat, offset)          \
+  asm volatile(                              \
+    "movq %1, %%rcx;"                        \
+    "addq %%rsp, %%rcx;"                     \
+    "movq (%%rcx), %0;"                      \
+    : "+r"(dat) : "r"(offset)                \
+    : "rcx"                                  )
+
+#define READ_STACK_DAT_IMM(dat, offset)      \
+  asm volatile(                              \
+    "movq " #offset "(%%rsp), %0;"           \
+    : "=r"(dat)                              )
+
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
-    "movl %1, %%ecx;"                        \
-    "movslq %%ecx, %%rcx;"                   \
+    "movq %1, %%rcx;"                        \
     "addq %%rsp, %%rcx;"                     \
     "movq %0, (%%rcx);"                      \
     : : "r"(dat), "r"(offset)                \
@@ -46,6 +58,11 @@
     "movq %%rax, (%0);"                      \
     : : "r" (ptrL), "r" (ptrR)               \
     : "rax"                                  )
+
+#define SET_MEM(ptr, var)                    \
+  asm volatile(                              \
+    "movq %1, (%0);"                         \
+    : : "r" (ptr), "r" (var)                 )
 
 // call to a pointer
 #define CALL_DAT(ptr)                        \
@@ -104,13 +121,10 @@
     : "rax"                                  )
 
 // create a fake return stack
-#define PUSH_FAKE_RET(label)                 \
-  asm volatile(                              \
-    "lea " #label "(%%rip), %%rax;"          \
-    "push %%rax;"                            \
-    "subq %0, %%rsp;"                        \
-    : : "i"(8)                               \
-    : "rax"                                  )
+#define PUSH_FAKE_RET(ra, fsize)             \
+  while(fsize--)                             \
+    asm volatile("push %0;"                  \
+      : : "r"(ra)                            )
 
 // a instrction that can jmp to the middle
 // 48 05 c3 00 00 00    	add    $0xc3,%rax
@@ -134,6 +148,3 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0xf7;
   *p++ = 0xfe;
 }
-
-extern void get_got_func(void **gotp, int stack_offset);
-extern void replace_got_func(void **fake, void *got);

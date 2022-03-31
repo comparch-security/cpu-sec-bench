@@ -6,6 +6,11 @@ GCC_OPT_LEVEL ?= O2
 CXX           ?= g++
 OBJDUMP       ?= objdump
 
+# Apple's Darwin OS on M1 list Arm core differently
+ifeq ($(ARCH), arm64)
+  ARCH := aarch64
+endif
+
 # extra security features (comment them out if not needed)
 #disable_stack_nx_protection    = yes
 #disable_stack_protection       = yes
@@ -29,46 +34,46 @@ LDFLAGS  :=
 OBJDUMPFLAGS := -D -l -S
 
 ifdef disable_stack_nx_protection
-CXXFLAGS += -z execstack
+  CXXFLAGS += -z execstack
 endif
 
 ifdef disable_stack_protection
-CXXFLAGS += -fno-stack-protector
+  CXXFLAGS += -fno-stack-protector
 endif
 
 ifdef enable_aslr_protection
-CXXFLAGS += -pie -fPIE
-LDFLAGS  += -Wl,-pie
+  CXXFLAGS += -pie -fPIE
+  LDFLAGS  += -Wl,-pie
 endif
 
 ifdef enable_got_protection
-LDFLAGS  += -Wl,-z,relro,-z,now
+  LDFLAGS  += -Wl,-z,relro,-z,now
 endif
 
 ifdef enable_stack_protection
-CXXFLAGS += -Wstack-protector -fstack-protector-all
-ifeq ($(ARCH), "x86_64")
-CXXFLAGS += -mstack-protector-guard=tls
+  CXXFLAGS += -Wstack-protector -fstack-protector-all
+ifeq ($(ARCH), x86_64)
+  CXXFLAGS += -mstack-protector-guard=tls
 endif
 endif
 
 ifdef enable_vtable_verify
-CXXFLAGS += -fvtable-verify=std
+  CXXFLAGS += -fvtable-verify=std
 endif
 
 ifdef enable_control_flow_protection
-ifeq ($(ARCH), "x86_64")
-CXXFLAGS += -fcf-protection=full -mcet
+ifeq ($(ARCH), x86_64)
+  CXXFLAGS += -fcf-protection=full -mcet
 endif
 endif
 
 ifdef enable_stack_clash_protection
-CXXFLAGS += -fstack-clash-protection
+  CXXFLAGS += -fstack-clash-protection
 endif
 
 ifdef enable_address_sanitizer
-CXXFLAGS += -fsanitize=address --param=asan-stack=1
-LDFLAGS  += -static-libasan
+  CXXFLAGS += -fsanitize=address --param=asan-stack=1
+  LDFLAGS  += -static-libasan
 endif
 
 # define cases
@@ -108,8 +113,10 @@ extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(a
 
 all: run-test
 
+
+# json.hpp needs C++11, which might be problematic on some systems
 run-test: $(base)/scheduler/run-test.cpp $(base)/scheduler/json.hpp | $(test-path)
-	$(CXX) -O1 -g -I. $< -o $@
+	$(CXX) -O2 --std=c++11 -I. $< -o $@
 
 rubbish += run-test
 
@@ -171,7 +178,7 @@ rubbish += $(cfi-tests)
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-rubbish += $(test-path)/results.json $(test-path)/results.dat
+rubbish += results.json results.json results.dat variables.json
 
 dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%

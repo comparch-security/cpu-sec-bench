@@ -15,8 +15,10 @@ int main()
   Fake *fake = new Fake();
   delete fake;
   write_vtable_pointer(orig, *((pvtable_t *)fake));
-  begin_catch_exception((void *)NULL, (int)SEGV_MAPERR, 1);
+  begin_catch_exception((void *)NULL, (int)SEGV_MAPERR, 17);
+  begin_catch_exception((void *)NULL, (int)SEGV_ACCERR, 18);
   orig->virtual_func();
+  end_catch_exception();
   end_catch_exception();
   return 4;
 }
