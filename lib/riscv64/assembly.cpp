@@ -1,46 +1,63 @@
 #include "include/assembly.hpp"
 #include <stdlib.h>
 
+// #define DEBUG_READ_GOT
+
+#ifdef DEBUG_READ_GOT
+#include <iostream>
+#endif
+
 int dummy_leaf_rv = 0;
 
 int FORCE_NOINLINE dummy_leaf_func(int v) {
   return v + rand();
 }
 
-#define GET_GOT_LOC                             \
-   asm volatile(                                \
-    "addi %0, ra, 0;"                           \
-    "lwu  %1, 0(ra);"                           \
-    : "+r"(pc), "+r"(inst)                      \
-  );                                            \
-  offset += ((inst >> 31) & 0x1)   << 20;       \
-  offset += ((inst >> 21) & 0x3ff) << 1;        \
-  offset += ((inst >> 20) & 0x1)   << 11;       \
-  offset += ((inst >> 12) & 0xff)  << 12;       \
-  if(offset >> 20) {                            \
-    offset |= 0xfff00000;                       \
-    offset = ~offset + 1;                       \
-    pc -= offset;                               \
-  } else                                        \
-    pc += offset;                               \
-  asm volatile(                                 \
-    "lwu  t0, (%0);"                            \
-    "srai t0, t0, 12;"                          \
-    "slli t0, t0, 12;"                          \
-    "add  t1, %0, t0;"                          \
-    "lw  t0, 4(%0);"                            \
-    "srai t0, t0, 20;"                          \
-    "add  %0, t1, t0;"                          \
-    : "+r"(pc)                                  \
-  );                                            \
+void get_got_func(void **gotp, void *label, int cet) {
+  char *pc = (char *)label;
+  arch_int_t offset = 0;
+  int instr;
 
-void get_got_func(void **gotp, int stack_offset) {
-  char *pc = NULL;
-  unsigned int offset = 0, inst = 0;
+#ifdef DEBUG_READ_GOT
+  std::cout << "label to rand(): " << std::hex << (unsigned long long)pc << " " << offset << std::endl;
+#endif
 
-  GET_GOT_LOC
- 
-  *gotp = pc;
+  // get the plt addr from the call instruction
+  // assembly:
+  //   894:   f9dff0ef                jal     ra,830 <rand@plt>
+  instr = *(int *)pc;
+  // get the imm20
+  offset += ((instr >> 31) & 0x1)   << 20;
+  offset += ((instr >> 21) & 0x3ff) << 1;
+  offset += ((instr >> 20) & 0x1)   << 11;
+  offset += ((instr >> 12) & 0xff)  << 12;
+  if(offset & 0x00100000) offset |= 0xfffffffffff00000llu; // sign extension
+  pc += offset;
+
+#ifdef DEBUG_READ_GOT
+  std::cout << "pos of PLT stub: " << std::hex << (unsigned long long)pc << " " << offset << std::endl;
+#endif
+
+  // get the GOT location from plt
+  // assembly:
+  //   c60:   00002e17                auipc   t3,0x2
+  //   c64:   428e3e03                ld      t3,1064(t3) # 3088 <rand@GLIBC_2.27>
+  //   c68:   000e0367                jalr    t1,t3
+  instr = *(int *)pc;
+  offset = instr & 0xfffff000;
+  if(offset & 0x80000000) offset |= 0xffffffff00000000llu; // sign extension
+  instr = *(int *)(pc+4);
+  pc += offset;
+  offset = (instr & 0xfff00000) >> 20;
+  if(offset & 0x800) offset |= 0xfffffffffffff000llu; // sign extension
+  pc += offset;
+
+  *gotp = *(void **)pc;
+
+#ifdef DEBUG_READ_GOT
+  std::cout << "pos of GOT entry: " << std::hex << (unsigned long long)pc << " " << (unsigned long long)gotp << " " << offset << std::endl;
+  std::cout << "instruction at the entry of rand(): " << std::hex << **((int **)gotp) << std::endl; // this instruction should remain even with ASLR
+#endif
 }
 
 void replace_got_func(void **fake, void *got) {

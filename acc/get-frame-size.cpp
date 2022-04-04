@@ -12,7 +12,9 @@
 #define GET_SP_LOC asm volatile("mov %0, sp" : "=r"(loc))
 #endif
 
-
+#ifdef CSB_RV64GC
+#define GET_SP_LOC asm volatile("mv %0, sp" : "=r"(loc))
+#endif
 
 void FORCE_NOINLINE helper_v_v() {
   // Here the loc is optimized as a register which does not occupy space on stack

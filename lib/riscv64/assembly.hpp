@@ -26,6 +26,11 @@
     : : "r"(offset)                          \
     : "t0"                                   )
 
+#define READ_STACK_DAT_IMM(dat, offset)      \
+  asm volatile(                              \
+    "ld %0, " #offset "(sp);"                \
+    : "=r"(dat)                              )
+
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
     "add %0, %0, sp;"                        \
@@ -47,6 +52,11 @@ extern int dummy_leaf_func(int);
     "sd t0, 0(%0);"                          \
     : : "r" (ptrL), "r" (ptrR)               \
     : "t0", "t1"                             )
+
+#define SET_MEM(ptr, var)                    \
+  asm volatile(                              \
+    "sd %1, 0(%0);"                          \
+    : : "r" (ptr), "r" (var)                 )
 
 // call to a pointer
 #define CALL_DAT(ptr)                        \
@@ -109,13 +119,14 @@ extern int dummy_leaf_func(int);
     "addi sp, sp, -16;"                      \
     "sd   t0, 8(sp);"                        \
     : : : "t0"                               )
+
 // create a fake return stack
-#define PUSH_FAKE_RET(label)                 \
-  asm volatile(                              \
-    "la   t0, " #label ";"                   \
-    "addi sp, sp, -16;"                      \
-    "sd   t0, 8(sp);"                        \
-    : : : "t0"                               )
+#define PUSH_FAKE_RET(ra, fsize)             \
+  while(fsize--)                             \
+    asm volatile(                            \
+      "addi sp, sp, -8;"                     \
+      "sd   %0, (sp);"                       \
+      : : "r"(ra)                            )
 
 // the machine code for the following
 // 0001                    nop
@@ -136,21 +147,3 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x00;
 }
 
-// the machine code for the following
-// 4501                    li      a0,0
-// 60a2                    ld      ra,8(sp)
-// 0141                    addi    sp,sp,16
-// 8082                    ret
-#define FUNC_MACHINE_CODE_CALL \
-  {0x01, 0x45, 0xa2, 0x60, 0x41, 0x01, 0x82, 0x80}
-
-void FORCE_INLINE assign_fake_machine_code_call(unsigned char *p) {
-  *p++ = 0x01;
-  *p++ = 0x45;
-  *p++ = 0xa2;
-  *p++ = 0x60;
-  *p++ = 0x41;
-  *p++ = 0x01;
-  *p++ = 0x82;
-  *p++ = 0x80;
-}
