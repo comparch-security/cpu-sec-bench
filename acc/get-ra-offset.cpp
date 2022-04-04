@@ -50,10 +50,18 @@ void FORCE_NOINLINE helper_v_p_g1(void *ra_label) {
   return;
 }
 
+/* x86-64 GCC 7.5.0
+ * Really odd problem!
+ * If using if (v == 0), the compiler thinks it is likely to happen
+ * and make the goto the following branch while adding a jump
+ * after calling the helper function,
+ * which make the RA pointing to the jump but not the RA_POS!
+ * Making if (v == -1) disable the compiler guess?!
+ */
 #define TEST_FUNC(FT)              \
 int test_##FT(int v) {             \
   void *ra_label = &&RA_POS;       \
-  if(v == 0) goto *ra_label;       \
+  if(v == -1) goto *ra_label;      \
   helper_##FT(ra_label);           \
   COMPILER_BARRIER;                \
  RA_POS:                           \
