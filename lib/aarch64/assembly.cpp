@@ -14,11 +14,6 @@ int FORCE_NOINLINE dummy_leaf_func(int v) {
 }
 
 void get_got_func(void **gotp, void *label, int cet) {
-  //char *pc = NULL, *pcc = NULL;
-  //unsigned int inst = 0;
-  //unsigned long long offset;
-
-  //GET_GOT_LOC
   char *pc = (char *)label;
   arch_int_t offset = 0;
 
@@ -33,7 +28,7 @@ void get_got_func(void **gotp, void *label, int cet) {
   // bl: 100101, imm26
   // pc = pc + imm26 * 4
   offset = ((*(int *)pc) & 0x03ffffff); // get the imm26
-  if(offset & 0x3000000) offset ^= 0xfffffffffc000000llu; // sign extended to 64
+  if(offset & 0x3000000) offset |= 0xfffffffffc000000llu; // sign extended to 64
   offset *= 4;
   pc += offset;
 

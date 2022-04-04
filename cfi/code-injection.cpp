@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "include/global_var.hpp"
 #include "include/signal.hpp"
 
@@ -10,6 +11,12 @@ volatile arch_int_t offset;
 void FORCE_NOINLINE return_helper(void *p) {
   gvar_init(2);
   MOD_STACK_DAT(p, offset);
+  /* HiFive Unmatched, GCC 11.2.0
+   * Make sure offset is modified as otherwise
+   * the stack is not expanded similarily with
+   * the -within-analysis test.
+   */
+  offset = rand();
 }
 
 void FORCE_NOINLINE call_helper(func_t f) {
@@ -25,10 +32,10 @@ int main(int argc, char* argv[])
   unsigned char *m_heap = new unsigned char [16];
   assign_fake_machine_code(m_heap);
 
-  func_t f;
-  void *p;
-  void *l;
-  char *addr;
+  func_t f = NULL;
+  void *p = NULL;
+  void *l = NULL;
+  char *addr = NULL;
 
   switch(argv[1][0] - '0') {
   case 0: // return

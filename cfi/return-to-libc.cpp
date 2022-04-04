@@ -7,6 +7,12 @@ void FORCE_NOINLINE helper(void *label) {
   ENFORCE_NON_LEAF_FUNC;
   arch_int_t m = 0;
   MOD_STACK_DAT(label, offset);
+  /* HiFive Unmatched, GCC 11.2.0
+   * Make sure offset is modified as otherwise
+   * the stack is not expanded similarily with
+   * the -within-analysis test.
+   */
+  offset = rand();
   COMPILER_BARRIER;
   PASS_INT_ARG(0, m);
 }

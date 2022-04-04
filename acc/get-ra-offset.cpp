@@ -1,54 +1,75 @@
 #include <cstdlib>
+#include <string>
 #include "include/global_var.hpp"
-#include "include/assembly.hpp"
 
-void FORCE_NOINLINE helper(void *ra_label) {
-  ENFORCE_NON_LEAF_FUNC;
+#define RA_POS_TEST_ENTRY(off, rv)                     \
+  READ_STACK_DAT_IMM(ra_stack, off);                   \
+  if(ra_stack == ra_label) { gvar_init(rv); return; }  \
+
+#define RA_POS_TEST        \
+  RA_POS_TEST_ENTRY(0, 0)  \
+  RA_POS_TEST_ENTRY(4, 1)  \
+  RA_POS_TEST_ENTRY(8, 2)  \
+  RA_POS_TEST_ENTRY(12, 3)  \
+  RA_POS_TEST_ENTRY(16, 4)  \
+  RA_POS_TEST_ENTRY(20, 5)  \
+  RA_POS_TEST_ENTRY(24, 6)  \
+  RA_POS_TEST_ENTRY(28, 7)  \
+  RA_POS_TEST_ENTRY(32, 8)  \
+  RA_POS_TEST_ENTRY(36, 9)  \
+  RA_POS_TEST_ENTRY(40, 10)  \
+  RA_POS_TEST_ENTRY(44, 11)  \
+  RA_POS_TEST_ENTRY(48, 12)  \
+  RA_POS_TEST_ENTRY(52, 13)  \
+  RA_POS_TEST_ENTRY(56, 14)  \
+  RA_POS_TEST_ENTRY(60, 15)  \
+
+const int max_gv_num = 4;
+volatile arch_int_t gv[max_gv_num];
+
+// function type: void return (v), 1 pointer argument (p), 0 global variable accessed inside (g0)
+void FORCE_NOINLINE helper_v_p_g0(void *ra_label) {
   volatile void *ra_stack = NULL;
-  READ_STACK_DAT_IMM(ra_stack, 0);
-  if(ra_stack == ra_label) { gvar_init(0); return; }
-  READ_STACK_DAT_IMM(ra_stack, 4);
-  if(ra_stack == ra_label) { gvar_init(1); return; }
-  READ_STACK_DAT_IMM(ra_stack, 8);
-  if(ra_stack == ra_label) { gvar_init(2); return; }
-  READ_STACK_DAT_IMM(ra_stack, 12);
-  if(ra_stack == ra_label) { gvar_init(3); return; }
-  READ_STACK_DAT_IMM(ra_stack, 16);
-  if(ra_stack == ra_label) { gvar_init(4); return; }
-  READ_STACK_DAT_IMM(ra_stack, 20);
-  if(ra_stack == ra_label) { gvar_init(5); return; }
-  READ_STACK_DAT_IMM(ra_stack, 24);
-  if(ra_stack == ra_label) { gvar_init(6); return; }
-  READ_STACK_DAT_IMM(ra_stack, 28);
-  if(ra_stack == ra_label) { gvar_init(7); return; }
-  READ_STACK_DAT_IMM(ra_stack, 32);
-  if(ra_stack == ra_label) { gvar_init(8); return; }
-  READ_STACK_DAT_IMM(ra_stack, 36);
-  if(ra_stack == ra_label) { gvar_init(9); return; }
-  READ_STACK_DAT_IMM(ra_stack, 40);
-  if(ra_stack == ra_label) { gvar_init(10); return; }
-  READ_STACK_DAT_IMM(ra_stack, 44);
-  if(ra_stack == ra_label) { gvar_init(11); return; }
-  READ_STACK_DAT_IMM(ra_stack, 48);
-  if(ra_stack == ra_label) { gvar_init(12); return; }
-  READ_STACK_DAT_IMM(ra_stack, 52);
-  if(ra_stack == ra_label) { gvar_init(13); return; }
-  READ_STACK_DAT_IMM(ra_stack, 56);
-  if(ra_stack == ra_label) { gvar_init(14); return; }
-  READ_STACK_DAT_IMM(ra_stack, 60);
-  if(ra_stack == ra_label) { gvar_init(15); return; }
+  gvar_init(-2);
+  RA_POS_TEST;
   gvar_init(-1);
   return;
 }
 
+// function type: void return (v), 1 pointer argument (p), 1 global variable accessed inside (g0)
+void FORCE_NOINLINE helper_v_p_g1(void *ra_label) {
+  volatile void *ra_stack = NULL;
+  gvar_init(-2-gv[0]);
+  /* HiFive Unmatched, GCC 11.2.0
+   * Make sure the global variable is modified as otherwise
+   * the stack is not expanded as expected.
+   */
+  gv[0] = rand();
+  RA_POS_TEST;
+  gvar_init(-1);
+  return;
+}
+
+#define TEST_FUNC(FT)              \
+int test_##FT(int v) {             \
+  void *ra_label = &&RA_POS;       \
+  if(v == 0) goto *ra_label;       \
+  helper_##FT(ra_label);           \
+  COMPILER_BARRIER;                \
+ RA_POS:                           \
+  if(gvar() < 0) return 1;         \
+  return gvar() + 32;              \
+}                                  \
+
+TEST_FUNC(v_p_g0)
+TEST_FUNC(v_p_g1)
+
 int main(int argc, char* argv[])
 {
-  void *ra_label = &&RA_POS;
-  if(0 == argv[1][0] - '0') goto *ra_label;
-  helper(ra_label);
-  COMPILER_BARRIER;
- RA_POS:
-  if(gvar() == -1) return 1;
-  return gvar() + 32;
+  for(int i=0; i<max_gv_num; i++) gv[i] = rand();
+  int v = argv[1][0] - '0';
+  std::string ftype(argv[2]);
+  if(ftype == "v-p-g0") return test_v_p_g0(v);
+  if(ftype == "v-p-g1") return test_v_p_g1(v);
 }
 
