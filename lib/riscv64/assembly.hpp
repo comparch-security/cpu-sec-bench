@@ -1,11 +1,9 @@
 // assembly helper functions
 // riscv64
 
-// load the address of a label to a register
-#define LOAD_LABEL(label, v)                 \
-  asm volatile(                              \
-    "la %0," #label ";"                      \
-    : "+r"(v)                                )
+// A special macro for reading the assembly on a label
+#define READ_FUNC_CODE 0x00009d2d
+#define READ_FUNC_MASK 0x0000ffff
 
 // declare a label in assembly
 #define DECL_LABEL(label)                    \

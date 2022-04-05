@@ -503,7 +503,9 @@
     "acc-check-ASLR": {
         "expect-results": { "1": "ASLR enabled."}
     },
-    "acc-read-func": {},
+    "acc-read-func": {
+        "arguments": {"0": ["1", "1"] }
+    },
     "acc-get-ra-offset-v-p-g0": {
         "program": "acc-get-ra-offset",
         "arguments": { "0": ["1", "v-p-g0"] },
