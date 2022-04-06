@@ -42,19 +42,6 @@
     "str %1, [%0];"                          \
     : : "r" (ptr), "r" (var)                 )
 
-// call to a pointer
-#define CALL_DAT(ptr)                        \
-  asm volatile(                              \
-    "blr  %0;"                               \
-    : : "r"(ptr)                             )
-
-#define CALL_DAT_INT(ptr, arg0)              \
-  asm volatile(                              \
-    "mov  x0, %1;"                           \
-    "blr  %0;"                               \
-    : : "r"(ptr), "r"(arg0)                  \
-    : "x0", "x30"                            )
-
 // jump to a pointer
 #define JMP_DAT(ptr)                         \
   asm volatile(                              \
@@ -63,21 +50,13 @@
                                              )
 
 //pass an integer argument
-#define PASS_INT_ARG(Idx, arg)               \
-  asm volatile(                              \
-    "mov x" #Idx ", %0;"                     \
-    : : "r" (arg)                            )
+#define PASS_INT_ARG0_IMM(arg)               \
+  asm volatile("mov x0, #" #arg ";")
 
 // test whether the machine support hardware FPU
 #if __ARM_FP >= 8
   #define SUPPORT_FP
 #endif
-
-// pass a double argument
-#define PASS_DOUBLE_ARG_FROM_INT(Idx, arg)   \
-  asm volatile(                              \
-    "fmov d" #Idx ", %0;"                    \
-    : : "r" (arg)                            )
 
 // create a fake return stack
 #define PUSH_FAKE_RET(ra, fsize)             \

@@ -1,11 +1,9 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
-
-static unsigned int rv = 1;
+#include "include/global_var.hpp"
 
 void FORCE_NOINLINE helper(int *var) {
   if(*var == 2) exit(0);
-  else rv = *var;
+  else gvar_init(*var);
 }
 
 class IntObj
@@ -15,11 +13,14 @@ public:
   int xPos;
 };
 
+static int *ip;
+
 int main(int argc, char* argv[])
 {
+  gvar_init(1);
   int num = argv[1][0] - '0';
   IntObj m(num);
-  CALL_DAT_INT(helper, &m);
-  helper(&(m.xPos));
-  return rv;
+  ip = (int *)(&m);
+  helper(ip);
+  return gvar();
 }

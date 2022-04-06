@@ -1,11 +1,9 @@
 #include <cstdlib>
-#include "include/assembly.hpp"
-
-static unsigned int rv = 1;
+#include "include/global_var.hpp"
 
 void FORCE_NOINLINE helper(double *var) {
   if(*var == 2.0) exit(0);
-  else rv = (unsigned int)(*var);
+  else gvar_init((unsigned int)(*var));
 }
 
 class DoubleObj
@@ -15,11 +13,14 @@ public:
   double xPos;
 };
 
+static double *dp;
+
 int main(int argc, char* argv[])
 { 
+  gvar_init(1);
   int num = argv[1][0] - '0';
   DoubleObj m((double)num);
-  CALL_DAT_INT(helper, &m);
-  helper(&(m.xPos));
-  return rv;
+  dp = (double *)(&m);
+  helper(dp);
+  return gvar();
 }

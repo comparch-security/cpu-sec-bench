@@ -4,7 +4,6 @@
 volatile arch_int_t offset;
 
 void FORCE_NOINLINE helper(void *label) {
-  arch_int_t m = 0;
   gvar_init(0);
   MOD_STACK_DAT(label, offset);
   /* HiFive Unmatched, GCC 11.2.0
@@ -15,7 +14,7 @@ void FORCE_NOINLINE helper(void *label) {
   offset = rand();
   gvar_init(3);
   COMPILER_BARRIER;
-  PASS_INT_ARG(0, m);
+  PASS_INT_ARG0_IMM(0);
 }
 
 int main(int argc, char* argv[])

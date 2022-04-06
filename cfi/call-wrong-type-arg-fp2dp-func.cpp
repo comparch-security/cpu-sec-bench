@@ -11,7 +11,7 @@ void FORCE_NOINLINE helper(int* var) {
  * which leads to stack smatching detection.
  * Declare the variable as a static global one instead.
  */
-static int var = 0;
+static int var;
 
 int main()
 {

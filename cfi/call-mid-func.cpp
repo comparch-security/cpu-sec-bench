@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include "include/global_var.hpp"
-#include "include/assembly.hpp"
 
 /* On Apple M1 Darwin 20.6.0 clang 12.0.5:
  * The global variable is accessed using a base register
