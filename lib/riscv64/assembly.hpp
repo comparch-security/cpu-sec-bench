@@ -1,13 +1,9 @@
 // assembly helper functions
 // riscv64
 
-// A special macro for reading the assembly on a label
+// special macros for acc-read-func
 #define READ_FUNC_CODE 0x00009d2d
 #define READ_FUNC_MASK 0x0000ffff
-
-// declare a label in assembly
-#define DECL_LABEL(label)                    \
-  asm volatile(#label ":")
 
 // get the distance between two pointers
 #define GET_DISTANCE(dis, pa, pb)            \
@@ -15,14 +11,12 @@
     "sub %0, %1, %2;"                        \
     : "+r"(dis) : "r" (pa), "r"(pb)          ) 
 
-// modify stack
-#define MOD_STACK_LABEL(label, offset)       \
+// stack related
+#define READ_STACK_DAT(dat, offset)          \
   asm volatile(                              \
-    "la  t0," #label ";"                     \
-    "add %0, %0, sp;"                        \
-    "sd  t0, (%0);"                          \
-    : : "r"(offset)                          \
-    : "t0"                                   )
+    "add  %1, sp, %1;"                       \
+    "ld   %0, (%1);"                         \
+    : "=r"(dat) : "r"(offset)                )
 
 #define READ_STACK_DAT_IMM(dat, offset)      \
   asm volatile(                              \
@@ -34,22 +28,6 @@
     "add %0, %0, sp;"                        \
     "sd  %1, (%0);"                          \
     : : "r"(offset), "r"(dat)                )
-
-// detect the stack
-extern int dummy_leaf_rv;
-extern int dummy_leaf_func(int);
-#define ENFORCE_NON_LEAF_FUNC_VAR(VAR) dummy_leaf_rv = dummy_leaf_func(VAR);
-#define ENFORCE_NON_LEAF_FUNC dummy_leaf_rv = dummy_leaf_func(dummy_leaf_rv);
-
-// exchange memory value
-#define XCHG_MEM(ptrL, ptrR)                 \
-  asm volatile(                              \
-    "ld t0, 0(%1);"                          \
-    "ld t1, 0(%0);"                          \
-    "sd t1, 0(%1);"                          \
-    "sd t0, 0(%0);"                          \
-    : : "r" (ptrL), "r" (ptrR)               \
-    : "t0", "t1"                             )
 
 #define SET_MEM(ptr, var)                    \
   asm volatile(                              \
@@ -70,26 +48,12 @@ extern int dummy_leaf_func(int);
     : : "r"(ptr), "r"(arg0)                  \
     : "a0", "ra"                             )
 
-//call to a label
-#define CALL_LABEL(label, offset)            \
-  asm volatile(                              \
-   "la   t0," #label ";"                     \
-   "jalr ra, t0, %0;"                        \
-   : : "i"(offset) : "t0"                    )
-
 // jump to a pointer
 #define JMP_DAT(ptr)                         \
   asm volatile(                              \
     "jalr x0, %0, 0;"                        \
     : : "r"(ptr)                             \
                                              )
-
-// jump to a label with offset
-#define JMP_LABEL(label, offset)             \
-  asm volatile(                              \
-    "la   t0," #label ";"                    \
-    "jalr x0, t0, %0;"                       \
-    : : "i"(offset) : "t0"                   )
 
 //pass an integer argument
 #define PASS_INT_ARG(Idx, arg)               \
@@ -109,14 +73,6 @@ extern int dummy_leaf_func(int);
     "fmv.d.x fa" #Idx ", %0;"                \
     : : "r" (arg)                            \
     : "fa" #Idx                              )
-
-// push an address
-#define PUSH_LABEL(label)                    \
-  asm volatile(                              \
-    "la   t0, " #label ";"                   \
-    "addi sp, sp, -16;"                      \
-    "sd   t0, 8(sp);"                        \
-    : : : "t0"                               )
 
 // create a fake return stack
 #define PUSH_FAKE_RET(ra, fsize)             \

@@ -1,14 +1,9 @@
 // assembly helper functions
 // riscv64
 
-// special macros for the read-func test
-#define READ_FUNC(var, num) var += num
+// special macros for acc-read-func
 #define READ_FUNC_CODE 0x0b000028
 #define READ_FUNC_MASK 0xffffffff
-
-// declare a label in assembly
-#define DECL_LABEL(label)                    \
-  asm volatile(#label ":")
 
 // get the distance between two pointers
 #define GET_DISTANCE(dis, pa, pb)            \
@@ -16,15 +11,7 @@
     "sub %0, %1, %2;"                        \
     : "+r"(dis) : "r" (pa), "r"(pb)          ) 
 
-// modify stack
-#define MOD_STACK_LABEL(label, offset)       \
-  asm volatile(                              \
-    "adr  x8," #label ";"                    \
-    "add  %0, sp, %0;"                       \
-    "str  x8, [%0];"                         \
-    : : "r"(offset)                          \
-    : "x8"                                   )
-
+// stack related
 #define READ_STACK_DAT(dat, offset)          \
   asm volatile(                              \
     "add  %1, sp, %1;"                       \
@@ -50,16 +37,6 @@
     : "+r"(offset));                         \
   *((void **)offset) = (void *)dat           \
 
-// exchange memory value
-#define XCHG_MEM(ptrL, ptrR)                 \
-  asm volatile(                              \
-    "ldr  x8, [%1];"                         \
-    "ldr  x9, [%0];"                         \
-    "str  x9, [%1];"                         \
-    "str  x8, [%0];"                         \
-    : : "r" (ptrL), "r" (ptrR)               \
-    : "x8", "x9"                             )
-
 #define SET_MEM(ptr, var)                    \
   asm volatile(                              \
     "str %1, [%0];"                          \
@@ -78,28 +55,12 @@
     : : "r"(ptr), "r"(arg0)                  \
     : "x0", "x30"                            )
 
-//call to a label
-#define CALL_LABEL(label, offset)            \
-  asm volatile(                              \
-   "adr   x8," #label ";"                    \
-   "add   x8, x8, %0;"                       \
-   "blr   x8;"                               \
-   : : "i"(offset) : "x8"                    )
-
 // jump to a pointer
 #define JMP_DAT(ptr)                         \
   asm volatile(                              \
     "br   %0;"                               \
     : : "r"(ptr)                             \
                                              )
-
-// jump to a label with offset
-#define JMP_LABEL(label, offset)             \
-  asm volatile(                              \
-    "adr   x8," #label ";"                   \
-    "add   x8, x8, %0;"                      \
-    "br    x8;"                              \
-    : : "i"(offset) : "x8"                   )
 
 //pass an integer argument
 #define PASS_INT_ARG(Idx, arg)               \

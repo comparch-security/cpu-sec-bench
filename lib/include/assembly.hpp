@@ -8,12 +8,6 @@
 // a barrier to stop compiler from reorder memory operations
 #define COMPILER_BARRIER asm volatile("" : : : "memory")
 
-// non-leaf function enforcement
-extern int dummy_leaf_rv;
-extern int dummy_leaf_func(int);
-#define ENFORCE_NON_LEAF_FUNC_VAR(VAR) dummy_leaf_rv = dummy_leaf_func(VAR);
-#define ENFORCE_NON_LEAF_FUNC dummy_leaf_rv = dummy_leaf_func(dummy_leaf_rv);
-
 #ifdef __x86_64
   #define CSB_X86_64
   typedef unsigned long long arch_uint_t;

@@ -1,18 +1,9 @@
 // assembly helper functions
 // x86_64
 
-// special macros for the read-func test
-#define READ_FUNC(var, num)                  \
-  asm volatile(                              \
-    "add  %1, %0;"                           \
-    : "+r"(var) : "r"(num)                   )
-
+// special macros for acc-read-func
 #define READ_FUNC_CODE 0x0000f701
 #define READ_FUNC_MASK 0x0000ffff
-
-// declare a label in assembly
-#define DECL_LABEL(label)                    \
-  asm volatile(#label ":")
 
 // get the distance between two pointers
 #define GET_DISTANCE(dis, pa, pb)            \
@@ -21,17 +12,7 @@
     "subq %2, %0;"                           \
     : "+r"(dis) : "r" (pa), "r"(pb)          ) 
 
-// modify stack
-#define MOD_STACK_LABEL(label, offset)       \
-  asm volatile(                              \
-    "lea " #label "(%%rip), %%rax;"          \
-    "movl %0, %%ecx;"                        \
-    "movslq %%ecx, %%rcx;"                   \
-    "addq %%rsp, %%rcx;"                     \
-    "movq %%rax, (%%rcx);"                   \
-    : : "r"(offset)                          \
-    : "rax", "rcx"                           )
-
+// stack related
 #define READ_STACK_DAT(dat, offset)          \
   asm volatile(                              \
     "movq %1, %%rcx;"                        \
@@ -53,15 +34,6 @@
     : : "r"(dat), "r"(offset)                \
     : "rcx"                                  )
 
-// exchange memory value
-#define XCHG_MEM(ptrL, ptrR)                 \
-  asm volatile(                              \
-    "movq (%0), %%rax;"                      \
-    "xchg %%rax, (%1);"                      \
-    "movq %%rax, (%0);"                      \
-    : : "r" (ptrL), "r" (ptrR)               \
-    : "rax"                                  )
-
 #define SET_MEM(ptr, var)                    \
   asm volatile(                              \
     "movq %1, (%0);"                         \
@@ -80,28 +52,12 @@
     : : "r"(ptr), "r"(arg0)                  \
     : "rdi"                                  )
 
-//call to a label
-#define CALL_LABEL(label, offset)            \
-  asm volatile(                              \
-    "lea " #label "(%%rip), %%rax;"          \
-    "add %0, %%rax;"                         \
-    "call *%%rax;"                           \
-    : : "i"(offset) : "rax"                  )
-
 // jump to a pointer
 #define JMP_DAT(ptr)                         \
   asm volatile(                              \
     "jmp *%0;"                               \
     : : "r" (ptr)                            \
                                              )
-
-// jump to a label with offset
-#define JMP_LABEL(label, offset)             \
-  asm volatile(                              \
-    "lea " #label "(%%rip), %%rax;"          \
-    "add %0, %%rax;"                         \
-    "jmp *%%rax;"                            \
-    : : "i"(offset) : "rax"                  )
 
 //pass an integer argument
 #define PASS_INT_ARG(Idx, arg)               \
@@ -128,13 +84,6 @@
   while(fsize--)                             \
     asm volatile("push %0;"                  \
       : : "r"(ra)                            )
-
-// a instrction that can jmp to the middle
-// 48 05 c3 00 00 00    	add    $0xc3,%rax
-// c3 retq
-// offset = 2
-#define MID_INSTRUCTION \
-  asm volatile("mid_instruction: add $0xc3, %%rax;" : : : "rax")
 
 // the machine code for the following
 //  31 c0                   xor    %eax,%eax
