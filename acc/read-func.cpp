@@ -15,17 +15,17 @@
  * in Clang 12.
  */
 
-int FORCE_NOINLINE helper(int var, int num, int sum) {
-  unsigned int *code = (unsigned int *)(&&CHECK_POS);
+int FORCE_NOINLINE helper(int var, int cet, int sum) {
+  unsigned int *code = (unsigned int *)(&&CHECK_POS) + cet;
   COMPILER_BARRIER;
  CHECK_POS:
-  var += num;
+  var += cet;
   COMPILER_BARRIER;
   return (var == sum && ((*code) & READ_FUNC_MASK) == READ_FUNC_CODE) ? 0 : 1;
 }
 
 int main(int argc, char* argv[]) {
   int var = argv[1][0] - '0';
-  int num = argv[2][0] - '0';
-  return helper(var, num, 2);
+  int cet = argv[2][0] - '0';
+  return helper(var, cet, var+cet);
 }
