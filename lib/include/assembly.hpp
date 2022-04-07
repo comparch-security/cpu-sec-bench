@@ -8,6 +8,7 @@
 // a barrier to stop compiler from reorder memory operations
 #define COMPILER_BARRIER asm volatile("" : : : "memory")
 
+// detect ISA
 #ifdef __x86_64
   #define CSB_X86_64
   typedef unsigned long long arch_uint_t;
@@ -27,6 +28,15 @@
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
   #include "riscv64/assembly.hpp"
+#endif
+
+// detect compiler
+#if defined(__GNUC__)
+  #if defined(__clang__)
+    #define COMPILER_CLANG
+  #else
+    #define COMPILER_GCC
+  #endif
 #endif
 
 extern void get_got_func(void **gotp, void *label, int cet);

@@ -2,8 +2,8 @@
 // riscv64
 
 // special macros for acc-read-func
-#define READ_FUNC_CODE 0x0b000028
-#define READ_FUNC_MASK 0xffffffff
+#define READ_FUNC_CODE 0x0b000020
+#define READ_FUNC_MASK 0xffffffe0
 
 // get the distance between two pointers
 #define GET_DISTANCE(dis, pa, pb)            \
