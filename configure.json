@@ -699,8 +699,11 @@
     },
     "cfi-return-without-call": {
         "require": { "0": [ [ "acc-get-frame-size" ] ] },
-    "arguments": { "0": ["1", "-vframe-size"] },
-    "expect-results": { "266": "illegally push stack out of the frame raises bus error" }
+        "arguments": { "0": ["1", "-vframe-size"] },
+        "expect-results": {
+            "16": "trip-wire on aarch64 leads to bus error.",
+            "266": "illegally push stack out of the frame raises bus error"
+        }
     },
     "cfi-return-to-instruction-in-rodata": {
     "program": "cfi-code-injection",
