@@ -73,7 +73,11 @@ endif
 
 ifdef enable_address_sanitizer
   CXXFLAGS += -fsanitize=address --param=asan-stack=1
+ifeq ($(CXX),clang++)
+	LDFLAGS  += -static-libsan 
+else
   LDFLAGS  += -static-libasan
+endif
 endif
 
 # define cases
