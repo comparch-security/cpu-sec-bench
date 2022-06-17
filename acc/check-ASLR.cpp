@@ -14,7 +14,12 @@ int main(int argc, char* argv[]) {
   if(argc == 1) {
     std::string cmd = "test/acc-check-ASLR ";
     cmd += std::to_string(fp);
-    return system(cmd.c_str());
+    int status = system(cmd.c_str());
+    /* system libfunc return int value which 8-15bits is the subshell returned val*/
+    if(WIFEXITED(status)){
+      return WEXITSTATUS(status);
+    }
+    return -1;
   } else if(argc == 2) {
     std::string fp_prev(argv[1]);
     return helper(fp, std::stoll(fp_prev));
