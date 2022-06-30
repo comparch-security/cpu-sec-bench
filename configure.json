@@ -1,4 +1,20 @@
 {
+    "mss-overflow-after-typecast-for-basictype-read-ptr-stack": {
+        "program": "mss-read-after-typecast-for-basictype",
+        "arguments": { "0": ["0"] }
+    },
+    "mss-overflow-after-typecast-for-basictype-read-ptr-heap": {
+        "program": "mss-read-after-typecast-for-basictype",
+        "arguments": { "0": ["1"] }
+    },
+    "mss-overflow-after-typecast-for-basictype-read-ptr-data": {
+        "program": "mss-read-after-typecast-for-basictype",
+        "arguments": { "0": ["2"] }
+    },
+    "mss-overflow-after-typecast-for-basictype-read-ptr-rodata": {
+        "program": "mss-read-after-typecast-for-basictype",
+        "arguments": { "0": ["3"] }
+    },
     "mss-overflow-read-index-stack": {
         "program": "mss-read-by-index",
         "arguments": { "0": ["0", "0"] },
