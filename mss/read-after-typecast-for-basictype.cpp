@@ -4,7 +4,7 @@
 #include <iterator>
 #include <iostream>
 
-//#define NDEBUG
+#define NDEBUG
 
 #ifndef NDEBUG
 char* long2charArr(long long  num) {
@@ -24,6 +24,9 @@ char* long2charArr(long long  num) {
 
 static int read_after_typecast(const char* cb, size_t offset, size_t len, size_t step, char c);
 bool is_little_endian(void);
+
+
+bool res = is_little_endian();
 
 const charBuffer buffer_rodata = {"uuuuuuu","ddddddd","ooooooo"};
 charBuffer buffer_data;
@@ -53,7 +56,7 @@ int main(int argc, char* argv[])
           std::cerr << "the pointer of data before cast is: " << reinterpret_cast<void*>(buffer_stack.data) << std::endl;
           std::cerr << "the pointer of overflow is: " << reinterpret_cast<void*>(buffer_stack.overflow) << std::endl;
       #endif
-      return read_after_typecast(std::end(buffer_stack.data)-char_len,char_len,ll_len-char_len,char_len,'u');
+      return read_after_typecast(std::end(buffer_stack.data)-char_len,char_len,ll_len-char_len,char_len,'o');
   }
   case 1:{
       #ifndef NDEBUG
@@ -61,7 +64,7 @@ int main(int argc, char* argv[])
           std::cerr << "the pointer of data before cast is: " << reinterpret_cast<void*>(buffer_heap->data) << std::endl;
           std::cerr << "the pointer of overflow is: " << reinterpret_cast<void*>(buffer_heap->overflow) << std::endl;
       #endif
-    return read_after_typecast(std::end(buffer_heap->data)-char_len,char_len,ll_len-char_len,char_len,'d');
+    return read_after_typecast(std::end(buffer_heap->data)-char_len,char_len,ll_len-char_len,char_len,'o');
   }
   case 2:{
     #ifndef NDEBUG
@@ -69,7 +72,7 @@ int main(int argc, char* argv[])
         std::cerr << "the pointer of data before cast is: " << reinterpret_cast<void*>(buffer_data.data) << std::endl;
         std::cerr << "the pointer of overflow is: " << reinterpret_cast<void*>(buffer_data.overflow) << std::endl;
     #endif
-    return read_after_typecast(std::end(buffer_data.data)-char_len,char_len,ll_len-char_len,char_len,'d');
+    return read_after_typecast(std::end(buffer_data.data)-char_len,char_len,ll_len-char_len,char_len,'o');
   }
   case 3:{
     #ifndef NDEBUG
@@ -77,7 +80,7 @@ int main(int argc, char* argv[])
         std::cerr << "the pointer of data before cast is: " << reinterpret_cast<const void*>(buffer_rodata.data) << std::endl;
         std::cerr << "the pointer of overflow is: " << reinterpret_cast<const void*>(buffer_rodata.overflow) << std::endl;
     #endif
-    return read_after_typecast(std::end(buffer_rodata.data)-char_len,char_len,ll_len-char_len,char_len,'d');
+    return read_after_typecast(std::end(buffer_rodata.data)-char_len,char_len,ll_len-char_len,char_len,'o');
   }
   }
 
@@ -88,17 +91,17 @@ static int read_after_typecast(const char* cb, size_t offset, size_t len, size_t
     long long* ptr = reinterpret_cast<long long*>(b);
     long long tmp = *ptr;
 
-    // bool res = is_little_endian();
 
-    // if(res){
-    //     tmp = (*ptr) >> 8*sizeof(char);
-    // }else{
-    //     tmp = *ptr;
-    // }
+    if(res){
+      tmp = (*ptr) >> 8*sizeof(char);
+    }else{
+      tmp = *ptr;
+    }
 
     int devi = 8*(sizeof(char)-1);
 
     #ifndef NDEBUG
+      std::cerr << "is little endian ?" << res << std::endl;
       std::cerr << "baiscially cast long long is: " << tmp << std::endl;
       std::cerr << "long long -- pointer addr is: " << reinterpret_cast<void*>(ptr-1) << std::endl;
       std::cerr << "long long  pointer addr is: " << reinterpret_cast<void*>(ptr) << std::endl;
@@ -110,7 +113,7 @@ static int read_after_typecast(const char* cb, size_t offset, size_t len, size_t
         
         char cmp = static_cast<char>(tmp & ((0xff << devi) & 0xffffffff));
         #ifndef NDEBUG
-          std::cerr << cmp << std::endl;
+          std::cerr << "current char is: " << cmp << std::endl;
         #endif
         if(cmp != c){
               return 1;
