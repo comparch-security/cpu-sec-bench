@@ -2,6 +2,7 @@ test/*
 *~
 *.o
 *.so
+*.tmp
 doc/*.log
 doc/*.out
 doc/*.aux
