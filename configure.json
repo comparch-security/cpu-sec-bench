@@ -1,124 +1,177 @@
-{
+{       
+    "mss-check-hasredzone":{
+    "program": "mss-check-redzone",
+    "arguments": { "0": ["0"]},
+    "set-var": { "0": "has-redzone"}
+    },
+    "mss-getlen-redzone_class_var_stack":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["1","-vhas-redzone"]},
+        "set-var": { "0": "redzone_class_var_stack"}
+    },
+    "mss-getlen-redzone_class_var_heap":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["2","-vhas-redzone"]},
+        "set-var": { "0": "redzone_class_var_heap"}
+    },
+    "mss-getlen-redzone_class_var_data":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["3","-vhas-redzone"]},
+        "set-var": { "0": "redzone_class_var_data"}
+    },
+    "mss-getlen-redzone_class_var_rodata":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["4","-vhas-redzone"]},
+        "set-var": { "0": "redzone_class_var_rodata"}
+    },
     "mss-overflow-read-index-stack": {
         "program": "mss-read-by-index",
-        "arguments": { "0": ["0", "0"] },
-        "reference": { "cwe": ["119", "125", "126", "788"] }
+        "arguments": { "0": ["0", "0","-vhas-redzone","-vredzone_class_var_stack"] },
+        "reference": { "cwe": ["119", "125", "126", "788"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-read-index-heap": {
         "program": "mss-read-by-index",
-        "arguments": { "0": ["1", "0"] }
+        "arguments": { "0": ["1", "0","-vhas-redzone","-vredzone_class_var_heap"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-read-index-data": {
         "program": "mss-read-by-index",
-        "arguments": { "0": ["2", "0"] }
+        "arguments": { "0": ["2", "0","-vhas-redzone","-vredzone_class_var_data"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-read-index-rodata": {
         "program": "mss-read-by-index",
-        "arguments": { "0": ["3", "0"] },
-        "reference": { "cwe": ["119", "125", "126", "788"] }
+        "arguments": { "0": ["3", "0","-vhas-redzone","-vredzone_class_var_rodata"] },
+        "reference": { "cwe": ["119", "125", "126", "788"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-read-index-stack": {
         "program": "mss-read-by-index",
-        "arguments": { "0": ["0", "1"] }
+        "arguments": { "0": ["0", "1","-vhas-redzone","-vredzone_class_var_stack"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-read-index-heap": {
         "program": "mss-read-by-index",
-        "arguments": { "0": ["1", "1"] }
+        "arguments": { "0": ["1", "1","-vhas-redzone","-vredzone_class_var_heap"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-read-index-data": {
         "program": "mss-read-by-index",
-        "arguments": { "0": ["2", "1"] }
+        "arguments": { "0": ["2", "1","-vhas-redzone","-vredzone_class_var_data"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-read-index-rodata": {
         "program": "mss-read-by-index",
-        "arguments": { "0": ["3", "1"] }
+        "arguments": { "0": ["3", "1","-vhas-redzone","-vredzone_class_var_rodata"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-read-ptr-stack": {
         "program": "mss-read-by-pointer",
-        "arguments": { "0": ["0", "0"] }
+        "arguments": { "0": ["0", "0","-vhas-redzone","-vredzone_class_var_stack"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-read-ptr-heap": {
         "program": "mss-read-by-pointer",
-        "arguments": { "0": ["1", "0"] }
+        "arguments": { "0": ["1", "0","-vhas-redzone","-vredzone_class_var_heap"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-read-ptr-data": {
         "program": "mss-read-by-pointer",
-        "arguments": { "0": ["2", "0"] }
+        "arguments": { "0": ["2", "0","-vhas-redzone","-vredzone_class_var_data"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-read-ptr-rodata": {
         "program": "mss-read-by-pointer",
-        "arguments": { "0": ["3", "0"] }
+        "arguments": { "0": ["3", "0","-vhas-redzone","-vredzone_class_var_rodata"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-read-ptr-stack": {
         "program": "mss-read-by-pointer",
-        "arguments": { "0": ["0", "1"] }
+        "arguments": { "0": ["0", "1","-vhas-redzone","-vredzone_class_var_stack"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-read-ptr-heap": {
         "program": "mss-read-by-pointer",
-        "arguments": { "0": ["1", "1"] }
+        "arguments": { "0": ["1", "1","-vhas-redzone","-vredzone_class_var_heap"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-read-ptr-data": {
         "program": "mss-read-by-pointer",
-        "arguments": { "0": ["2", "1"] }
+        "arguments": { "0": ["2", "1","-vhas-redzone","-vredzone_class_var_data"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-read-ptr-rodata": {
         "program": "mss-read-by-pointer",
-        "arguments": { "0": ["3", "1"] }
+        "arguments": { "0": ["3", "1","-vhas-redzone","-vredzone_class_var_rodata"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-write-index-stack": {
         "program": "mss-write-by-index",
-        "arguments": { "0": ["0", "0"] }
+        "arguments": { "0": ["0", "0","-vhas-redzone","-vredzone_class_var_stack"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-write-index-heap": {
         "program": "mss-write-by-index",
-        "arguments": { "0": ["1", "0"] }
+        "arguments": { "0": ["1", "0","-vhas-redzone","-vredzone_class_var_heap"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-write-index-data": {
         "program": "mss-write-by-index",
-        "arguments": { "0": ["2", "0"] }
+        "arguments": { "0": ["2", "0","-vhas-redzone","-vredzone_class_var_data"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-write-index-stack": {
         "program": "mss-write-by-index",
-        "arguments": { "0": ["0", "1"] },
-        "reference": { "cwe": ["119"] }
+        "arguments": { "0": ["0", "1","-vhas-redzone","-vredzone_class_var_stack"] },
+        "reference": { "cwe": ["119"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-write-index-heap": {
         "program": "mss-write-by-index",
-        "arguments": { "0": ["1", "1"] },
-        "reference": { "cwe": ["119"] }
+        "arguments": { "0": ["1", "1","-vhas-redzone","-vredzone_class_var_heap"] },
+        "reference": { "cwe": ["119"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-write-index-data": {
         "program": "mss-write-by-index",
-        "arguments": { "0": ["2", "1"] },
-        "reference": { "cwe": ["119"] }
+        "arguments": { "0": ["2", "1","-vhas-redzone","-vredzone_class_var_data"] },
+        "reference": { "cwe": ["119"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-write-ptr-stack": {
         "program": "mss-write-by-pointer",
-        "arguments": { "0": ["0", "0"] },
-        "reference": { "cwe": ["119", "121", "125", "126", "788"] }
+        "arguments": { "0": ["0", "0","-vhas-redzone","-vredzone_class_var_stack"] },
+        "reference": { "cwe": ["119", "121", "125", "126", "788"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-write-ptr-heap": {
         "program": "mss-write-by-pointer",
-        "arguments": { "0": ["1", "0"] }
+        "arguments": { "0": ["1", "0","-vhas-redzone","-vredzone_class_var_heap"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-overflow-write-ptr-data": {
         "program": "mss-write-by-pointer",
-        "arguments": { "0": ["2", "0"] }
+        "arguments": { "0": ["2", "0","-vhas-redzone","-vredzone_class_var_data"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-write-ptr-stack": {
         "program": "mss-write-by-pointer",
-        "arguments": { "0": ["0", "1"] },
-        "reference": { "cwe": ["119"] }
+        "arguments": { "0": ["0", "1","-vhas-redzone","-vredzone_class_var_stack"] },
+        "reference": { "cwe": ["119"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-write-ptr-heap": {
         "program": "mss-write-by-pointer",
-        "arguments": { "0": ["1", "1"] },
-        "reference": { "cwe": ["119"] }
+        "arguments": { "0": ["1", "1","-vhas-redzone","-vredzone_class_var_heap"] },
+        "reference": { "cwe": ["119"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-underflow-write-ptr-data": {
         "program": "mss-write-by-pointer",
-        "arguments": { "0": ["2", "1"] },
-        "reference": { "cwe": ["119"] }
+        "arguments": { "0": ["2", "1","-vhas-redzone","-vredzone_class_var_data"] },
+        "reference": { "cwe": ["119"] },
+        "require": { "0": [["mss-check-redzone"]] }
     },
     "mss-read-cross-object-index-stack": {
         "program": "mss-read-cross-object-by-index",

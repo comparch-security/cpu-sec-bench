@@ -40,3 +40,5 @@ int check(const char *buf, int size, int step, char c) {
     if(buf[i] != c) return 1;
   return 0;
 }
+
+int redz_length = 8;
