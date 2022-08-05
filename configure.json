@@ -1,4 +1,52 @@
 {
+    "mss-overflow-after-typecast-for-basictype-read-ptr-stack": {
+        "program": "mss-read-after-typecast-for-basictype",
+        "arguments": { "0": ["0"] }
+    },
+    "mss-overflow-after-typecast-for-basictype-read-ptr-heap": {
+        "program": "mss-read-after-typecast-for-basictype",
+        "arguments": { "0": ["1"] }
+    },
+    "mss-overflow-after-typecast-for-basictype-read-ptr-data": {
+        "program": "mss-read-after-typecast-for-basictype",
+        "arguments": { "0": ["2"] }
+    },
+    "mss-overflow-after-typecast-for-basictype-read-ptr-rodata": {
+        "program": "mss-read-after-typecast-for-basictype",
+        "arguments": { "0": ["3"] }
+    },
+    "mss-overflow-after-typecast-for-expandedarray-read-ptr-stack": {
+        "program": "mss-read-after-typecast-for-expandedarray",
+        "arguments": { "0": ["0"] }
+    },
+    "mss-overflow-after-typecast-for-expandedarray-read-ptr-heap": {
+        "program": "mss-read-after-typecast-for-expandedarray",
+        "arguments": { "0": ["1"] }
+    },
+    "mss-overflow-after-typecast-for-expandedarray-read-ptr-data": {
+        "program": "mss-read-after-typecast-for-expandedarray",
+        "arguments": { "0": ["2"] }
+    },
+    "mss-overflow-after-typecast-for-expandedarray-read-ptr-rodata": {
+        "program": "mss-read-after-typecast-for-expandedarray",
+        "arguments": { "0": ["3"] }
+    },
+    "mss-overflow-after-typecast-for-expandedclass-read-ptr-stack": {
+        "program": "mss-read-after-typecast-for-expandedclass",
+        "arguments": { "0": ["0"] }
+    },
+    "mss-overflow-after-typecast-for-expandedclass-read-ptr-heap": {
+        "program": "mss-read-after-typecast-for-expandedclass",
+        "arguments": { "0": ["1"] }
+    },
+    "mss-overflow-after-typecast-for-expandedclass-read-ptr-data": {
+        "program": "mss-read-after-typecast-for-expandedclass",
+        "arguments": { "0": ["2"] }
+    },
+    "mss-overflow-after-typecast-for-expandedclass-read-ptr-rodata": {
+        "program": "mss-read-after-typecast-for-expandedclass",
+        "arguments": { "0": ["3"] }
+    },
     "mss-overflow-read-index-stack": {
         "program": "mss-read-by-index",
         "arguments": { "0": ["0", "0"] },
@@ -64,6 +112,42 @@
     "mss-underflow-read-ptr-rodata": {
         "program": "mss-read-by-pointer",
         "arguments": { "0": ["3", "1"] }
+    },
+    "mss-overflow-after-typecast-for-basictype-write-ptr-stack": {
+        "program": "mss-write-after-typecast-for-basictype",
+        "arguments": { "0": ["0"] }
+    },
+    "mss-overflow-after-typecast-for-basictype-write-ptr-heap": {
+        "program": "mss-write-after-typecast-for-basictype",
+        "arguments": { "0": ["1"] }
+    },
+    "mss-overflow-after-typecast-for-basictype-write-ptr-data": {
+        "program": "mss-write-after-typecast-for-basictype",
+        "arguments": { "0": ["2"] }
+    },
+    "mss-overflow-after-typecast-for-expandedarray-write-ptr-stack": {
+        "program": "mss-write-after-typecast-for-expandedarray",
+        "arguments": { "0": ["0"] }
+    },
+    "mss-overflow-after-typecast-for-expandedarray-write-ptr-heap": {
+        "program": "mss-write-after-typecast-for-expandedarray",
+        "arguments": { "0": ["1"] }
+    },
+    "mss-overflow-after-typecast-for-expandedarray-write-ptr-data": {
+        "program": "mss-write-after-typecast-for-expandedarray",
+        "arguments": { "0": ["2"] }
+    },
+    "mss-overflow-after-typecast-for-expandedclass-write-ptr-stack": {
+        "program": "mss-write-after-typecast-for-expandedclass",
+        "arguments": { "0": ["0"] }
+    },
+    "mss-overflow-after-typecast-for-expandedclass-write-ptr-heap": {
+        "program": "mss-write-after-typecast-for-expandedclass",
+        "arguments": { "0": ["1"] }
+    },
+    "mss-overflow-after-typecast-for-expandedclass-write-ptr-data": {
+        "program": "mss-write-after-typecast-for-expandedclass",
+        "arguments": { "0": ["2"] }
     },
     "mss-overflow-write-index-stack": {
         "program": "mss-write-by-index",
