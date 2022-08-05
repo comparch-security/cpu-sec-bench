@@ -28,11 +28,30 @@ int read_by_index(const charBuffer& cb, long long offset, long long size, int st
   return 0;
 }
 
+void update_by_typecast(char *buf, long long val){
+  long long *ptr = reinterpret_cast<long long*>(buf);
+  *ptr = val;
+}
+
 int read_by_pointer(const char *buf, long long offset, long long size, int step, char c) {
   buf += offset;
   for(long long i=0; i != size; i += step, buf += step)
     if(*buf != c) return 1;
   return 0;
+}
+
+int read_by_typecast(const char* cb, int offset, int len, int step, char c){
+    char* b = const_cast<char*>(cb);
+    long long* ptr = reinterpret_cast<long long*>(b);
+    /* check every char element in array except '\0' */
+    long long tmp = (*ptr) >> 8;
+
+    for(int i= 0; i != len; i+=step){
+      char cmp = static_cast<char>(tmp & 0xff);
+      if(cmp != c) return 1;
+      tmp >>= step*8;
+    }
+    return 0;
 }
 
 int check(const char *buf, int size, int step, char c) {
