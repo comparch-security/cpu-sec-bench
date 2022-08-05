@@ -1,4 +1,40 @@
 {
+    "mss-check-stack-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["0","0"]}
+    },
+    "mss-check-heap-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["1","0"]}
+    },
+    "mss-check-data-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["2","0"]}
+    },
+    "mss-check-rodata-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["3","0"]}
+    },
+    "mss-getlen-stack-redzone":{
+        "program": "mss-check-redzone",
+        "set-var": { "0": "redzone_class_var_stack"},
+        "require": { "0": [["mss-check-stack-redzone"]]}
+    },
+    "mss-getlen-heap-redzone":{
+        "program": "mss-check-redzone",
+        "set-var": { "0": "redzone_class_var_heap"},
+        "require": { "0": [["mss-check-heap-redzone"]]}
+    },
+    "mss-getlen-data-redzone":{
+        "program": "mss-check-redzone",
+        "set-var": { "0": "redzone_class_var_data"},
+        "require": { "0": [["mss-check-data-redzone"]]}
+    },
+    "mss-getlen-rodata-redzone":{
+        "program": "mss-check-redzone",
+        "set-var": { "0": "redzone_class_var_rodata"},
+        "require": { "0": [["mss-check-rodata-redzone"]]}
+    },
     "mss-overflow-read-index-stack": {
         "program": "mss-read-by-index",
         "arguments": { "0": ["0", "0"] },
