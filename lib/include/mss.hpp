@@ -8,6 +8,12 @@ struct charBuffer
   char overflow[8];
 };
 
+struct crossptrBuffer
+{
+  long long target;
+  char data[8]; 
+};
+
 extern void char_buffer_init(charBuffer *, char uf, char d, char of);
 extern void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c);
 extern void update_by_pointer(char *buf, long long offset, long long size, int step, char c);

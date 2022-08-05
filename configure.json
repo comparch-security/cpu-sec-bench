@@ -1,4 +1,20 @@
 {
+    "mss-overflow-read-after-typecast-for-crosstype-stack":{
+        "program": "mss-read-after-typecast-for-crosstype",
+        "arguments": { "0": ["0"] }
+    },
+    "mss-overflow-read-after-typecast-for-crosstype-heap":{
+        "program": "mss-read-after-typecast-for-crosstype",
+        "arguments": { "0": ["1"] }
+    },
+    "mss-overflow-read-after-typecast-for-crosstype-data":{
+        "program": "mss-read-after-typecast-for-crosstype",
+        "arguments": { "0": ["2"] }
+    },
+    "mss-overflow-read-after-typecast-for-crosstype-rodata":{
+        "program": "mss-read-after-typecast-for-crosstype",
+        "arguments": { "0": ["3"] }
+    },
     "mss-overflow-read-index-stack": {
         "program": "mss-read-by-index",
         "arguments": { "0": ["0", "0"] },
