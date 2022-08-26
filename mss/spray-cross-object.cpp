@@ -1,25 +1,18 @@
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
 
-charBuffer buffer_data, buffer_dataT;
+// buffer in data
+charBuffer buffer_data('u','d','o'), buffer_dataT('u','d','o');
 
 int main(int argc, char* argv[])
 {
-  // buffer in data
-  char_buffer_init(&buffer_data,  'u', 'd', 'o');
-  char_buffer_init(&buffer_dataT, 'u', 'd', 'o');
-
   // buffer in local stack
-  charBuffer buffer_stack;
-  charBuffer buffer_stackT;
-  char_buffer_init(&buffer_stack,  'u', 'd', 'o');
-  char_buffer_init(&buffer_stackT, 'u', 'd', 'o');
+  charBuffer buffer_stack('u','d','o');
+  charBuffer buffer_stackT('u','d','o');
 
   // buffer allocated in heap
-  charBuffer *buffer_heap  = new charBuffer;
-  charBuffer *buffer_heapT = new charBuffer;
-  char_buffer_init(buffer_heap, 'u', 'd', 'o');
-  char_buffer_init(buffer_heapT, 'u', 'd', 'o');
+  charBuffer *buffer_heap  = new charBuffer('u','d','o');
+  charBuffer *buffer_heapT = new charBuffer('u','d','o');
 
   int store_type = argv[1][0] - '0';
   long long distance = 0;

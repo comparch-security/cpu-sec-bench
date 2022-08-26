@@ -1,34 +1,24 @@
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
 
-const charBuffer buffer_rodataU = {"uuuuuuu","ddddddd","ooooooo"};
-const charBuffer buffer_rodataM = {"uuuuuuu","ddddddd","ooooooo"};
-const charBuffer buffer_rodataD = {"uuuuuuu","ddddddd","ooooooo"};
+const charBuffer buffer_rodataU('u','d','o');
+const charBuffer buffer_rodataM('u','d','o');
+const charBuffer buffer_rodataD('u','d','o');
 
-charBuffer buffer_dataU, buffer_dataM, buffer_dataD;
+// buffer in data
+charBuffer buffer_dataU('u','d','o'), buffer_dataM('u','d','o'), buffer_dataD('u','d','o');
 
 int main(int argc, char* argv[])
 {
-  // buffer in data
-  char_buffer_init(&buffer_dataU, 'u', 'd', 'o');
-  char_buffer_init(&buffer_dataM, 'u', 'd', 'o');
-  char_buffer_init(&buffer_dataD, 'u', 'd', 'o');
-
   // buffer in local stack
-  charBuffer buffer_stackU;
-  charBuffer buffer_stackM;
-  charBuffer buffer_stackD;
-  char_buffer_init(&buffer_stackU, 'u', 'd', 'o');
-  char_buffer_init(&buffer_stackM, 'u', 'd', 'o');
-  char_buffer_init(&buffer_stackD, 'u', 'd', 'o');
+  charBuffer buffer_stackU('u','d','o');
+  charBuffer buffer_stackM('u','d','o');
+  charBuffer buffer_stackD('u','d','o');
 
   // buffer allocated in heap
-  charBuffer *buffer_heapU = new charBuffer;
-  charBuffer *buffer_heapM = new charBuffer;
-  charBuffer *buffer_heapD = new charBuffer;
-  char_buffer_init(buffer_heapU, 'u', 'd', 'o');
-  char_buffer_init(buffer_heapM, 'u', 'd', 'o');
-  char_buffer_init(buffer_heapD, 'u', 'd', 'o');
+  charBuffer *buffer_heapU = new charBuffer('u','d','o');
+  charBuffer *buffer_heapM = new charBuffer('u','d','o');
+  charBuffer *buffer_heapD = new charBuffer('u','d','o');
 
   int store_type = argv[1][0] - '0';
   long long distance_up   = 0;

@@ -14,7 +14,7 @@ int main() {
       return check(pvec[i]->data, 7,  1, 'd');
     } else {
       pmap[pvec[i]] = i;
-      char_buffer_init(pvec[i], 'u', 'd', 'o');
+      pvec[i]->updateBuffer('u', 'd', 'o');
       delete pvec[i];
     }
   }

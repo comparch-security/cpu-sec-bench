@@ -12,8 +12,7 @@ void FORCE_NOINLINE helper(const char* b) {
 
 int main()
 {
-  charBuffer buffer;
-  char_buffer_init(&buffer, 'u', 'd', 'o');
+  charBuffer buffer('u','d','o');
   helper(buffer.data);
   return check(buffer.data, 8, 1, 'c');
 }

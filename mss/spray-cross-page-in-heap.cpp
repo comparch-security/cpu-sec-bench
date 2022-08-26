@@ -8,16 +8,14 @@ int main(int argc, char* argv[])
 {
 
   // buffer allocated in heap
-  charBuffer *buffer  = new charBuffer;
-  char_buffer_init(buffer, 'u', 'd', 'o');
+  charBuffer *buffer  = new charBuffer('u','d','o');
 
   // collect a large number of buffers on heap
   std::set<charBuffer *> bset;
   long long distance = 0;
   charBuffer *bufferT;
   do {
-    bufferT = new charBuffer;
-    char_buffer_init(bufferT, 'u', 'd', 'o');
+    bufferT = new charBuffer('u','d','o');
     bset.insert(bufferT);
     GET_DISTANCE(distance, bufferT->data, buffer->data);
   } while(sysconf(_SC_PAGESIZE) >= abs(distance));

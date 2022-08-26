@@ -1,14 +1,20 @@
 #ifndef BOF_HPP_INCLUDED
 #define BOF_HPP_INCLUDED
 
-struct charBuffer
+#define BUFFERLEN 8
+#define LASTELEM  7
+typedef class charBuffer
 {
-  char underflow[8];
-  char data[8];
-  char overflow[8];
-};
+public:
+  char underflow[BUFFERLEN]{};
+  char data[BUFFERLEN]{};
+  char overflow[BUFFERLEN]{};
+public:
+  charBuffer() = default;
+  charBuffer(const char uf, const char d, const char of);
+  void updateBuffer(const char uf, const char d, const char of);
+}charBuffer;
 
-extern void char_buffer_init(charBuffer *, char uf, char d, char of);
 extern void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c);
 extern void update_by_pointer(char *buf, long long offset, long long size, int step, char c);
 extern int read_by_index(const charBuffer& cb, long long offset, long long size, int step, char c);

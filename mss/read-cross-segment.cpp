@@ -2,22 +2,17 @@
 #include "include/assembly.hpp"
 #include <cstdio>
 
-const charBuffer buffer_rodata = {"qqqqqqq","rrrrrrr","sssssss"};
-
-charBuffer buffer_data;
+const charBuffer buffer_rodata('q','r','s');
+// buffer in data
+charBuffer buffer_data('c','d','e');
 
 int main(int argc, char* argv[])
 {
-  // buffer in data
-  char_buffer_init(&buffer_data, 'c', 'd', 'e');
-
   // buffer in local stack
-  charBuffer buffer_stack;
-  char_buffer_init(&buffer_stack, 'r', 's', 't');
+  charBuffer buffer_stack('r','s','t');
 
   // buffer allocated in heap
-  charBuffer *buffer_heap = new charBuffer;
-  char_buffer_init(buffer_heap, 'g', 'h', 'i');
+  charBuffer *buffer_heap = new charBuffer('g','h','i');
 
   int src_type = argv[1][0] - '0';
   int des_type = argv[2][0] - '0';
