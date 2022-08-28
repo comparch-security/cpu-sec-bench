@@ -1,25 +1,25 @@
 #include "include/mss.hpp"
 
 charBuffer::charBuffer(const char uf, const char d, const char of){
-  for(unsigned int i=0; i!=LASTELEM; i++) {
+  for(unsigned int i=0; i!=CB_BUF_LEN-1; i++) {
     underflow[i] = uf;
     data[i] = d;
     overflow[i] = of;
   }
-  underflow[LASTELEM] = 0;
-  data[LASTELEM]      = 0;
-  overflow[LASTELEM]  = 0;
+  underflow[CB_BUF_LEN-1] = 0;
+  data[CB_BUF_LEN-1]      = 0;
+  overflow[CB_BUF_LEN-1]  = 0;
 }
 
 void charBuffer::updateBuffer(const char uf, const char d, const char of){
-  for(unsigned int i=0; i!=LASTELEM; i++) {
+  for(unsigned int i=0; i!=CB_BUF_LEN-1; i++) {
     underflow[i] = uf;
     data[i] = d;
     overflow[i] = of;
   }
-  underflow[LASTELEM] = 0;
-  data[LASTELEM]      = 0;
-  overflow[LASTELEM]  = 0;
+  underflow[CB_BUF_LEN-1] = 0;
+  data[CB_BUF_LEN-1]      = 0;
+  overflow[CB_BUF_LEN-1]  = 0;
 }
 
 void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c) {
