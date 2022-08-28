@@ -3,7 +3,8 @@
 
 #define BUFFERLEN 8
 #define LASTELEM  7
-typedef class charBuffer
+
+class charBuffer
 {
 public:
   char underflow[BUFFERLEN]{};
@@ -13,7 +14,7 @@ public:
   charBuffer() = default;
   charBuffer(const char uf, const char d, const char of);
   void updateBuffer(const char uf, const char d, const char of);
-}charBuffer;
+};
 
 extern void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c);
 extern void update_by_pointer(char *buf, long long offset, long long size, int step, char c);
