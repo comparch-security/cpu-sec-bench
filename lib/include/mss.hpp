@@ -1,15 +1,14 @@
 #ifndef BOF_HPP_INCLUDED
 #define BOF_HPP_INCLUDED
 
-#define BUFFERLEN 8
-#define LASTELEM  7
+#define CB_BUF_LEN 8
 
 class charBuffer
 {
 public:
-  char underflow[BUFFERLEN];
-  char data[BUFFERLEN];
-  char overflow[BUFFERLEN];
+  char underflow[CB_BUF_LEN];
+  char data[CB_BUF_LEN];
+  char overflow[CB_BUF_LEN];
 public:
   charBuffer() = default;
   charBuffer(const char uf, const char d, const char of);
