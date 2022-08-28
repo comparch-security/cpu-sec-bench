@@ -7,9 +7,9 @@
 class charBuffer
 {
 public:
-  char underflow[BUFFERLEN]{};
-  char data[BUFFERLEN]{};
-  char overflow[BUFFERLEN]{};
+  char underflow[BUFFERLEN];
+  char data[BUFFERLEN];
+  char overflow[BUFFERLEN];
 public:
   charBuffer() = default;
   charBuffer(const char uf, const char d, const char of);
