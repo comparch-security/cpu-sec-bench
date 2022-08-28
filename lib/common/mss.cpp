@@ -2,24 +2,24 @@
 
 charBuffer::charBuffer(const char uf, const char d, const char of){
   for(unsigned int i=0; i!=LASTELEM; i++) {
-    this->underflow[i] = uf;
-    this->data[i] = d;
-    this->overflow[i] = of;
+    underflow[i] = uf;
+    data[i] = d;
+    overflow[i] = of;
   }
-  this->underflow[LASTELEM] = 0;
-  this->data[LASTELEM]      = 0;
-  this->overflow[LASTELEM]  = 0;
+  underflow[LASTELEM] = 0;
+  data[LASTELEM]      = 0;
+  overflow[LASTELEM]  = 0;
 }
 
 void charBuffer::updateBuffer(const char uf, const char d, const char of){
   for(unsigned int i=0; i!=LASTELEM; i++) {
-    this->underflow[i] = uf;
-    this->data[i] = d;
-    this->overflow[i] = of;
+    underflow[i] = uf;
+    data[i] = d;
+    overflow[i] = of;
   }
-  this->underflow[LASTELEM] = 0;
-  this->data[LASTELEM]      = 0;
-  this->overflow[LASTELEM]  = 0;
+  underflow[LASTELEM] = 0;
+  data[LASTELEM]      = 0;
+  overflow[LASTELEM]  = 0;
 }
 
 void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c) {
