@@ -1,20 +1,17 @@
 #include "include/mss.hpp"
 
-const charBuffer buffer_rodata = {"uuuuuuu","ddddddd","ooooooo"};
-charBuffer buffer_data;
+const charBuffer buffer_rodata('u','d','o');
+// buffer in data
+charBuffer buffer_data('u','d','o');
 
 int main(int argc, char* argv[])
 {
-  // buffer in data
-  char_buffer_init(&buffer_data, 'u', 'd', 'o');
 
   // buffer in local stack
-  charBuffer buffer_stack;
-  char_buffer_init(&buffer_stack, 'u', 'd', 'o');
+  charBuffer buffer_stack('u','d','o');
 
   // buffer allocated in heap
-  charBuffer *buffer_heap = new charBuffer;
-  char_buffer_init(buffer_heap, 'u', 'd', 'o');
+  charBuffer *buffer_heap = new charBuffer('u','d','o');
 
   int store_type = argv[1][0] - '0';
   int flow_type  = argv[2][0] - '0';

@@ -15,8 +15,7 @@ void FORCE_NOINLINE helper(const char* b, int level) {
 
 int main(int argc, char* argv[])
 {
-  charBuffer buffer;
-  char_buffer_init(&buffer, 'l', 'm', 'n');
+  charBuffer buffer('l', 'm', 'n');
   helper(buffer.data, sysconf(_SC_PAGESIZE)/(sizeof(charBuffer)+sizeof(long long)+sizeof(void *)) + 1);
   return check(buffer.data, 8, 1, 'c');
 }

@@ -17,7 +17,7 @@ int main() {
       break;
     } else {
       pmap[buffer] = i;
-      char_buffer_init(buffer, 'u', 'd', 'o');
+      buffer->updateBuffer('u', 'd', 'o');
       delete buffer;
     }
   }

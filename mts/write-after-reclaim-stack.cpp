@@ -10,7 +10,7 @@ int FORCE_NOINLINE helper(bool option) {
     return check(buffer.data, 7,  1, 'c');
   } else {
     pb = &buffer;
-    char_buffer_init(&buffer, 'u', 'd', 'o');
+    buffer.updateBuffer('u', 'd', 'o');
     return 0;
   }
 }

@@ -5,8 +5,7 @@
 
 int main() {
   std::set<charBuffer *> pset;
-  charBuffer *buffer = new charBuffer;
-  char_buffer_init(buffer, 'u', 'd', 'o');
+  charBuffer *buffer = new charBuffer('u','d','o');
   pset.insert(buffer);
   delete buffer;
   update_by_pointer(buffer->data, 0, 8,  1, 'c');
@@ -17,7 +16,7 @@ int main() {
       return check(buffer->data, 8,  1, 'c');
     else {
       pset.insert(buffer);
-      char_buffer_init(buffer, 'u', 'd', 'o');
+      buffer->updateBuffer('u', 'd', 'o');
     }
     delete buffer;
     update_by_pointer(buffer->data, 0, 8,  1, 'c');
