@@ -7,7 +7,7 @@ int FORCE_NOINLINE helper(bool option) {
   charBuffer buffer;
   if(option) {
     update_by_pointer(pb->data, 0, 8,  1, 'c');
-    return check(buffer.data, 7,  1, 'c');
+    return check(buffer, 7,  1, 'c', 1);
   } else {
     pb = &buffer;
     buffer.updateBuffer('u', 'd', 'o');

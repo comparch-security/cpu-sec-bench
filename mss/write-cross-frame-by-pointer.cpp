@@ -14,5 +14,5 @@ int main()
 {
   charBuffer buffer('u','d','o');
   helper(buffer.data);
-  return check(buffer.data, 8, 1, 'c');
+  return check(buffer, 8, 1, 'c', 1);
 }

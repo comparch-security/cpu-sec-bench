@@ -12,5 +12,5 @@ void helper() {
 int main() {
   helper();
   update_by_pointer(gbuffer->data, 0, 8,  1, 'c');
-  return check(gbuffer->data, 8,  1, 'c');
+  return check(*gbuffer, 8,  1, 'c', 1);
 }

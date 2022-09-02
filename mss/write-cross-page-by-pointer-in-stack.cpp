@@ -17,5 +17,5 @@ int main(int argc, char* argv[])
 {
   charBuffer buffer('l', 'm', 'n');
   helper(buffer.data, sysconf(_SC_PAGESIZE)/(sizeof(charBuffer)+sizeof(long long)+sizeof(void *)) + 1);
-  return check(buffer.data, 8, 1, 'c');
+  return check(buffer, 8, 1, 'c',1);
 }

@@ -22,9 +22,9 @@ int main(int argc, char* argv[])
   
   if(distance > 0) {
     update_by_pointer(buffer->data, 0, distance+8, 1, 'c');
-    exit(check(bufferT->data,  8,  1, 'c'));
+    exit(check(*bufferT,  8,  1, 'c',1));
   } else {
     update_by_pointer(bufferT->data, 0, -distance+8, 1, 'c');
-    exit(check(buffer->data,  8,  1, 'c'));
+    exit(check(*buffer,  8,  1, 'c',1));
   }
 }

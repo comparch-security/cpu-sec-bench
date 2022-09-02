@@ -11,7 +11,7 @@ int main() {
   for(int i=0; i<RELOC_NUM; i++) {
     pvec[i] = new charBuffer;
     if(pmap.count(pvec[i])) {
-      return check(pvec[i]->data, 7,  1, 'd');
+      return check(*(pvec[i]), 7,  1, 'd',1);
     } else {
       pmap[pvec[i]] = i;
       pvec[i]->updateBuffer('u', 'd', 'o');

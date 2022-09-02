@@ -1,0 +1,2102 @@
+
+========== acc-check-ASLR =========
+make test/acc-check-ASLR
+make: 'test/acc-check-ASLR' is up to date.
+
+test/acc-check-ASLR
+
+========== acc-check-CET =========
+make test/acc-check-CET
+make: 'test/acc-check-CET' is up to date.
+
+test/acc-check-CET 1
+set runtime variable cet-enabled to 1
+
+========== acc-get-frame-size =========
+make test/acc-get-frame-size
+make: 'test/acc-get-frame-size' is up to date.
+
+test/acc-get-frame-size
+set runtime variable frame-size to 4
+
+========== acc-get-ra-offset-v-p-g0 =========
+make test/acc-get-ra-offset
+make: 'test/acc-get-ra-offset' is up to date.
+
+test/acc-get-ra-offset 1 v-p-g0
+set runtime variable stack-offset-v-p-g0 to 2
+
+========== acc-get-ra-offset-v-p-g1 =========
+make test/acc-get-ra-offset
+make: 'test/acc-get-ra-offset' is up to date.
+
+test/acc-get-ra-offset 1 v-p-g1
+set runtime variable stack-offset-v-p-g1 to 2
+
+========== acc-read-GOT =========
+make test/acc-read-GOT
+make: 'test/acc-read-GOT' is up to date.
+
+test/acc-read-GOT 1
+
+========== acc-read-func =========
+make test/acc-read-func
+make: 'test/acc-read-func' is up to date.
+
+test/acc-read-func 1 1
+
+========== cfi-call-instruction-in-data =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 1 1
+
+========== cfi-call-instruction-in-heap =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 1 3
+
+========== cfi-call-instruction-in-rodata =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 1 0
+
+========== cfi-call-instruction-in-stack =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 1 2
+
+========== cfi-call-mid-func =========
+make test/cfi-call-mid-func
+make: 'test/cfi-call-mid-func' is up to date.
+
+test/cfi-call-mid-func
+
+========== cfi-call-wrong-func-within-static-analysis =========
+make test/cfi-call-wrong-func-within-static-analysis
+make: 'test/cfi-call-wrong-func-within-static-analysis' is up to date.
+
+test/cfi-call-wrong-func-within-static-analysis 1
+
+========== cfi-call-wrong-num-arg-func =========
+make test/cfi-call-wrong-num-arg-func
+make: 'test/cfi-call-wrong-num-arg-func' is up to date.
+
+test/cfi-call-wrong-num-arg-func
+
+========== cfi-call-wrong-type-arg-fp2dp-func =========
+make test/cfi-call-wrong-type-arg-fp2dp-func
+make: 'test/cfi-call-wrong-type-arg-fp2dp-func' is up to date.
+
+test/cfi-call-wrong-type-arg-fp2dp-func
+
+========== cfi-call-wrong-type-arg-int2double-func =========
+make test/cfi-call-wrong-type-arg-int2double-func
+make: 'test/cfi-call-wrong-type-arg-int2double-func' is up to date.
+
+test/cfi-call-wrong-type-arg-int2double-func
+
+========== cfi-call-wrong-type-arg-op2doublep-func =========
+make test/cfi-call-wrong-type-arg-op2doublep-func
+make: 'test/cfi-call-wrong-type-arg-op2doublep-func' is up to date.
+
+test/cfi-call-wrong-type-arg-op2doublep-func 2
+
+========== cfi-call-wrong-type-arg-op2intp-func =========
+make test/cfi-call-wrong-type-arg-op2intp-func
+make: 'test/cfi-call-wrong-type-arg-op2intp-func' is up to date.
+
+test/cfi-call-wrong-type-arg-op2intp-func 2
+
+========== cfi-jump-mid-func =========
+make test/cfi-jump-mid-func
+make: 'test/cfi-jump-mid-func' is up to date.
+
+test/cfi-jump-mid-func 1
+
+========== cfi-return-to-wrong-call-site-within-static-analysis =========
+make test/cfi-return-to-wrong-call-site-within-static-analysis
+make: 'test/cfi-return-to-wrong-call-site-within-static-analysis' is up to date.
+
+test/cfi-return-to-wrong-call-site-within-static-analysis 2
+set runtime variable stack-offset-v-p-g1 to 2
+
+========== cfi-return-without-call =========
+make test/cfi-return-without-call
+make: 'test/cfi-return-without-call' is up to date.
+
+test/cfi-return-without-call 1 4
+
+========== cpi-func-pointer-assign =========
+make test/cpi-func-pointer-assign
+make: 'test/cpi-func-pointer-assign' is up to date.
+
+test/cpi-func-pointer-assign
+
+========== cpi-modify-GOT =========
+make test/cpi-modify-GOT
+make: 'test/cpi-modify-GOT' is up to date.
+
+test/cpi-modify-GOT 1
+
+========== cpi-read-vtable-pointer =========
+make test/cpi-read-vtable-pointer
+make: 'test/cpi-read-vtable-pointer' is up to date.
+
+test/cpi-read-vtable-pointer
+
+========== cpi-write-vtable-pointer =========
+make test/cpi-write-vtable-pointer
+make: 'test/cpi-write-vtable-pointer' is up to date.
+
+test/cpi-write-vtable-pointer
+
+========== mss-overflow-read-index-data =========
+make test/mss-read-by-index
+make: 'test/mss-read-by-index' is up to date.
+
+test/mss-read-by-index 2 0
+
+========== mss-overflow-read-index-heap =========
+make test/mss-read-by-index
+make: 'test/mss-read-by-index' is up to date.
+
+test/mss-read-by-index 1 0
+
+========== mss-overflow-read-index-rodata =========
+make test/mss-read-by-index
+make: 'test/mss-read-by-index' is up to date.
+
+test/mss-read-by-index 3 0
+
+========== mss-overflow-read-index-stack =========
+make test/mss-read-by-index
+make: 'test/mss-read-by-index' is up to date.
+
+test/mss-read-by-index 0 0
+
+========== mss-overflow-read-ptr-data =========
+make test/mss-read-by-pointer
+make: 'test/mss-read-by-pointer' is up to date.
+
+test/mss-read-by-pointer 2 0
+
+========== mss-overflow-read-ptr-heap =========
+make test/mss-read-by-pointer
+make: 'test/mss-read-by-pointer' is up to date.
+
+test/mss-read-by-pointer 1 0
+
+========== mss-overflow-read-ptr-rodata =========
+make test/mss-read-by-pointer
+make: 'test/mss-read-by-pointer' is up to date.
+
+test/mss-read-by-pointer 3 0
+
+========== mss-overflow-read-ptr-stack =========
+make test/mss-read-by-pointer
+make: 'test/mss-read-by-pointer' is up to date.
+
+test/mss-read-by-pointer 0 0
+
+========== mss-overflow-write-index-data =========
+make test/mss-write-by-index
+make: 'test/mss-write-by-index' is up to date.
+
+test/mss-write-by-index 2 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-overflow-write-index-heap =========
+make test/mss-write-by-index
+make: 'test/mss-write-by-index' is up to date.
+
+test/mss-write-by-index 1 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-overflow-write-index-stack =========
+make test/mss-write-by-index
+make: 'test/mss-write-by-index' is up to date.
+
+test/mss-write-by-index 0 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-overflow-write-ptr-data =========
+make test/mss-write-by-pointer
+make: 'test/mss-write-by-pointer' is up to date.
+
+test/mss-write-by-pointer 2 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-overflow-write-ptr-heap =========
+make test/mss-write-by-pointer
+make: 'test/mss-write-by-pointer' is up to date.
+
+test/mss-write-by-pointer 1 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-overflow-write-ptr-stack =========
+make test/mss-write-by-pointer
+make: 'test/mss-write-by-pointer' is up to date.
+
+test/mss-write-by-pointer 0 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-underflow-read-index-data =========
+make test/mss-read-by-index
+make: 'test/mss-read-by-index' is up to date.
+
+test/mss-read-by-index 2 1
+
+========== mss-underflow-read-index-heap =========
+make test/mss-read-by-index
+make: 'test/mss-read-by-index' is up to date.
+
+test/mss-read-by-index 1 1
+
+========== mss-underflow-read-index-rodata =========
+make test/mss-read-by-index
+make: 'test/mss-read-by-index' is up to date.
+
+test/mss-read-by-index 3 1
+
+========== mss-underflow-read-index-stack =========
+make test/mss-read-by-index
+make: 'test/mss-read-by-index' is up to date.
+
+test/mss-read-by-index 0 1
+
+========== mss-underflow-read-ptr-data =========
+make test/mss-read-by-pointer
+make: 'test/mss-read-by-pointer' is up to date.
+
+test/mss-read-by-pointer 2 1
+
+========== mss-underflow-read-ptr-heap =========
+make test/mss-read-by-pointer
+make: 'test/mss-read-by-pointer' is up to date.
+
+test/mss-read-by-pointer 1 1
+
+========== mss-underflow-read-ptr-rodata =========
+make test/mss-read-by-pointer
+make: 'test/mss-read-by-pointer' is up to date.
+
+test/mss-read-by-pointer 3 1
+
+========== mss-underflow-read-ptr-stack =========
+make test/mss-read-by-pointer
+make: 'test/mss-read-by-pointer' is up to date.
+
+test/mss-read-by-pointer 0 1
+
+========== mss-underflow-write-index-data =========
+make test/mss-write-by-index
+make: 'test/mss-write-by-index' is up to date.
+
+test/mss-write-by-index 2 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-underflow-write-index-heap =========
+make test/mss-write-by-index
+make: 'test/mss-write-by-index' is up to date.
+
+test/mss-write-by-index 1 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-underflow-write-index-stack =========
+make test/mss-write-by-index
+make: 'test/mss-write-by-index' is up to date.
+
+test/mss-write-by-index 0 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-underflow-write-ptr-data =========
+make test/mss-write-by-pointer
+make: 'test/mss-write-by-pointer' is up to date.
+
+test/mss-write-by-pointer 2 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-underflow-write-ptr-heap =========
+make test/mss-write-by-pointer
+make: 'test/mss-write-by-pointer' is up to date.
+
+test/mss-write-by-pointer 1 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-underflow-write-ptr-stack =========
+make test/mss-write-by-pointer
+make: 'test/mss-write-by-pointer' is up to date.
+
+test/mss-write-by-pointer 0 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-frame-index =========
+make test/mss-write-cross-frame-by-index
+make: 'test/mss-write-cross-frame-by-index' is up to date.
+
+test/mss-write-cross-frame-by-index
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-frame-ptr =========
+make test/mss-write-cross-frame-by-pointer
+make: 'test/mss-write-cross-frame-by-pointer' is up to date.
+
+test/mss-write-cross-frame-by-pointer
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-page-index-stack =========
+make test/mss-write-cross-page-by-index-in-stack
+make: 'test/mss-write-cross-page-by-index-in-stack' is up to date.
+
+test/mss-write-cross-page-by-index-in-stack
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-page-ptr-stack =========
+make test/mss-write-cross-page-by-pointer-in-stack
+make: 'test/mss-write-cross-page-by-pointer-in-stack' is up to date.
+
+test/mss-write-cross-page-by-pointer-in-stack
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-data-to-heap-index =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 2 1 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-data-to-heap-ptr =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 2 1 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-data-to-stack-index =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 2 0 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-data-to-stack-ptr =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 2 0 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-heap-to-data-index =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 1 2 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-heap-to-data-ptr =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 1 2 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-heap-to-stack-index =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 1 0 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-heap-to-stack-ptr =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 1 0 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-stack-to-data-index =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 0 2 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-stack-to-data-ptr =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 0 2 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-stack-to-heap-index =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 0 1 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-write-cross-segment-stack-to-heap-ptr =========
+make test/mss-write-cross-segment
+make: 'test/mss-write-cross-segment' is up to date.
+
+test/mss-write-cross-segment 0 1 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mts-access-after-free-alias-heap =========
+make test/mts-access-after-free-alias-heap
+make: 'test/mts-access-after-free-alias-heap' is up to date.
+
+test/mts-access-after-free-alias-heap
+in funciton
+val is: in getelem, i is: 0
+
+in getelem, i is: 0
+
+========== mts-access-after-free-alias-stack =========
+make test/mts-access-after-free-alias-stack
+make: 'test/mts-access-after-free-alias-stack' is up to date.
+
+test/mts-access-after-free-alias-stack
+in funciton
+val is: in getelem, i is: 0
+ 
+in getelem, i is: 0
+Test abnormality: mts-access-after-free-alias-stack failed with unexpected exit value 1
+Test abnormality: mts-access-after-free-alias-stack failed with unexpected exit value 1
+
+========== mts-access-after-free-org-heap =========
+make test/mts-access-after-free-org-heap
+make: 'test/mts-access-after-free-org-heap' is up to date.
+
+test/mts-access-after-free-org-heap
+in funciton
+val is: in getelem, i is: 0
+
+in getelem, i is: 0
+
+========== mts-reallocate-heap =========
+make test/mts-reallocate-heap
+make: 'test/mts-reallocate-heap' is up to date.
+
+test/mts-reallocate-heap
+
+========== mts-reallocate-stack =========
+make test/mts-reallocate-stack
+make: 'test/mts-reallocate-stack' is up to date.
+
+test/mts-reallocate-stack
+
+========== mts-write-after-free-heap =========
+make test/mts-write-after-free-heap
+make: 'test/mts-write-after-free-heap' is up to date.
+
+test/mts-write-after-free-heap
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mts-write-after-free-stack =========
+make test/mts-write-after-free-stack
+make: 'test/mts-write-after-free-stack' is up to date.
+
+test/mts-write-after-free-stack
+in funciton
+val is: in getelem, i is: 0
+ 
+in getelem, i is: 0
+Test abnormality: mts-write-after-free-stack failed with unexpected exit value 1
+Test abnormality: mts-write-after-free-stack failed with unexpected exit value 1
+
+========== mts-write-after-reclaim-heap =========
+make test/mts-write-after-reclaim-heap
+make: 'test/mts-write-after-reclaim-heap' is up to date.
+
+test/mts-write-after-reclaim-heap
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mts-write-after-reclaim-stack =========
+make test/mts-write-after-reclaim-stack
+make: 'test/mts-write-after-reclaim-stack' is up to date.
+
+test/mts-write-after-reclaim-stack
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+
+========== mts-write-before-reclaim-heap =========
+make test/mts-write-before-reclaim-heap
+make: 'test/mts-write-before-reclaim-heap' is up to date.
+
+test/mts-write-before-reclaim-heap
+in funciton
+val is: in getelem, i is: 0
+ 
+in getelem, i is: 0
+
+========== cfi-call-wrong-func =========
+make test/cfi-call-wrong-func
+make: 'test/cfi-call-wrong-func' is up to date.
+
+test/cfi-call-wrong-func 1
+
+========== cfi-call-wrong-func-vtable-child =========
+make test/cfi-call-wrong-func-vtable-child
+make: 'test/cfi-call-wrong-func-vtable-child' is up to date.
+
+test/cfi-call-wrong-func-vtable-child
+
+========== cfi-call-wrong-func-vtable-offset =========
+make test/cfi-call-wrong-func-vtable-offset
+make: 'test/cfi-call-wrong-func-vtable-offset' is up to date.
+
+test/cfi-call-wrong-func-vtable-offset
+
+========== cfi-call-wrong-func-vtable-parent =========
+make test/cfi-call-wrong-func-vtable-parent
+make: 'test/cfi-call-wrong-func-vtable-parent' is up to date.
+
+test/cfi-call-wrong-func-vtable-parent
+
+========== cfi-call-wrong-func-vtable-sibling =========
+make test/cfi-call-wrong-func-vtable-sibling
+make: 'test/cfi-call-wrong-func-vtable-sibling' is up to date.
+
+test/cfi-call-wrong-func-vtable-sibling
+
+========== cfi-jump-instruction-in-data =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 2 1 0
+
+========== cfi-jump-instruction-in-heap =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 2 3 0
+
+========== cfi-jump-instruction-in-rodata =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 2 0 0
+
+========== cfi-jump-instruction-in-stack =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 2 2 0
+
+========== cfi-return-to-wrong-call-site =========
+make test/cfi-return-to-wrong-call-site
+make: 'test/cfi-return-to-wrong-call-site' is up to date.
+
+test/cfi-return-to-wrong-call-site 2
+
+========== cpi-func-pointer-arithmetic =========
+make test/cpi-func-pointer-arithmetic
+make: 'test/cpi-func-pointer-arithmetic' is up to date.
+
+test/cpi-func-pointer-arithmetic
+
+========== mss-overflow-write-cross-object-index-data =========
+make test/mss-write-cross-object-by-index
+g++ -I./lib -O2 -std=c++11 -Wall mss/write-cross-object-by-index.cpp ./lib/common/global_var.o ./lib/common/signal.o ./lib/x86_64/assembly.o ./lib/common/mss.o -o test/mss-write-cross-object-by-index 
+
+test/mss-write-cross-object-by-index 2 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-overflow-write-cross-object-index-heap =========
+make test/mss-write-cross-object-by-index
+make: 'test/mss-write-cross-object-by-index' is up to date.
+
+test/mss-write-cross-object-by-index 1 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-overflow-write-cross-object-index-stack =========
+make test/mss-write-cross-object-by-index
+make: 'test/mss-write-cross-object-by-index' is up to date.
+
+test/mss-write-cross-object-by-index 0 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-overflow-write-cross-object-ptr-data =========
+make test/mss-write-cross-object-by-pointer
+make: 'test/mss-write-cross-object-by-pointer' is up to date.
+
+test/mss-write-cross-object-by-pointer 2 0
+in funciton
+val is: in getelem, i is: 0
+d
+in getelem, i is: 0
+Test abnormality: mss-overflow-write-cross-object-ptr-data failed with unexpected exit value 1
+Test abnormality: mss-overflow-write-cross-object-ptr-data failed with unexpected exit value 1
+
+========== mss-overflow-write-cross-object-ptr-heap =========
+make test/mss-write-cross-object-by-pointer
+make: 'test/mss-write-cross-object-by-pointer' is up to date.
+
+test/mss-write-cross-object-by-pointer 1 0
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-overflow-write-cross-object-ptr-stack =========
+make test/mss-write-cross-object-by-pointer
+make: 'test/mss-write-cross-object-by-pointer' is up to date.
+
+test/mss-write-cross-object-by-pointer 0 0
+in funciton
+val is: in getelem, i is: 0
+d
+in getelem, i is: 0
+Test abnormality: mss-overflow-write-cross-object-ptr-stack failed with unexpected exit value 1
+Test abnormality: mss-overflow-write-cross-object-ptr-stack failed with unexpected exit value 1
+
+========== mss-read-cross-frame-index =========
+make test/mss-read-cross-frame-by-index
+make: 'test/mss-read-cross-frame-by-index' is up to date.
+
+test/mss-read-cross-frame-by-index
+
+========== mss-read-cross-frame-ptr =========
+make test/mss-read-cross-frame-by-pointer
+make: 'test/mss-read-cross-frame-by-pointer' is up to date.
+
+test/mss-read-cross-frame-by-pointer
+
+========== mss-read-cross-object-index-data =========
+make test/mss-read-cross-object-by-index
+make: 'test/mss-read-cross-object-by-index' is up to date.
+
+test/mss-read-cross-object-by-index 2
+
+========== mss-read-cross-object-index-heap =========
+make test/mss-read-cross-object-by-index
+make: 'test/mss-read-cross-object-by-index' is up to date.
+
+test/mss-read-cross-object-by-index 1
+
+========== mss-read-cross-object-index-rodata =========
+make test/mss-read-cross-object-by-index
+make: 'test/mss-read-cross-object-by-index' is up to date.
+
+test/mss-read-cross-object-by-index 3
+
+========== mss-read-cross-object-index-stack =========
+make test/mss-read-cross-object-by-index
+make: 'test/mss-read-cross-object-by-index' is up to date.
+
+test/mss-read-cross-object-by-index 0
+
+========== mss-read-cross-object-ptr-data =========
+make test/mss-read-cross-object-by-pointer
+make: 'test/mss-read-cross-object-by-pointer' is up to date.
+
+test/mss-read-cross-object-by-pointer 2
+
+========== mss-read-cross-object-ptr-heap =========
+make test/mss-read-cross-object-by-pointer
+make: 'test/mss-read-cross-object-by-pointer' is up to date.
+
+test/mss-read-cross-object-by-pointer 1
+
+========== mss-read-cross-object-ptr-rodata =========
+make test/mss-read-cross-object-by-pointer
+make: 'test/mss-read-cross-object-by-pointer' is up to date.
+
+test/mss-read-cross-object-by-pointer 3
+
+========== mss-read-cross-object-ptr-stack =========
+make test/mss-read-cross-object-by-pointer
+make: 'test/mss-read-cross-object-by-pointer' is up to date.
+
+test/mss-read-cross-object-by-pointer 0
+
+========== mss-read-cross-page-index-stack =========
+make test/mss-read-cross-page-by-index-in-stack
+make: 'test/mss-read-cross-page-by-index-in-stack' is up to date.
+
+test/mss-read-cross-page-by-index-in-stack
+
+========== mss-read-cross-page-ptr-stack =========
+make test/mss-read-cross-page-by-pointer-in-stack
+make: 'test/mss-read-cross-page-by-pointer-in-stack' is up to date.
+
+test/mss-read-cross-page-by-pointer-in-stack
+
+========== mss-read-cross-segment-data-to-heap-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 2 1 0
+
+========== mss-read-cross-segment-data-to-heap-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 2 1 1
+
+========== mss-read-cross-segment-data-to-rodata-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 2 3 0
+
+========== mss-read-cross-segment-data-to-rodata-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 2 3 1
+
+========== mss-read-cross-segment-data-to-stack-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 2 0 0
+test/mss-read-cross-segment terminated with signal 11
+Test abnormality: mss-read-cross-segment-data-to-stack-index failed with unexpected exit value 267
+Test abnormality: mss-read-cross-segment-data-to-stack-index failed with unexpected exit value 267
+
+========== mss-read-cross-segment-data-to-stack-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 2 0 1
+
+========== mss-read-cross-segment-heap-to-data-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 1 2 0
+
+========== mss-read-cross-segment-heap-to-data-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 1 2 1
+
+========== mss-read-cross-segment-heap-to-rodata-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 1 3 0
+
+========== mss-read-cross-segment-heap-to-rodata-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 1 3 1
+
+========== mss-read-cross-segment-heap-to-stack-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 1 0 0
+test/mss-read-cross-segment terminated with signal 11
+Test abnormality: mss-read-cross-segment-heap-to-stack-index failed with unexpected exit value 267
+Test abnormality: mss-read-cross-segment-heap-to-stack-index failed with unexpected exit value 267
+
+========== mss-read-cross-segment-heap-to-stack-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 1 0 1
+
+========== mss-read-cross-segment-rodata-to-data-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 3 2 0
+
+========== mss-read-cross-segment-rodata-to-data-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 3 2 1
+
+========== mss-read-cross-segment-rodata-to-heap-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 3 1 0
+
+========== mss-read-cross-segment-rodata-to-heap-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 3 1 1
+
+========== mss-read-cross-segment-rodata-to-stack-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 3 0 0
+test/mss-read-cross-segment terminated with signal 11
+Test abnormality: mss-read-cross-segment-rodata-to-stack-index failed with unexpected exit value 267
+Test abnormality: mss-read-cross-segment-rodata-to-stack-index failed with unexpected exit value 267
+
+========== mss-read-cross-segment-rodata-to-stack-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 3 0 1
+
+========== mss-read-cross-segment-stack-to-data-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 0 2 0
+test/mss-read-cross-segment terminated with signal 11
+Test abnormality: mss-read-cross-segment-stack-to-data-index failed with unexpected exit value 267
+Test abnormality: mss-read-cross-segment-stack-to-data-index failed with unexpected exit value 267
+
+========== mss-read-cross-segment-stack-to-data-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 0 2 1
+
+========== mss-read-cross-segment-stack-to-heap-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 0 1 0
+test/mss-read-cross-segment terminated with signal 11
+Test abnormality: mss-read-cross-segment-stack-to-heap-index failed with unexpected exit value 267
+Test abnormality: mss-read-cross-segment-stack-to-heap-index failed with unexpected exit value 267
+
+========== mss-read-cross-segment-stack-to-heap-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 0 1 1
+
+========== mss-read-cross-segment-stack-to-rodata-index =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 0 3 0
+test/mss-read-cross-segment terminated with signal 11
+Test abnormality: mss-read-cross-segment-stack-to-rodata-index failed with unexpected exit value 267
+Test abnormality: mss-read-cross-segment-stack-to-rodata-index failed with unexpected exit value 267
+
+========== mss-read-cross-segment-stack-to-rodata-ptr =========
+make test/mss-read-cross-segment
+make: 'test/mss-read-cross-segment' is up to date.
+
+test/mss-read-cross-segment 0 3 1
+
+========== mss-spray-cross-frame =========
+make test/mss-spray-cross-frame
+make: 'test/mss-spray-cross-frame' is up to date.
+
+test/mss-spray-cross-frame
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-spray-cross-page-stack =========
+make test/mss-spray-cross-page-in-stack
+g++ -I./lib -O2 -std=c++11 -Wall mss/spray-cross-page-in-stack.cpp ./lib/common/global_var.o ./lib/common/signal.o ./lib/x86_64/assembly.o ./lib/common/mss.o -o test/mss-spray-cross-page-in-stack 
+In file included from mss/spray-cross-page-in-stack.cpp:3:
+./lib/include/mss.hpp: In instantiation of ‘int check(BufferType&&, int, int, CompElem, int) [with BufferType = const char*&; CompElem = char]’:
+mss/spray-cross-page-in-stack.cpp:14:30:   required from here
+./lib/include/mss.hpp:49:44: error: request for member ‘getelem_byindex<char>’ in ‘bu’, which is of non-class type ‘const char*’
+   49 |     std::cerr << "val is: " << bu.template getelem_byindex<CompElem>(i,ind) << std::endl;
+      |                                ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+./lib/include/mss.hpp:50:20: error: request for member ‘getelem_byindex<char>’ in ‘bu’, which is of non-class type ‘const char*’
+   50 |     if(bu.template getelem_byindex<CompElem>(i,ind) != ce) return 1;
+      |        ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+make: *** [Makefile:142: test/mss-spray-cross-page-in-stack] Error 1
+fail to make mss-spray-cross-page-in-stack with error status 2
+Test abnormality: mss-spray-cross-page-stack failed with unexpected exit value -1
+
+========== mss-underflow-write-cross-object-index-data =========
+make test/mss-write-cross-object-by-index
+make: 'test/mss-write-cross-object-by-index' is up to date.
+
+test/mss-write-cross-object-by-index 2 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-underflow-write-cross-object-index-heap =========
+make test/mss-write-cross-object-by-index
+make: 'test/mss-write-cross-object-by-index' is up to date.
+
+test/mss-write-cross-object-by-index 1 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-underflow-write-cross-object-index-stack =========
+make test/mss-write-cross-object-by-index
+make: 'test/mss-write-cross-object-by-index' is up to date.
+
+test/mss-write-cross-object-by-index 0 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-underflow-write-cross-object-ptr-data =========
+make test/mss-write-cross-object-by-pointer
+make: 'test/mss-write-cross-object-by-pointer' is up to date.
+
+test/mss-write-cross-object-by-pointer 2 1
+in funciton
+val is: in getelem, i is: 0
+d
+in getelem, i is: 0
+Test abnormality: mss-underflow-write-cross-object-ptr-data failed with unexpected exit value 1
+Test abnormality: mss-underflow-write-cross-object-ptr-data failed with unexpected exit value 1
+
+========== mss-underflow-write-cross-object-ptr-heap =========
+make test/mss-write-cross-object-by-pointer
+make: 'test/mss-write-cross-object-by-pointer' is up to date.
+
+test/mss-write-cross-object-by-pointer 1 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-underflow-write-cross-object-ptr-stack =========
+make test/mss-write-cross-object-by-pointer
+make: 'test/mss-write-cross-object-by-pointer' is up to date.
+
+test/mss-write-cross-object-by-pointer 0 1
+in funciton
+val is: in getelem, i is: 0
+d
+in getelem, i is: 0
+Test abnormality: mss-underflow-write-cross-object-ptr-stack failed with unexpected exit value 1
+Test abnormality: mss-underflow-write-cross-object-ptr-stack failed with unexpected exit value 1
+
+========== mts-access-after-reclaim-heap =========
+make test/mts-access-after-reclaim-heap
+make: 'test/mts-access-after-reclaim-heap' is up to date.
+
+test/mts-access-after-reclaim-heap
+in funciton
+val is: in getelem, i is: 0
+ 
+in getelem, i is: 0
+
+========== mts-access-after-reclaim-stack =========
+make test/mts-access-after-reclaim-stack
+make: 'test/mts-access-after-reclaim-stack' is up to date.
+
+test/mts-access-after-reclaim-stack
+in funciton
+val is: in getelem, i is: 0
+d
+in getelem, i is: 0
+val is: in getelem, i is: 1
+d
+in getelem, i is: 1
+val is: in getelem, i is: 2
+d
+in getelem, i is: 2
+val is: in getelem, i is: 3
+d
+in getelem, i is: 3
+val is: in getelem, i is: 4
+d
+in getelem, i is: 4
+val is: in getelem, i is: 5
+d
+in getelem, i is: 5
+val is: in getelem, i is: 6
+d
+in getelem, i is: 6
+
+========== cfi-call-wrong-func-vtable =========
+make test/cfi-call-wrong-func-vtable
+make: 'test/cfi-call-wrong-func-vtable' is up to date.
+
+test/cfi-call-wrong-func-vtable
+
+========== cfi-call-wrong-func-vtable-released =========
+make test/cfi-call-wrong-func-vtable-released
+make: 'test/cfi-call-wrong-func-vtable-released' is up to date.
+
+test/cfi-call-wrong-func-vtable-released
+
+========== cfi-call-wrong-num-arg-vtable =========
+make test/cfi-call-wrong-num-arg-vtable
+make: 'test/cfi-call-wrong-num-arg-vtable' is up to date.
+
+test/cfi-call-wrong-num-arg-vtable
+
+========== cfi-call-wrong-num-func-vtable =========
+make test/cfi-call-wrong-num-func-vtable
+make: 'test/cfi-call-wrong-num-func-vtable' is up to date.
+
+test/cfi-call-wrong-num-func-vtable
+
+========== cfi-call-wrong-num-func-vtable-data =========
+make test/cfi-call-wrong-num-func-vtable-data
+make: 'test/cfi-call-wrong-num-func-vtable-data' is up to date.
+
+test/cfi-call-wrong-num-func-vtable-data
+
+========== cfi-call-wrong-num-func-vtable-heap =========
+make test/cfi-call-wrong-num-func-vtable-heap
+make: 'test/cfi-call-wrong-num-func-vtable-heap' is up to date.
+
+test/cfi-call-wrong-num-func-vtable-heap
+
+========== cfi-call-wrong-num-func-vtable-stack =========
+make test/cfi-call-wrong-num-func-vtable-stack
+make: 'test/cfi-call-wrong-num-func-vtable-stack' is up to date.
+
+test/cfi-call-wrong-num-func-vtable-stack
+
+========== cfi-return-to-func =========
+make test/cfi-return-to-func
+make: 'test/cfi-return-to-func' is up to date.
+
+test/cfi-return-to-func 2
+
+========== cfi-return-to-non-call-site =========
+make test/cfi-return-to-non-call-site
+make: 'test/cfi-return-to-non-call-site' is up to date.
+
+test/cfi-return-to-non-call-site 2
+
+========== mss-spray-cross-object-heap =========
+make test/mss-spray-cross-object
+make: 'test/mss-spray-cross-object' is up to date.
+
+test/mss-spray-cross-object 1
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== mss-spray-cross-page-heap =========
+make test/mss-spray-cross-page-in-heap
+make: 'test/mss-spray-cross-page-in-heap' is up to date.
+
+test/mss-spray-cross-page-in-heap
+in funciton
+val is: in getelem, i is: 0
+c
+in getelem, i is: 0
+val is: in getelem, i is: 1
+c
+in getelem, i is: 1
+val is: in getelem, i is: 2
+c
+in getelem, i is: 2
+val is: in getelem, i is: 3
+c
+in getelem, i is: 3
+val is: in getelem, i is: 4
+c
+in getelem, i is: 4
+val is: in getelem, i is: 5
+c
+in getelem, i is: 5
+val is: in getelem, i is: 6
+c
+in getelem, i is: 6
+val is: in getelem, i is: 7
+c
+in getelem, i is: 7
+
+========== cfi-return-to-instruction-in-data =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 0 1 2
+
+========== cfi-return-to-instruction-in-heap =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 0 3 2
+
+========== cfi-return-to-instruction-in-rodata =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 0 0 2
+
+========== cfi-return-to-instruction-in-stack =========
+make test/cfi-code-injection
+make: 'test/cfi-code-injection' is up to date.
+
+test/cfi-code-injection 0 2 2
+
+========== cfi-return-to-libc =========
+make test/cfi-return-to-libc
+make: 'test/cfi-return-to-libc' is up to date.
+
+test/cfi-return-to-libc 2

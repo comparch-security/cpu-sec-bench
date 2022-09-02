@@ -19,22 +19,22 @@ int main(int argc, char* argv[])
   switch(store_type*2+flow_type) {
   case 0: // stack overflow
     update_by_index(buffer_stack,  0,   16,  1, 'c');
-    return check(buffer_stack.overflow,  8,  1, 'c');
+    return check(buffer_stack,  8,  1, 'c',2);
   case 1: // stack underflow
     update_by_index(buffer_stack,  0,   -9, -1, 'c');
-    return check(buffer_stack.underflow, 8,  1, 'c');
+    return check(buffer_stack, 8,  1, 'c',0);
   case 2: // heap overflow
     update_by_index(*buffer_heap,  0,   16,  1, 'c');
-    return check(buffer_heap->overflow,  8,  1, 'c');
+    return check(*buffer_heap,  8,  1, 'c',2);
   case 3: // heap underflow
     update_by_index(*buffer_heap,  0,   -9, -1, 'c');
-    return check(buffer_heap->underflow, 8,  1, 'c');
+    return check(*buffer_heap, 8,  1, 'c',0);
   case 4: // data overflow
     update_by_index(buffer_data,   0,   16,  1, 'c');
-    return check(buffer_data.overflow,   8,  1, 'c');
+    return check(buffer_data,   8,  1, 'c',2);
   case 5: // data underflow
     update_by_index(buffer_data,   0,   -9, -1, 'c');
-    return check(buffer_data.underflow,  8,  1, 'c');
+    return check(buffer_data,  8,  1, 'c',0);
   default:
     return -1;
   }

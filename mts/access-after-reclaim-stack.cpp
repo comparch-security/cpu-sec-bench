@@ -6,7 +6,7 @@ charBuffer *pb;
 int FORCE_NOINLINE helper(bool option) {
   charBuffer buffer;
   if(option) {
-    return check(buffer.data, 7,  1, 'd');
+    return check(buffer, 7,  1, 'd', 1);
   } else {
     pb = &buffer;
     buffer.updateBuffer('u', 'd', 'o');

@@ -6,7 +6,7 @@ charBuffer *gbuffer;
 int FORCE_NOINLINE helper(bool option) {
   charBuffer buffer[80];
   if(option)
-    return check(buffer[40].data, 8,  1, 'c');
+    return check(buffer[40], 8,  1, 'c', 1);
   else
     gbuffer = buffer+40;
   return 0;

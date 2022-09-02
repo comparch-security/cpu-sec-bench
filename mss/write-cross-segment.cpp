@@ -17,7 +17,8 @@ int main(int argc, char* argv[])
   int acc_type = argv[3][0] - '0';
   long long distance   = 0;
 
-  char *psrc, *pdes;
+  char *psrc;
+  charBuffer *pdes;
 
   switch(src_type) {
   case 0: psrc = buffer_stack.data; break;
@@ -27,13 +28,13 @@ int main(int argc, char* argv[])
   }
 
   switch(des_type) {
-  case 0: pdes = buffer_stack.data; break;
-  case 1: pdes = buffer_heap->data; break;
-  case 2: pdes = buffer_data.data;  break;
+  case 0: pdes = &buffer_stack; break;
+  case 1: pdes = buffer_heap; break;
+  case 2: pdes = &buffer_data;  break;
   default: return -1;
   }
 
-  GET_DISTANCE(distance, pdes, psrc);
+  GET_DISTANCE(distance, pdes->data, psrc);
 
   if(acc_type == 0) {
     switch(src_type) {
@@ -46,5 +47,5 @@ int main(int argc, char* argv[])
     update_by_pointer(psrc, distance, 8, 1, 'c');
   }
 
-  return check(pdes, 8, 1, 'c');
+  return check(*pdes, 8, 1, 'c',1);
 }

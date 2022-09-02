@@ -11,7 +11,7 @@ void FORCE_NOINLINE helper(const char* b, int level) {
   else {
     GET_DISTANCE(delta, b, dummy.data);
     update_by_pointer(dummy.data, 0, delta+8, 1, 'c');
-    exit(check(b, 8, 1, 'c'));
+    exit(check(b, 8, 1, 'c',1));
   }
 }
 

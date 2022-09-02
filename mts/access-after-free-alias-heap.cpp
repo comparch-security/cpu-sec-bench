@@ -7,6 +7,6 @@ int main() {
   buffer = tmp;
   tmp->updateBuffer('u', 'd', 'o');
   delete tmp;
-  return check(buffer->data, 7,  1, 'd');
+  return check(*buffer, 7,  1, 'd', 1);
 }
 

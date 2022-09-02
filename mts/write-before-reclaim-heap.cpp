@@ -13,7 +13,7 @@ int main() {
   for(int i=0; i<RELOC_NUM; i++) {
     buffer = new charBuffer;
     if(pset.count(buffer))
-      return check(buffer->data, 8,  1, 'c');
+      return check(*buffer, 8,  1, 'c', 1);
     else {
       pset.insert(buffer);
       buffer->updateBuffer('u', 'd', 'o');

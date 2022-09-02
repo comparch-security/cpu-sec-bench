@@ -26,6 +26,6 @@ int main() {
     return 2;
   else {
     update_by_pointer(dangle->data, 0, 8,  1, 'c');
-    return check(buffer->data, 8,  1, 'c');
+    return check(*buffer, 8,  1, 'c', 1);
   }
 }

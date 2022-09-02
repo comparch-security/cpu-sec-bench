@@ -31,26 +31,26 @@ int main(int argc, char* argv[])
   case 0: { // stack
     GET_DISTANCE(distance_up,   buffer_stackU.data, buffer_stackM.data);
     GET_DISTANCE(distance_down, buffer_stackD.data, buffer_stackM.data);
-    char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_stackU.data : buffer_stackD.data;
+    charBuffer* buf         = (distance_up > 0) ^ (flow_type == 1) ? &buffer_stackU : &buffer_stackD;
     long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up        : distance_down;
     update_by_index(buffer_stackM, distance,   8, 1, 'c');
-    return check(buf,  8,  1, 'c');
+    return check(*buf,  8,  1, 'c', 1);
   }
   case 1: { // heap
     GET_DISTANCE(distance_up,   buffer_heapU->data, buffer_heapM->data);
     GET_DISTANCE(distance_down, buffer_heapD->data, buffer_heapM->data);
-    char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_heapU->data : buffer_heapD->data;
+    charBuffer* buf         = (distance_up > 0) ^ (flow_type == 1) ? buffer_heapU : buffer_heapD;
     long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up        : distance_down;
     update_by_index(*buffer_heapM, distance,   8, 1, 'c');
-    return check(buf,  8,  1, 'c');
+    return check(*buf,  8,  1, 'c',1);
   }
   case 2: { // data
     GET_DISTANCE(distance_up,   buffer_dataU.data, buffer_dataM.data);
     GET_DISTANCE(distance_down, buffer_dataD.data, buffer_dataM.data);
-    char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_dataU.data : buffer_dataD.data;
+    charBuffer* buf          = (distance_up > 0) ^ (flow_type == 1) ? &buffer_dataU : &buffer_dataD;
     long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up       : distance_down;
     update_by_index(buffer_dataM, distance,   8, 1, 'c');
-    return check(buf,  8,  1, 'c');
+    return check(*buf,  8,  1, 'c',1);
   }
   default:
     return -1;

@@ -10,5 +10,5 @@ void FORCE_NOINLINE helper() {
 
 int main() {
   helper();
-  return check(gbuffer->data, 7,  1, 'd');
+  return check(*gbuffer, 7,  1, 'd',1);
 }
