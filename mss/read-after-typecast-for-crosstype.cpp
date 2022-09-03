@@ -1,12 +1,5 @@
 #include "include/mss.hpp"
 
-void crossptr_buffer_init(crossptrBuffer *cb, long long ll, char d) {
-  cb->target = ll;
-  for(unsigned int i=0; i<7; i++) 
-    cb->data[i] = d;
-  cb->data[7] = 0;
-}
-
 int local_check(long long num,int step,char d){
   unsigned char tmp;
   for(int i = 0; i != step; i++){
@@ -17,22 +10,14 @@ int local_check(long long num,int step,char d){
   return 0;
 }
 
-const crossptrBuffer buffer_rodata = {0,"ddddddd"};
+const crossptrBuffer buffer_rodata(0, 'd');
 
-crossptrBuffer buffer_data;
+crossptrBuffer buffer_data(0, 'd');
 
 int main(int argc, char* argv[])
 {
-  // buffer in data
-  crossptr_buffer_init(&buffer_data,0,'d');
-
-  // buffer in local stack
-  crossptrBuffer buffer_stack;
-  crossptr_buffer_init(&buffer_stack,0,'d');
-
-  // buffer allocated in heap
-  crossptrBuffer* buffer_heap = new crossptrBuffer;
-  crossptr_buffer_init(buffer_heap,0,'d');
+  crossptrBuffer buffer_stack(0, 'd');
+  crossptrBuffer *buffer_heap = new crossptrBuffer(0, 'd');
 
   int store_type = argv[1][0] - '0';
 

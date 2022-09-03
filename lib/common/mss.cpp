@@ -22,6 +22,14 @@ void charBuffer::updateBuffer(const char uf, const char d, const char of){
   overflow[CB_BUF_LEN-1]  = 0;
 }
 
+crossptrBuffer::crossptrBuffer(long long t, char d)
+  : target(t)
+{
+  for(unsigned int i=0; i!=CB_BUF_LEN-1; i++)
+    data[i] = d;
+  data[CB_BUF_LEN-1]      = 0;
+}
+
 void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c) {
   for(long long i=offset; i != size+offset; i += step)
     cb.data[i] = c;
