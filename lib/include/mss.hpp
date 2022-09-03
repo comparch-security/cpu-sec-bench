@@ -9,7 +9,7 @@ public:
   char underflow[CB_BUF_LEN];
   char data[CB_BUF_LEN];
   char overflow[CB_BUF_LEN];
-public:
+
   charBuffer() = default;
   charBuffer(const char uf, const char d, const char of);
   void updateBuffer(const char uf, const char d, const char of);
