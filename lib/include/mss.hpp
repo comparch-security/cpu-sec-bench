@@ -15,6 +15,12 @@ public:
   void updateBuffer(const char uf, const char d, const char of);
 };
 
+struct crossptrBuffer
+{
+  long long target;
+  char data[8]; 
+};
+
 extern void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c);
 extern void update_by_pointer(char *buf, long long offset, long long size, int step, char c);
 extern int read_by_index(const charBuffer& cb, long long offset, long long size, int step, char c);
