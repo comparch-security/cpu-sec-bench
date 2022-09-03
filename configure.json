@@ -1,18 +1,18 @@
 {
-    "mss-overflow-read-after-typecast-for-crosstype-stack":{
-        "program": "mss-read-after-typecast-for-crosstype",
+    "mss-overflow-read-scalar-cast-to-array-stack":{
+        "program": "mss-overflow-read-scalar-cast-to-array",
         "arguments": { "0": ["0"] }
     },
-    "mss-overflow-read-after-typecast-for-crosstype-heap":{
-        "program": "mss-read-after-typecast-for-crosstype",
+    "mss-overflow-read-scalar-cast-to-array-heap":{
+        "program": "mss-overflow-read-scalar-cast-to-array",
         "arguments": { "0": ["1"] }
     },
-    "mss-overflow-read-after-typecast-for-crosstype-data":{
-        "program": "mss-read-after-typecast-for-crosstype",
+    "mss-overflow-read-scalar-cast-to-array-data":{
+        "program": "mss-overflow-read-scalar-cast-to-array",
         "arguments": { "0": ["2"] }
     },
-    "mss-overflow-read-after-typecast-for-crosstype-rodata":{
-        "program": "mss-read-after-typecast-for-crosstype",
+    "mss-overflow-read-scalar-cast-to-array-rodata":{
+        "program": "mss-overflow-read-scalar-cast-to-array",
         "arguments": { "0": ["3"] }
     },
     "mss-overflow-read-index-stack": {

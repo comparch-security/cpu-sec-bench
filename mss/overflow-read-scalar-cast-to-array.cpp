@@ -2,14 +2,14 @@
 
 const long long compare_target = 0x0064646464646464ll; // = "ddddddd"
 
-const crossptrBuffer buffer_rodata(compare_target, 'd');
+const typeCastBuffer buffer_rodata(compare_target, 'd');
 
-crossptrBuffer buffer_data(compare_target, 'd');
+typeCastBuffer buffer_data(compare_target, 'd');
 
 int main(int argc, char* argv[])
 {
-  crossptrBuffer buffer_stack(compare_target, 'd');
-  crossptrBuffer *buffer_heap = new crossptrBuffer(compare_target, 'd');
+  typeCastBuffer buffer_stack(compare_target, 'd');
+  typeCastBuffer *buffer_heap = new typeCastBuffer(compare_target, 'd');
 
   int store_type = argv[1][0] - '0';
 

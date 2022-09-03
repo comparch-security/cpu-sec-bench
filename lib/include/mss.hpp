@@ -15,14 +15,14 @@ public:
   void updateBuffer(const char uf, const char d, const char of);
 };
 
-class crossptrBuffer
+class typeCastBuffer
 {
 public:
   long long target;
   char data[CB_BUF_LEN];
 
-  crossptrBuffer() = default;
-  crossptrBuffer(long long t, char d);
+  typeCastBuffer() = default;
+  typeCastBuffer(long long t, char d);
 };
 
 extern void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c);

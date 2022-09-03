@@ -22,7 +22,7 @@ void charBuffer::updateBuffer(const char uf, const char d, const char of){
   overflow[CB_BUF_LEN-1]  = 0;
 }
 
-crossptrBuffer::crossptrBuffer(long long t, char d)
+typeCastBuffer::typeCastBuffer(long long t, char d)
   : target(t)
 {
   for(unsigned int i=0; i!=CB_BUF_LEN-1; i++)
