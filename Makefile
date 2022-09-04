@@ -2,6 +2,7 @@ SHELL := /bin/bash
 
 # default variables
 ARCH          ?= $(shell arch)
+OSType        ?= $(shell uname)
 GCC_OPT_LEVEL ?= O2
 CXX           ?= g++
 OBJDUMP       ?= objdump
@@ -9,6 +10,12 @@ OBJDUMP       ?= objdump
 # Apple's Darwin OS on M1 list Arm core differently
 ifeq ($(ARCH), arm64)
   ARCH := aarch64
+endif
+
+ifeq ($(OSType), Darwin)
+  CPU_INFO := $(shell sysctl -n machdep.cpu.brand_string)
+else
+  CPU_INFO := $(shell grep -m 1 "model name" /proc/cpuinfo)
 endif
 
 # extra security features (comment them out if not needed)
@@ -116,16 +123,28 @@ extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(a
 # compile targets
 
 all: run-test
-
+.PHONY: all
 
 # json.hpp needs C++11, which might be problematic on some systems
-run-test: $(base)/scheduler/run-test.cpp $(base)/scheduler/json.hpp | $(test-path)
+run-test: $(base)/scheduler/run-test.cpp $(base)/scheduler/json.hpp $(test-path)/sys_info.txt
 	$(CXX) -O2 --std=c++11 -I. $< -o $@
 
 rubbish += run-test
 
-$(test-path):
-	-mkdir -p $@
+$(test-path)/sys_info.txt:
+	-mkdir -p $(test-path)
+	echo "CPU: $(CPU_INFO)" > $(test-path)/sys_info.txt
+	echo "System : " >> $(test-path)/sys_info.txt
+	uname -srpi >> $(test-path)/sys_info.txt
+	echo "Compiler : " >> $(test-path)/sys_info.txt
+	$(CXX) --version >> $(test-path)/sys_info.txt
+	echo "LIBC : " >> $(test-path)/sys_info.txt
+	$(OBJDUMP) --version >> $(test-path)/sys_info.txt
+	echo "Flags : " >> $(test-path)/sys_info.txt
+	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
+	echo "LDFLAGS = "$(LDFLAGS) >> $(test-path)/sys_info.txt
+
+rubbish += $(test-path)/sys_info.txt
 
 libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
 	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@

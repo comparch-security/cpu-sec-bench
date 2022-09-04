@@ -120,6 +120,17 @@ bool dump_json(json &db, const std::string& fn, bool notice) {
 
 void report_gen() {
   std::ofstream report_file("results.dat");
+
+  // insert sys infomation to the result file
+  std::ifstream sys_info_file("test/sys_info.txt");
+  char buf[256];
+  while(!sys_info_file.eof()) {
+    sys_info_file.getline(buf, 256);
+    report_file << "# " << buf << std::endl;
+  }
+  sys_info_file.close();
+
+  // record test result
   for(auto record: result_db.get<std::map<std::string, json> >())
     report_file << record.first << " " << record.second["result"] << std::endl;
   report_file.close();  
