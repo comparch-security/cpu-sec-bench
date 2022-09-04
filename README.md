@@ -91,10 +91,11 @@ In the alphabet order:
 
 #### References:
 
+1. 沈思豪, 解达, 宋威. [跨平台内存安全测试集设计](http://dx.doi.org/10.15888/j.cnki.csa.008840). 计算机系统应用, 2022, 31(10).
 1. Wei Song, Jiameng Ying, Sihao Shen, Boya Li, Hao Ma, Peng Liu.
    _A comprehensive and cross-platform test suite for memory safety -- Towards an open framework for testing processor hardware supported security extensions_.
    [arXiv:2111.14072](https://arxiv.org/abs/2111.14072), November 2021.
-2. Jianping Zhu, Wei Song, Ziyuan Zhu, Jiameng Ying, Boya Li, Bibo Tu, Gang Shi, Rui Hou, and Dan Meng.
+1. Jianping Zhu, Wei Song, Ziyuan Zhu, Jiameng Ying, Boya Li, Bibo Tu, Gang Shi, Rui Hou, and Dan Meng.
    _[CPU security benchmark](https://wsong83.github.io/publication/comparch/secarch2018.pdf)_.
    In Proceedings of the 1st Workshop on Security-Oriented Designs of Computer Architectures and Processors,
    Toronto, ON, Canada, pp. 8–14, 2018.
