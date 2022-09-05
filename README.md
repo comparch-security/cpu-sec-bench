@@ -38,7 +38,7 @@ Possible parameters:
   continue    Continue a previous test by reading the results.json file first.
   debug       Stop testing on the first unexpected exit status.
   make-only   Make the test cases without running them.
-  no-make     Due to make the test cases as they are made aleady.
+  no-make     Don't make the test cases as they are made aleady (normally on embedded systems).
   report      Generate a report after finishing all test cases.
 ~~~
 
