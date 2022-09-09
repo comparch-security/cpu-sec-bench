@@ -25,6 +25,15 @@ public:
   typeCastBuffer(long long t, char d);
 };
 
+class scalarCastBuffer
+{
+public:
+  int target;
+  int data;
+  scalarCastBuffer() = default;
+  scalarCastBuffer(int d):target(d),data(d){};
+};
+
 extern void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c);
 extern void update_by_pointer(char *buf, long long offset, long long size, int step, char c);
 extern int read_by_index(const charBuffer& cb, long long offset, long long size, int step, char c);
