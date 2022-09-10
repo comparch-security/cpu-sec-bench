@@ -1,20 +1,4 @@
 {
-    "mss-overflow-read-scalar-cast-to-array-stack":{
-        "program": "mss-overflow-read-scalar-cast-to-array",
-        "arguments": { "0": ["0"] }
-    },
-    "mss-overflow-read-scalar-cast-to-array-heap":{
-        "program": "mss-overflow-read-scalar-cast-to-array",
-        "arguments": { "0": ["1"] }
-    },
-    "mss-overflow-read-scalar-cast-to-array-data":{
-        "program": "mss-overflow-read-scalar-cast-to-array",
-        "arguments": { "0": ["2"] }
-    },
-    "mss-overflow-read-scalar-cast-to-array-rodata":{
-        "program": "mss-overflow-read-scalar-cast-to-array",
-        "arguments": { "0": ["3"] }
-    },
     "mss-check-stack-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["0"]},
@@ -494,6 +478,22 @@
     "mss-spray-cross-page-heap": {
         "program": "mss-spray-cross-page-in-heap",
         "require": { "0": [ [ "mss-spray-cross-object-heap" ] ] }
+    },
+    "mss-overflow-read-scalar-cast-to-array-stack":{
+        "program": "mss-overflow-read-scalar-cast-to-array",
+        "arguments": { "0": ["0"] }
+    },
+    "mss-overflow-read-scalar-cast-to-array-heap":{
+        "program": "mss-overflow-read-scalar-cast-to-array",
+        "arguments": { "0": ["1"] }
+    },
+    "mss-overflow-read-scalar-cast-to-array-data":{
+        "program": "mss-overflow-read-scalar-cast-to-array",
+        "arguments": { "0": ["2"] }
+    },
+    "mss-overflow-read-scalar-cast-to-array-rodata":{
+        "program": "mss-overflow-read-scalar-cast-to-array",
+        "arguments": { "0": ["3"] }
     },
 
     "mts-access-after-free-alias-stack": {},
