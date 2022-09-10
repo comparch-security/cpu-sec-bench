@@ -15,6 +15,26 @@
         "program": "mss-overflow-read-scalar-cast-to-array",
         "arguments": { "0": ["3"] }
     },
+    "mss-check-stack-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["0"]},
+        "set-var": { "0": "redzone_class_var_stack"}
+    },
+    "mss-check-heap-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["1"]},
+        "set-var": { "0": "redzone_class_var_heap"}
+    },
+    "mss-check-data-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["2"]},
+        "set-var": { "0": "redzone_class_var_data"}
+    },
+    "mss-check-rodata-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["3"]},
+        "set-var": { "0": "redzone_class_var_rodata"}
+    },
     "mss-overflow-read-index-stack": {
         "program": "mss-read-by-index",
         "arguments": { "0": ["0", "0"] },
