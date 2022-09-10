@@ -13,6 +13,7 @@ typedef pfunc_t *pvtable_t;
 
 // create a fake virtual table on heap with `nfunc' number of `pfunc_t'
 extern pvtable_t create_fake_vtable_on_heap(unsigned int nfunc);
+extern void free_fake_vtable_on_heap(pvtable_t addr);
 
 class Base
 {

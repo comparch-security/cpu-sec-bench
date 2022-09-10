@@ -24,5 +24,6 @@ int main()
   end_catch_exception();
   end_catch_exception();
   end_catch_exception();
+  delete m;
   exit(rv);
 }

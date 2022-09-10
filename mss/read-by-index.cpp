@@ -15,24 +15,29 @@ int main(int argc, char* argv[])
   int store_type = argv[1][0] - '0';
   int flow_type  = argv[2][0] - '0';
 
+  int rv;
+
   switch(store_type*2+flow_type) {
   case 0: // stack overflow
-    return read_by_index(buffer_stack,  8, 7, 1, 'o');
+    rv = read_by_index(buffer_stack,  8, 7, 1, 'o'); break;
   case 1: // stack underflow
-    return read_by_index(buffer_stack, -8, 7, 1, 'u');
+    rv = read_by_index(buffer_stack, -8, 7, 1, 'u'); break;
   case 2: // heap overflow
-    return read_by_index(*buffer_heap,  8, 7, 1, 'o');
+    rv = read_by_index(*buffer_heap,  8, 7, 1, 'o'); break;
   case 3: // heap underflow
-    return read_by_index(*buffer_heap, -8, 7, 1, 'u');
+    rv = read_by_index(*buffer_heap, -8, 7, 1, 'u'); break;
   case 4: // data overflow
-    return read_by_index(buffer_data,   8, 7, 1, 'o');
+    rv = read_by_index(buffer_data,   8, 7, 1, 'o'); break;
   case 5: // data underflow
-    return read_by_index(buffer_data,  -8, 7, 1, 'u');
+    rv = read_by_index(buffer_data,  -8, 7, 1, 'u'); break;
   case 6: // rodata underflow
-    return read_by_index(buffer_rodata, 8, 7, 1, 'o');
+    rv = read_by_index(buffer_rodata, 8, 7, 1, 'o'); break;
   case 7: // rodata underflow
-    return read_by_index(buffer_rodata,-8, 7, 1, 'u');
+    rv = read_by_index(buffer_rodata,-8, 7, 1, 'u'); break;
   default:
-    return -1;
+    rv = -1;
   }
+
+  delete buffer_heap;
+  return rv;
 }

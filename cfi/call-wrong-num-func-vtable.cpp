@@ -14,5 +14,7 @@ int main()
   Fake *fake = new Fake();
   write_vtable_pointer(orig, read_vtable_pointer(fake));
   orig->virtual_func();
+  delete orig;
+  delete fake;
   return 4;
 }

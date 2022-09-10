@@ -24,32 +24,44 @@ int main(int argc, char* argv[])
   long long distance_up   = 0;
   long long distance_down = 0;
 
+  int rv;
+
   switch(store_type) {
   case 0: // stack
     GET_DISTANCE(distance_up,   buffer_stackU.underflow, buffer_stackM.data);
     GET_DISTANCE(distance_down, buffer_stackD.overflow,  buffer_stackM.data);
-    return
+    rv =
       read_by_pointer(buffer_stackM.data, distance_up,   7, 1, 'u') &
       read_by_pointer(buffer_stackM.data, distance_down, 7, 1, 'o') ;
+    break;
   case 1: // heap
     GET_DISTANCE(distance_up,   buffer_heapU->underflow, buffer_heapM->data);
     GET_DISTANCE(distance_down, buffer_heapD->overflow,  buffer_heapM->data);
-    return
+    rv =
       read_by_pointer(buffer_heapM->data, distance_up,   7, 1, 'u') &
       read_by_pointer(buffer_heapM->data, distance_down, 7, 1, 'o') ;
+    break;
   case 2: // data
     GET_DISTANCE(distance_up,   buffer_dataU.underflow, buffer_dataM.data);
     GET_DISTANCE(distance_down, buffer_dataD.overflow,  buffer_dataM.data);
-    return
+    rv =
       read_by_pointer(buffer_dataM.data, distance_up,   7, 1, 'u') &
       read_by_pointer(buffer_dataM.data, distance_down, 7, 1, 'o') ;
+    break;
   case 3: // rodata
     GET_DISTANCE(distance_up,   buffer_rodataU.underflow, buffer_rodataM.data);
     GET_DISTANCE(distance_down, buffer_rodataD.overflow,  buffer_rodataM.data);
-    return
+    rv =
       read_by_pointer(buffer_rodataM.data, distance_up,   7, 1, 'u') &
       read_by_pointer(buffer_rodataM.data, distance_down, 7, 1, 'o') ;
+    break;
   default:
-    return -1;
+    rv = -1;
   }
+
+  delete buffer_heapU;
+  delete buffer_heapM;
+  delete buffer_heapD;
+
+  return rv;
 }

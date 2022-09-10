@@ -20,14 +20,13 @@ int main(int argc, char* argv[])
   long long distance   = 0;
 
   const char *psrc, *pdes;
-  char tc; 
+  char tc;
 
   switch(src_type) {
   case 0: psrc = buffer_stack.data; break;
   case 1: psrc = buffer_heap->data; break;
   case 2: psrc = buffer_data.data; break;
   case 3: psrc = buffer_rodata.data; break;
-  default: return -1;
   }
 
   switch(des_type) {
@@ -35,20 +34,23 @@ int main(int argc, char* argv[])
   case 1: pdes = buffer_heap->data;  tc = 'h'; break;
   case 2: pdes = buffer_data.data;   tc = 'd'; break;
   case 3: pdes = buffer_rodata.data; tc = 'r'; break;
-  default: return -1;
   }
 
   GET_DISTANCE(distance, pdes, psrc);
 
+  int rv;
+
   if(acc_type == 0) {
     switch(src_type) {
-    case 0: return read_by_index(buffer_stack,  distance, 7, 1, tc);
-    case 1: return read_by_index(*buffer_heap,  distance, 7, 1, tc);
-    case 2: return read_by_index(buffer_data,   distance, 7, 1, tc);
-    case 3: return read_by_index(buffer_rodata, distance, 7, 1, tc);
-    default: return -1;
+    case 0: rv = read_by_index(buffer_stack,  distance, 7, 1, tc); break;
+    case 1: rv = read_by_index(*buffer_heap,  distance, 7, 1, tc); break;
+    case 2: rv = read_by_index(buffer_data,   distance, 7, 1, tc); break;
+    case 3: rv = read_by_index(buffer_rodata, distance, 7, 1, tc); break;
     }
   } else {
-    return read_by_pointer(psrc, distance, 7, 1, tc);
+    rv = read_by_pointer(psrc, distance, 7, 1, tc);
   }
+
+  delete buffer_heap;
+  return rv;
 }

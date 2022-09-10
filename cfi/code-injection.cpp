@@ -96,5 +96,6 @@ int main(int argc, char* argv[])
 #endif
   end_catch_exception();
  EXIT_POS:
+  delete m_heap;
   return gvar();
 }

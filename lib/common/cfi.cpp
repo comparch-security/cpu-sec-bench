@@ -49,6 +49,10 @@ extern pvtable_t create_fake_vtable_on_heap(unsigned int nfunc) {
   return addr;
 }
 
+extern void free_fake_vtable_on_heap(pvtable_t addr) {
+  free(addr);
+}
+
 void memory_exchange(void * a, void * b, int byte) {
   void* c = malloc(byte);
   memcpy(c, a, byte);

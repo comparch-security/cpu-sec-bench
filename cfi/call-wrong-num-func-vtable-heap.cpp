@@ -18,5 +18,7 @@ int main()
   write_vtable_pointer(orig, fake_vtable);
   orig->virtual_func();
 
+  delete orig;
+  free_fake_vtable_on_heap(fake_vtable);
   return 4;
 }

@@ -20,6 +20,7 @@ int main()
   orig->virtual_func();
   end_catch_exception();
   end_catch_exception();
+  delete orig;
   return 4;
 }
 

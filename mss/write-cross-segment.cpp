@@ -23,14 +23,12 @@ int main(int argc, char* argv[])
   case 0: psrc = buffer_stack.data; break;
   case 1: psrc = buffer_heap->data; break;
   case 2: psrc = buffer_data.data; break;
-  default: return -1;
   }
 
   switch(des_type) {
   case 0: pdes = buffer_stack.data; break;
   case 1: pdes = buffer_heap->data; break;
   case 2: pdes = buffer_data.data;  break;
-  default: return -1;
   }
 
   GET_DISTANCE(distance, pdes, psrc);
@@ -40,11 +38,12 @@ int main(int argc, char* argv[])
     case 0: update_by_index(buffer_stack,  distance, 8, 1, 'c'); break;
     case 1: update_by_index(*buffer_heap,  distance, 8, 1, 'c'); break;
     case 2: update_by_index(buffer_data,   distance, 8, 1, 'c'); break;
-    default: return -1;
     }
   } else {
     update_by_pointer(psrc, distance, 8, 1, 'c');
   }
 
-  return check(pdes, 8, 1, 'c');
+  int rv = check(pdes, 8, 1, 'c');
+  delete buffer_heap;
+  return rv;
 }

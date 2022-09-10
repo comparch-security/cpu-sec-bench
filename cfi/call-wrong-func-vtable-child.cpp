@@ -8,5 +8,7 @@ int main()
   write_vtable_pointer(orig, read_vtable_pointer(fake));
   rv += orig->virtual_funcM0();
   rv += fake->virtual_funcM0();
+  delete orig;
+  delete fake;
   return rv == 6 ? 0 : 1;
 }

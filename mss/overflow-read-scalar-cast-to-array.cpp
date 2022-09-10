@@ -13,17 +13,19 @@ int main(int argc, char* argv[])
 
   int store_type = argv[1][0] - '0';
 
+  int rv;
+
   switch(store_type) {
   case 0: // stack overflow
-    return check(&buffer_stack.target,  2, 1, compare_target);
+    rv = check(&buffer_stack.target,  2, 1, compare_target); break;
   case 1: // heap overflow
-    return check(&buffer_heap->target,  2, 1, compare_target);
+    rv = check(&buffer_heap->target,  2, 1, compare_target); break;
   case 2: // data overflow
-    return check(&buffer_data.target,   2, 1, compare_target);
+    rv = check(&buffer_data.target,   2, 1, compare_target); break;
   case 3: // rodata overflow
-    return check(&buffer_rodata.target, 2, 1, compare_target);
-  default:
-    return 2;
+    rv = check(&buffer_rodata.target, 2, 1, compare_target); break;
   }
 
+  delete buffer_heap;
+  return rv;
 }
