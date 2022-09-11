@@ -14,17 +14,21 @@ int main(int argc, char* argv[])
 
   int store_type = argv[1][0] - '0';
 
+  int rv;
+
   switch(store_type) {
   case 0: // stack overflow
-    return check(reinterpret_cast<long long*>(&buffer_stack.target),  1, 1, compare_target);
+    rv = check((long long*)(&buffer_stack.target),  1, 1, compare_target); break;
   case 1: // heap overflow
-    return check(reinterpret_cast<long long*>(&buffer_heap->target),  1, 1, compare_target);
+    rv = check((long long*)(&buffer_heap->target),  1, 1, compare_target); break;
   case 2: // data overflow
-    return check(reinterpret_cast<long long*>(&buffer_data.target),   1, 1, compare_target);
+    rv = check((long long*)(&buffer_data.target),   1, 1, compare_target); break;
   case 3: // rodata overflow
-    return check(reinterpret_cast<const long long*>(&buffer_rodata.target), 1, 1, compare_target);
+    rv = check((const long long*)(&buffer_rodata.target), 1, 1, compare_target); break;
   default:
-    return 2;
+    rv = 2;
   }
 
+  delete buffer_heap;
+  return rv;
 }
