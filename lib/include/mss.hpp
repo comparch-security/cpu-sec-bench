@@ -15,19 +15,19 @@ public:
   void updateBuffer(const char uf, const char d, const char of);
 };
 
-template<typename tT>
+template<typename tT, unsigned int CB_SIZE = CB_BUF_LEN>
 class typeCastBuffer
 {
 public:
   tT target;
-  char data[CB_BUF_LEN];
+  char data[CB_SIZE];
 
   typeCastBuffer() = default;
   typeCastBuffer(tT t, char d)
     : target(t)
   {
-    for(unsigned int i=0; i!=CB_BUF_LEN-1; i++) data[i] = d;
-    data[CB_BUF_LEN-1] = 0;
+    for(unsigned int i=0; i!=CB_SIZE-1; i++) data[i] = d;
+    data[CB_SIZE-1] = 0;
   }
 };
 
