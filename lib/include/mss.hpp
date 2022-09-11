@@ -15,23 +15,20 @@ public:
   void updateBuffer(const char uf, const char d, const char of);
 };
 
+template<typename tT>
 class typeCastBuffer
 {
 public:
-  long long target;
+  tT target;
   char data[CB_BUF_LEN];
 
   typeCastBuffer() = default;
-  typeCastBuffer(long long t, char d);
-};
-
-class scalarCastBuffer
-{
-public:
-  int target;
-  int data;
-  scalarCastBuffer() = default;
-  scalarCastBuffer(int d):target(d),data(d){};
+  typeCastBuffer(tT t, char d)
+    : target(t)
+  {
+    for(unsigned int i=0; i!=CB_BUF_LEN-1; i++) data[i] = d;
+    data[CB_BUF_LEN-1] = 0;
+  }
 };
 
 extern void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c);

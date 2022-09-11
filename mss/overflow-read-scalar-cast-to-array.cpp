@@ -2,14 +2,14 @@
 
 const long long compare_target = 0x0064646464646464ll; // = "ddddddd"
 
-const typeCastBuffer buffer_rodata(compare_target, 'd');
+const typeCastBuffer<long long> buffer_rodata(compare_target, 'd');
 
-typeCastBuffer buffer_data(compare_target, 'd');
+typeCastBuffer<long long> buffer_data(compare_target, 'd');
 
 int main(int argc, char* argv[])
 {
-  typeCastBuffer buffer_stack(compare_target, 'd');
-  typeCastBuffer *buffer_heap = new typeCastBuffer(compare_target, 'd');
+  typeCastBuffer<long long> buffer_stack(compare_target, 'd');
+  typeCastBuffer<long long> *buffer_heap = new typeCastBuffer<long long>(compare_target, 'd');
 
   int store_type = argv[1][0] - '0';
 

@@ -1,16 +1,15 @@
 #include "include/mss.hpp"
 
-const int fill_target = 0x11111111;
-const long long  compare_target = 0x1111111111111111;
+const long long compare_target = 0x6464646400000001ll;
 
-const scalarCastBuffer buffer_rodata(fill_target);
+const typeCastBuffer<int> buffer_rodata(1, 'd');
 
-scalarCastBuffer buffer_data(fill_target);
+typeCastBuffer<int> buffer_data(1, 'd');
 
 int main(int argc, char* argv[])
 {
-  scalarCastBuffer buffer_stack(fill_target);
-  scalarCastBuffer *buffer_heap = new scalarCastBuffer(fill_target);
+  typeCastBuffer<int> buffer_stack(1, 'd');
+  typeCastBuffer<int> *buffer_heap = new typeCastBuffer<int>(1, 'd');
 
   int store_type = argv[1][0] - '0';
 
