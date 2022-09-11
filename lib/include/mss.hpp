@@ -34,7 +34,14 @@ public:
 extern void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c);
 extern void update_by_pointer(char *buf, long long offset, long long size, int step, char c);
 extern int read_by_index(const charBuffer& cb, long long offset, long long size, int step, char c);
-extern int read_by_pointer(const char *buf, long long offset, long long size, int step, char c);
+
+template<typename T>
+int read_by_pointer(const T *buf, long long offset, long long size, int step, T c) {
+  buf += offset;
+  for(long long i=0; i != size; i += step, buf += step)
+    if(*buf != c) return 1;
+  return 0;
+}
 
 template<typename T>
 int check(const T *buf, int size, int step, T c) {

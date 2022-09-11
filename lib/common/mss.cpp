@@ -38,10 +38,3 @@ int read_by_index(const charBuffer& cb, long long offset, long long size, int st
     if(cb.data[i] != c) return 1;
   return 0;
 }
-
-int read_by_pointer(const char *buf, long long offset, long long size, int step, char c) {
-  buf += offset;
-  for(long long i=0; i != size; i += step, buf += step)
-    if(*buf != c) return 1;
-  return 0;
-}
