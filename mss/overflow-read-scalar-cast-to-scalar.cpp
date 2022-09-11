@@ -13,20 +13,14 @@ int main(int argc, char* argv[])
 
   int store_type = argv[1][0] - '0';
 
-  int rv;
+  const long long *target[] = {
+    (const long long *)&buffer_stack.target,
+    (const long long *)&buffer_heap->target,
+    (const long long *)&buffer_data.target,
+    (const long long *)&buffer_rodata.target
+  };
 
-  switch(store_type) {
-  case 0: // stack overflow
-    rv = check((long long*)(&buffer_stack.target),  1, 1, compare_target); break;
-  case 1: // heap overflow
-    rv = check((long long*)(&buffer_heap->target),  1, 1, compare_target); break;
-  case 2: // data overflow
-    rv = check((long long*)(&buffer_data.target),   1, 1, compare_target); break;
-  case 3: // rodata overflow
-    rv = check((const long long*)(&buffer_rodata.target), 1, 1, compare_target); break;
-  default:
-    rv = 2;
-  }
+  int rv = check(target[store_type], 1, 1, compare_target);
 
   delete buffer_heap;
   return rv;
