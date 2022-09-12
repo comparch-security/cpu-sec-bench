@@ -19,12 +19,14 @@ class Base
 {
 public:
   virtual void virtual_func();
+  virtual ~Base() {}
 };
 
 class Helper : public Base
 {
 public:
   virtual void virtual_func();
+  virtual ~Helper() {}
 };
 
 class Helper2 : public Base
@@ -33,6 +35,7 @@ class Helper2 : public Base
 public:
   virtual void virtual_func(int arg);
   double get_lvar() { return lvar; }
+  virtual ~Helper2() {}
 };
 
 class Helper3 : public Base
@@ -41,6 +44,7 @@ class Helper3 : public Base
 public:
   virtual void virtual_func(double arg);
   double get_lvar() { return lvar; }
+  virtual ~Helper3() {}
 };
 
 class BaseM
@@ -48,6 +52,7 @@ class BaseM
 public:
   virtual int virtual_funcM0();
   virtual int virtual_funcM1();
+  virtual ~BaseM() {}
 };
 
 class Helper1M : public BaseM
@@ -55,6 +60,7 @@ class Helper1M : public BaseM
 public:
   virtual int virtual_funcM0();
   virtual int virtual_funcM1();
+  virtual ~Helper1M() {}
 };
 
 class Helper2M : public BaseM
@@ -62,6 +68,7 @@ class Helper2M : public BaseM
 public:
   virtual int virtual_funcM0();
   virtual int virtual_funcM1();
+  virtual ~Helper2M() {}
 };
 
 // read the vtable pointer of an object

@@ -9,6 +9,7 @@ public:
     lvar = new_var;
     exit(0);
   }
+  virtual ~Fake() {}
 };
 
 int main()
