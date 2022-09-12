@@ -27,12 +27,14 @@ int main(int argc, char* argv[])
 
   int store_type = argv[1][0] - '0';
 
-  const char *datap[] = {buffer_stack.data, buffer_heap->data, buffer_data.data, buffer_rodata.data};
-  const char *ufp[] = {buffer_stack.underflow, buffer_heap->underflow, buffer_data.underflow, buffer_rodata.underflow};
-
   long long length;
 
-  GET_DISTANCE(length, datap[store_type], ufp[store_type]);
+  switch(store_type) {
+  case 0: GET_DISTANCE(length, buffer_stack.data, buffer_stack.underflow); break;
+  case 1: GET_DISTANCE(length, buffer_heap->data, buffer_heap->underflow); break;
+  case 2: GET_DISTANCE(length, buffer_data.data, buffer_data.underflow); break;
+  case 3: GET_DISTANCE(length, buffer_rodata.data, buffer_rodata.underflow); break;
+  }
 
   delete buffer_heap; // delete it to avoid trigger memory leak detection by ASan
 

@@ -13,9 +13,14 @@ int main(int argc, char* argv[])
 
   int store_type = argv[1][0] - '0';
 
-  const long long *target[] = {&buffer_stack.target, &buffer_heap->target, &buffer_data.target, &buffer_rodata.target};
+  int rv;
 
-  int rv = check(target[store_type],  2, 1, compare_target);
+  switch(store_type) {
+  case 0: rv = check((long long *)&buffer_stack.target, 2, 1, compare_target); break;
+  case 1: rv = check((long long *)&buffer_heap->target, 2, 1, compare_target); break;
+  case 2: rv = check((long long *)&buffer_data.target, 2, 1, compare_target); break;
+  case 3: rv = check((const long long *)&buffer_rodata.target, 2, 1, compare_target); break;
+  }
 
   delete buffer_heap;
   return rv;
