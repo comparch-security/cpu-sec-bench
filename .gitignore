@@ -12,3 +12,5 @@ results.json
 results.dat
 variables.json
 run-test
+*log
+.vscode/
