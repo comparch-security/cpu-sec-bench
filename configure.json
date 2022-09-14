@@ -1,23 +1,43 @@
 {
-    "mss-check-stack-redzone":{
+    "mss-check-class-stack-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["0"]},
         "set-var": { "0": "redzone_class_var_stack"}
     },
-    "mss-check-heap-redzone":{
+    "mss-check-class-heap-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["1"]},
         "set-var": { "0": "redzone_class_var_heap"}
     },
-    "mss-check-data-redzone":{
+    "mss-check-class-data-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["2"]},
         "set-var": { "0": "redzone_class_var_data"}
     },
-    "mss-check-rodata-redzone":{
+    "mss-check-class-rodata-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["3"]},
         "set-var": { "0": "redzone_class_var_rodata"}
+    },
+    "mss-check-insideclass-stack-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["4"]},
+        "set-var": { "0": "redzone_inside_class_var_stack"}
+    },
+    "mss-check-insideclass-heap-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["5"]},
+        "set-var": { "0": "redzone_inside_class_var_heap"}
+    },
+    "mss-check-insideclass-data-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["6"]},
+        "set-var": { "0": "redzone_inside_class_var_data"}
+    },
+    "mss-check-insideclass-rodata-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["7"]},
+        "set-var": { "0": "redzone_inside_class_var_rodata"}
     },
     "mss-overflow-read-index-stack": {
         "program": "mss-read-by-index",
