@@ -1,23 +1,43 @@
 {
-    "mss-check-stack-redzone":{
+    "mss-check-inter-stack-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["0"]},
-        "set-var": { "0": "redzone_class_var_stack"}
+        "set-var": { "0": "redzone_inter_var_stack"}
     },
-    "mss-check-heap-redzone":{
+    "mss-check-inter-heap-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["1"]},
-        "set-var": { "0": "redzone_class_var_heap"}
+        "set-var": { "0": "redzone_inter_var_heap"}
     },
-    "mss-check-data-redzone":{
+    "mss-check-inter-data-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["2"]},
-        "set-var": { "0": "redzone_class_var_data"}
+        "set-var": { "0": "redzone_inter_var_data"}
     },
-    "mss-check-rodata-redzone":{
+    "mss-check-inter-rodata-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["3"]},
-        "set-var": { "0": "redzone_class_var_rodata"}
+        "set-var": { "0": "redzone_inter_var_rodata"}
+    },
+    "mss-check-intro-stack-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["4"]},
+        "set-var": { "0": "redzone_intro_var_stack"}
+    },
+    "mss-check-intro-heap-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["5"]},
+        "set-var": { "0": "redzone_intro_var_heap"}
+    },
+    "mss-check-intro-data-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["6"]},
+        "set-var": { "0": "redzone_intro_var_data"}
+    },
+    "mss-check-intro-rodata-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["7"]},
+        "set-var": { "0": "redzone_intro_var_rodata"}
     },
     "mss-overflow-read-index-stack": {
         "program": "mss-read-by-index",
