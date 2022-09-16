@@ -1,6 +1,9 @@
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
 
+#include <csignal>
+#include <unistd.h>
+
 const charBuffer buffer_rodata('u','d','o');
 // buffer in data
 charBuffer buffer_data('u','d','o');
@@ -44,5 +47,9 @@ int main(int argc, char* argv[])
   *  then natuarlly to combine "check" and "getXXXlen" into one test.
   */
   length -= CB_BUF_LEN;
-  return 32 + getPower(length);
+
+  union sigval sv;
+  sv.sival_int = length;
+  sigqueue(getppid(),SIGRTMIN,sv);
+  return 64;
 }
