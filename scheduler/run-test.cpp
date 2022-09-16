@@ -1,5 +1,6 @@
 // standard cpp library
 #include <cstdlib>
+#include <csignal>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -36,10 +37,14 @@ extern char **environ; // especially required by spawn
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
+volatile int sig_runtime_var = 0;
 int case_parser(const std::string& cn, str_list_t& arg_list, std::string& vn, std::set<int> &results);
 char ** argv_conv(const std::string &cmd, const str_list_t &args);
 int run_cmd(const char *argv[]);
 bool run_tests(std::list<std::string> cases);
+
+// signal handle func
+void sig_handler(int sig, siginfo_t *siginfo, void *ucontext);
 
 int main(int argc, char* argv[]) {
   // parse argument
@@ -286,6 +291,16 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
 
 int run_cmd(char *argv[]) {
   pid_t pid;
+
+  struct sigaction act;
+  sigemptyset(&act.sa_mask);
+  act.sa_sigaction = sig_handler;
+  act.sa_flags = SA_RESTART | SA_SIGINFO;
+  if(sigaction(SIGRTMIN,&act,NULL) == -1){
+    std::cerr << "sigaction failed!" << std::endl;
+    exit(-1);
+  }
+
   int rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, environ);
   if(rv) {
     if(rv == ENOSYS) {
@@ -355,13 +370,19 @@ bool run_tests(std::list<std::string> cases) {
           std::cout << "\n" << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
           rv = run_cmd(argv_conv(cmd, arg));
 
-          // record run-time parameter
+          // record run-time parameter by using ret-val
           if(!gvar.empty() && rv >= 32 && rv < 64) { // successfully find a run-time parameter
             std::cerr << "set runtime variable " << gvar << " to " << rv - 32 << std::endl;
             var_db[gvar] = rv-32; dump_json(var_db, "variables.json", false);
             rv = 0;
           }
 
+          // record run-time parameter by using real-time signal
+          if(!gvar.empty() && rv == 64){
+            std::cerr << "set runtime variable " << gvar << " to " << sig_runtime_var <<std::endl;
+            var_db[gvar] = sig_runtime_var; dump_json(var_db, "variables.json", false);
+            rv = 0;
+          }
           if(0 == rv) break;
           else rvs.insert(rv);
 
@@ -393,4 +414,9 @@ bool run_tests(std::list<std::string> cases) {
     }
   }
   return true;
+}
+
+void sig_handler(int sig, siginfo_t *siginfo, void *ucontext){
+  sig_runtime_var = siginfo->si_value.sival_int;
+  std::cerr << "siginfo: " << siginfo->si_value.sival_int << std::endl;
 }
