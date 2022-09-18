@@ -1,23 +1,43 @@
 {
-    "mss-check-stack-redzone":{
+    "mss-check-inter-obj-stack-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["0"]},
-        "set-var": { "0": "redzone_class_var_stack"}
+        "set-var": { "0": "redzone_inter_obj_stack"}
     },
-    "mss-check-heap-redzone":{
+    "mss-check-inter-obj-heap-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["1"]},
-        "set-var": { "0": "redzone_class_var_heap"}
+        "set-var": { "0": "redzone_inter_obj_heap"}
     },
-    "mss-check-data-redzone":{
+    "mss-check-inter-obj-data-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["2"]},
-        "set-var": { "0": "redzone_class_var_data"}
+        "set-var": { "0": "redzone_inter_obj_data"}
     },
-    "mss-check-rodata-redzone":{
+    "mss-check-inter-obj-rodata-redzone":{
         "program": "mss-check-redzone",
         "arguments": { "0": ["3"]},
-        "set-var": { "0": "redzone_class_var_rodata"}
+        "set-var": { "0": "redzone_inter_obj_rodata"}
+    },
+    "mss-check-intra-obj-stack-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["4"]},
+        "set-var": { "0": "redzone_intra_obj_stack"}
+    },
+    "mss-check-intra-obj-heap-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["5"]},
+        "set-var": { "0": "redzone_intra_obj_heap"}
+    },
+    "mss-check-intra-obj-data-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["6"]},
+        "set-var": { "0": "redzone_intra_obj_data"}
+    },
+    "mss-check-intra-obj-rodata-redzone":{
+        "program": "mss-check-redzone",
+        "arguments": { "0": ["7"]},
+        "set-var": { "0": "redzone_intra_obj_rodata"}
     },
     "mss-overflow-read-index-stack": {
         "program": "mss-read-by-index",
