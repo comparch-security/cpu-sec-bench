@@ -1,5 +1,6 @@
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
+#include <cstdlib>
 
 const charBuffer buffer_rodata('u','d','o');
 const charBuffer buffer_rodata_dup('u','d','o');
@@ -15,7 +16,6 @@ charBuffer buffer_data_dup('u','d','o');
 */
 inline int getPower(long long num){
   int ret = 0;
-  if(num < 0) num = -num;
   while(num >>= 1) ret++;
   return ret;
 }
@@ -36,12 +36,10 @@ int main(int argc, char* argv[])
   long long length = 0;
 
   switch(store_type) {
-  //get the redzone len between objects 
     case 0: GET_DISTANCE(length, &buffer_stack, &buffer_stack_dup);break;
     case 1: GET_DISTANCE(length, buffer_heap, buffer_heap_dup); break;
     case 2: GET_DISTANCE(length, &buffer_data, &buffer_data_dup); break;
     case 3: GET_DISTANCE(length, &buffer_rodata, &buffer_rodata_dup); break;
-  //get the redzone len inside objects
     case 4: GET_DISTANCE(length, buffer_stack.data, buffer_stack.underflow); break;
     case 5: GET_DISTANCE(length, buffer_heap->data, buffer_heap->underflow); break;
     case 6: GET_DISTANCE(length, buffer_data.data, buffer_data.underflow); break;
@@ -56,10 +54,7 @@ int main(int argc, char* argv[])
   *  And we use getdistance to determine whether it exists, 
   *  then natuarlly to combine "check" and "getXXXlen" into one test.
   */
-  if(store_type < 4 && length != 0)
-    length < 0 ? length += sizeof(charBuffer) : length -= sizeof(charBuffer);
-  else if(store_type >= 4 && length != 0)
-    length < 0 ? length += CB_BUF_LEN         : length -= CB_BUF_LEN;
-
+  length = abs(length);
+  length -= store_type < 4 ? sizeof(charBuffer) : CB_BUF_LEN;
   return 32 + getPower(length);
 }
