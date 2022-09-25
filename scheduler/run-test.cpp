@@ -325,6 +325,13 @@ char ** argv_conv(const std::string &cmd, const str_list_t &args) {
   return gargv;
 }
 
+std::string tmp_file_name(const std::string &cmd, const str_list_t &args) {
+  std::string rv = cmd;
+  for(const auto a:args) rv += "_" + a;
+  rv += ".tmp";
+  return rv;
+}
+
 
 bool run_tests(std::list<std::string> cases) {
   std::string prog, cmd;
@@ -360,6 +367,18 @@ bool run_tests(std::list<std::string> cases) {
             std::cerr << "set runtime variable " << gvar << " to " << rv - 32 << std::endl;
             var_db[gvar] = rv-32; dump_json(var_db, "variables.json", false);
             rv = 0;
+          }
+
+          if(!gvar.empty() && rv == 64) { // a run-time parameter recorded in atmp file
+            std::ifstream tmpf(tmp_file_name(cmd, arg));
+            if(tmpf.good()) {
+              int value;
+              tmpf >> value;
+              var_db[gvar] = value; dump_json(var_db, "variables.json", false);
+              tmpf.close();
+              rv = 0;
+              std::cerr << "set runtime variable " << gvar << " to " << value << " by reading " << tmp_file_name(cmd, arg) << std::endl;
+            }
           }
 
           if(0 == rv) break;

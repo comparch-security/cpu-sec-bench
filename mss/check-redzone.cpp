@@ -1,6 +1,7 @@
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
 #include <cstdlib>
+#include <fstream>
 
 const charBuffer buffer_rodata('u','d','o');
 const charBuffer buffer_rodata_dup('u','d','o');
@@ -56,5 +57,18 @@ int main(int argc, char* argv[])
   */
   length = abs(length);
   length -= store_type < 4 ? sizeof(charBuffer) : CB_BUF_LEN;
-  return 32 + getPower(length);
+  //return 32 + getPower(length);
+
+  std::string tmpfn;
+  for(int i=0; i<argc; i++) {
+    tmpfn += argv[i];
+    if(i+1 < argc) tmpfn += "_";
+  }
+  tmpfn += ".tmp";
+
+  std::ofstream tmpf(tmpfn);
+  tmpf << length;
+  tmpf.close();
+
+  return 64;
 }

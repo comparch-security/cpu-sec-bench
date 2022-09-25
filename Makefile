@@ -214,7 +214,7 @@ prep: $(sec-tests-prep)
 rubbish += $(sec-tests-prep)
 
 clean:
-	-rm $(rubbish) *.tmp  > /dev/null 2>&1
+	-rm $(rubbish) *.tmp $(test-path)/*.tmp > /dev/null 2>&1
 
 .PHONY: clean run dump prep
 
