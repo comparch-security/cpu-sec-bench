@@ -2,7 +2,6 @@
 #include "include/assembly.hpp"
 #include "include/temp_file.hpp"
 #include <cstdlib>
-#include <fstream>
 
 const charBuffer buffer_rodata('u','d','o');
 const charBuffer buffer_rodata_dup('u','d','o');
