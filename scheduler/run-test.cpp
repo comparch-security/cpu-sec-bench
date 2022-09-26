@@ -13,6 +13,9 @@
 // 3rd party library
 #include "scheduler/json.hpp"
 
+// internal library
+#include "lib/include/temp_file.hpp"
+
 using json = nlohmann::basic_json<nlohmann::ordered_map>;
 static json config_db, result_db, var_db;
 char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
@@ -325,14 +328,6 @@ char ** argv_conv(const std::string &cmd, const str_list_t &args) {
   return gargv;
 }
 
-std::string tmp_file_name(const std::string &cmd, const str_list_t &args) {
-  std::string rv = cmd;
-  for(const auto a:args) rv += "_" + a;
-  rv += ".tmp";
-  return rv;
-}
-
-
 bool run_tests(std::list<std::string> cases) {
   std::string prog, cmd;
   str_llist_t alist;
@@ -370,14 +365,14 @@ bool run_tests(std::list<std::string> cases) {
           }
 
           if(!gvar.empty() && rv == 64) { // a run-time parameter recorded in atmp file
-            std::ifstream tmpf(tmp_file_name(cmd, arg));
+            std::ifstream tmpf(temp_file_name(cmd, arg));
             if(tmpf.good()) {
               int value;
               tmpf >> value;
               var_db[gvar] = value; dump_json(var_db, "variables.json", false);
               tmpf.close();
               rv = 0;
-              std::cerr << "set runtime variable " << gvar << " to " << value << " by reading " << tmp_file_name(cmd, arg) << std::endl;
+              std::cerr << "set runtime variable " << gvar << " to " << value << " by reading " << temp_file_name(cmd, arg) << std::endl;
             }
           }
 

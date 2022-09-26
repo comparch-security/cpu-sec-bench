@@ -118,7 +118,7 @@ sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
 headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
-extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
+extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(base)/lib/common/temp_file.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
 
 # compile targets
 
@@ -126,8 +126,8 @@ all: run-test
 .PHONY: all
 
 # json.hpp needs C++11, which might be problematic on some systems
-run-test: $(base)/scheduler/run-test.cpp $(base)/scheduler/json.hpp $(test-path)/sys_info.txt
-	$(CXX) -O2 --std=c++11 -I. $< -o $@
+run-test: $(base)/scheduler/run-test.cpp $(base)/lib/common/temp_file.o $(base)/scheduler/json.hpp $(test-path)/sys_info.txt
+	$(CXX) -O2 --std=c++11 -I. $< $(base)/lib/common/temp_file.o -o $@
 
 rubbish += run-test
 

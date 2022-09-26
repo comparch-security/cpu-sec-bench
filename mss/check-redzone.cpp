@@ -1,5 +1,6 @@
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
+#include "include/temp_file.hpp"
 #include <cstdlib>
 #include <fstream>
 
@@ -50,25 +51,9 @@ int main(int argc, char* argv[])
   delete buffer_heap; // delete it to avoid trigger memory leak detection by ASan
   delete buffer_heap_dup;
 
-  /* Because each mem areas may have redzones with different lens 
-  *  So it's necessary to use multiple testcases to check whether this kind mem has a redzone.
-  *  And we use getdistance to determine whether it exists, 
-  *  then natuarlly to combine "check" and "getXXXlen" into one test.
-  */
-  length = abs(length);
-  length -= store_type < 4 ? sizeof(charBuffer) : CB_BUF_LEN;
-  //return 32 + getPower(length);
+  int sign = length >= 0 ? 1 : -1;
+  length -= sign * (store_type < 4 ? sizeof(charBuffer) : CB_BUF_LEN);
 
-  std::string tmpfn;
-  for(int i=0; i<argc; i++) {
-    tmpfn += argv[i];
-    if(i+1 < argc) tmpfn += "_";
-  }
-  tmpfn += ".tmp";
-
-  std::ofstream tmpf(tmpfn);
-  tmpf << length;
-  tmpf.close();
-
+  write_to_temp_file(length, argc, argv);
   return 64;
 }
