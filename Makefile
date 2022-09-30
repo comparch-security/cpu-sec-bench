@@ -81,7 +81,7 @@ endif
 ifdef enable_address_sanitizer
   CXXFLAGS += -fsanitize=address --param=asan-stack=1
 ifeq ($(CXX),clang++)
-	LDFLAGS  += -static-libsan 
+  LDFLAGS  += -static-libsan
 else
   LDFLAGS  += -static-libasan
 endif
@@ -126,8 +126,8 @@ all: run-test
 .PHONY: all
 
 # json.hpp needs C++11, which might be problematic on some systems
-run-test: $(base)/scheduler/run-test.cpp $(base)/lib/common/temp_file.o $(base)/scheduler/json.hpp $(test-path)/sys_info.txt
-	$(CXX) -O2 --std=c++11 -I. $< $(base)/lib/common/temp_file.o -o $@
+run-test: $(base)/scheduler/run-test.cpp $(base)/lib/common/temp_file.cpp $(base)/lib/include/temp_file.hpp $(base)/scheduler/json.hpp $(test-path)/sys_info.txt
+	$(CXX) -O2 --std=c++11 -I. -I./lib  $< $(base)/lib/common/temp_file.cpp -o $@
 
 rubbish += run-test
 
