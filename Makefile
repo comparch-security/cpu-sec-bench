@@ -129,7 +129,7 @@ all: run-test
 run-test: $(base)/scheduler/run-test.cpp $(base)/lib/common/temp_file.cpp $(base)/lib/include/temp_file.hpp $(base)/scheduler/json.hpp $(test-path)/sys_info.txt
 	$(CXX) -O2 --std=c++11 -I. -I./lib  $< $(base)/lib/common/temp_file.cpp -o $@
 
-rubbish += run-test $(base)/lib/common/temp_file.o
+rubbish += run-test
 
 $(test-path)/sys_info.txt:
 	-mkdir -p $(test-path)
