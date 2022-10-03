@@ -7,9 +7,14 @@ GCC_OPT_LEVEL ?= O2
 CXX           ?= g++
 OBJDUMP       ?= objdump
 
+ifeq ($(ARCH), x86_64)
+  CXXFLAGS := -DX86_64
+endif
+
 # Apple's Darwin OS on M1 list Arm core differently
 ifeq ($(ARCH), arm64)
   ARCH := aarch64
+  CXXFLAGS := -DAARCH64
 endif
 
 ifeq ($(OSType), Darwin)
