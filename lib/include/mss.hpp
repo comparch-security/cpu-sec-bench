@@ -34,6 +34,9 @@ public:
 extern void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c);
 extern void update_by_pointer(char *buf, long long offset, long long size, int step, char c);
 extern int read_by_index(const charBuffer& cb, long long offset, long long size, int step, char c);
+inline long long round_up(long long size, int boundary){
+  return (size + boundary - 1) & ~(boundary - 1);
+}
 
 template<typename T>
 int read_by_pointer(const T *buf, long long offset, long long size, int step, T c) {
