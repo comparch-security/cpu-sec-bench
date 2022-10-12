@@ -25,6 +25,9 @@ int main(int argc, char* argv[])
   }
   delete buffer_heap;
   long long abs_len = llabs(length);
+  
+  delete buffer_heap;
+  
   if(abs_len == CB_BUF_LEN) return 0;
-  return -1;
+  else return 1;
 }
