@@ -2,43 +2,35 @@
 #include "include/assembly.hpp"
 #include <cstdlib>
 
-const charBuffer buffer_rodata('u','d','o');
-const char rodata_p0[1]     = {};const char rodata_p0_dup[1]   = {};
-const char rodata_p1[2]     = {};const char rodata_p1_dup[2]   = {};
-const char rodata_p2[4]     = {};const char rodata_p2_dup[4]   = {};
-const char rodata_p3[8]     = {};const char rodata_p3_dup[8]   = {};
-const char rodata_p4[16]    = {};const char rodata_p4_dup[16]  = {};
-const char rodata_p5[32]    = {};const char rodata_p5_dup[32]  = {};
-const char rodata_p6[64]    = {};const char rodata_p6_dup[64]  = {};
-const char rodata_p7[128]   = {};const char rodata_p7_dup[128] = {};
-const char* rodata_ptrarr[] = {rodata_p0,rodata_p0_dup,
-                               rodata_p1,rodata_p1_dup,
-                               rodata_p2,rodata_p2_dup,
-                               rodata_p3,rodata_p3_dup,
-                               rodata_p4,rodata_p4_dup,
-                               rodata_p5,rodata_p5_dup,
-                               rodata_p6,rodata_p6_dup,
-                               rodata_p7,rodata_p7_dup};
+const char rodata_p00[1],   rodata_p01[1];
+const char rodata_p10[2],   rodata_p11[2];
+const char rodata_p20[4],   rodata_p21[4];
+const char rodata_p30[8],   rodata_p31[8];
+const char rodata_p40[16],  rodata_p41[16];
+const char rodata_p50[32],  rodata_p51[32];
+const char rodata_p60[64],  rodata_p61[64];
+const char rodata_p70[128], rodata_p71[128];
+const char* rodata_ptrarr[] = {
+  rodata_p00, rodata_p01, rodata_p10, rodata_p11,
+  rodata_p20, rodata_p21, rodata_p30, rodata_p31,
+  rodata_p40, rodata_p41, rodata_p50, rodata_p51,
+  rodata_p60, rodata_p61, rodata_p70, rodata_p71};
 
-charBuffer buffer_data('u','d','o');
-const char data_p0[1]     = {};const char data_p0_dup[1]   = {};
-const char data_p1[2]     = {};const char data_p1_dup[2]   = {};
-const char data_p2[4]     = {};const char data_p2_dup[4]   = {};
-const char data_p3[8]     = {};const char data_p3_dup[8]   = {};
-const char data_p4[16]    = {};const char data_p4_dup[16]  = {};
-const char data_p5[32]    = {};const char data_p5_dup[32]  = {};
-const char data_p6[64]    = {};const char data_p6_dup[64]  = {};
-const char data_p7[128]   = {};const char data_p7_dup[128] = {};
-const char* data_ptrarr[] = {data_p0,data_p0_dup,
-                             data_p1,data_p1_dup,
-                             data_p2,data_p2_dup,
-                             data_p3,data_p3_dup,
-                             data_p4,data_p4_dup,
-                             data_p5,data_p5_dup,
-                             data_p6,data_p6_dup,
-                             data_p7,data_p7_dup};
+char data_p00[1],   data_p01[1];
+char data_p10[2],   data_p11[2];
+char data_p20[4],   data_p21[4];
+char data_p30[8],   data_p31[8];
+char data_p40[16],  data_p41[16];
+char data_p50[32],  data_p51[32];
+char data_p60[64],  data_p61[64];
+char data_p70[128], data_p71[128];
+char* rodata_ptrarr[] = {
+  data_p00, data_p01, data_p10, data_p11,
+  data_p20, data_p21, data_p30, data_p31,
+  data_p40, data_p41, data_p50, data_p51,
+  data_p60, data_p61, data_p70, data_p71};
 
-int check_every_aligned(char const* const* ptr){
+int check_every_aligned(char const* const* ptr) {
   long long abs_dist = 0;
   for(int i = 0; i < 16; i+=2){
     long long aligned_len = 0x1LL << (i >> 1);
@@ -48,28 +40,24 @@ int check_every_aligned(char const* const* ptr){
       return 0;
     }
   }
-  return -1;
+  return 1;
 }
 
 int main(int argc, char* argv[])
 {
-  charBuffer buffer_stack('u','d','o');
-  const char stack_p0[1]     = {};const char stack_p0_dup[1]   = {};
-  const char stack_p1[2]     = {};const char stack_p1_dup[2]   = {};
-  const char stack_p2[4]     = {};const char stack_p2_dup[4]   = {};
-  const char stack_p3[8]     = {};const char stack_p3_dup[8]   = {};
-  const char stack_p4[16]    = {};const char stack_p4_dup[16]  = {};
-  const char stack_p5[32]    = {};const char stack_p5_dup[32]  = {};
-  const char stack_p6[64]    = {};const char stack_p6_dup[64]  = {};
-  const char stack_p7[128]   = {};const char stack_p7_dup[128] = {};
-  const char* stack_ptrarr[] = {stack_p0,stack_p0_dup,
-                                stack_p1,stack_p1_dup,
-                                stack_p2,stack_p2_dup,
-                                stack_p3,stack_p3_dup,
-                                stack_p4,stack_p4_dup,
-                                stack_p5,stack_p5_dup,
-                                stack_p6,stack_p6_dup,
-                                stack_p7,stack_p7_dup};
+  char stack_p00[1],   stack_p01[1];
+  char stack_p10[2],   stack_p11[2];
+  char stack_p20[4],   stack_p21[4];
+  char stack_p30[8],   stack_p31[8];
+  char stack_p40[16],  stack_p41[16];
+  char stack_p50[32],  stack_p51[32];
+  char stack_p60[64],  stack_p61[64];
+  char stack_p70[128], stack_p71[128];
+  char* stack_ptrarr[] = {
+    stack_p00, stack_p01, stack_p10, stack_p11,
+    stack_p20, stack_p21, stack_p30, stack_p31,
+    stack_p40, stack_p41, stack_p50, stack_p51,
+    stack_p60, stack_p61, stack_p70, stack_p71};
 
   int store_type = argv[1][0] - '0';
 
