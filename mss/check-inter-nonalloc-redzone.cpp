@@ -2,14 +2,14 @@
 #include "include/assembly.hpp"
 #include <cstdlib>
 
-const char rodata_p00[1],   rodata_p01[1];
-const char rodata_p10[2],   rodata_p11[2];
-const char rodata_p20[4],   rodata_p21[4];
-const char rodata_p30[8],   rodata_p31[8];
-const char rodata_p40[16],  rodata_p41[16];
-const char rodata_p50[32],  rodata_p51[32];
-const char rodata_p60[64],  rodata_p61[64];
-const char rodata_p70[128], rodata_p71[128];
+const char rodata_p00[1]   = {}, rodata_p01[1]   = {};
+const char rodata_p10[2]   = {}, rodata_p11[2]   = {};
+const char rodata_p20[4]   = {}, rodata_p21[4]   = {};
+const char rodata_p30[8]   = {}, rodata_p31[8]   = {};
+const char rodata_p40[16]  = {}, rodata_p41[16]  = {};
+const char rodata_p50[32]  = {}, rodata_p51[32]  = {};
+const char rodata_p60[64]  = {}, rodata_p61[64]  = {};
+const char rodata_p70[128] = {}, rodata_p71[128] = {};
 const char* rodata_ptrarr[] = {
   rodata_p00, rodata_p01, rodata_p10, rodata_p11,
   rodata_p20, rodata_p21, rodata_p30, rodata_p31,
@@ -24,7 +24,7 @@ char data_p40[16],  data_p41[16];
 char data_p50[32],  data_p51[32];
 char data_p60[64],  data_p61[64];
 char data_p70[128], data_p71[128];
-char* rodata_ptrarr[] = {
+char* data_ptrarr[] = {
   data_p00, data_p01, data_p10, data_p11,
   data_p20, data_p21, data_p30, data_p31,
   data_p40, data_p41, data_p50, data_p51,
