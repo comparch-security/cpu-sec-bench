@@ -20,7 +20,9 @@
  * Relax the check by reading both locations.
  */
 
-int FORCE_NOINLINE helper(int var, int cet, int sum) {
+typedef unsigned char uc;
+
+int FORCE_NOINLINE helper(uc var, uc cet, uc sum) {
   unsigned int *code = (unsigned int *)(&&CHECK_POS);
   unsigned int *code_cet = code + cet;
   COMPILER_BARRIER;
@@ -37,7 +39,7 @@ int FORCE_NOINLINE helper(int var, int cet, int sum) {
 }
 
 int main(int argc, char* argv[]) {
-  int var = argv[1][0] - '0';
-  int cet = argv[2][0] - '0';
+  uc var = argv[1][0] - '0';
+  uc cet = argv[2][0] - '0';
   return helper(var, cet, var+cet);
 }
