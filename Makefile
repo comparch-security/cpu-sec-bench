@@ -135,7 +135,7 @@ $(test-path)/sys_info.txt:
 	-mkdir -p $(test-path)
 	echo "CPU: $(CPU_INFO)" > $(test-path)/sys_info.txt
 	echo "System : " >> $(test-path)/sys_info.txt
-	uname -srpi >> $(test-path)/sys_info.txt
+	uname -srp >> $(test-path)/sys_info.txt
 	echo "Compiler : " >> $(test-path)/sys_info.txt
 	$(CXX) --version >> $(test-path)/sys_info.txt
 	echo "LIBC : " >> $(test-path)/sys_info.txt
