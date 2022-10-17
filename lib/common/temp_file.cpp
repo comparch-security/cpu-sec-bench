@@ -3,7 +3,7 @@
 
 std::string temp_file_name(const std::string& cmd, const std::list<std::string>& glist) {
   std::string fn = cmd;
-  for(auto const g:glist) fn += "_" + g;
+  for(auto const &g:glist) fn += "_" + g;
   fn += ".tmp";
   return fn;
 }
