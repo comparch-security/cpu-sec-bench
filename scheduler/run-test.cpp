@@ -79,6 +79,9 @@ int main(int argc, char* argv[]) {
     if(file_exist("variables.json") && !read_json(result_db, "variables.json", false)) return 1;
   }
 
+  if(test_run && make_run){
+    system("./run-test make-only");
+  }
   run_tests(collect_case_list());
 
   if(report_run) report_gen();
