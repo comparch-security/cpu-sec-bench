@@ -1,5 +1,7 @@
 #include "include/assembly.hpp"
 #include <stdlib.h>
+#include <sstream>
+#include <fstream>
 
 //#define DEBUG_READ_GOT
 
@@ -43,4 +45,37 @@ void replace_got_func(void **fake, void *got) {
   );
 }
 
+int run_dump_cmd(const std::string& procname,
+                 const std::string& funcname, const std::string& filename){
+  std::string cmd = "./script/get_x86_func_inst.sh " + procname + " "
+                    + funcname + " " + filename;
+  return system(cmd.c_str());
+}
 
+int get_nth_func_inst(unsigned int& num,unsigned int& mask,
+                       unsigned int& offset,const std::string name, int nth){
+  num = mask = offset = 0;
+  std::ifstream tmpf(name);
+  if(tmpf.good()){
+    std::string line;
+    while(nth--){
+      std::getline(tmpf,line);
+      std::istringstream firstopcode(line);
+
+      if(nth != 0){
+        int drop_num;
+        while(firstopcode >> std::hex >> drop_num){
+          offset++;
+        }
+      }else{
+        int bytes_num = 0, tmp_num;
+        while(firstopcode >> std::hex >> tmp_num){
+          tmp_num <<= bytes_num;
+          num |= tmp_num;mask |= (0xff << bytes_num);
+          bytes_num += 8;
+        }
+      }
+    }
+    return 0;
+  }else return 2;
+}

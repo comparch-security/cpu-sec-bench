@@ -3,6 +3,7 @@
 #ifndef ASSEMBLY_HPP_INCLUDED
 #define ASSEMBLY_HPP_INCLUDED
 
+#include <string>
 #include "include/gcc_builtin.hpp"
 
 // a barrier to stop compiler from reorder memory operations
@@ -41,5 +42,10 @@
 
 extern void get_got_func(void **gotp, void *label, int cet);
 extern void replace_got_func(void **fake, void *got);
+
+int run_dump_cmd(const std::string& procname,
+                 const std::string& funcname, const std::string& filename);
+int get_nth_func_inst(unsigned int& num,unsigned int& mask, 
+                       unsigned int& offset,const std::string name, int nth);
 
 #endif // ASSEMBLY_HPP_INCLUDED

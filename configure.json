@@ -595,9 +595,14 @@
     "acc-check-ASLR": {
         "expect-results": { "1": "ASLR enabled."}
     },
+    "acc-get-static-funcinfo":{
+        "set-var": { "0": "inst-opcode",
+                     "1": "inst-mask",
+                     "2": "inst-byte-offset"}
+    },
     "acc-read-func": {
-        "require": { "0": [ [ "acc-check-CET" ] ] },
-        "arguments": {"0": ["1", "-vcet-enabled"] }
+        "require": { "0": [[ "acc-get-static-funcinfo" ]]},
+        "arguments": {"0": ["1","-vinst-opcode","-vinst-mask","-vinst-byte-offset"]}
     },
     "acc-get-ra-offset-v-p-g0": {
         "program": "acc-get-ra-offset",
