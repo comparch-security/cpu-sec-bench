@@ -11,7 +11,7 @@ int FORCE_NOINLINE helper(uintptr_t p0, uintptr_t p1) {
   return p0 == p1 ? 1 : 0;
 }
 
-std::string tmp_file = "check-ASLR.tmp";
+std::string tmp_file = "./test/check-ASLR.tmp";
 
 int main(int argc, char* argv[]) {
   uintptr_t fp = reinterpret_cast<uintptr_t>(&helper);
