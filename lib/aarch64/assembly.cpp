@@ -134,3 +134,9 @@ void replace_got_func(void **fake, void *got) {
 
 }
 
+int run_dump_cmd(const std::string& procname,
+                 const std::string& funcname, const std::string& filename){
+  std::string cmd = "./script/get_aarch64_func_inst.sh " + procname + " "
+                    + funcname + " " + filename;
+  return system(cmd.c_str());
+}

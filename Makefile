@@ -118,7 +118,8 @@ sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
 headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
-extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(base)/lib/common/temp_file.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
+common_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(base)/lib/common/temp_file.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
+extra_tools := $(base)/lib/tool/get_static_funcinfo.o
 
 # compile targets
 
@@ -151,50 +152,54 @@ libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
 
 rubbish += $(test-path)/libcfi.so
 
-$(extra_objects): %.o : %.cpp $(headers)
+$(common_objects): %.o : %.cpp $(headers)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-rubbish += $(extra_objects)
+$(extra_tools): %.o : %.cpp $(headers)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+rubbish += $(common_objects) $(extra_tools)
 
 $(base)/lib/common/mss.o: %.o : %.cpp $(base)/lib/include/mss.hpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 rubbish += $(base)/lib/common/mss.o
 
-$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(headers) $(base)/lib/common/mss.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@ $(LDFLAGS)
+$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(common_objects) $(headers) $(base)/lib/common/mss.o
+	$(CXX) $(CXXFLAGS) $< $(common_objects) $(base)/lib/common/mss.o -o $@ $(LDFLAGS)
 
 rubbish += $(mss-tests)
 
 $(mss-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(base)/lib/common/mss.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@ $(LDFLAGS)
+$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(common_objects) $(base)/lib/common/mss.o
+	$(CXX) $(CXXFLAGS) $< $(common_objects) $(base)/lib/common/mss.o -o $@ $(LDFLAGS)
 
 rubbish += $(mts-tests)
 
 $(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@ $(LDFLAGS)
+$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(common_objects) $(extra_tools)
+	if [ $* = read-func ]; then $(CXX) $(CXXFLAGS) $< $(common_objects) $(extra_tools) -o $@ $(LDFLAGS);\
+    else $(CXX) $(CXXFLAGS) $< $(common_objects) -o $@ $(LDFLAGS);fi
 
 rubbish += $(acc-tests)
 
 $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(common_objects) libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(common_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cpi-tests)
 
 $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(common_objects) libcfi.so $(headers)
+	$(CXX) $(CXXFLAGS) $< $(common_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cfi-tests)
 

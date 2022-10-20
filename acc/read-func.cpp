@@ -1,5 +1,10 @@
 #include "include/assembly.hpp"
+#include "include/get_static_funcinfo.hpp"
+#include <fstream>
 
+unsigned int code_num    = 0;
+unsigned int code_mask   = 0;
+unsigned int inst_byte_offset = 0;
 /*
  * If a local variable is modified by an embedded assembly,
  * it might be removed by Clang 12 on Mac M1.
@@ -20,24 +25,23 @@
  * Relax the check by reading both locations.
  */
 
-int FORCE_NOINLINE helper(int var, int cet, int sum) {
-  unsigned int *code = (unsigned int *)(&&CHECK_POS);
-  unsigned int *code_cet = code + cet;
-  COMPILER_BARRIER;
- CHECK_POS:
-  var += cet;
-  COMPILER_BARRIER;
-  return (var == sum &&
-          (
-           ((*code    ) & READ_FUNC_MASK) == READ_FUNC_CODE ||
-           ((*code_cet) & READ_FUNC_MASK) == READ_FUNC_CODE
-          )
-         )
-    ? 0 : 1;
+int FORCE_NOINLINE helper(int var) {
+  unsigned char *code = (unsigned char *)(&helper);
+  code += inst_byte_offset;
+  return ((*(unsigned int*)code) & code_mask) == code_num
+         ? 0 : 1;
 }
 
 int main(int argc, char* argv[]) {
   int var = argv[1][0] - '0';
-  int cet = argv[2][0] - '0';
-  return helper(var, cet, var+cet);
+  get_func_nth_inst("./test/acc-read-func", "helper",
+                    "./test/acc-read-func-helperinternal.tmp", 5);
+  std::ifstream itmpf("./test/acc-read-func-helperinternal.tmp");
+  if(itmpf.good()){
+    return helper(var);
+    itmpf >> code_num;
+    itmpf >> code_mask;
+    itmpf >> inst_byte_offset;
+  }
+  return 2;
 }
