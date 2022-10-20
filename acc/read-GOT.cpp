@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
   if(cet_enabled == -1) goto *rand_label;   // impossible to happen
 
   get_got_func(&got, rand_label, cet_enabled);
-  COMPILER_BARRIER;
+  mbarrier;
  RAND_CALL:
   rand();
   mbarrier;

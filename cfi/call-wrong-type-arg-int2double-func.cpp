@@ -15,7 +15,7 @@ int main()
 #else
   arch_int_t *i = (arch_int_t *)(&d);
   *i = -1;  // use the memory as way to pass an int to the double arguemnt
-  COMPILER_BARRIER;
+  mbarrier;
   helper(d);
   exit(gvar());
 #endif

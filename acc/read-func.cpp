@@ -23,10 +23,10 @@
 int FORCE_NOINLINE helper(int var, int cet, int sum) {
   unsigned int *code = (unsigned int *)(&&CHECK_POS);
   unsigned int *code_cet = code + cet;
-  COMPILER_BARRIER;
+  mbarrier;
  CHECK_POS:
   var += cet;
-  COMPILER_BARRIER;
+  mbarrier;
   return (var == sum &&
           (
            ((*code    ) & READ_FUNC_MASK) == READ_FUNC_CODE ||

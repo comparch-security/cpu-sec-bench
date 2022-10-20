@@ -13,7 +13,7 @@ void FORCE_NOINLINE helper(void *label) {
    */
   offset = rand();
   gvar_init(3);
-  COMPILER_BARRIER;
+  mbarrier;
   PASS_INT_ARG0_IMM(0);
 }
 

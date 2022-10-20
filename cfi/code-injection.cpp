@@ -21,7 +21,7 @@ void FORCE_NOINLINE return_helper(void *p) {
 
 void FORCE_NOINLINE call_helper(func_t f) {
   gvar_init(2);
-  COMPILER_BARRIER;
+  mbarrier;
   f();
 }
 

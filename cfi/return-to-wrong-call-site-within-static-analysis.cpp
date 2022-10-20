@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 
   // call a function but illegally return
   helper(ret_label);
-  COMPILER_BARRIER;
+  mbarrier;
   // the elligal return site
  RET_POS:
   if(gvar() < 0) exit(32 - gvar());

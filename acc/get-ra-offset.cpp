@@ -63,7 +63,7 @@ int test_##FT(int v) {             \
   void *ra_label = &&RA_POS;       \
   if(v == -1) goto *ra_label;      \
   helper_##FT(ra_label);           \
-  COMPILER_BARRIER;                \
+  mbarrier;                        \
  RA_POS:                           \
   if(gvar() < 0) return 1;         \
   return gvar() + 32;              \

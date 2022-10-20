@@ -5,7 +5,7 @@ volatile arch_int_t offset;
 
 void FORCE_NOINLINE helper(void *label) {
   gvar_init(3);
-  COMPILER_BARRIER;
+  mbarrier;
   MOD_STACK_DAT(label, offset);
   /* HiFive Unmatched, GCC 11.2.0
    * Make sure offset is modified as otherwise
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
   // call a function but illegally return
   helper(ret_label);
   helper2();// failed if runs here
-  COMPILER_BARRIER;
+  mbarrier;
   // the elligal return site
  RET_POS:
   exit(gvar());

@@ -4,6 +4,7 @@
 // make a function incline/non-inline
 #define FORCE_INLINE __attribute__((always_inline)) inline
 #define FORCE_NOINLINE __attribute__((noinline))
+// a barrier to stop compiler from reorder memory operations
 #define mbarrier asm volatile("": : :"memory")
 
 // code/data alignment
