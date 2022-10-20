@@ -79,11 +79,14 @@ ifdef enable_stack_clash_protection
 endif
 
 ifdef enable_address_sanitizer
-  CXXFLAGS += -fsanitize=address --param=asan-stack=1
+  CXXFLAGS += -fsanitize=address
 ifeq ($(CXX),clang++)
+  LDFLAGS  += -static-libsan
+else ifeq($(CXX),c++)
   LDFLAGS  += -static-libsan
 else
   LDFLAGS  += -static-libasan
+  CXXFLAGS += --param=asan-stack=1
 endif
 endif
 
