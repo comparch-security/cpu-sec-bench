@@ -146,7 +146,7 @@ std::list<std::string> collect_case_list() {
   return rv;
 }
 
-int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, std::string& vn,
+int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, str_list_t& vn,
                  std::set<int> &expect_results, std::set<int> &retry_results) {
   // check whether the case exist
   if(!config_db.count(cn)) {
@@ -157,9 +157,9 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   auto tcase = config_db[cn];
 
   // check requirement
-  int req_case = 0;
-  std::string req_case_str = "0";
   if(tcase.count("require")) {
+    std::string req_case_str = "0";
+    int  req_case = 0;
     bool req_case_all_tested = true;
     bool req_case_tested = false;
     bool req_case_ok = false;
@@ -213,7 +213,7 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   arg_list.clear();
   arg_list.push_back(str_list_t());
   if(tcase.count("arguments")) {
-    auto arguments = tcase["arguments"][req_case_str].get<str_list_t>();
+    auto arguments = tcase["arguments"]["0"].get<str_list_t>();
     for(auto arg : arguments) {
       if(arg.size() >= 3) {
         auto atype = arg.substr(0,2);
@@ -264,8 +264,13 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   }
 
   // check whether the case store a global variable
-  if(tcase.count("set-var") && tcase["set-var"].count(req_case_str)) {
-    vn = tcase["set-var"][req_case_str].get<std::string>();
+  if(tcase.count("set-var")) {
+    vn.clear();
+    int gvar_case = 0;
+    while(tcase["set-var"].count(std::to_string(gvar_case))){
+      vn.push_back(tcase["set-var"][std::to_string(gvar_case)].get<std::string>());
+      gvar_case++;
+    }
   } else
     vn.clear();
 
@@ -331,7 +336,7 @@ char ** argv_conv(const std::string &cmd, const str_list_t &args) {
 bool run_tests(std::list<std::string> cases) {
   std::string prog, cmd;
   str_llist_t alist;
-  std::string gvar;
+  str_list_t gvar;
   std::set<int> expect_results, retry_results, rvs;
   while(!cases.empty()) {
     auto cn = cases.front();
@@ -358,21 +363,22 @@ bool run_tests(std::list<std::string> cases) {
           rv = run_cmd(argv_conv(cmd, arg));
 
           // record run-time parameter
-          if(!gvar.empty() && rv >= 32 && rv < 64) { // successfully find a run-time parameter
-            std::cerr << "set runtime variable " << gvar << " to " << rv - 32 << std::endl;
-            var_db[gvar] = rv-32; dump_json(var_db, "variables.json", false);
+          if(gvar.size() == 1 && rv >= 32 && rv < 64) { // successfully find a run-time parameter
+            std::cerr << "set runtime variable " << gvar.front() << " to " << rv - 32 << std::endl;
+            var_db[gvar.front()] = rv-32; dump_json(var_db, "variables.json", false);
             rv = 0;
           }
 
           if(!gvar.empty() && rv == 64) { // a run-time parameter recorded in atmp file
             std::ifstream tmpf(temp_file_name(cmd, arg));
             if(tmpf.good()) {
-              int value;
-              tmpf >> value;
-              var_db[gvar] = value; dump_json(var_db, "variables.json", false);
-              tmpf.close();
+              for(auto i =  gvar.begin(); i != gvar.end(); i++){
+                int value;tmpf >> value;
+                var_db[*i] = value; dump_json(var_db, "variables.json", false);
+                std::cerr << "set runtime variable " << *i << " to " << value << " by reading " << temp_file_name(cmd, arg) << std::endl;
+              }
               rv = 0;
-              std::cerr << "set runtime variable " << gvar << " to " << value << " by reading " << temp_file_name(cmd, arg) << std::endl;
+              tmpf.close();
             }
           }
 
