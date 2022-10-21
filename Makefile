@@ -186,12 +186,25 @@ rubbish += $(mts-tests)
 $(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
+# do not try to complicate this part
 $(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(common_objects) $(extra_tools)
-	if [ $* = read-func ]; then $(CXX) $(CXXFLAGS) $< $(common_objects) $(extra_tools) -o $@ $(LDFLAGS);\
-	    if [ $(ARCH) = aarch64 ]; then echo call aarch64 objdump shell-code; ./script/get_aarch64_func_inst.sh ./test/acc-read-func helper ./test/funcopcode.tmp;\
-		elif [ $(ARCH) = x86_64 ]; then echo call x86_64 objdump shell-code; ./script/get_x86_func_inst.sh ./test/acc-read-func helper ./test/funcopcode.tmp;\
-		else echo call x86_64 objdump shell-code; ./script/get_x86_func_inst.sh ./test/acc-read-func helper ./test/funcopcode.tmp;fi;\
-    else $(CXX) $(CXXFLAGS) $< $(common_objects) -o $@ $(LDFLAGS);fi
+	$(CXX) $(CXXFLAGS) $< $(common_objects) -o $@ $(LDFLAGS)
+
+
+# move the selection of arch dependent script out of the target execution
+func-info-gen := ./script/get_x86_func_inst.sh
+ifeq ($(ARCH), aarch64)
+  func-info-gen := ./script/get_aarch64_func_inst.sh
+endif
+
+# generate func-info.tmp by your script
+# let your script to call the get_static_funinfo as a command line executable
+$(test-path)/acc-read-func-func-info.tmp: $(func-info-gen) $(test-path)/acc-read-func $(base)/lib/tool/get_static_funcinfo
+	$^ helper $@
+
+# force the generation of func-info.tmp by a new target (copied)
+$(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-info.tmp
+	cp $< $@
 
 rubbish += $(acc-tests)
 
