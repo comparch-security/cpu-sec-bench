@@ -1,5 +1,4 @@
 #include "include/assembly.hpp"
-#include "include/get_static_funcinfo.hpp"
 #include <fstream>
 
 unsigned int code_num    = 0;
@@ -25,22 +24,22 @@ unsigned int inst_byte_offset = 0;
  * Relax the check by reading both locations.
  */
 
-int FORCE_NOINLINE helper(int var) {
+int FORCE_NOINLINE helper() {
   unsigned char *code = (unsigned char *)(&helper);
   code += inst_byte_offset;
   return ((*(unsigned int*)code) & code_mask) == code_num
          ? 0 : 1;
 }
 
+// move the get nth opcode out of the test all together!
 int main(int argc, char* argv[]) {
-  int var = argv[1][0] - '0';
-  get_func_nth_inst(5);
-  std::ifstream itmpf("./test/funcinfo.tmp");
+  std::string fn(argv[1]);
+  std::ifstream itmpf(fn);
   if(itmpf.good()){
-    return helper(var);
     itmpf >> code_num;
     itmpf >> code_mask;
     itmpf >> inst_byte_offset;
+    return helper(var);
   }
   return 2;
 }
