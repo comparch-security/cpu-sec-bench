@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
   COMPILER_BARRIER;
  RAND_CALL:
   rand();
-  mbarrier;
+  COMPILER_BARRIER;
 
   begin_catch_exception(got, SEGV_ACCERR);
   replace_got_func((void **)helper, got);

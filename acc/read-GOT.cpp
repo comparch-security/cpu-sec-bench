@@ -17,6 +17,6 @@ int main(int argc, char* argv[])
   COMPILER_BARRIER;
  RAND_CALL:
   rand();
-  mbarrier;
+  COMPILER_BARRIER;
   return 0 != *(uintptr_t *)(got) ? 0 : 1;
 }
