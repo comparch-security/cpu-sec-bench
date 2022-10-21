@@ -3,7 +3,7 @@
 
 std::string temp_file_name(const std::string& cmd, const std::list<std::string>& glist) {
   std::string fn = cmd;
-  for(auto const g:glist) fn += "_" + g;
+  for(auto const &g:glist) fn += "_" + g;
   fn += ".tmp";
   return fn;
 }
@@ -16,8 +16,8 @@ void write_to_temp_file(int var, int argc, char **argv) {
   }
   fn += ".tmp";
 
-  std::ofstream f(fn);
-  f << var;
+  std::ofstream f(fn,std::ofstream::app);
+  f << var << "\n";
   f.close();
 }
 
