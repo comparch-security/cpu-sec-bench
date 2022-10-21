@@ -4,7 +4,9 @@
 // make a function incline/non-inline
 #define FORCE_INLINE __attribute__((always_inline)) inline
 #define FORCE_NOINLINE __attribute__((noinline))
-#define mbarrier asm volatile("": : :"memory")
+
+// a barrier to stop compiler from reorder memory operations
+#define COMPILER_BARRIER asm volatile("" : : : "memory")
 
 // code/data alignment
 #define ALIGN(NByte) __attribute__ ((aligned (NByte)))
