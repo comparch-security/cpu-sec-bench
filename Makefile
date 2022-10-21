@@ -12,6 +12,7 @@ ifeq ($(ARCH), arm64)
   ARCH := aarch64
 endif
 
+# why do you need do this?
 export ARCH
 
 ifeq ($(OSType), Darwin)
@@ -187,7 +188,7 @@ $(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 # do not try to complicate this part
-$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(common_objects) $(extra_tools)
+$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(common_objects)
 	$(CXX) $(CXXFLAGS) $< $(common_objects) -o $@ $(LDFLAGS)
 
 
