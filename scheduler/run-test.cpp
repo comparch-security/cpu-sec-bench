@@ -39,7 +39,7 @@ extern char **environ; // especially required by spawn
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
-int case_parser(const std::string& cn, str_list_t& arg_list, std::string& vn, std::set<int> &results);
+int case_parser(const std::string& cn, str_list_t& arg_list, str_list_t& vn, std::set<int> &results);
 char ** argv_conv(const std::string &cmd, const str_list_t &args);
 int run_cmd(const char *argv[]);
 bool run_tests(std::list<std::string> cases);
