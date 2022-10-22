@@ -106,6 +106,10 @@ acc-cpps  = $(wildcard $(acc-path)/*.cpp)
 acc-tests = $(addprefix $(test-path)/acc-, $(basename $(notdir $(acc-cpps))))
 acc-cpps-prep = $(addsuffix .prep, $(acc-cpps))
 
+# this target is for forcing the generation of special acc test target
+acc-gen   = $(addsuffix .gen, $(acc-tests))
+.PHONY: $(acc-gen)
+
 cpi-path  = $(base)/cpi
 cpi-cpps  = $(wildcard $(cpi-path)/*.cpp)
 cpi-tests = $(addprefix $(test-path)/cpi-, $(basename $(notdir $(cpi-cpps))))
@@ -122,6 +126,11 @@ sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-
 
 headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
 extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(base)/lib/common/temp_file.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
+
+func-opcode-gen := ./script/get_x86_func_inst.sh
+ifeq ($(ARCH), aarch64)
+  func-opcode-gen := ./script/get_aarch64_func_inst.sh
+endif
 
 # compile targets
 
@@ -180,8 +189,14 @@ rubbish += $(mts-tests)
 $(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
+$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(test-path)/acc-%.gen $(extra_objects) 
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@ $(LDFLAGS)
+
+$(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen)
+	$(CXX) $(CXXFLAGS) $(acc-path)/read-func.cpp $(extra_objects) -o $(test-path)/acc-read-func $(LDFLAGS)
+	$^ $(test-path)/acc-read-func helper 8 $@
+
+$(test-path)/acc-read-func.gen: $(test-path)/acc-read-func-func-opcode.tmp
 
 rubbish += $(acc-tests)
 

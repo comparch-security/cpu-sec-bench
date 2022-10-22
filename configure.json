@@ -596,8 +596,7 @@
         "expect-results": { "1": "ASLR enabled."}
     },
     "acc-read-func": {
-        "require": { "0": [ [ "acc-check-CET" ] ] },
-        "arguments": {"0": ["1", "-vcet-enabled"] }
+        "arguments": {"0": ["./test/acc-read-func-func-opcode.tmp"] }
     },
     "acc-get-ra-offset-v-p-g0": {
         "program": "acc-get-ra-offset",
