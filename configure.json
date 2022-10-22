@@ -5,7 +5,7 @@
     },
     "mss-check-inter-obj-heap-redzone":{
         "program": "mss-check-inter-alloc-redzone",
-        "set-var": {"0": "redzone_inter_obj_heap"}
+        "set-var": {"0": ["redzone_inter_obj_heap"]}
     },
     "mss-check-inter-obj-data-redzone":{
         "program": "mss-check-inter-nonalloc-redzone",
@@ -602,19 +602,19 @@
     "acc-get-ra-offset-v-p-g0": {
         "program": "acc-get-ra-offset",
         "arguments": { "0": ["1", "v-p-g0"] },
-        "set-var": { "0": "stack-offset-v-p-g0" }
+        "set-var": { "0": ["stack-offset-v-p-g0"] }
     },
     "acc-get-ra-offset-v-p-g1": {
         "program": "acc-get-ra-offset",
         "arguments": { "0": ["1", "v-p-g1"] },
-        "set-var": { "0": "stack-offset-v-p-g1" }
+        "set-var": { "0": ["stack-offset-v-p-g1"] }
     },
     "acc-get-frame-size": {
-        "set-var": { "0": "frame-size" }
+        "set-var": { "0": ["frame-size"] }
     },
     "acc-check-CET": {
         "arguments": { "0": ["1"] },
-        "set-var": { "0": "cet-enabled" }
+        "set-var": { "0": ["cet-enabled"] }
     },
     "acc-read-GOT": {
         "require": { "0": [ [ "acc-check-CET" ] ] },
@@ -770,8 +770,8 @@
                        "1": ["-roffset"]
                      },
         "offset": [0, 8, 1],
-        "set-var": { "0": "stack-offset-v-p-g1",
-                     "1": "stack-offset-v-p-g1"
+        "set-var": { "0": ["stack-offset-v-p-g1"],
+                     "1": ["stack-offset-v-p-g1"]
                    },
         "retry-results": { "1": "failed to change RA on stack at all, normal return.",
                            "267": "RA is partially written leading to a segment error due to wrong RA."
