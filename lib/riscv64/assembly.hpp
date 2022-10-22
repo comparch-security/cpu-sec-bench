@@ -1,10 +1,6 @@
 // assembly helper functions
 // riscv64
 
-// special macros for acc-read-func
-#define READ_FUNC_CODE 0x00009d2d
-#define READ_FUNC_MASK 0x0000ffff
-
 // get the distance between two pointers
 #define GET_DISTANCE(dis, pa, pb)            \
   asm volatile(                              \

@@ -5,9 +5,6 @@
 
 #include "include/gcc_builtin.hpp"
 
-// a barrier to stop compiler from reorder memory operations
-#define COMPILER_BARRIER asm volatile("" : : : "memory")
-
 // detect ISA
 #ifdef __x86_64
   #define CSB_X86_64
