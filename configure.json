@@ -596,6 +596,7 @@
         "expect-results": { "1": "ASLR enabled."}
     },
     "acc-read-func": {
+        "program": "acc-read-func.gen",
         "arguments": {"0": ["./test/acc-read-func-func-opcode.tmp"] }
     },
     "acc-get-ra-offset-v-p-g0": {
