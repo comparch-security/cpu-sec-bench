@@ -106,10 +106,6 @@ acc-cpps  = $(wildcard $(acc-path)/*.cpp)
 acc-tests = $(addprefix $(test-path)/acc-, $(basename $(notdir $(acc-cpps))))
 acc-cpps-prep = $(addsuffix .prep, $(acc-cpps))
 
-# this target is for forcing the generation of special acc test target
-acc-gen   = $(addsuffix .gen, $(acc-tests))
-.PHONY: $(acc-gen)
-
 cpi-path  = $(base)/cpi
 cpi-cpps  = $(wildcard $(cpi-path)/*.cpp)
 cpi-tests = $(addprefix $(test-path)/cpi-, $(basename $(notdir $(cpi-cpps))))
@@ -189,14 +185,14 @@ rubbish += $(mts-tests)
 $(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(test-path)/acc-%.gen $(extra_objects) 
+$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@ $(LDFLAGS)
 
-$(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen)
-	$(CXX) $(CXXFLAGS) $(acc-path)/read-func.cpp $(extra_objects) -o $(test-path)/acc-read-func $(LDFLAGS)
-	$^ $(test-path)/acc-read-func helper 8 $@
+$(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
+	$^ helper 8 $@
 
-$(test-path)/acc-read-func.gen: $(test-path)/acc-read-func-func-opcode.tmp
+$(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-opcode.tmp
+	cp $< $@
 
 rubbish += $(acc-tests)
 
@@ -232,7 +228,7 @@ prep: $(sec-tests-prep)
 rubbish += $(sec-tests-prep)
 
 clean:
-	-rm $(rubbish) *.tmp $(test-path)/*.tmp > /dev/null 2>&1
+	-rm $(rubbish) *.tmp $(test-path)/*.tmp $(test-path)/*.gen > /dev/null 2>&1
 
 .PHONY: clean run dump prep
 
