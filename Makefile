@@ -123,6 +123,11 @@ sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-
 headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
 extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(base)/lib/common/temp_file.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
 
+func-opcode-gen := ./script/get_x86_func_inst.sh
+ifeq ($(ARCH), aarch64)
+  func-opcode-gen := ./script/get_aarch64_func_inst.sh
+endif
+
 # compile targets
 
 all: run-test
@@ -183,6 +188,12 @@ $(mts-cpps-prep): %.prep:%
 $(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@ $(LDFLAGS)
 
+$(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
+	$^ helper 8 $@
+
+$(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-opcode.tmp
+	cp $< $@
+
 rubbish += $(acc-tests)
 
 $(acc-cpps-prep): %.prep:%
@@ -217,7 +228,7 @@ prep: $(sec-tests-prep)
 rubbish += $(sec-tests-prep)
 
 clean:
-	-rm $(rubbish) *.tmp $(test-path)/*.tmp > /dev/null 2>&1
+	-rm $(rubbish) *.tmp $(test-path)/*.tmp $(test-path)/*.gen > /dev/null 2>&1
 
 .PHONY: clean run dump prep
 

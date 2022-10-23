@@ -1,4 +1,7 @@
 #include "include/assembly.hpp"
+#include <fstream>
+
+unsigned long long code_num = 0;
 
 /*
  * If a local variable is modified by an embedded assembly,
@@ -20,24 +23,18 @@
  * Relax the check by reading both locations.
  */
 
-int FORCE_NOINLINE helper(int var, int cet, int sum) {
-  unsigned int *code = (unsigned int *)(&&CHECK_POS);
-  unsigned int *code_cet = code + cet;
-  COMPILER_BARRIER;
- CHECK_POS:
-  var += cet;
-  COMPILER_BARRIER;
-  return (var == sum &&
-          (
-           ((*code    ) & READ_FUNC_MASK) == READ_FUNC_CODE ||
-           ((*code_cet) & READ_FUNC_MASK) == READ_FUNC_CODE
-          )
-         )
-    ? 0 : 1;
+int FORCE_NOINLINE helper() {
+  unsigned long long *code = (unsigned long long *)(&helper);
+  return (*code) == code_num
+         ? 0 : 1;
 }
 
 int main(int argc, char* argv[]) {
-  int var = argv[1][0] - '0';
-  int cet = argv[2][0] - '0';
-  return helper(var, cet, var+cet);
+
+  std::ifstream itmpf(argv[1]);
+  if(itmpf.good()){
+    itmpf >> std::hex >> code_num;
+    return helper();
+  }
+  return 2;
 }
