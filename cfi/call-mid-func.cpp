@@ -7,7 +7,7 @@
  * To cope with this effect, an external function is called (gavr_decr()).
  */
 
-void * FORCE_NOINLINE helper() {
+void * FORCE_NOINLINE __attribute__((noreturn)) helper() {
   /* On Apple M1 Darwin 20.6.0 clang 12.0.5:
    * Load the address of a label by adr failed.
    * Using adrp+add is affected by compiler optimization and failed as well.
