@@ -126,6 +126,8 @@ extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(b
 func-opcode-gen := ./script/get_x86_func_inst.sh
 ifeq ($(ARCH), aarch64)
   func-opcode-gen := ./script/get_aarch64_func_inst.sh
+else ifeq ($(ARCH), riscv64)
+  func-opcode-gen := ./script/get_riscv64_func_inst.sh
 endif
 
 # compile targets
