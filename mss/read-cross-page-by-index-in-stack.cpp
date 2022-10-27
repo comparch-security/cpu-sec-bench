@@ -4,7 +4,7 @@
 
 int FORCE_NOINLINE helper(const char* b, int level) {
   long long delta = 0;
-  charBuffer dummy;
+  charBuffer dummy('u','d','o');
   if(level != 0)
     return helper(b, level-1);
   else {

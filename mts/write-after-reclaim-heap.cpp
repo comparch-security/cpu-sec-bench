@@ -7,7 +7,7 @@
 int main() {
   std::map<charBuffer *, int> pmap;
   std::vector<charBuffer *> pvec(RELOC_NUM);
-  charBuffer *buffer, *dangle;
+  charBuffer *buffer, *dangle = nullptr;
 
   for(int i=0; i<RELOC_NUM; i++) {
     buffer = new charBuffer;

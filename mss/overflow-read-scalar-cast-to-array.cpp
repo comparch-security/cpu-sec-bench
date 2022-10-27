@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 
   int store_type = argv[1][0] - '0';
 
-  int rv;
+  int rv = 0;
 
   switch(store_type) {
   case 0: rv = check((long long *)&buffer_stack.target, 2, 1, compare_target); break;

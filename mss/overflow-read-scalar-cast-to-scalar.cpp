@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 
   int store_type = argv[1][0] - '0';
 
-  int rv;
+  int rv = 0;
 
   /* Do NOT try to optimize this case into a single expression by puting targets into a vector.
      The initialization related to target in stack and heap has been optimized away by G++ 11.2.

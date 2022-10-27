@@ -5,7 +5,7 @@
 
 int FORCE_NOINLINE helper(const char* b) {
   long long delta = 0;
-  charBuffer dummy;
+  charBuffer dummy('u','d','o');
   GET_DISTANCE(delta, b, dummy.data);
   return read_by_index(dummy, delta, 7, 1, 'd');
 }

@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
   int acc_type = argv[3][0] - '0';
   long long distance   = 0;
 
-  char *psrc, *pdes;
+  char *psrc = NULL, *pdes = NULL;
 
   switch(src_type) {
   case 0: psrc = buffer_stack.data; break;

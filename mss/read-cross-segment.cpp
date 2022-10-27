@@ -19,8 +19,8 @@ int main(int argc, char* argv[])
   int acc_type = argv[3][0] - '0';
   long long distance   = 0;
 
-  const char *psrc, *pdes;
-  char tc;
+  const char *psrc = NULL, *pdes = NULL;
+  char tc = '0';
 
   switch(src_type) {
   case 0: psrc = buffer_stack.data; break;
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 
   GET_DISTANCE(distance, pdes, psrc);
 
-  int rv;
+  int rv = 0;
 
   if(acc_type == 0) {
     switch(src_type) {
