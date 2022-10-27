@@ -20,6 +20,8 @@ using json = nlohmann::basic_json<nlohmann::ordered_map>;
 static json config_db, result_db, var_db;
 char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
 char * gargv[33];
+char env_pool[32][64];
+char * genvv[33];
 
 // global configure parameters
 bool cond_run = false;
@@ -39,9 +41,10 @@ extern char **environ; // especially required by spawn
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
-int case_parser(const std::string& cn, str_list_t& arg_list, str_list_t& vn, std::set<int> &results);
+int case_parser(const std::string& cn, str_list_t& arg_list, str_list_t& vn, std::set<int> &results,
+                std::set<int> &retry_results, str_llist_t &bf_list, str_llist_t &rf_list);
 char ** argv_conv(const std::string &cmd, const str_list_t &args);
-int run_cmd(const char *argv[]);
+int run_cmd(char *argv[], char *envv[]);
 bool run_tests(std::list<std::string> cases);
 
 int main(int argc, char* argv[]) {
@@ -146,8 +149,58 @@ std::list<std::string> collect_case_list() {
   return rv;
 }
 
+void proc_arg_parser(const json& tcase, const str_list_t& input_arg, str_llist_t& output_arg, bool IsEnv){
+  for(auto ia:input_arg){
+    if(ia.size() >= 3) {
+      auto type = ia.substr(0,2);
+      if(type == "-r") { // range
+        auto range_name = ia.substr(2);
+        if(tcase.count(range_name)) {
+          auto range_value = tcase[range_name].get<std::vector<int> >();
+          auto arg_list_size_org = output_arg.size();
+          for(int i=0; i<arg_list_size_org; i++) {
+            auto ale = output_arg.front();
+            output_arg.pop_front();
+            for(int r=range_value[0]; r<range_value[1]; r+=range_value[2]) {
+              auto new_ale = str_list_t(ale);
+              if(!IsEnv) new_ale.push_back(std::to_string(r));
+              output_arg.push_back(new_ale);
+            }
+          }
+        } else // fallback
+          for(auto &ale : output_arg) ale.push_back(ia);
+      } else if(type == "-l") { // list
+        auto list_name = ia.substr(2);
+        if(tcase.count(list_name)) {
+          auto list_value = tcase[list_name].get<std::vector<int> >();
+          auto arg_list_size_org = output_arg.size();
+          for(int i=0; i<arg_list_size_org; i++) {
+            auto ale = output_arg.front();
+            output_arg.pop_front();
+            for(auto v: list_value) {
+              auto new_ale = str_list_t(ale);
+              if(!IsEnv) new_ale.push_back(std::to_string(v));
+              output_arg.push_back(new_ale);
+            }
+          }
+        } else // fallback
+          for(auto &ale : output_arg) ale.push_back(ia);
+      } else if(type == "-v") { // variable
+        auto var_name = ia.substr(2);
+        if(var_db.count(var_name))
+          for(auto &ale : output_arg) ale.push_back(std::to_string(var_db[var_name].get<int>()));
+        else // fallback
+          for(auto &ale : output_arg) ale.push_back(ia);
+      }
+      else // other, fallback
+        for(auto &ale : output_arg) ale.push_back(ia);
+    }else
+      for(auto &ale : output_arg) ale.push_back(ia);
+  }
+}
+
 int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, str_list_t& vn,
-                 std::set<int> &expect_results, std::set<int> &retry_results) {
+                 std::set<int> &expect_results, std::set<int> &retry_results, str_llist_t &bf_list, str_llist_t &rf_list) {
   // check whether the case exist
   if(!config_db.count(cn)) {
     std::cerr << "Fail to parse test case " << cn << std::endl;
@@ -214,53 +267,21 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   arg_list.push_back(str_list_t());
   if(tcase.count("arguments")) {
     auto arguments = tcase["arguments"][req_case_str].get<str_list_t>();
-    for(auto arg : arguments) {
-      if(arg.size() >= 3) {
-        auto atype = arg.substr(0,2);
-        if(atype == "-r") { // range
-          auto range_name = arg.substr(2);
-          if(tcase.count(range_name)) {
-            auto range_value = tcase[range_name].get<std::vector<int> >();
-            auto arg_list_size_org = arg_list.size();
-            for(int i=0; i<arg_list_size_org; i++) {
-              auto ale = arg_list.front();
-              arg_list.pop_front();
-              for(int r=range_value[0]; r<range_value[1]; r+=range_value[2]) {
-                auto new_ale = str_list_t(ale);
-                new_ale.push_back(std::to_string(r));
-                arg_list.push_back(new_ale);
-              }
-            }
-          } else // fallback
-            for(auto &ale : arg_list) ale.push_back(arg);
-        } else if(atype == "-l") { // list
-          auto list_name = arg.substr(2);
-          if(tcase.count(list_name)) {
-            auto list_value = tcase[list_name].get<std::vector<int> >();
-            auto arg_list_size_org = arg_list.size();
-            for(int i=0; i<arg_list_size_org; i++) {
-              auto ale = arg_list.front();
-              arg_list.pop_front();
-              for(auto v: list_value) {
-                auto new_ale = str_list_t(ale);
-                new_ale.push_back(std::to_string(v));
-                arg_list.push_back(new_ale);
-              }
-            }
-          } else // fallback
-            for(auto &ale : arg_list) ale.push_back(arg);
-        } else if(atype == "-v") { // variable
-          auto var_name = arg.substr(2);
-          if(var_db.count(var_name))
-            for(auto &ale : arg_list) ale.push_back(std::to_string(var_db[var_name].get<int>()));
-          else // fallback
-            for(auto &ale : arg_list) ale.push_back(arg);
-        }
-        else // other, fallback
-          for(auto &ale : arg_list) ale.push_back(arg);
-      } else
-        for(auto &ale : arg_list) ale.push_back(arg);
-    }
+    proc_arg_parser(tcase, arguments, arg_list, false);
+  }
+
+  bf_list.clear();
+  bf_list.push_back(str_list_t());
+  if(tcase.count("build-flag") && tcase["build-flag"].count(req_case_str)){
+    auto build_flag = tcase["build-flag"][req_case_str].get<str_list_t>();
+    proc_arg_parser(tcase, build_flag, bf_list, true);
+  }
+
+  rf_list.clear();
+  rf_list.push_back(str_list_t());
+  if(tcase.count("run-flag") && tcase["run-flag"].count(req_case_str)){
+    auto run_flag = tcase["run-flag"][req_case_str].get<str_list_t>();
+    proc_arg_parser(tcase, run_flag, rf_list, true);
   }
 
   // check whether the case store a global variable
@@ -287,9 +308,12 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   return 0;
 }
 
-int run_cmd(char *argv[]) {
-  pid_t pid;
-  int rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, environ);
+int run_cmd(char *argv[], char *envv[]) {
+  pid_t pid;int rv = 0;
+  if(envv && envv[0])
+    rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, envv);
+  else
+    rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, environ);
   if(rv) {
     if(rv == ENOSYS) {
       std::cerr << "posix_spawn() is support in this system!" << std::endl;
@@ -328,34 +352,57 @@ char ** argv_conv(const std::string &cmd, const str_list_t &args) {
   return gargv;
 }
 
+char ** env_conv(const str_list_t& args){
+  int i = 0;
+  for(const auto a:args) strcpy(env_pool[i++],a.c_str());
+  for(int j=0; j<i; j++) genvv[j]=env_pool[j];
+  genvv[i] = NULL;
+  return genvv;
+}
+
 bool run_tests(std::list<std::string> cases) {
   std::string prog, cmd;
   str_llist_t alist;
+  str_llist_t bflag;
+  str_llist_t rflag;
   str_list_t gvar;
   std::set<int> expect_results, retry_results, rvs;
   while(!cases.empty()) {
     auto cn = cases.front();
     cases.pop_front();
     //std::cerr << "case: " << cn << std::endl; // keep in case needed in debug
-    int test_cond = case_parser(cn, prog, alist, gvar, expect_results, retry_results);
+    int test_cond = case_parser(cn, prog, alist, gvar, expect_results,
+                                retry_results, bflag, rflag);
     if(!test_run || test_cond == 0) {
       std::cout << "\n========== " << cn << " =========" << std::endl;
       std::cout << "make test/" << prog << std::endl;
       int rv = 0;
       rvs.clear();
-      if(0 == rv && make_run) {
-        rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)));
-        if(rv){
-          std::cout << "fail to make " << prog << " with error status " << rv << std::endl;
-          rv = -1;
-        }
-      }
+      
+      cmd = "test/" + prog;
+      int run_nums = alist.size() > bflag.size() ?
+                     (alist.size() > rflag.size() ? alist.size() : rflag.size())
+                    :(bflag.size() > rflag.size() ? bflag.size() : rflag.size());
+      auto aiter = alist.begin();
+      auto biter = bflag.begin();
+      auto riter = rflag.begin();
 
-      if(0 == rv && test_run) { // run the test case
-        for(auto arg:alist) {
-          cmd = "test/" + prog;
-          std::cout << "\n" << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
-          rv = run_cmd(argv_conv(cmd, arg));
+      for(int i = 0; i != run_nums; i++){
+        if(make_run) {
+          biter->push_front(cmd);
+          rv = run_cmd(argv_conv("make", *biter),NULL);
+          if(rv){
+            std::cout << "fail to make " << prog << " with error status " << rv << std::endl;
+            rv = -1;
+          }
+          if(std::next(biter) != bflag.cend()) biter++;
+        }
+
+        if(0 == rv && test_run) { // run the test case
+          std::cout << "\n"; for(auto r:(*riter)) std::cout << r << " ";std::cout << cmd;
+          for(auto a:(*aiter)) std::cout << " " << a; std::cout << std::endl;
+
+          rv = run_cmd(argv_conv(cmd, *aiter), env_conv(*riter));
 
           // record run-time parameter
           if(gvar.size() == 1 && rv >= 32 && rv < 64) { // successfully find a run-time parameter
@@ -365,16 +412,17 @@ bool run_tests(std::list<std::string> cases) {
           }
 
           if(!gvar.empty() && rv == 64) { // a run-time parameter recorded in atmp file
-            std::ifstream tmpf(temp_file_name(cmd, arg));
+            std::ifstream tmpf(temp_file_name(cmd, (*aiter)));
             if(tmpf.good()) {
               for(auto i =  gvar.begin(); i != gvar.end(); i++){
                 int value;tmpf >> value;
                 var_db[*i] = value; dump_json(var_db, "variables.json", false);
-                std::cerr << "set runtime variable " << *i << " to " << value << " by reading " << temp_file_name(cmd, arg) << std::endl;
+                std::cerr << "set runtime variable " << *i << " to " << value << " by reading " << temp_file_name(cmd, (*aiter)) << std::endl;
               }
               rv = 0;
               tmpf.close();
-            }
+            }else
+              std::cerr << "can't open tmp file, set gvar failed" << std::endl;
           }
 
           if(0 == rv) break;
@@ -385,12 +433,12 @@ bool run_tests(std::list<std::string> cases) {
             if(debug_run) exit(1);
           }
         }
+      }
 
-        if(rv != 0) {
-          for(auto v:rvs) if(retry_results.count(v)) rv = v;
-          for(auto v:rvs) if(expect_results.count(v)) rv = v;
-          for(auto v:rvs) if(!expect_results.count(v) && !retry_results.count(v)) rv = v;
-        }
+      if(rv != 0) {
+        for(auto v:rvs) if(retry_results.count(v)) rv = v;
+        for(auto v:rvs) if(expect_results.count(v)) rv = v;
+        for(auto v:rvs) if(!expect_results.count(v) && !retry_results.count(v)) rv = v;
       }
 
       result_db[cn]["result"] = rv; dump_json(result_db, "results.json", false);

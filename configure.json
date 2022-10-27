@@ -636,7 +636,9 @@
         "expect-results": { "16": "relocation tables under read-only protection." }
     },
 
-    "cfi-call-mid-func": {},
+    "cfi-call-mid-func": {
+        "run-flag": { "0": ["ASAN_OPTIONS=detect_leaks=0"]}
+    },
     "cfi-call-wrong-func-within-static-analysis": {
         "arguments": { "0": ["1"] }
     },
@@ -729,7 +731,8 @@
         "expect-results": { "16": "expected excption on the illegal call." }
     },
     "cfi-jump-mid-func": {
-        "arguments": { "0": ["1"] }
+        "arguments": { "0": ["1"] },
+        "run-flag": { "0": ["ASAN_OPTIONS=detect_leaks=0"]}
     },
     "cfi-jump-instruction-in-rodata": {
     "program": "cfi-code-injection",
@@ -783,11 +786,13 @@
     },
     "cfi-return-to-func": {
         "require": { "0": [ [ "cfi-return-to-wrong-call-site" ] ] },
-        "arguments": { "0": ["-vstack-offset-v-p-g1"] }
+        "arguments": { "0": ["-vstack-offset-v-p-g1"] },
+        "run-flag": { "0": ["ASAN_OPTIONS=detect_leaks=0"]}
     },
     "cfi-return-to-libc": {
         "require": { "0": [ [ "cfi-return-to-func", "cfi-return-to-non-call-site" ] ] },
-        "arguments": { "0": ["-vstack-offset-v-p-g1"] }
+        "arguments": { "0": ["-vstack-offset-v-p-g1"] },
+        "run-flag": { "0": ["ASAN_OPTIONS=detect_leaks=0"]}
     },
     "cfi-return-without-call": {
         "require": { "0": [ [ "acc-get-frame-size" ] ] },
