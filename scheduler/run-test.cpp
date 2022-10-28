@@ -313,8 +313,21 @@ int run_cmd(char *argv[]) {
     return 256+WTERMSIG(status);
   }
 
-  if(WIFEXITED(status))
-    return WEXITSTATUS(status);
+  if(WIFEXITED(status)){
+    int ret = WEXITSTATUS(status);
+    if(ret != 0){
+      std::ifstream tmpf(argv[1]);
+      if(tmpf.good()){
+        tmpf >> status;
+        tmpf.close();
+        return status;
+      }else{
+        std::cerr << "open return-val file failed!" << std::endl;
+        exit(1);
+      }
+    }else
+      return ret;
+  }
 
   return -2;  // should not run here!
 }
@@ -322,6 +335,16 @@ int run_cmd(char *argv[]) {
 char ** argv_conv(const std::string &cmd, const str_list_t &args) {
   int i = 0;
   strcpy(arg_pool[i++], cmd.c_str());
+  for(const auto a:args) strcpy(arg_pool[i++],a.c_str());
+  for(int j=0; j<i; j++) gargv[j]=arg_pool[j];
+  gargv[i] = NULL;
+  return gargv;
+}
+
+char ** argv_conv(const std::string &cmd1, const std::string &cmd2, const str_list_t &args) {
+  int i = 0;
+  strcpy(arg_pool[i++], cmd1.c_str());
+  strcpy(arg_pool[i++], cmd2.c_str());
   for(const auto a:args) strcpy(arg_pool[i++],a.c_str());
   for(int j=0; j<i; j++) gargv[j]=arg_pool[j];
   gargv[i] = NULL;
@@ -354,8 +377,11 @@ bool run_tests(std::list<std::string> cases) {
       if(0 == rv && test_run) { // run the test case
         for(auto arg:alist) {
           cmd = "test/" + prog;
-          std::cout << "\n" << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
-          rv = run_cmd(argv_conv(cmd, arg));
+          std::string execf = "make";
+          std::string rcmd = cmd + ".run";
+          std::cout << "\n" << execf << " " << rcmd;
+          for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
+          rv = run_cmd(argv_conv(execf, rcmd, arg));
 
           // record run-time parameter
           if(gvar.size() == 1 && rv >= 32 && rv < 64) { // successfully find a run-time parameter

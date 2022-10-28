@@ -90,6 +90,9 @@ else
 endif
 endif
 
+#define run-time envrionment flags
+RUN-PREFIX := ASAN_OPTIONS=detect_leaks=0
+
 # define cases
 mss-path  = $(base)/mss
 mss-cpps  = $(wildcard $(mss-path)/*.cpp)
@@ -119,6 +122,8 @@ cfi-cpps-prep = $(addsuffix .prep, $(cfi-cpps))
 sec-tests := $(mss-tests) $(mts-tests) $(acc-tests) $(cpi-tests) $(cfi-tests)
 sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
+
+exec-unit := $(addsuffix .run, $(sec-tests)) $(test-path)/acc-read-func.gen.run
 
 headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
 extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(base)/lib/common/temp_file.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
@@ -190,10 +195,11 @@ $(mts-cpps-prep): %.prep:%
 $(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@ $(LDFLAGS)
 
-$(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
-	$^ helper 8 $@
+$(test-path)/acc-read-func-func-opcode: $(func-opcode-gen) $(test-path)/acc-read-func
+	$^ helper 8 $@.tmp
+.PHONY: $(test-path)/acc-read-func-func-opcode
 
-$(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-opcode.tmp
+$(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-opcode
 	cp $< $@
 
 rubbish += $(acc-tests)
@@ -218,6 +224,20 @@ $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 rubbish += results.json results.json results.dat variables.json
+
+# If the first argument suffix is ".run"...
+ifeq (.run,$(suffix $(firstword $(MAKECMDGOALS))))
+  # use the rest as arguments for "run"
+  ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  # ...and turn them into do-nothing targets
+  $(eval $(ARGS):;@:)
+endif
+
+$(exec-unit): %.run:%
+	$(RUN-PREFIX) $< $(ARGS);ret=$$?;echo $$ret > $<.run;exit $$ret;
+.PHONY: $(exec-unit)
+
+rubbish += $(exec-unit)
 
 dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%
