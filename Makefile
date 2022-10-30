@@ -80,9 +80,7 @@ endif
 
 ifdef enable_address_sanitizer
   CXXFLAGS += -fsanitize=address
-ifeq ($(CXX),clang++)
-  LDFLAGS  += -static-libsan
-else ifeq ($(CXX),c++)
+ifeq ($(CXX),$(filter $(CXX),clang++ c++))
   LDFLAGS  += -static-libsan
 else
   LDFLAGS  += -static-libasan
