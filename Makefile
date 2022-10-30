@@ -39,6 +39,7 @@ LD_LIBRARY_PATH=$(test-path)
 CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -std=c++11 -Wall
 LDFLAGS  :=
 OBJDUMPFLAGS := -D -l -S
+RUN_PREFIX :=
 
 ifdef disable_stack_nx_protection
   CXXFLAGS += -z execstack
@@ -80,6 +81,7 @@ endif
 
 ifdef enable_address_sanitizer
   CXXFLAGS += -fsanitize=address
+  RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
 ifeq ($(CXX),$(filter $(CXX),clang++ c++))
   LDFLAGS  += -static-libsan
 else
@@ -135,7 +137,7 @@ all: run-test
 
 # json.hpp needs C++11, which might be problematic on some systems
 run-test: $(base)/scheduler/run-test.cpp $(base)/lib/common/temp_file.cpp $(base)/lib/include/temp_file.hpp $(base)/scheduler/json.hpp $(test-path)/sys_info.txt
-	$(CXX) -O2 --std=c++11 -I. -I./lib  $< $(base)/lib/common/temp_file.cpp -o $@
+	$(CXX) -O2 --std=c++11 -I. -I./lib -DRUN_PREFIX="\"$(RUN_PREFIX)\"" $< $(base)/lib/common/temp_file.cpp -o $@
 
 rubbish += run-test
 

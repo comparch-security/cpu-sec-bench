@@ -5,6 +5,8 @@
 #include <string>
 #include <set>
 #include <list>
+#include <cstring>
+#include <vector>
 
 // POSIX APIs (linux variant)
 #include <spawn.h>
@@ -36,6 +38,12 @@ void report_gen();
 
 // test case related
 extern char **environ; // especially required by spawn
+char **run_env;
+void add_extra_run_prefix();
+#ifdef RUN_PREFIX
+static char run_prefix[] = RUN_PREFIX;
+std::list<char *> extra_run_prefix;
+#endif
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
@@ -78,6 +86,8 @@ int main(int argc, char* argv[]) {
     if(file_exist("results.json") && !read_json(result_db, "results.json", false)) return 1;
     if(file_exist("variables.json") && !read_json(result_db, "variables.json", false)) return 1;
   }
+
+  add_extra_run_prefix();
 
   run_tests(collect_case_list());
 
@@ -287,9 +297,16 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   return 0;
 }
 
-int run_cmd(char *argv[]) {
+int run_cmd(char *argv[], char **runv = NULL) {
   pid_t pid;
-  int rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, environ);
+  if(runv == NULL) runv = environ;
+  /* debug env
+  std::cout << "environment:";
+  int envi = 0;
+  while(runv[envi] != NULL) std::cout << std::string(runv[envi++]) << std::endl;
+  std::cout << std::endl;
+  */
+  int rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, runv);
   if(rv) {
     if(rv == ENOSYS) {
       std::cerr << "posix_spawn() is support in this system!" << std::endl;
@@ -354,8 +371,10 @@ bool run_tests(std::list<std::string> cases) {
       if(0 == rv && test_run) { // run the test case
         for(auto arg:alist) {
           cmd = "test/" + prog;
-          std::cout << "\n" << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
-          rv = run_cmd(argv_conv(cmd, arg));
+          std::cout << "\n";
+          if(!extra_run_prefix.empty()) for(auto a:extra_run_prefix) std::cout << std::string(a) << " ";
+          std::cout << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
+          rv = run_cmd(argv_conv(cmd, arg), run_env);
 
           // record run-time parameter
           if(gvar.size() == 1 && rv >= 32 && rv < 64) { // successfully find a run-time parameter
@@ -408,4 +427,32 @@ bool run_tests(std::list<std::string> cases) {
     }
   }
   return true;
+}
+
+void add_extra_run_prefix() {
+  // find the end of the environment
+  int envi = 0;
+  while(environ[envi] != NULL) envi++;
+
+  // copy it locally
+  static std::vector<char *> run_env_vect(envi + 8);
+  for(int i=0; i<envi; i++) run_env_vect[i] = environ[i];
+
+#ifdef RUN_PREFIX
+  std::cout << "Need to add extra evironment variables" << std::endl;
+
+  // assuming directly adding the environ array would not overflow
+  char *pch = strtok(run_prefix, " ");
+  while(pch != NULL) {
+    if(run_env_vect.size() == envi) run_env_vect.resize(envi+8);
+    run_env_vect[envi++] = pch;
+    extra_run_prefix.push_back(pch);
+    std::cout << "add " << std::string(pch) << " to env" << std::endl;
+    pch = strtok(NULL, " ");
+  }
+  if(run_env_vect.size() == envi) run_env_vect.resize(envi+8);
+  run_env_vect[envi] = NULL;
+#endif
+
+  run_env = &(run_env_vect[0]);
 }
