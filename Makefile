@@ -8,11 +8,11 @@ CXX           ?= g++
 OBJDUMP       ?= objdump
 
 # Apple's Darwin OS on M1 list Arm core differently
-ifeq ($(ARCH), arm64)
+ifeq ($(ARCH),arm64)
   ARCH := aarch64
 endif
 
-ifeq ($(OSType), Darwin)
+ifeq ($(OSType),Darwin)
   CPU_INFO := $(shell sysctl -n machdep.cpu.brand_string)
 else
   CPU_INFO := $(shell grep -m 1 "model name" /proc/cpuinfo)
@@ -59,7 +59,7 @@ endif
 
 ifdef enable_stack_protection
   CXXFLAGS += -Wstack-protector -fstack-protector-all
-ifeq ($(ARCH), x86_64)
+ifeq ($(ARCH),x86_64)
   CXXFLAGS += -mstack-protector-guard=tls
 endif
 endif
@@ -69,7 +69,7 @@ ifdef enable_vtable_verify
 endif
 
 ifdef enable_control_flow_protection
-ifeq ($(ARCH), x86_64)
+ifeq ($(ARCH),x86_64)
   CXXFLAGS += -fcf-protection=full -mcet
 endif
 endif
