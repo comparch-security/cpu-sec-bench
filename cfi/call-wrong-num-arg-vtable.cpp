@@ -1,9 +1,10 @@
 #include <cstdlib>
 #include "include/cfi.hpp"
 
+int lvar;
+
 class Fake
 {
-  int lvar;
 public:
   virtual int virtual_func(int new_var) {
     lvar = new_var;
