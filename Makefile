@@ -159,7 +159,7 @@ rubbish += $(test-path)/sys_info.txt
 libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
 	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@
 
-rubbish += $(test-path)/libcfi.so
+rubbish += libcfi.so
 
 $(extra_objects): %.o : %.cpp $(headers)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
