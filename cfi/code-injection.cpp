@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include "include/global_var.hpp"
 #include "include/signal.hpp"
+#include <string>
 
 static unsigned char m_data[] = FUNC_MACHINE_CODE;
 const unsigned char m_rodata[] = FUNC_MACHINE_CODE;
@@ -45,7 +46,8 @@ int main(int argc, char* argv[])
     case 2: p = (void *)(m_stack); break;
     case 3: p = (void *)(m_heap); break;
     }
-    offset = 4 * (argv[3][0] - '0');
+    std::string cmd_offset = argv[1];
+    offset = 4 * stoll(cmd_offset);
     addr = (char *)p;
     break;
   case 1: // call
