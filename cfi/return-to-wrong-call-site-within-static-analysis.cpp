@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "include/global_var.hpp"
+#include <string>
 
 volatile arch_int_t offset;
 
@@ -20,7 +21,12 @@ void FORCE_NOINLINE helper(void *label) {
 int main(int argc, char* argv[])
 {
   // get the offset of RA on stack
-  offset = 4 * (argv[1][0] - '0');
+  std::string cmd_var_offset = argv[1];
+  std::string cmd_range_offset = argv[2];
+  arch_int_t var_offset = stoll(cmd_var_offset);
+  arch_int_t range_offset = stoll(cmd_range_offset);
+
+  offset = 4*(range_offset + var_offset);
   void *ret_label = &&RET_POS;
   gvar_init(0);
   if(offset == -1) goto *ret_label;  // impossible to run here
