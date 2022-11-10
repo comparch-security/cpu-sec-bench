@@ -562,7 +562,8 @@
         "require": { "0": [ [ "mts-write-after-free-stack" ], ["mts-reallocate-stack"] ] }
     },
     "mts-write-after-reclaim-stack": {
-        "require": { "0": [ ["mts-reallocate-stack"] ] }
+        "require": { "0": [ ["mts-reallocate-stack"] ] },
+        "arguments": {"0": ["c","c"]}
     },
     "mts-access-after-free-org-heap": {
         "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
