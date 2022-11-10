@@ -3,11 +3,11 @@
 
 charBuffer *pb;
 
-int FORCE_NOINLINE helper(bool option) {
-  charBuffer buffer;
+int FORCE_NOINLINE helper(bool option, char target_val, char cmp_val) {
+  charBuffer buffer('u','d','o');
   if(option) {
-    update_by_pointer(pb->data, 0, 8,  1, 'c');
-    return check(buffer.data, 7,  1, 'c');
+    update_by_pointer(pb->data, 0, 8,  1, target_val);
+    return check(buffer.data, 7,  1, cmp_val);
   } else {
     pb = &buffer;
     buffer.updateBuffer('u', 'd', 'o');
@@ -15,8 +15,16 @@ int FORCE_NOINLINE helper(bool option) {
   }
 }
 
+<<<<<<< Updated upstream
 int main() {
   int rv0 = helper(false);
   int rv1 = helper(true);
+=======
+int main(int argc, char* argv[]) {
+  bool cmp_val = argv[1][0];
+  bool target_val = argv[2][0];
+  int rv0 = helper(false,target_val,cmp_val);
+  int rv1 = helper(true,target_val,cmp_val);
+>>>>>>> Stashed changes
   return rv0+rv1;
 }
