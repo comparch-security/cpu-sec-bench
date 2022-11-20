@@ -8,6 +8,7 @@ const unsigned char m_rodata[] = FUNC_MACHINE_CODE;
 typedef void (*func_t)();
 
 volatile arch_int_t offset;
+std::string cmd_offset;
 
 void FORCE_NOINLINE return_helper(void *p) {
   gvar_init(2);
@@ -46,7 +47,7 @@ int main(int argc, char* argv[])
     case 2: p = (void *)(m_stack); break;
     case 3: p = (void *)(m_heap); break;
     }
-    std::string cmd_offset = argv[1];
+    cmd_offset = argv[3];
     offset = 4 * stoll(cmd_offset);
     addr = (char *)p;
     break;
