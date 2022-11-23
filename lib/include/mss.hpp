@@ -32,7 +32,7 @@ public:
 };
 
 extern void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c);
-extern void update_by_pointer(char *buf, long long offset, long long size, int step, char c);
+extern void __attribute__((noinline)) update_by_pointer(char *buf, long long offset, long long size, int step, char c);
 extern int read_by_index(const charBuffer& cb, long long offset, long long size, int step, char c);
 
 template<typename T>
@@ -43,7 +43,7 @@ int read_by_pointer(const T *buf, long long offset, long long size, int step, T 
   return 0;
 }
 
-template<typename T>
+template<typename T> __attribute__((noinline))
 int check(const T *buf, int size, int step, T c) {
   for(int i=0; i!= size; i += step)
     if(buf[i] != c) return 1;

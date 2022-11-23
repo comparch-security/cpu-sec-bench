@@ -27,7 +27,7 @@ void update_by_index(charBuffer& cb, long long offset, long long size, int step,
     cb.data[i] = c;
 }
 
-void update_by_pointer(char *buf, long long offset, long long size, int step, char c) {
+void __attribute__((noinline)) update_by_pointer(char *buf, long long offset, long long size, int step, char c) {
   buf += offset;
   for(long long i=0; i != size; i += step, buf += step)
     *buf = c;
