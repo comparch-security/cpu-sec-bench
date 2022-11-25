@@ -1,6 +1,7 @@
 #ifndef BOF_HPP_INCLUDED
 #define BOF_HPP_INCLUDED
 
+#include "include/gcc_builtin.hpp"
 #define CB_BUF_LEN 8
 
 class charBuffer
@@ -32,7 +33,7 @@ public:
 };
 
 extern void update_by_index(charBuffer& cb, long long offset, long long size, int step, char c);
-extern void update_by_pointer(char *buf, long long offset, long long size, int step, char c);
+extern void FORCE_NOINLINE update_by_pointer(char *buf, long long offset, long long size, int step, char c);
 extern int read_by_index(const charBuffer& cb, long long offset, long long size, int step, char c);
 
 template<typename T>
@@ -43,7 +44,7 @@ int read_by_pointer(const T *buf, long long offset, long long size, int step, T 
   return 0;
 }
 
-template<typename T>
+template<typename T> FORCE_NOINLINE
 int check(const T *buf, int size, int step, T c) {
   for(int i=0; i!= size; i += step)
     if(buf[i] != c) return 1;
