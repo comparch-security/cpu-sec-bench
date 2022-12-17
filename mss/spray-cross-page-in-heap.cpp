@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
   do {
     bufferT = new charBuffer('u','d','o');
     bset.insert(bufferT);
-    GET_DISTANCE(distance, bufferT->data, buffer->data);
+    GET_DISTANCE(distance, (long long)bufferT->data, (long long)buffer->data);
   } while(sysconf(_SC_PAGESIZE) >= abs(distance));
 
   if(distance > 0) {

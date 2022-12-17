@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
   case 2: pdes = buffer_data.data;  break;
   }
 
-  GET_DISTANCE(distance, pdes, psrc);
+  GET_DISTANCE(distance, (long long)pdes, (long long)psrc);
 
   if(acc_type == 0) {
     switch(src_type) {

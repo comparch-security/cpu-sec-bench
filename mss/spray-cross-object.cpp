@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 
   switch(store_type) {
   case 0: // stack
-    GET_DISTANCE(distance, buffer_stackT.data, buffer_stack.data);
+    GET_DISTANCE(distance, (long long)buffer_stackT.data,(long long)buffer_stack.data);
     if(distance > 0) {
       update_by_pointer(buffer_stack.data, 0, distance+8, 1, 'c');
       exit(check(buffer_stackT.data,  8,  1, 'c'));
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
     }
     break;
   case 1: // heap
-    GET_DISTANCE(distance, buffer_heapT->data, buffer_heap->data);
+    GET_DISTANCE(distance, (long long)buffer_heapT->data,(long long)buffer_heap->data);
     if(distance > 0) {
       update_by_pointer(buffer_heap->data, 0, distance+8, 1, 'c');
       exit(check(buffer_heapT->data,  8,  1, 'c'));
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
     }
     break;
   case 2: // data
-    GET_DISTANCE(distance, buffer_dataT.data, buffer_data.data);
+    GET_DISTANCE(distance,(long long)buffer_dataT.data,(long long)buffer_data.data);
     if(distance > 0) {
       update_by_pointer(buffer_data.data, 0, distance+8, 1, 'c');
       exit(check(buffer_dataT.data,  8,  1, 'c'));
