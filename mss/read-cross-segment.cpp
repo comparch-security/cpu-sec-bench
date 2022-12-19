@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
   case 3: pdes = buffer_rodata.data; tc = 'r'; break;
   }
 
-  GET_DISTANCE(distance, pdes, psrc);
+  GET_DISTANCE(distance, (long long)pdes, (long long)psrc);
 
   int rv;
 

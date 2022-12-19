@@ -57,7 +57,8 @@
 // create a fake return stack
 #define PUSH_FAKE_RET(ra, fsize)             \
   while(fsize--)                             \
-    asm volatile("str %0, [sp, #-8]!;"       \
+    asm volatile("sub sp,sp,#8;"             \
+		 "str %0, [sp];"             \
       : : "r"(ra)                            )
 
 // the machine code for the following

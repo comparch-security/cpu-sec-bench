@@ -28,29 +28,29 @@ int main(int argc, char* argv[])
 
   switch(store_type) {
   case 0: // stack
-    GET_DISTANCE(distance_up,   buffer_stackU.underflow, buffer_stackM.data);
-    GET_DISTANCE(distance_down, buffer_stackD.overflow,  buffer_stackM.data);
+    GET_DISTANCE(distance_up,   (long long)buffer_stackU.underflow, (long long)buffer_stackM.data);
+    GET_DISTANCE(distance_down, (long long)buffer_stackD.overflow,  (long long)buffer_stackM.data);
     rv =
       read_by_pointer(buffer_stackM.data, distance_up,   7, 1, 'u') &
       read_by_pointer(buffer_stackM.data, distance_down, 7, 1, 'o') ;
     break;
   case 1: // heap
-    GET_DISTANCE(distance_up,   buffer_heapU->underflow, buffer_heapM->data);
-    GET_DISTANCE(distance_down, buffer_heapD->overflow,  buffer_heapM->data);
+    GET_DISTANCE(distance_up,   (long long)buffer_heapU->underflow, (long long)buffer_heapM->data);
+    GET_DISTANCE(distance_down, (long long)buffer_heapD->overflow,  (long long)buffer_heapM->data);
     rv =
       read_by_pointer(buffer_heapM->data, distance_up,   7, 1, 'u') &
       read_by_pointer(buffer_heapM->data, distance_down, 7, 1, 'o') ;
     break;
   case 2: // data
-    GET_DISTANCE(distance_up,   buffer_dataU.underflow, buffer_dataM.data);
-    GET_DISTANCE(distance_down, buffer_dataD.overflow,  buffer_dataM.data);
+    GET_DISTANCE(distance_up,   (long long)buffer_dataU.underflow, (long long)buffer_dataM.data);
+    GET_DISTANCE(distance_down, (long long)buffer_dataD.overflow,  (long long)buffer_dataM.data);
     rv =
       read_by_pointer(buffer_dataM.data, distance_up,   7, 1, 'u') &
       read_by_pointer(buffer_dataM.data, distance_down, 7, 1, 'o') ;
     break;
   case 3: // rodata
-    GET_DISTANCE(distance_up,   buffer_rodataU.underflow, buffer_rodataM.data);
-    GET_DISTANCE(distance_down, buffer_rodataD.overflow,  buffer_rodataM.data);
+    GET_DISTANCE(distance_up,   (long long)buffer_rodataU.underflow, (long long)buffer_rodataM.data);
+    GET_DISTANCE(distance_down, (long long)buffer_rodataD.overflow,  (long long)buffer_rodataM.data);
     rv =
       read_by_pointer(buffer_rodataM.data, distance_up,   7, 1, 'u') &
       read_by_pointer(buffer_rodataM.data, distance_down, 7, 1, 'o') ;
