@@ -34,7 +34,7 @@ int check_every_aligned(char const* const* ptr) {
   long long abs_dist = 0;
   for(int i = 0; i < 16; i+=2){
     long long aligned_len = 0x1LL << (i >> 1);
-    GET_DISTANCE(abs_dist, ptr[i+1], ptr[i]);
+    GET_DISTANCE(abs_dist, (long long)ptr[i+1], (long long)ptr[i]);
     abs_dist = llabs(abs_dist);
     if(aligned_len == abs_dist){
       return 0;

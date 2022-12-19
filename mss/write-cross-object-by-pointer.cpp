@@ -26,8 +26,8 @@ int main(int argc, char* argv[])
 
   switch(store_type) {
   case 0: { // stack
-    GET_DISTANCE(distance_up,   buffer_stackU.data, buffer_stackM.data);
-    GET_DISTANCE(distance_down, buffer_stackD.data, buffer_stackM.data);
+    GET_DISTANCE(distance_up,   (long long)buffer_stackU.data, (long long)buffer_stackM.data);
+    GET_DISTANCE(distance_down, (long long)buffer_stackD.data, (long long)buffer_stackM.data);
     char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_stackU.data : buffer_stackD.data;
     long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up        : distance_down;
     update_by_pointer(buffer_stackM.data, distance,   8, 1, 'c');
@@ -35,8 +35,8 @@ int main(int argc, char* argv[])
     break;
   }
   case 1: { // heap
-    GET_DISTANCE(distance_up,   buffer_heapU->data, buffer_heapM->data);
-    GET_DISTANCE(distance_down, buffer_heapD->data, buffer_heapM->data);
+    GET_DISTANCE(distance_up,   (long long)buffer_heapU->data, (long long)buffer_heapM->data);
+    GET_DISTANCE(distance_down, (long long)buffer_heapD->data, (long long)buffer_heapM->data);
     char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_heapU->data : buffer_heapD->data;
     long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up        : distance_down;
     update_by_pointer(buffer_heapM->data, distance,   8, 1, 'c');
@@ -44,8 +44,8 @@ int main(int argc, char* argv[])
     break;
   }
   case 2: { // data
-    GET_DISTANCE(distance_up,   buffer_dataU.data, buffer_dataM.data);
-    GET_DISTANCE(distance_down, buffer_dataD.data, buffer_dataM.data);
+    GET_DISTANCE(distance_up,   (long long)buffer_dataU.data, (long long)buffer_dataM.data);
+    GET_DISTANCE(distance_down, (long long)buffer_dataD.data, (long long)buffer_dataM.data);
     char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_dataU.data : buffer_dataD.data;
     long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up       : distance_down;
     update_by_pointer(buffer_dataM.data, distance,   8, 1, 'c');

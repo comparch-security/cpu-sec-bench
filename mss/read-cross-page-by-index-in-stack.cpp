@@ -8,7 +8,7 @@ int FORCE_NOINLINE helper(const char* b, int level) {
   if(level != 0)
     return helper(b, level-1);
   else {
-    GET_DISTANCE(delta, b, dummy.data);
+    GET_DISTANCE(delta, (long long)b, (long long)dummy.data);
     return read_by_index(dummy, delta, 7, 1, 'm');
   }
 }

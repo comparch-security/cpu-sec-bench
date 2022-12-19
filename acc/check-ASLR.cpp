@@ -19,14 +19,16 @@ int main(int argc, char* argv[]) {
     if(0 == system("test/acc-check-ASLR 1")) { // run the inner call
       std::ifstream tmpf(tmp_file);
       uintptr_t addr;
-      tmpf >> addr;
+      unsigned long long addr_num;
+      tmpf >> addr_num;
+      addr = (uintptr_t)addr_num;
       tmpf.close();
       return helper(fp, addr); // check whether both calls put helper() on the same location
     } else
       return 2; // should never run to here
   } else { // write out the location of helper() to tmp file
     std::ofstream tmpf(tmp_file);
-    tmpf << fp;
+    tmpf << (unsigned long long)fp;
     tmpf.close();
     return 0;
   }
