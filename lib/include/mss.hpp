@@ -3,6 +3,7 @@
 
 #include "include/gcc_builtin.hpp"
 #define CB_BUF_LEN 8
+#define LARGE_UNALIGNED_BUF_LEN 0xfff0
 
 class charBuffer
 {
@@ -13,6 +14,18 @@ public:
 
   charBuffer() = default;
   charBuffer(const char uf, const char d, const char of);
+  void updateBuffer(const char uf, const char d, const char of);
+};
+
+class LargeMemberBuffer
+{
+public:
+  char underflow[LARGE_UNALIGNED_BUF_LEN];
+  char data[LARGE_UNALIGNED_BUF_LEN];
+  char overflow[LARGE_UNALIGNED_BUF_LEN];
+
+  LargeMemberBuffer() = default;
+  LargeMemberBuffer(const char uf, const char d, const char of);
   void updateBuffer(const char uf, const char d, const char of);
 };
 
