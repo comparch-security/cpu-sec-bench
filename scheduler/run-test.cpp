@@ -1,3 +1,7 @@
+// POSIX APIs (linux variant)
+#include <spawn.h>
+#include <sys/wait.h>
+
 // standard cpp library
 #include <cstdlib>
 #include <iostream>
@@ -7,10 +11,6 @@
 #include <list>
 #include <cstring>
 #include <vector>
-
-// POSIX APIs (linux variant)
-#include <spawn.h>
-#include <sys/wait.h>
 
 // 3rd party library
 #include "scheduler/json.hpp"
@@ -37,13 +37,13 @@ bool dump_json(json &db, const std::string& fn, bool notice);
 void report_gen();
 
 // test case related
-extern char **environ; // especially required by spawn
+char **org_env;
 char **run_env;
-void add_extra_run_prefix();
+void add_extra_run_prefix(char **);
 #ifdef RUN_PREFIX
-static char run_prefix[] = RUN_PREFIX;
-std::list<char *> extra_run_prefix;
+  static char run_prefix[] = RUN_PREFIX;
 #endif
+std::list<char *> extra_run_prefix;
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
@@ -52,7 +52,7 @@ char ** argv_conv(const std::string &cmd, const str_list_t &args);
 int run_cmd(const char *argv[]);
 bool run_tests(std::list<std::string> cases);
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[], char* envp[]) {
   // parse argument
   for(int i=1; i<argc; i++) {
     std::string param(argv[i]);
@@ -87,7 +87,8 @@ int main(int argc, char* argv[]) {
     if(file_exist("variables.json") && !read_json(result_db, "variables.json", false)) return 1;
   }
 
-  add_extra_run_prefix();
+  org_env = envp;
+  add_extra_run_prefix(envp);
 
   run_tests(collect_case_list());
 
@@ -299,7 +300,7 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
 
 int run_cmd(char *argv[], char **runv = NULL) {
   pid_t pid;
-  if(runv == NULL) runv = environ;
+  if(runv == NULL) runv = org_env;
   /* debug env
   std::cout << "environment:";
   int envi = 0;
@@ -309,7 +310,7 @@ int run_cmd(char *argv[], char **runv = NULL) {
   int rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, runv);
   if(rv) {
     if(rv == ENOSYS) {
-      std::cerr << "posix_spawn() is support in this system!" << std::endl;
+      std::cerr << "posix_spawn() is NOT supported in this system!" << std::endl;
       exit(1);
     } else {
       return rv;
@@ -320,7 +321,7 @@ int run_cmd(char *argv[], char **runv = NULL) {
   do {
      s = waitpid(pid, &status, WUNTRACED | WCONTINUED);
      if(s == -1) {
-       std::cerr << "waitpid() is support in this system!" << std::endl;
+       std::cerr << "waitpid() is NOT supported in this system!" << std::endl;
        exit(1);
      }
   } while (!WIFEXITED(status) && !WIFSIGNALED(status));
@@ -429,14 +430,14 @@ bool run_tests(std::list<std::string> cases) {
   return true;
 }
 
-void add_extra_run_prefix() {
+void add_extra_run_prefix(char **envp) {
   // find the end of the environment
   int envi = 0;
-  while(environ[envi] != NULL) envi++;
+  while(envp[envi] != NULL) envi++;
 
   // copy it locally
   static std::vector<char *> run_env_vect(envi + 8);
-  for(int i=0; i<envi; i++) run_env_vect[i] = environ[i];
+  for(int i=0; i<envi; i++) run_env_vect[i] = envp[i];
 
 #ifdef RUN_PREFIX
   std::cout << "Need to add extra evironment variables" << std::endl;
