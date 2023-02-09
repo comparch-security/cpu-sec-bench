@@ -1,6 +1,12 @@
+#ifdef _MSC_VER
+// Windows MSVC
+#define _CRT_SECURE_NO_WARNINGS
+#include <process.h>
+#else
 // POSIX APIs (linux variant)
 #include <spawn.h>
 #include <sys/wait.h>
+#endif
 
 // standard cpp library
 #include <cstdlib>
@@ -130,6 +136,17 @@ bool dump_json(json &db, const std::string& fn, bool notice) {
     std::cerr << "Fail to dump json file `" << fn << "'" << std::endl;
     return false;
   }
+}
+
+str_list_t& append_str_list(str_list_t &l, const char *str_const) {
+  char str[256];
+  strcpy(str, str_const);
+  char *pch = strtok(str, " ");
+  while(pch != NULL) {
+    l.push_back(std::string(pch));
+    pch = strtok(NULL, " ");
+  }
+  return l;
 }
 
 void report_gen() {
@@ -298,6 +315,29 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   return 0;
 }
 
+#ifdef _MSC_VER
+// Windows MSVC
+int run_cmd(char* argv[], char** runv = NULL) {
+  auto pid = _spawnvp(_P_NOWAIT, argv[0], argv);
+  if (pid == -1) {
+    std::cerr << "Fail to spawn the executable!" << std::endl;
+    exit(1);
+  }
+
+  int status;
+  if (_cwait(&status, pid, _WAIT_CHILD)) {
+    std::cerr << "Cannot wait for the executable!" << std::endl;
+    exit(1);
+  }
+
+  if (status != 0)
+    std::cout << "Terminated with code " << status << std::endl;
+
+  return status;
+}
+
+#else
+// POSIX version (Linux variant)
 int run_cmd(char *argv[], char **runv = NULL) {
   pid_t pid;
   if(runv == NULL) runv = org_env;
@@ -307,6 +347,11 @@ int run_cmd(char *argv[], char **runv = NULL) {
   while(runv[envi] != NULL) std::cout << std::string(runv[envi++]) << std::endl;
   std::cout << std::endl;
   */
+
+  /*
+  int argi = 0;
+  while(argv[argi] != NULL) std::cout << std::string(argv[argi++]) << std::endl;
+  */  
   int rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, runv);
   if(rv) {
     if(rv == ENOSYS) {
@@ -336,6 +381,8 @@ int run_cmd(char *argv[], char **runv = NULL) {
 
   return -2;  // should not run here!
 }
+
+#endif
 
 char ** argv_conv(const std::string &cmd, const str_list_t &args) {
   int i = 0;

@@ -1,21 +1,72 @@
 SHELL := /bin/bash
 
-# default variables
-ARCH          ?= $(shell arch)
-OSType        ?= $(shell uname)
-GCC_OPT_LEVEL ?= O2
-CXX           ?= g++
-OBJDUMP       ?= objdump
+# check whether it is a windows env
+OSType          ?= $(shell echo %OS%)
 
-# Apple's Darwin OS on M1 list Arm core differently
-ifeq ($(ARCH),arm64)
-  ARCH := aarch64
+ifeq ($(OSType),Windows_NT)
+  ARCH          ?= x86_64
+else
+  ARCH          ?= $(shell arch)
+  OSType        := $(shell uname)
+  ifeq ($(ARCH),arm64)
+    ARCH        := aarch64
+  endif
 endif
 
-ifeq ($(OSType),Darwin)
-  CPU_INFO := $(shell sysctl -n machdep.cpu.brand_string)
+# set variables
+OPT_LEVEL       ?= O2
+
+ifeq ($(OSType),Windows_NT)
+
+  # platform
+  CPU_INFO      ?= $(shell echo %PROCESSOR_IDENTIFIER%)
+  RUN_PREFIX    :=
+  test-path     := test
+
+  # compiler
+  CXX           := cl
+  OBJDUMP       := dumpbin
+
+  CXXFLAGS_BASE := /nologo /W3 /WX- /sdl /Oi /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE \
+                   /Gm- /EHsc /MD /GS /Gy /Gd /I . /I ./lib
+  CXXFLAGS      := /$(OPT_LEVEL) $(CXXFLAGS_BASE)
+  LDFLAGS       :=
+  OBJDUMPFLAGS  :=
+
+else ifeq ($(OSType),Darwin)
+
+  # platform
+  CPU_INFO      = $(shell sysctl -n machdep.cpu.brand_string)
+  RUN_PREFIX    :=
+  test-path     := test
+
+  #compiler
+  CXX           := clang++
+  OBJDUMP       := objdump
+
+  CXXFLAGS_BASE := -I. -I./lib -std=c++11 -Wall
+  CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE) 
+  LDFLAGS       :=
+  LD_LIBRARY_PATH := $(test-path)
+  OBJDUMPFLAGS  := -D -l -S
+
 else
-  CPU_INFO := $(shell grep -m 1 "model name" /proc/cpuinfo)
+
+  # platform
+  CPU_INFO      = $(shell grep -m 1 "model name" /proc/cpuinfo)
+  RUN_PREFIX    :=
+  test-path     := test
+
+  #compiler
+  CXX           ?= g++
+  OBJDUMP       ?= objdump
+
+  CXXFLAGS_BASE := -I. -I./lib -std=c++11 -Wall
+  CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE) 
+  LDFLAGS       :=
+  LD_LIBRARY_PATH := $(test-path)
+  OBJDUMPFLAGS  := -D -l -S
+
 endif
 
 # extra security features (comment them out if not needed)
@@ -33,16 +84,8 @@ endif
 #enable_riscv64_cheri       = yes
 
 # define paths and objects
-base = .
-
-test-path = $(base)/test
-LD_LIBRARY_PATH=$(test-path)
 
 # define compiling flags
-CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -std=c++11 -Wall
-LDFLAGS  :=
-OBJDUMPFLAGS := -D -l -S
-RUN_PREFIX :=
 
 ifdef disable_stack_nx_protection
   CXXFLAGS += -z execstack
@@ -99,27 +142,27 @@ ifdef enable_riscv64_cheri
 endif
 
 # define cases
-mss-path  = $(base)/mss
+mss-path  = mss
 mss-cpps  = $(wildcard $(mss-path)/*.cpp)
 mss-tests = $(addprefix $(test-path)/mss-, $(basename $(notdir $(mss-cpps))))
 mss-cpps-prep = $(addsuffix .prep, $(mss-cpps))
 
-mts-path  = $(base)/mts
+mts-path  = mts
 mts-cpps  = $(wildcard $(mts-path)/*.cpp)
 mts-tests = $(addprefix $(test-path)/mts-, $(basename $(notdir $(mts-cpps))))
 mts-cpps-prep = $(addsuffix .prep, $(mts-cpps))
 
-acc-path  = $(base)/acc
+acc-path  = acc
 acc-cpps  = $(wildcard $(acc-path)/*.cpp)
 acc-tests = $(addprefix $(test-path)/acc-, $(basename $(notdir $(acc-cpps))))
 acc-cpps-prep = $(addsuffix .prep, $(acc-cpps))
 
-cpi-path  = $(base)/cpi
+cpi-path  = cpi
 cpi-cpps  = $(wildcard $(cpi-path)/*.cpp)
 cpi-tests = $(addprefix $(test-path)/cpi-, $(basename $(notdir $(cpi-cpps))))
 cpi-cpps-prep = $(addsuffix .prep, $(cpi-cpps))
 
-cfi-path  = $(base)/cfi
+cfi-path  = cfi
 cfi-cpps  = $(wildcard $(cfi-path)/*.cpp)
 cfi-tests = $(addprefix $(test-path)/cfi-, $(basename $(notdir $(cfi-cpps))))
 cfi-cpps-prep = $(addsuffix .prep, $(cfi-cpps))
@@ -128,8 +171,8 @@ sec-tests := $(mss-tests) $(mts-tests) $(acc-tests) $(cpi-tests) $(cfi-tests)
 sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
-headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
-extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(base)/lib/common/temp_file.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
+headers := $(wildcard lib/include/*.hpp) $(wildcard lib/$(ARCH)/*.hpp)
+extra_objects := lib/common/global_var.o lib/common/signal.o lib/common/temp_file.o $(addprefix lib/$(ARCH)/, assembly.o)
 
 func-opcode-gen := ./script/get_x86_func_inst.sh
 ifeq ($(ARCH), aarch64)
@@ -138,16 +181,30 @@ else ifeq ($(ARCH), riscv64)
   func-opcode-gen := ./script/get_riscv64_func_inst.sh
 endif
 
-# compile targets
-
 all: run-test
 .PHONY: all
 
-# json.hpp needs C++11, which might be problematic on some systems
-run-test: $(base)/scheduler/run-test.cpp $(base)/lib/common/temp_file.cpp $(base)/lib/include/temp_file.hpp $(base)/scheduler/json.hpp $(test-path)/sys_info.txt
-	$(CXX) -O2 --std=c++11 -I. -I./lib -DRUN_PREFIX="\"$(RUN_PREFIX)\"" $< $(base)/lib/common/temp_file.cpp -o $@
+ifeq ($(OSType),Windows_NT)
 
-rubbish += run-test
+run-test: scheduler/run-test.cpp lib/common/temp_file.cpp lib/include/temp_file.hpp scheduler/json.hpp $(test-path)/sys_info.txt
+	$(CXX) /O2 $(CXXFLAGS_BASE) $< lib/common/temp_file.cpp /Fe: $@
+
+$(test-path)/sys_info.txt:
+	-mkdir $(test-path)
+	echo "CPU: & System : " > $(test-path)/sys_info.txt
+	systeminfo | findstr /C:"Windows" /C:"Intel" >> $(test-path)/sys_info.txt
+	echo "Compiler : " >> $(test-path)/sys_info.txt
+	echo "VSCMD_VER=" %VSCMD_VER% " UCRTVersion=" %UCRTVersion% " VCToolsVersion=" %VCToolsVersion% >> $(test-path)/sys_info.txt
+	echo "Flags : " >> $(test-path)/sys_info.txt
+	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
+	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
+
+rubbish += run-test.exe $(test-path)/sys_info.txt
+
+else
+
+run-test: scheduler/run-test.cpp lib/common/temp_file.cpp lib/include/temp_file.hpp scheduler/json.hpp $(test-path)/sys_info.txt
+	$(CXX) -O2 $(CXXFLAGS_BASE) -DRUN_PREFIX="\"$(RUN_PREFIX)\"" $< lib/common/temp_file.cpp -o $@
 
 $(test-path)/sys_info.txt:
 	-mkdir -p $(test-path)
@@ -160,11 +217,14 @@ $(test-path)/sys_info.txt:
 	$(OBJDUMP) --version >> $(test-path)/sys_info.txt
 	echo "Flags : " >> $(test-path)/sys_info.txt
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
-	echo "LDFLAGS = "$(LDFLAGS) >> $(test-path)/sys_info.txt
+	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
 
-rubbish += $(test-path)/sys_info.txt
+rubbish += run-test $(test-path)/sys_info.txt
 
-libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
+endif
+
+
+libcfi.so: lib/common/cfi.cpp  lib/include/cfi.hpp
 	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@
 
 rubbish += libcfi.so
@@ -174,21 +234,21 @@ $(extra_objects): %.o : %.cpp $(headers)
 
 rubbish += $(extra_objects)
 
-$(base)/lib/common/mss.o: %.o : %.cpp $(base)/lib/include/mss.hpp
+lib/common/mss.o: %.o : %.cpp lib/include/mss.hpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-rubbish += $(base)/lib/common/mss.o
+rubbish += lib/common/mss.o
 
-$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(headers) $(base)/lib/common/mss.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@ $(LDFLAGS)
+$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(headers) lib/common/mss.o
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) lib/common/mss.o -o $@ $(LDFLAGS)
 
 rubbish += $(mss-tests)
 
 $(mss-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(base)/lib/common/mss.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@ $(LDFLAGS)
+$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) lib/common/mss.o
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) lib/common/mss.o -o $@ $(LDFLAGS)
 
 rubbish += $(mts-tests)
 
@@ -237,8 +297,17 @@ prep: $(sec-tests-prep)
 
 rubbish += $(sec-tests-prep)
 
+ifeq ($(OSType),Windows_NT)
+
+clean:
+	-del /Q $(test-path)
+
+else
+
 clean:
 	-rm $(rubbish) *.tmp $(test-path)/*.tmp $(test-path)/*.gen > /dev/null 2>&1
+
+endif
 
 .PHONY: clean run dump prep
 

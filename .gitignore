@@ -1,6 +1,8 @@
 test/*
+*.exe
 *~
 *.o
+*.obj
 *.so
 *.tmp
 doc/*.log
@@ -14,3 +16,4 @@ variables.json
 run-test
 *.log
 .vscode/
+.vs/
