@@ -13,7 +13,7 @@ Chinese Academy of Sciences.
 The software can be distributed under GNU General Public License version 3.
 See [LICENSE](LICENSE.md) for more details.
 
-#### Usage
+#### Usage (Linux variants)
 
 * Make the C++ `run-test` helper program
 
@@ -49,6 +49,27 @@ dump        Generate a dissambly dump for all test cases.
 prep        Generate the preprocessed C++ files (resolving all macros) for all test cases.
 clean       Clean up the test environment for a fresh test.
 ~~~
+
+#### Usage (Windows MSVC)
+
+We assume MSVC 2019 or later is installed.
+The test bench currently relies on GNU Make is made available through the winget:
+
+~~~bash
+  winget install gnuwin32.make
+~~~
+
+Assuming the test bench is run in a Windows PowerShell lunched by MSVC
+(Suggested by Microsoft, a shell must be lunched through MSVC),
+the GNU Make needs to be added to the PATH variable:
+
+~~~bash
+  $Env:PATH += ";C:\Program Files (x86)\GnuWin32\bin"
+~~~
+
+Once this is done, we try to make the Makefile works on Windows as well.
+For the obvious reasons, some functions are unavailable but we are working on them.
+
 
 #### Content of the repo:
 - **acc**: test cases related to memory access control.
