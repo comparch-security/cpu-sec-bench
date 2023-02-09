@@ -34,36 +34,27 @@ ifeq ($(OSType),Windows_NT)
   LDFLAGS       :=
   OBJDUMPFLAGS  :=
 
-else ifeq ($(OSType),Darwin)
+else
 
   # platform
-  CPU_INFO      = $(shell sysctl -n machdep.cpu.brand_string)
+  ifeq ($(OSType),Darwin)
+    CPU_INFO    = $(shell sysctl -n machdep.cpu.brand_string)
+  else
+    CPU_INFO    = $(shell grep -m 1 "model name" /proc/cpuinfo)
+  endif
   RUN_PREFIX    :=
   test-path     := test
 
   #compiler
-  CXX           := clang++
+  ifeq ($(OSType),Darwin)
+    CXX         := clang++
+  else
+    CXX         := g++
+  endif
   OBJDUMP       := objdump
 
   CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
   CXXFLAGS_RUN  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
-  CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE) 
-  LDFLAGS       :=
-  LD_LIBRARY_PATH := $(test-path)
-  OBJDUMPFLAGS  := -D -l -S
-
-else
-
-  # platform
-  CPU_INFO      = $(shell grep -m 1 "model name" /proc/cpuinfo)
-  RUN_PREFIX    :=
-  test-path     := test
-
-  #compiler
-  CXX           ?= g++
-  OBJDUMP       ?= objdump
-
-  CXXFLAGS_BASE := -I. -I./lib -std=c++11 -Wall
   CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE) 
   LDFLAGS       :=
   LD_LIBRARY_PATH := $(test-path)
