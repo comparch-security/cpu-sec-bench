@@ -13,7 +13,7 @@ Chinese Academy of Sciences.
 The software can be distributed under GNU General Public License version 3.
 See [LICENSE](LICENSE.md) for more details.
 
-#### Usage (Linux variants)
+### Usage (Linux variants)
 
 * Make the C++ `run-test` helper program
 
@@ -50,7 +50,7 @@ prep        Generate the preprocessed C++ files (resolving all macros) for all t
 clean       Clean up the test environment for a fresh test.
 ~~~
 
-#### Usage (Windows MSVC)
+### Usage (Windows MSVC)
 
 We assume MSVC 2019 or later is installed.
 The test bench currently relies on GNU Make is made available through the winget:
@@ -71,7 +71,7 @@ Once this is done, we try to make the Makefile works on Windows as well.
 For the obvious reasons, some functions are unavailable but we are working on them.
 
 
-#### Content of the repo:
+### Content of the repo:
 - **acc**: test cases related to memory access control.
 - **cfi**: test cases related to control flow integrity.
 - **cpi**: test cases related to code pointer integrity.
@@ -84,7 +84,7 @@ For the obvious reasons, some functions are unavailable but we are working on th
 - README.md: this readme file.
 - configure.json: the configuration parameters recorded in JSON.
 
-#### Test results
+### Test results
 
 The results of individual test cases are recorded in a generated file `results.json`.
 The meaning of the result integer:
@@ -98,7 +98,7 @@ The meaning of the result integer:
 * -1: configuration error which needs to be fixed.
 * other: Something is wrong and need investigation.
 
-#### Contributors
+### Contributors
 
 In the alphabet order:
 
@@ -110,7 +110,7 @@ In the alphabet order:
 - Sihao Shen
 - Wei Song
 
-#### References:
+### References:
 
 1. 沈思豪, 解达, 宋威. [跨平台内存安全测试集设计](http://dx.doi.org/10.15888/j.cnki.csa.008840). 计算机系统应用, 2022, 31(10).
 1. Wei Song, Jiameng Ying, Sihao Shen, Boya Li, Hao Ma, Peng Liu.
