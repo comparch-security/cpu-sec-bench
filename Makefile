@@ -27,8 +27,9 @@ ifeq ($(OSType),Windows_NT)
   CXX           := cl
   OBJDUMP       := dumpbin
 
-  CXXFLAGS_BASE := /nologo /W3 /WX- /sdl /Oi /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE \
-                   /Gm- /EHsc /MD /GS /Gy /Gd /I . /I ./lib
+  CXXFLAGS_BASE := /nologo /W3 /WX- /sdl /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
+                   /Gm- /EHsc /MD /GS /Gy /Gd /I./lib
+  CXXFLAGS_RUN  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
   CXXFLAGS      := /$(OPT_LEVEL) $(CXXFLAGS_BASE)
   LDFLAGS       :=
   OBJDUMPFLAGS  :=
@@ -44,7 +45,8 @@ else ifeq ($(OSType),Darwin)
   CXX           := clang++
   OBJDUMP       := objdump
 
-  CXXFLAGS_BASE := -I. -I./lib -std=c++11 -Wall
+  CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
+  CXXFLAGS_RUN  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
   CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE) 
   LDFLAGS       :=
   LD_LIBRARY_PATH := $(test-path)
@@ -176,10 +178,10 @@ endif
 all: run-test
 .PHONY: all
 
-ifeq ($(OSType),Windows_NT)
-
 run-test: scheduler/run-test.cpp lib/common/temp_file.cpp lib/include/temp_file.hpp scheduler/json.hpp $(test-path)/sys_info.txt
-	$(CXX) /O2 $(CXXFLAGS_BASE) $< lib/common/temp_file.cpp /Fe: $@
+	$(CXX) $(CXXFLAGS_RUN) $< lib/common/temp_file.cpp -o $@
+
+ifeq ($(OSType),Windows_NT)
 
 $(test-path)/sys_info.txt:
 	-mkdir $(test-path)
@@ -194,9 +196,6 @@ $(test-path)/sys_info.txt:
 rubbish += run-test.exe $(test-path)/sys_info.txt
 
 else
-
-run-test: scheduler/run-test.cpp lib/common/temp_file.cpp lib/include/temp_file.hpp scheduler/json.hpp $(test-path)/sys_info.txt
-	$(CXX) -O2 $(CXXFLAGS_BASE) -DRUN_PREFIX="\"$(RUN_PREFIX)\"" $< lib/common/temp_file.cpp -o $@
 
 $(test-path)/sys_info.txt:
 	-mkdir -p $(test-path)

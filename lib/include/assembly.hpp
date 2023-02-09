@@ -6,7 +6,9 @@
 #include "include/gcc_builtin.hpp"
 
 // detect ISA
-#ifdef __x86_64
+#if defined(__x86_64) || defined(_MSC_VER)
+// strange that we cannot find a predefined macro to identify ISA in MSVC
+// We are forced to check the compiler macro and assume Intel x86_64 accordingly
   #define CSB_X86_64
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
@@ -34,6 +36,10 @@
   #else
     #define COMPILER_GCC
   #endif
+#endif
+
+#if defined(_MSC_VER)
+  #define COMPILER_MSVC
 #endif
 
 extern void get_got_func(void **gotp, void *label, int cet);
