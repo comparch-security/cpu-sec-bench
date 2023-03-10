@@ -658,6 +658,28 @@
         "expect-results": {"290": "cheri capabilities enabled."}
     },
 
+    "mts-double-free-scalar": {
+            "program": "mts-double-free",
+            "arguments": {"0": ["0","-rsize"]},
+            "size": [0, 8, 1]
+    },
+    "mts-double-free-object": {
+        "program": "mts-double-free",
+        "arguments": {"0": ["1","-rsize"]},
+        "size": [0, 8, 1]
+    },
+    "mts-access-diff-scalar-by-double-free-reallocate": {
+        "require": {"0": [["mts-double-free-scalar"]]}
+    },
+    "mts-access-diff-object-by-double-free-reallocate": {
+        "require": {"0": [["mts-double-free-object"]]}
+    },
+    "mts-write-diff-scalar-by-double-free-reallocate": {
+        "require": {"0": [["mts-double-free-scalar"]]}
+    },
+    "mts-write-diff-object-by-double-free-reallocate": {
+        "require": {"0": [["mts-double-free-object"]]}
+    },
     "mts-access-after-free-alias-stack": {},
     "mts-reallocate-stack": {},
     "mts-access-after-reclaim-stack": {
