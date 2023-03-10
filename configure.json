@@ -903,7 +903,6 @@
                            "267": "RA is partially written leading to a segment error due to wrong RA.",
                            "251": "When Arm Asan Enabled, the clang compiler pushes two more registers(one for shadow memory, another for alignment)"},
         "expect-results": {"290": "cheri capabilities enabled."}
-                        }
     },
     "cfi-return-to-wrong-call-site": {
         "require": { "0": [ [ "cfi-return-to-wrong-call-site-within-static-analysis" ] ] },
