@@ -1,4 +1,6 @@
 {
+    "mss-sweep-stackobject-in-heap":{
+    },
     "mss-check-inter-obj-stack-redzone":{
         "program": "mss-check-inter-nonalloc-redzone",
         "arguments": { "0": ["0"]}
@@ -748,6 +750,9 @@
         "expect-results": { "16": "relocation tables under read-only protection." }
     },
 
+    "cfi-check-textsection-sweep-stackobject-in-heap": {
+        "require": {"0": [["mss-sweep-stackobject-in-heap"]]}
+    },
     "cfi-call-mid-func": {},
     "cfi-call-wrong-func-within-static-analysis": {
         "arguments": { "0": ["1"] }
