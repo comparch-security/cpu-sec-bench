@@ -2,8 +2,6 @@
 #include <map>
 #include <vector>
 
-#define RELOC_NUM 64
-
 int main() {
   std::map<charBuffer *, int> pmap;
   std::vector<charBuffer *> pvec(RELOC_NUM);

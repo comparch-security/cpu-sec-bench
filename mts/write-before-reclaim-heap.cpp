@@ -1,8 +1,6 @@
 #include "include/mss.hpp"
 #include <set>
 
-#define RELOC_NUM 64
-
 int main() {
   std::set<charBuffer *> pset;
   charBuffer *buffer = new charBuffer('u','d','o');
