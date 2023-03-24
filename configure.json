@@ -658,6 +658,11 @@
         "expect-results": {"290": "cheri capabilities enabled."}
     },
 
+    "mts-double-free": {
+        "arguments": {"0": ["0","0","-rsize"]},
+        "size": [0, 8, 1],
+        "expect-results": {"134": "freebsd jemalloc check mechannism enabled"}
+    },
     "mts-access-after-free-alias-stack": {},
     "mts-reallocate-stack": {},
     "mts-access-after-reclaim-stack": {
