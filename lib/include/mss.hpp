@@ -4,6 +4,8 @@
 #include "include/gcc_builtin.hpp"
 #define CB_BUF_LEN 8
 
+#define RELOC_NUM 64
+
 class charBuffer
 {
 public:
