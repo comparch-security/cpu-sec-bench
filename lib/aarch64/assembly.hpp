@@ -8,6 +8,8 @@
     : "+r"(dis) : "r" (pa), "r"(pb)          ) 
 
 // stack related
+// mac M1 llvm -O2 will optimize ldr instruction out
+// it's best to use READ_STACK_DAT_IMM
 #define READ_STACK_DAT(dat, offset)          \
   asm volatile(                              \
     "add  %1, sp, %1;"                       \
@@ -44,6 +46,10 @@
     "br   %0;"                               \
     : : "r"(ptr)                             \
                                              )
+
+// jump to a data stored in a pointer
+#define JMP_DAT_PTR(ptr)                      \
+  goto *ptr;
 
 //pass an integer argument
 #define PASS_INT_ARG0_IMM(arg)               \
