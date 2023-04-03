@@ -658,6 +658,25 @@
         "expect-results": {"290": "cheri capabilities enabled."}
     },
 
+    "mts-double-free": {
+        "arguments": {"0": ["0","0","-rsize","7","0"]},
+        "size": [0, 8, 1],
+        "expect-results": {"262": "freebsd jemalloc check mechannism enabled"}
+    },
+    "mts-write-by-double-free-reallocate": {
+        "program": "mts-double-free",
+        "require": {"0": [["mts-double-free"]]},
+        "arguments": {"0": ["0","0","-rsize","7","1"]},
+        "size": [0, 8, 1],
+        "expect-results": {"262": "freebsd jemalloc check mechannism enabled"}
+    },
+    "mts-access-by-double-free-reallocate": {
+        "program": "mts-double-free",
+        "require": {"0": [["mts-double-free"]]},
+        "arguments": {"0": ["0","0","-rsize","7","2"]},
+        "size": [0, 8, 1],
+        "expect-results": {"262": "freebsd jemalloc check mechannism enabled"}        
+    },
     "mts-access-after-free-alias-stack": {},
     "mts-reallocate-stack": {},
     "mts-access-after-reclaim-stack": {
