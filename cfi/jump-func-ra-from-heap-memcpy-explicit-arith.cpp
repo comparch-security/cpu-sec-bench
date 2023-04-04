@@ -7,6 +7,14 @@
 int ra_offset = sizeof(void*) * 16; //  Maximum height of stack data/ra copy
 int ra_index = 0;
 bool direct_exit = false;
+/*volatile modifier can not be removed,
+ *otherwise will cause segment fault in riscv/gcc
+ *(jump again will interrupt s0 register in ra_target_func frame)
+ *(Oddly, same ra_target_func function in XXX-implicit-arith.cpp and
+ * XXX-explicit-arith.cpp, this test was not influenced,
+ * but XXX-implicit-arith.cpp was influenced)
+*/
+volatile void* global_ra_pos = NULL;
 
 void FORCE_NOINLINE helper(void* addr, void*ra_pos){
     volatile void *ra_stack = NULL;
@@ -24,6 +32,7 @@ void FORCE_NOINLINE helper(void* addr, void*ra_pos){
 
 void FORCE_NOINLINE ra_target_func(void* addr_buffer ,int flutter_option){
     void* ra_pos = &&RA_POS;
+    global_ra_pos = &&RA_POS;
     if(flutter_option == 1) goto *ra_pos;  // fake use
 
     COMPILER_BARRIER;
@@ -40,6 +49,7 @@ RA_POS:
 int main(int argc, char** argv){
 
     int flutter_option = atoi(argv[1]);
+    int flag_option    = atoi(argv[2]);
 
     gvar_init(flutter_option);
     void* addr_buffer = malloc(ra_offset);
@@ -50,10 +60,26 @@ int main(int argc, char** argv){
 
     void* jmp_target = malloc(sizeof(void*));
     memcpy(jmp_target, addr_buffer+ra_index, sizeof(void*));
-    direct_exit = true;
-    //goto *jmp_target;
-    JMP_DAT_PTR(jmp_target);
 
-    //if prog has run at this, it means the jump failed
-    return gvar();
+    switch(flag_option){
+        case 1:
+            if(*(uintptr_t*)jmp_target == (uintptr_t)global_ra_pos)
+                return 0;
+            break;
+        case 2:
+            //this conditional statement is used to bypass M1/clang jump check
+            //M1 forbidden jump directly from switch-case;
+            if(!direct_exit){
+                direct_exit = true;
+                //goto *jmp_target;
+                JMP_DAT_PTR(jmp_target);
+                //if prog has run at this, it means the jump failed
+            }
+            return gvar();
+            break;
+        default:
+            break;
+    }
+
+    return 1;
 }

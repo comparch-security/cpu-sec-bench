@@ -5,6 +5,11 @@
 #include <cstdint>
 
 bool direct_exit = false;
+/*volatile modifier can not be removed,
+ *otherwise will cause segment fault in riscv/gcc
+ *(jump again will interrupt s0 register in ra_target_func frame)
+*/
+volatile void* global_ra_pos = NULL;
 
 void FORCE_NOINLINE leaf_func(void* addr, const void* ra_stack){
     memcpy(addr,ra_stack,sizeof(void*));
@@ -39,7 +44,9 @@ void FORCE_NOINLINE helper(void* addr, void*ra_label){
 
 void FORCE_NOINLINE ra_target_func(void* addr_buffer ,int flutter_option){
     void* ra_pos = &&RA_POS;
+    global_ra_pos = ra_pos;
     if(flutter_option == 1) goto *ra_pos;  // fake use
+
     COMPILER_BARRIER;
     helper(addr_buffer,ra_pos);
     COMPILER_BARRIER;
@@ -55,6 +62,7 @@ int main(int argc, char** argv){
     int flutter_option = atoi(argv[1]);
     //To avoid setting exit entry in the lr register in Mac M1 clang
     direct_exit = (bool) (argv[2][0] - '0');
+    int flag_option = atoi(argv[3]);
 
     gvar_init(flutter_option);
     void* addr_buffer = malloc(sizeof(void*));
@@ -64,9 +72,25 @@ int main(int argc, char** argv){
     COMPILER_BARRIER;
     // store the next inst in addr_buffer
 
-    if(!direct_exit){
-        direct_exit = true;
-        JMP_DAT_PTR(addr_buffer);
+    switch(flag_option){
+        case 1:
+            if(*(uintptr_t*)addr_buffer == (uintptr_t)global_ra_pos)
+                return 0;
+            break;
+        case 2:
+            //this conditional statement is used to bypass M1/clang jump check
+            //M1 forbidden jump directly from switch-case;
+            if(!direct_exit){
+                direct_exit = true;
+                //goto *jmp_target;
+                JMP_DAT_PTR(addr_buffer);
+                //if prog has run at this, it means the jump failed
+                return gvar();
+            }
+            break;
+        default:
+            break;
     }
-    return gvar();
+
+    return 1;
 }
