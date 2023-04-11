@@ -42,6 +42,14 @@
     : : "r" (ptr)                            \
                                              )
 
+// jump to a data stored in a pointer
+#define JMP_DAT_PTR(ptr)                      \
+  asm volatile(                              \
+    "mov (%0), %%rcx;"                       \
+    "jmp *%%rcx;"                             \
+    : : "c" (ptr)                            \
+                                             )
+
 //pass an integer argument
 #define PASS_INT_ARG0_IMM(arg)               \
   asm volatile("mov $" #arg ", %rdi;")

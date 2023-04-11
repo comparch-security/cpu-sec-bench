@@ -699,6 +699,21 @@
     "mts-write-after-reclaim-heap": {
         "require": { "0": [ [ "mts-reallocate-heap" ] ] }
     },
+    "acc-copy-stackra-to-heap-explicit-arith": {
+        "program": "cfi-jump-func-ra-from-heap-memcpy-explicit-arith",
+        "require": {"0": [["cpi-func-pointer-arithmetic"]]},
+        "arguments": {"0": ["2","1"]},
+        "expect-results": { "-1": "arithmetic on a pointer to the function pointer is prohibited on Clang 12."}
+    },
+    "acc-copy-stackra-to-heap-implicit-arith": {
+        "program": "cfi-jump-func-ra-from-heap-memcpy-implicit-arith",
+        "require": { "0": [ ["acc-get-ra-offset-v-p-g1"] ],
+                     "1": [ ["acc-get-ra-offset-v-p-g0"] ]
+                   },
+        "arguments": {"0": ["2","0","1"],
+                      "1": ["2","0","1"]
+                     }
+    },
     "acc-check-ASLR": {
         "expect-results": { "1": "ASLR enabled."}
     },
@@ -851,6 +866,19 @@
     },
     "cfi-jump-mid-func": {
         "arguments": { "0": ["1"] }
+    },
+    "cfi-jump-func-ra-from-heap-memcpy-explicit-arith": {
+        "require": {"0": [["cpi-func-pointer-arithmetic","acc-copy-stackra-to-heap-explicit-arith"]]},
+        "arguments": {"0": ["2","2"]},
+        "expect-results": { "-1": "arithmetic on a pointer to the function pointer is prohibited on Clang 12."}
+    },
+    "cfi-jump-func-ra-from-heap-memcpy-implicit-arith": {
+        "require": { "0": [ ["acc-get-ra-offset-v-p-g1","acc-copy-stackra-to-heap-implicit-arith"] ],
+                     "1": [ ["acc-get-ra-offset-v-p-g0","acc-copy-stackra-to-heap-implicit-arith"] ]
+                   },
+        "arguments": {"0": ["2","0","2"],
+                      "1": ["2","0","2"]
+                    }
     },
     "cfi-jump-instruction-in-rodata": {
     "program": "cfi-code-injection",

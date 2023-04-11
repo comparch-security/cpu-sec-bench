@@ -8,6 +8,8 @@
     : "+r"(dis) : "r" (pa), "r"(pb)          ) 
 
 // stack related
+// mac M1 llvm -O2 will optimize ldr instruction out
+// it's best to use READ_STACK_DAT_IMM
 #define READ_STACK_DAT(dat, offset)          \
   asm volatile(                              \
     "add  %1, sp, %1;"                       \
@@ -43,6 +45,19 @@
   asm volatile(                              \
     "br   %0;"                               \
     : : "r"(ptr)                             \
+                                             )
+
+/* Jump to a data stored in a pointer
+ * If load ptr to a register, 
+ * br inst will be optimized out in Mac M1
+ * Can not use goto statement, because of
+ * the label has crossed functions.
+*/
+#define JMP_DAT_PTR(ptr)                     \
+  volatile void* label = *(void**) ptr;      \
+  asm volatile(                              \
+    "br   %0;"                               \
+    : : "r"(label)                           \
                                              )
 
 //pass an integer argument
