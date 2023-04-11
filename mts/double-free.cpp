@@ -10,6 +10,14 @@
  *large size chunk was organied in large bins
 */
 
+/*PASS: dlmalloc/ptmalloc FAIL: jemalloc/ntheap/mallocng
+*PASS: I7 Risc-v FAIL: Mac-M1
+*add access/write test by using allocator double free debug
+*malloc_count and free_count is used to avoid code reorderind
+*which is caused by mac llvm optimization
+*split three test cases into three functions
+*make tccache size more flexile
+*/
 std::vector<int> chunk_size = {
           8,  //ALLOC_SMALL_SIZE1
          48,  //ALLOC_SMALL_SIZE2
@@ -24,19 +32,19 @@ std::vector<int> chunk_size = {
 
 int length = 0;
 
-int inline double_free_check(std::set<uintptr_t> addr_buffer){
+int double_free_check(std::set<uintptr_t>* addr_buffer){
     for(int i = 0; i != RELOC_NUM; i++){
-        auto ret = addr_buffer.insert((uintptr_t) malloc(length));
+        auto ret = addr_buffer->insert((uintptr_t) malloc(length));
         if(!ret.second)
             return 0;
     }
     return 1;
 }
 
-int access_check(std::set<uintptr_t> addr_buffer){
+int access_check(std::set<uintptr_t>* addr_buffer){
     for(int i = 0; i != RELOC_NUM; i++){
         char* tmp = (char*) malloc(length);
-        auto ret = addr_buffer.insert((uintptr_t) tmp);
+        auto ret = addr_buffer->insert((uintptr_t) tmp);
         if(!ret.second){
             return check(tmp,length,1,'c');
         }
@@ -45,14 +53,14 @@ int access_check(std::set<uintptr_t> addr_buffer){
     return 1;
 }
 
-int write_check(std::set<uintptr_t> addr_buffer){
+int write_check(std::set<uintptr_t>* addr_buffer){
     for(int i = 0; i != RELOC_NUM; i++){
         char* tmp = (char*) malloc(length);
-        auto ret = addr_buffer.insert((uintptr_t) tmp);
+        auto ret = addr_buffer->insert((uintptr_t) tmp);
         if(!ret.second){
             update_by_pointer(tmp, 0, length, 1, 'o'); // override the buffer by duplicate pointer
             uintptr_t tmp_num = (uintptr_t) tmp;
-            const char* orig = (const char*) (*addr_buffer.find(tmp_num));
+            const char* orig = (const char*) (*(addr_buffer->find(tmp_num)));
             return check(orig,length,1,'o');
 
         }else{
@@ -78,9 +86,9 @@ int main(int argc, char** argv){
     }
 
     //traverse the chunk_size array to try different size of free chunk 
-    for(int i = 0; i != sizeof(chunk_size)/sizeof(int); i++){
-
-        length = chunk_size[i] + offset * (2 << i);
+    int pow_index = 0;
+    for(auto cs : chunk_size){
+        length = cs + offset * (2 << pow_index++);
 
         //int* tccache[TCCACHE_SIZE];
         std::vector<int*> tccache(tccache_size);
@@ -141,13 +149,13 @@ int main(int argc, char** argv){
 
             switch(flag_option){
                 case 0:
-                    ret = double_free_check(addr_buffer);
+                    ret = double_free_check(&addr_buffer);
                     break;
                 case 1:
-                    ret = access_check(addr_buffer);
+                    ret = access_check(&addr_buffer);
                     break;
                 case 2:
-                    ret = write_check(addr_buffer);
+                    ret = write_check(&addr_buffer);
                     break;
                 default:
                     break;
