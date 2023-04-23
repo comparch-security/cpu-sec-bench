@@ -18,6 +18,8 @@
 // internal library
 #include "lib/include/temp_file.hpp"
 
+#define MAX_RUN 50
+
 using json = nlohmann::basic_json<nlohmann::ordered_map>;
 static json config_db, result_db, var_db;
 char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
@@ -347,6 +349,8 @@ char ** argv_conv(const std::string &cmd, const str_list_t &args) {
 }
 
 bool run_tests(std::list<std::string> cases) {
+  //check current test dependency and avoid endless loop
+  int current_test_checkdep_count = 0;
   std::string prog, cmd;
   str_llist_t alist;
   str_list_t gvar;
@@ -418,13 +422,21 @@ bool run_tests(std::list<std::string> cases) {
         std::cerr << "Test abnormality: " << cn << " failed with unexpected exit value " << rv << std::endl;
         if(debug_run) exit(1);
       }
+      current_test_checkdep_count = 0;
     } else if(test_run && test_cond == 1)
-      cases.push_back(cn);
+      if(current_test_checkdep_count < MAX_RUN){
+        cases.push_back(cn);
+        current_test_checkdep_count++;
+      }else{
+        std::cerr << "Test abnormality: " << cn << " the dependency relationship for the current test is incorrect." << std::endl;
+        if(debug_run) exit(1);
+      }
     else if(test_run && test_cond == -1) {
         std::cerr << "Test abnormality: " << cn << " does not exist in the configure.json file." << std::endl;
-        if(debug_run) exit(1);      
+        if(debug_run) exit(1);
     } else if(test_run) {
       result_db[cn]["result"] = test_cond; dump_json(result_db, "results.json", false);
+      current_test_checkdep_count = 0;
     }
   }
   return true;
