@@ -72,8 +72,8 @@ public:
 };
 
 // read the vtable pointer of an object
-extern pvtable_t read_vtable_pointer(Base *);
-extern pvtable_t read_vtable_pointer(BaseM *);
+extern pvtable_t read_vtable_pointer(const Base *);
+extern pvtable_t read_vtable_pointer(const BaseM *);
 
 // write the vtable pointer of an object
 extern void write_vtable_pointer(Base *, pvtable_t);

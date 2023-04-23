@@ -62,7 +62,7 @@ void memory_exchange(void * a, void * b, int byte) {
 
 // read write vtable pointer
 
-pvtable_t read_vtable_pointer(Base * p) {
+pvtable_t read_vtable_pointer(const Base * p) {
   pvtable_t *vtp = (pvtable_t *)p;
   return *vtp;
 }
@@ -72,7 +72,7 @@ void write_vtable_pointer(Base * pobj, pvtable_t vtp) {
   *vtp_orig = vtp;
 }
 
-pvtable_t read_vtable_pointer(BaseM * p) {
+pvtable_t read_vtable_pointer(const BaseM * p) {
   pvtable_t *vtp = (pvtable_t *)p;
   return *vtp;
 }
