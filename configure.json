@@ -766,9 +766,36 @@
         "arguments": { "0": ["-vcet-enabled"] }
     },
 
-    "cpi-read-vtable-pointer": {},
-    "cpi-write-vtable-pointer": {
-        "require": { "0": [ [ "cpi-read-vtable-pointer" ] ] }
+    "cpi-read-stack-vtable-pointer": {
+        "program": "cpi-read-vtable-pointer",
+        "arguments": { "0": ["0"]}
+    },
+    "cpi-read-heap-vtable-pointer": {
+        "program": "cpi-read-vtable-pointer",
+        "arguments": { "0": ["1"]}
+    },
+    "cpi-read-data-vtable-pointer": {
+        "program": "cpi-read-vtable-pointer",
+        "arguments": { "0": ["2"]}
+    },
+    "cpi-read-rodata-vtable-pointer": {
+        "program": "cpi-read-vtable-pointer",
+        "arguments": { "0": ["3"]}
+    },
+    "cpi-write-stack-vtable-pointer": {
+        "program": "cpi-write-vtable-pointer",
+        "arguments": { "0": ["0"]},
+        "require": { "0": [ [ "cpi-read-stack-vtable-pointer" ] ] }
+    },
+    "cpi-write-heap-vtable-pointer": {
+        "program": "cpi-write-vtable-pointer",
+        "arguments": { "0": ["1"]},
+        "require": { "0": [ [ "cpi-read-heap-vtable-pointer" ] ] }
+    },
+    "cpi-write-data-vtable-pointer": {
+        "program": "cpi-write-vtable-pointer",
+        "arguments": { "0": ["2"]},
+        "require": { "0": [ [ "cpi-read-data-vtable-pointer" ] ] }
     },
     "cpi-func-pointer-assign": {},
     "cpi-func-pointer-arithmetic": {
@@ -790,20 +817,24 @@
         "require": { "0": [ [ "cfi-call-wrong-func-within-static-analysis" ] ] },
     "arguments": { "0": ["1"] }
     },
-    "cfi-call-wrong-func-vtable-parent": {
-        "require": { "0": [ [ "cpi-write-vtable-pointer" ] ] }
+    "cfi-call-wrong-func-heap-vtable-parent": {
+        "program": "cfi-call-wrong-func-vtable-parent",
+        "require": { "0": [ [ "cpi-write-heap-vtable-pointer" ] ] }
     },
-    "cfi-call-wrong-func-vtable-sibling": {
-        "require": { "0": [ [ "cpi-write-vtable-pointer" ] ] }
+    "cfi-call-wrong-func-heap-vtable-sibling": {
+        "program": "cfi-call-wrong-func-vtable-sibling",
+        "require": { "0": [ [ "cpi-write-heap-vtable-pointer" ] ] }
     },
-    "cfi-call-wrong-func-vtable-child": {
-        "require": { "0": [ [ "cpi-write-vtable-pointer" ] ] }
+    "cfi-call-wrong-func-heap-vtable-child": {
+        "program": "cfi-call-wrong-func-vtable-child",
+        "require": { "0": [ [ "cpi-write-heap-vtable-pointer" ] ] }
     },
-    "cfi-call-wrong-func-vtable-offset": {
-        "require": { "0": [ [ "cpi-write-vtable-pointer" ] ] }
+    "cfi-call-wrong-func-heap-vtable-offset": {
+        "program": "cfi-call-wrong-func-vtable-offset",
+        "require": { "0": [ [ "cpi-write-heap-vtable-pointer" ] ] }
     },
     "cfi-call-wrong-func-vtable": {
-        "require": { "0": [ [ "cfi-call-wrong-func-vtable-child" ] ] }
+        "require": { "0": [ [ "cfi-call-wrong-func-heap-vtable-child" ] ] }
     },
     "cfi-call-wrong-func-vtable-released": {
         "require": { "0": [ [ "cfi-call-wrong-func-vtable" ] ] },
