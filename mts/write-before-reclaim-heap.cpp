@@ -6,12 +6,14 @@ int main() {
   charBuffer *buffer = new charBuffer('u','d','o');
   pset.insert(buffer);
   delete buffer;
+  update_by_pointer(buffer->underflow, 0, 8,  1, 't');
   update_by_pointer(buffer->data, 0, 8,  1, 'c');
+  update_by_pointer(buffer->overflow, 0, 8,  1, 'n');
 
   for(int i=0; i<RELOC_NUM; i++) {
     buffer = new charBuffer;
     if(pset.count(buffer)) {
-      int rv = check(buffer->data, 8,  1, 'c');
+      int rv = check(buffer->underflow, 8,  1, 't') & check(buffer->data, 8,  1, 'c') & check(buffer->overflow, 8,  1, 'n');
       delete buffer;
       return rv;
     } else {

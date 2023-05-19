@@ -9,7 +9,7 @@ int main() {
   for(int i=0; i<RELOC_NUM; i++) {
     pvec[i] = new charBuffer;
     if(pmap.count(pvec[i])) {
-      int rv = check(pvec[i]->data, 7,  1, 'd');
+      int rv = check(pvec[i]->underflow, 7,  1, 'u') & check(pvec[i]->data, 7,  1, 'd') & check(pvec[i]->overflow, 7,  1, 'o');
       delete pvec[i];
       return rv;
     } else {
