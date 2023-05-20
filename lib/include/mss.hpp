@@ -8,6 +8,7 @@ class LargeMemberBufferBase
 {
   public:
   virtual void updateBuffer(const char uf, const char d, const char of) = 0;
+  virtual const char * get_data() const = 0;
 };
 
 template<unsigned int SZ>
@@ -39,6 +40,10 @@ public:
     underflow[SZ-1] = 0;
     data[SZ-1]      = 0;
     overflow[SZ-1]  = 0;
+  }
+
+  virtual const char * get_data() const {
+    return data;
   }
 };
 
