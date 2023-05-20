@@ -4,61 +4,43 @@
 #include "include/gcc_builtin.hpp"
 #define CB_BUF_LEN 8
 
-#define LARGE_UNALIGNED_BUF_LEN1 0x100
-#define LARGE_UNALIGNED_BUF_LEN2 0x200
-#define LARGE_UNALIGNED_BUF_LEN3 0x400
-#define LARGE_UNALIGNED_BUF_LEN4 0x800
-#define LARGE_UNALIGNED_BUF_LEN5 0x1000
-#define LARGE_UNALIGNED_BUF_LEN6 0x2000
-#define LARGE_UNALIGNED_BUF_LEN7 0x4000
-#define LARGE_UNALIGNED_BUF_LEN8 0x8000
+class LargeMemberBufferBase
+{
+  public:
+  virtual void updateBuffer(const char uf, const char d, const char of) = 0;
+};
 
-#define LARGEMEMBERBUFFERCLASS(num)                                         \
-                                                                            \
-class LargeMemberBuffer##num                                                \
-{                                                                           \
-public:                                                                     \
-  char underflow[LARGE_UNALIGNED_BUF_LEN##num];                             \
-  char data[LARGE_UNALIGNED_BUF_LEN##num];                                  \
-  char overflow[LARGE_UNALIGNED_BUF_LEN##num];                              \
-                                                                            \
-  LargeMemberBuffer##num() = default;                                       \
-  LargeMemberBuffer##num(const char uf, const char d, const char of);       \
-  void updateBuffer(const char uf, const char d, const char of);            \
-}                                                                           \
+template<unsigned int SZ>
+class LargeMemberBuffer : public LargeMemberBufferBase
+{
+public:
+  char underflow[SZ];
+  char data[SZ];
+  char overflow[SZ];
 
-#define LARGEMEMBERBUFFERCLASS_INIT(num)                                                      \
-LargeMemberBuffer##num::LargeMemberBuffer##num(const char uf, const char d, const char of){   \
-  for(unsigned int i=0; i!=LARGE_UNALIGNED_BUF_LEN##num-1; i++) {                             \
-    underflow[i] = uf;                                                                        \
-    data[i] = d;                                                                              \
-    overflow[i] = of;                                                                         \
-  }                                                                                           \
-  underflow[LARGE_UNALIGNED_BUF_LEN##num-1] = 0;                                              \
-  data[LARGE_UNALIGNED_BUF_LEN##num-1]      = 0;                                              \
-  overflow[LARGE_UNALIGNED_BUF_LEN##num-1]  = 0;                                              \
-}                                                                                             \
+  LargeMemberBuffer() = default;
+  LargeMemberBuffer(const char uf, const char d, const char of) {
+    for(unsigned int i=0; i!=SZ-1; i++) {
+      underflow[i] = uf;
+      data[i] = d;
+      overflow[i] = of;
+    }
+    underflow[SZ-1] = 0;
+    data[SZ-1]      = 0;
+    overflow[SZ-1]  = 0;
+  }
 
-#define LARGEMEMBERBUFFERCLASS_UPDATE(num)                                                    \
-void LargeMemberBuffer##num::updateBuffer(const char uf, const char d, const char of){        \
-  for(unsigned int i=0; i!=LARGE_UNALIGNED_BUF_LEN##num-1; i++) {                             \
-    underflow[i] = uf;                                                                        \
-    data[i] = d;                                                                              \
-    overflow[i] = of;                                                                         \
-  }                                                                                           \
-  underflow[LARGE_UNALIGNED_BUF_LEN##num-1] = 0;                                              \
-  data[LARGE_UNALIGNED_BUF_LEN##num-1]      = 0;                                              \
-  overflow[LARGE_UNALIGNED_BUF_LEN##num-1]  = 0;                                              \
-}                                                                                             \
-
-LARGEMEMBERBUFFERCLASS(1);
-LARGEMEMBERBUFFERCLASS(2);
-LARGEMEMBERBUFFERCLASS(3);
-LARGEMEMBERBUFFERCLASS(4);
-LARGEMEMBERBUFFERCLASS(5);
-LARGEMEMBERBUFFERCLASS(6);
-LARGEMEMBERBUFFERCLASS(7);
-LARGEMEMBERBUFFERCLASS(8);
+  virtual void updateBuffer(const char uf, const char d, const char of) {
+    for(unsigned int i=0; i!=SZ-1; i++) {
+      underflow[i] = uf;
+      data[i] = d;
+      overflow[i] = of;
+    }
+    underflow[SZ-1] = 0;
+    data[SZ-1]      = 0;
+    overflow[SZ-1]  = 0;
+  }
+};
 
 #define RELOC_NUM 64
 
