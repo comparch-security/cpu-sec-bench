@@ -8,7 +8,13 @@ class LargeMemberBufferBase
 {
   public:
   virtual void updateBuffer(const char uf, const char d, const char of) = 0;
-  virtual const char * get_data() const = 0;
+  virtual const char * get_const_underflow() const = 0;
+  virtual const char * get_const_data() const = 0;
+  virtual const char * get_const_overflow() const = 0;
+  virtual char * get_underflow() = 0;
+  virtual char * get_data() = 0;
+  virtual char * get_overflow() = 0;
+  virtual ~LargeMemberBufferBase() = default;
 };
 
 template<unsigned int SZ>
@@ -42,9 +48,30 @@ public:
     overflow[SZ-1]  = 0;
   }
 
-  virtual const char * get_data() const {
+  virtual const char * get_const_underflow() const {
+    return underflow;
+  }
+
+  virtual const char * get_const_data() const {
     return data;
   }
+
+  virtual const char * get_const_overflow() const {
+    return overflow;
+  }
+
+  virtual char * get_underflow() {
+    return underflow;
+  }
+
+  virtual char * get_data() {
+    return data;
+  }
+
+  virtual char * get_overflow() {
+    return overflow;
+  }
+
 };
 
 #define RELOC_NUM 64

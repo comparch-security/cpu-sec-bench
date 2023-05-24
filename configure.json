@@ -133,56 +133,56 @@
     "mss-overflow-large-read-ptr-stack": {
         "program": "mss-read-large-member-inter-object",
         "arguments": { "0": ["0", "0","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-overflow-large-read-ptr-heap": {
         "program": "mss-read-large-member-inter-object",
         "arguments": { "0": ["1", "0","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-overflow-large-read-ptr-data": {
         "program": "mss-read-large-member-inter-object",
         "arguments": { "0": ["2", "0","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-overflow-large-read-ptr-rodata": {
         "program": "mss-read-large-member-inter-object",
         "arguments": { "0": ["3", "0","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-rodata-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-underflow-large-read-ptr-stack": {
         "program": "mss-read-large-member-inter-object",
         "arguments": { "0": ["0", "1","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-underflow-large-read-ptr-heap": {
         "program": "mss-read-large-member-inter-object",
         "arguments": { "0": ["1", "1","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-underflow-large-read-ptr-data": {
         "program": "mss-read-large-member-inter-object",
         "arguments": { "0": ["2", "1","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-underflow-large-read-ptr-rodata": {
         "program": "mss-read-large-member-inter-object",
         "arguments": { "0": ["3", "1","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-rodata-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
@@ -270,42 +270,42 @@
     "mss-overflow-large-write-ptr-stack": {
         "program": "mss-write-large-member-inter-object",
         "arguments": { "0": ["0", "0","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-overflow-large-write-ptr-heap": {
         "program": "mss-write-large-member-inter-object",
         "arguments": { "0": ["1", "0","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-overflow-large-write-ptr-data": {
         "program": "mss-write-large-member-inter-object",
         "arguments": { "0": ["2", "0","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-underflow-large-write-ptr-stack": {
         "program": "mss-write-large-member-inter-object",
         "arguments": { "0": ["0", "1","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-underflow-large-write-ptr-heap": {
         "program": "mss-write-large-member-inter-object",
         "arguments": { "0": ["1", "1","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-underflow-large-write-ptr-data": {
         "program": "mss-write-large-member-inter-object",
         "arguments": { "0": ["2", "1","-rsize"] },
-        "size": [1, 8, 1],
+        "size": [0, 9, 1],
         "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
