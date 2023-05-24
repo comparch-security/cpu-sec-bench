@@ -2,14 +2,30 @@
 #include <map>
 #include <vector>
 
-int main() {
+int main(int argc, char** argv) {
   std::map<charBuffer *, int> pmap;
   std::vector<charBuffer *> pvec(RELOC_NUM);
+
+  int region_flag = argv[1][0] - '0';
 
   for(int i=0; i<RELOC_NUM; i++) {
     pvec[i] = new charBuffer;
     if(pmap.count(pvec[i])) {
-      int rv = check(pvec[i]->data, 7,  1, 'd');
+      int rv = 1;
+      switch (region_flag)
+      {
+      case 0:
+        rv = check(pvec[i]->underflow, 7,  1, 'u');
+        break;
+      case 1:
+        rv = check(pvec[i]->data, 7,  1, 'd');
+        break;
+      case 2:
+        rv = check(pvec[i]->overflow, 7,  1, 'o');
+        break;
+      default:
+        break;
+      }
       delete pvec[i];
       return rv;
     } else {
