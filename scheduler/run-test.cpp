@@ -167,6 +167,12 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
 
   auto tcase = config_db[cn];
 
+  // get the program name
+  if(tcase.count("program"))
+    pn = tcase["program"].get<std::string>();
+  else
+    pn = cn;
+
   // check requirement
   int req_case = 0;
   std::string req_case_str = "0";
@@ -213,12 +219,6 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
     if(!req_case_all_tested) return 1; // prerequisit not tested yet
     if(!req_case_ok) return 1024; // no need to test as all prerequisit tested and failed
   }
-
-  // get the program name
-  if(tcase.count("program"))
-    pn = tcase["program"].get<std::string>();
-  else
-    pn = cn;
 
   // get the argument lists
   arg_list.clear();
