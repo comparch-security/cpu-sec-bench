@@ -18,6 +18,9 @@ else
   CPU_INFO := $(shell grep -m 1 "model name" /proc/cpuinfo)
 endif
 
+# extra compile/link option
+enable_static_link             = yes
+
 # extra security features (comment them out if not needed)
 #disable_stack_nx_protection    = yes
 #disable_stack_protection       = yes
@@ -37,10 +40,19 @@ LD_LIBRARY_PATH=$(test-path)
 
 # define compiling flags
 CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -std=c++11 -Wall
+SCHEDULER_CXXFLAGS = -$(GCC_OPT_LEVEL) --std=c++11 -I. -I./lib
 LDFLAGS  :=
 OBJDUMPFLAGS := -D -l -S
 RUN_PREFIX :=
 
+# extra compile/link option
+ifdef enable_static_link
+	CXXFLAGS += -static
+	SCHEDULER_CXXFLAGS += -static
+endif
+
+
+# extra security features (comment them out if not needed)
 ifdef disable_stack_nx_protection
   CXXFLAGS += -z execstack
 endif
@@ -82,6 +94,7 @@ endif
 ifdef enable_address_sanitizer
   CXXFLAGS += -fsanitize=address
   RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
+  SCHEDULER_CXXFLAGS += -DRUN_PREFIX="$(RUN_PREFIX)"
 ifeq ($(CXX),$(filter $(CXX),clang++ c++))
   LDFLAGS  += -static-libsan
 else
@@ -137,7 +150,7 @@ all: run-test
 
 # json.hpp needs C++11, which might be problematic on some systems
 run-test: $(base)/scheduler/run-test.cpp $(base)/lib/common/temp_file.cpp $(base)/lib/include/temp_file.hpp $(base)/scheduler/json.hpp $(test-path)/sys_info.txt
-	$(CXX) -O2 --std=c++11 -I. -I./lib -DRUN_PREFIX="\"$(RUN_PREFIX)\"" $< $(base)/lib/common/temp_file.cpp -o $@
+	$(CXX) $(SCHEDULER_CXXFLAGS)  $< $(base)/lib/common/temp_file.cpp -o $@
 
 rubbish += run-test
 
@@ -156,10 +169,17 @@ $(test-path)/sys_info.txt:
 
 rubbish += $(test-path)/sys_info.txt
 
-libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
-	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@
+ifdef enable_static_link
+libcfi: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@.a
+
+rubbish += libcfi.a
+else
+libcfi: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
+	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@.so
 
 rubbish += libcfi.so
+endif
 
 $(extra_objects): %.o : %.cpp $(headers)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -201,7 +221,7 @@ rubbish += $(acc-tests)
 $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) libcfi $(headers)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cpi-tests)
@@ -209,7 +229,7 @@ rubbish += $(cpi-tests)
 $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) libcfi $(headers)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cfi-tests)
