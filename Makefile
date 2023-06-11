@@ -29,6 +29,9 @@ endif
 #enable_stack_clash_protection  = yes
 #enable_address_sanitizer       = yes
 
+# extra hardware secrutiy features
+#enable_riscv64_cheri       = yes
+
 # define paths and objects
 base = .
 
@@ -40,6 +43,7 @@ CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -std=c++11 -Wall
 LDFLAGS  :=
 OBJDUMPFLAGS := -D -l -S
 RUN_PREFIX :=
+EXTENDED_ISA :=
 
 ifdef disable_stack_nx_protection
   CXXFLAGS += -z execstack
@@ -88,6 +92,11 @@ else
   LDFLAGS  += -static-libasan
   CXXFLAGS += --param=asan-stack=1
 endif
+endif
+
+ifdef enable_riscv64_cheri
+  EXTENDED_ISA := CHERI
+  CXXFLAGS += -DEXTENDED_ISA=$(EXTENDED_ISA) -cheri -cheri-bounds=very-aggressive
 endif
 
 # define cases

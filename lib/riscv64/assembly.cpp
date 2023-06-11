@@ -61,11 +61,8 @@ void get_got_func(void **gotp, void *label, int cet) {
 }
 
 void replace_got_func(void **fake, void *got) {
- 
-  asm volatile(
-    "sd   %0, 0(%1);"
-    : : "r"(fake), "r"(got)
-  );
+  
+  SET_MEM(got,fake);
 }
 
 #undef GET_GOT_LOC
