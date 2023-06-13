@@ -21,18 +21,6 @@ void FORCE_NOINLINE leaf_func(void* addr, const void* ra_stack){
     leaf_func(addr,(const void*)&ra_stack); \
     return; }                               \
 
-
-#define RA_POS_TEST          \
-  RA_POS_TEST_ENTRY(0, 0)    \
-  RA_POS_TEST_ENTRY(8, 2)    \
-  RA_POS_TEST_ENTRY(16, 4)   \
-  RA_POS_TEST_ENTRY(24, 6)   \
-  RA_POS_TEST_ENTRY(32, 8)   \
-  RA_POS_TEST_ENTRY(40, 10)  \
-  RA_POS_TEST_ENTRY(48, 12)  \
-  RA_POS_TEST_ENTRY(56, 14)  \
-  RA_POS_TEST_ENTRY(64, 14)  \
-
 void FORCE_NOINLINE helper(void* addr, void*ra_label){
     volatile void *ra_stack = NULL;
 
