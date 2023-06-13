@@ -6,24 +6,6 @@
   READ_STACK_DAT_IMM(ra_stack, off);                   \
   if(ra_stack == ra_label) { gvar_init(rv); return; }  \
 
-#define RA_POS_TEST        \
-  RA_POS_TEST_ENTRY(0, 0)  \
-  RA_POS_TEST_ENTRY(4, 1)  \
-  RA_POS_TEST_ENTRY(8, 2)  \
-  RA_POS_TEST_ENTRY(12, 3)  \
-  RA_POS_TEST_ENTRY(16, 4)  \
-  RA_POS_TEST_ENTRY(20, 5)  \
-  RA_POS_TEST_ENTRY(24, 6)  \
-  RA_POS_TEST_ENTRY(28, 7)  \
-  RA_POS_TEST_ENTRY(32, 8)  \
-  RA_POS_TEST_ENTRY(36, 9)  \
-  RA_POS_TEST_ENTRY(40, 10)  \
-  RA_POS_TEST_ENTRY(44, 11)  \
-  RA_POS_TEST_ENTRY(48, 12)  \
-  RA_POS_TEST_ENTRY(52, 13)  \
-  RA_POS_TEST_ENTRY(56, 14)  \
-  RA_POS_TEST_ENTRY(60, 15)  \
-
 const int max_gv_num = 4;
 volatile arch_int_t gv[max_gv_num];
 

@@ -20,7 +20,7 @@ void FORCE_NOINLINE helper(void* addr, void*ra_pos){
     volatile void *ra_stack = NULL;
     memmove(addr,(const void*)&ra_stack,ra_offset);
     for(int i = 0; i != ra_offset; i+=sizeof(void*)){
-        if((uintptr_t)ra_pos == *(arch_uint_t*)(addr+i)){
+        if((uintptr_t)ra_pos == *(arch_uint_t*)((long long)addr+(long long)i)){
             ra_index = i;
             break;
         }else{
@@ -59,7 +59,8 @@ int main(int argc, char** argv){
     COMPILER_BARRIER;
 
     void* jmp_target = malloc(sizeof(void*));
-    memcpy(jmp_target, addr_buffer+ra_index, sizeof(void*));
+    memcpy(jmp_target, (void*)((long long)addr_buffer+(long long)ra_index), 
+    sizeof(void*));
 
     switch(flag_option){
         case 1:
