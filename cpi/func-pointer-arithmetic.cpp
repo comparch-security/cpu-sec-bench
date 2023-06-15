@@ -10,8 +10,7 @@ void FORCE_NOINLINE helper() {
 typedef void(*func_t)();
 
 void FORCE_NOINLINE call_helper(intptr_t fp, intptr_t diff) {
-  func_t func = reinterpret_cast<func_t>(fp);
-  func += diff;
+  func_t func = reinterpret_cast<func_t>(fp + diff);
   func();
 }
 

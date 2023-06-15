@@ -20,11 +20,18 @@
   #include "aarch64/assembly.hpp"
 #endif
 
-#if defined(__riscv) && __riscv_xlen == 64
+#if defined(__riscv) && __riscv_xlen == 64 && !defined(__CHERI__ )
   #define CSB_RV64GC
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
   #include "riscv64/assembly.hpp"
+#endif
+
+#if __CHERI_CAPABILITY_WIDTH__ == 128 && _riscv_arch == cheri  && defined(__CHERI__ )
+  #define CSB_RV64GC
+  typedef unsigned long long arch_uint_t;
+  typedef long long arch_int_t;
+  #include "cheri_riscv64/assembly.hpp"
 #endif
 
 // detect compiler
