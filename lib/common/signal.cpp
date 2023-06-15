@@ -60,7 +60,7 @@ void FORCE_INLINE begin_catch_exception_common() {
     exit(-1);
   }
   if(-1 == sigaction(SIGILL, &act, NULL)) {
-    perror("begin_catch_nx_exception() fails to catch SIGFPE!");
+    perror("begin_catch_nx_exception() fails to catch SIGILL!");
     exit(-1);
   }
 }
