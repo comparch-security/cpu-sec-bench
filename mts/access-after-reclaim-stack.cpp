@@ -1,5 +1,10 @@
-#include "include/gcc_builtin.hpp"
 #include "include/mss.hpp"
+
+#if defined(__GNUC__) 
+  #include "include/posix/gcc_builtin.hpp"
+#else
+  #include "include/visualc++/msvc_builtin.hpp"
+#endif
 
 charBuffer *pb;
 

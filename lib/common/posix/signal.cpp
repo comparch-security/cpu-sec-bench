@@ -1,5 +1,7 @@
-#include "include/signal.hpp"
-#include "include/gcc_builtin.hpp"
+#if defined(__GNUC__)
+  #include "include/posix/signal.hpp"
+  #include "include/posix/gcc_builtin.hpp"
+#endif
 #include <cstdlib>
 #include <cstdio>
 #include <vector>

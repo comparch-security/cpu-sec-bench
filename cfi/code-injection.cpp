@@ -79,13 +79,20 @@ int main(int argc, char* argv[])
     break;
   }
 
+#if defined(_MSC_VER)
+  begin_catch_exception(addr, (ULONG*)NULL, RT_CODE_ACCERR, (ULONG)EXCEPTION_ACCESS_VIOLATION);
+
+  begin_catch_exception(addr+4, (ULONG*)NULL, 0, (ULONG)EXCEPTION_ILLEGAL_INSTRUCTION);
+  begin_catch_exception(addr+4, (ULONG*)NULL, 0, (ULONG)EXCEPTION_FLT_INVALID_OPERATION);
+#else
   begin_catch_exception(addr, SEGV_ACCERR);
-#ifdef CSB_ARMV8_64
-  // bus error on Apple M1
-  begin_catch_exception(addr, BUS_ADRALN, RT_CODE_ACCERR, SIGBUS);
-#endif
+  #ifdef CSB_ARMV8_64
+    // bus error on Apple M1
+    begin_catch_exception(addr, BUS_ADRALN, RT_CODE_ACCERR, SIGBUS);
+  #endif
   begin_catch_exception(addr+4, 0, 0, SIGILL);
   begin_catch_exception(addr+4, 0, 0, SIGFPE);
+#endif
   switch(argv[1][0] - '0') {
   case 0: return_helper(p); break;
   case 1: call_helper(f); break;

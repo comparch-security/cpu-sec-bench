@@ -1,7 +1,11 @@
 #ifndef BOF_HPP_INCLUDED
 #define BOF_HPP_INCLUDED
 
-#include "include/gcc_builtin.hpp"
+#if defined(__GNUC__)
+  #include "include/posix/gcc_builtin.hpp"
+#else
+  #include "include/visualc++/msvc_builtin.hpp"
+#endif
 #define CB_BUF_LEN 8
 
 class charBuffer

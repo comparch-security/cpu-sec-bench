@@ -1,9 +1,14 @@
 #include <string>
 #include <cstdlib>
 #include <cstdint>
-#include "include/gcc_builtin.hpp"
 #include <fstream>
 //#include <iostream>
+
+#if defined(__GNUC__)
+  #include "include/posix/gcc_builtin.hpp"
+#else
+  #include "include/visualc++/msvc_builtin.hpp"
+#endif
 
 int FORCE_NOINLINE helper(uintptr_t p0, uintptr_t p1) {
   // if debug code is really needed for future use, keep it simple and commented out

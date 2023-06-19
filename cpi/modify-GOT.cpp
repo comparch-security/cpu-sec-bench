@@ -23,7 +23,11 @@ int main(int argc, char* argv[])
   rand();
   COMPILER_BARRIER;
 
-  begin_catch_exception(got, SEGV_ACCERR);
+  #if defined(_MSC_VER)
+    begin_catch_exception(got, (ULONG*)NULL, RT_CODE_ACCERR, (ULONG)EXCEPTION_ACCESS_VIOLATION);
+  #else
+    begin_catch_exception(got, SEGV_ACCERR);
+  #endif
   replace_got_func((void **)helper, got);
   end_catch_exception();
 

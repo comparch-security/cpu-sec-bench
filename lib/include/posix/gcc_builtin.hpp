@@ -1,5 +1,4 @@
-#ifndef GCC_BUILTIN_HPP_INCLUDED
-#define GCC_BUILTIN_HPP_INCLUDED
+#if defined(__GNUC__)
 
 // make a function incline/non-inline
 #define FORCE_INLINE __attribute__((always_inline)) inline
