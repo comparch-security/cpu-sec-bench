@@ -1,13 +1,23 @@
-SHELL := /bin/bash
-
+#Check Current SHELL DEFAULT PATH
 # check whether it is a windows env
-OSType          ?= $(shell echo %OS%)
+ifneq ($(wildcard C:\Windows\SysWOW64\WindowsPowerShell\),)
+	SHELL         := C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe
+	OSType        ?= $(shell echo $$Env:OS)
+else ifneq ($(wildcard C:\Windows\System32\cmd.exe),)
+	SHELL         := C:\Windows\System32\cmd.exe
+	OSType        ?= $(shell echo %OS%)
+else ifneq ($(wildcard /bin/bash),)
+	SHELL         := /bin/bash
+	OSType        ?= $(shell Uname)
+else
+	SHELL         := /bin/sh
+	OSType        ?= $(shell Uname)
+endif
 
 ifeq ($(OSType),Windows_NT)
   ARCH          ?= x86_64
 else
   ARCH          ?= $(shell arch)
-  OSType        := $(shell uname)
   ifeq ($(ARCH),arm64)
     ARCH        := aarch64
   endif
@@ -27,9 +37,9 @@ ifeq ($(OSType),Windows_NT)
   CXX           := cl
   OBJDUMP       := dumpbin
 
-  CXXFLAGS_BASE := /nologo /W3 /WX- /sdl /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
+  CXXFLAGS_BASE := /nologo /W3 /WX- /sdl /Oi /volatile:iso /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
                    /Gm- /EHsc /MD /GS /Gy /Gd /I./lib
-  CXXFLAGS_RUN  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
+  CXXFLAGS_RUN  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX=\"$(RUN_PREFIX)\"
   CXXFLAGS      := /$(OPT_LEVEL) $(CXXFLAGS_BASE)
   LDFLAGS       :=
   OBJDUMPFLAGS  :=
@@ -184,7 +194,7 @@ $(test-path)/sys_info.txt:
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
 
-rubbish += run-test.exe $(test-path)/sys_info.txt
+rubbish += run-test.* $(test-path)/sys_info.txt
 
 else
 
@@ -280,10 +290,12 @@ prep: $(sec-tests-prep)
 rubbish += $(sec-tests-prep)
 
 ifeq ($(OSType),Windows_NT)
-
+comma:= ,
+empty:=
+space:= $(empty) $(empty)
+rubbish:= $(subst $(space),$(comma),$(rubbish))
 clean:
-	-del /Q $(test-path)
-
+	Remove-Item -ErrorAction Ignore $(rubbish),*.tmp,$(test-path)/*.tmp,$(test-path)/*.gen;
 else
 
 clean:
