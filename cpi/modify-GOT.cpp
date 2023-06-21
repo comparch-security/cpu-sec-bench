@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
   rand();
   COMPILER_BARRIER;
 
-  begin_catch_exception(got, SEGV_ACCERR);
+  begin_catch_exception_wrapper(got, SEGV_ACCERR);
   replace_got_func((void **)helper, got);
   end_catch_exception();
 

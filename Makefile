@@ -156,8 +156,8 @@ sec-tests := $(mss-tests) $(mts-tests) $(acc-tests) $(cpi-tests) $(cfi-tests)
 sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
-headers := $(wildcard lib/include/*.hpp) $(wildcard lib/$(ARCH)/*.hpp)
-extra_objects := lib/common/global_var.o lib/common/signal.o lib/common/temp_file.o $(addprefix lib/$(ARCH)/, assembly.o)
+headers := $(wildcard lib/include/*.hpp) $(wildcard lib/$(ARCH)/*.hpp) $(wildcard lib/$(CLIBAPI)/*.hpp)
+extra_objects := lib/common/global_var.o lib/common/temp_file.o $(addprefix lib/$(ARCH)/, assembly.o) $(addprefix lib/$(CLIBAPI)/, signal.o)
 
 func-opcode-gen := ./script/get_x86_func_inst.sh
 ifeq ($(ARCH), aarch64)
