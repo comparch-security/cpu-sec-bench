@@ -184,7 +184,7 @@ $(test-path)/sys_info.txt:
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
 
-rubbish += run-test.exe $(test-path)/sys_info.txt
+rubbish += run-test.* temp_file.obj $(test-path)/sys_info.txt
 
 else
 
@@ -281,8 +281,14 @@ rubbish += $(sec-tests-prep)
 
 ifeq ($(OSType),Windows_NT)
 
+# cmd can not identify "/", so use powershell remove-item
+# powershell remove-item separates diff items by comma not whitespace
+comma:= ,
+empty:=
+space:= $(empty) $(empty)
+rubbish:= $(subst $(space),$(comma),$(rubbish))
 clean:
-	-del /Q $(test-path)
+	powershell Remove-Item -ErrorAction Ignore $(rubbish),*.tmp,$(test-path)/*.tmp,$(test-path)/*.gen;
 
 else
 
