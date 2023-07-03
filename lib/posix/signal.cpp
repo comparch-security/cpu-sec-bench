@@ -61,12 +61,12 @@ void FORCE_INLINE begin_catch_exception_common() {
   }
 }
 
-void begin_catch_exception(const void *expected_faulty_addr, int si_code, int rv_code, int si_signo) {
+void begin_catch_exception_gcc(const void *expected_faulty_addr, int si_code, int rv_code, int si_signo) {
   if(svp < 0) begin_catch_exception_common();
   sigact_stack[++svp] = {expected_faulty_addr, si_signo, si_code, rv_code};
 }
 
-void begin_catch_exception(const void **expected_faulty_addr, int si_code, int rv_code, int si_signo) {
+void begin_catch_exception_gcc(const void **expected_faulty_addr, int si_code, int rv_code, int si_signo) {
   if(svp < 0) begin_catch_exception_common();
   sigact_stack[++svp] = {expected_faulty_addr, si_signo, si_code, rv_code};
 }

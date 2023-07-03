@@ -71,7 +71,7 @@ LONG WINAPI ExceptionHandler(struct _EXCEPTION_POINTERS* pExceptionInfo){
   return EXCEPTION_CONTINUE_SEARCH;
 }
 
-void begin_catch_exception(const PVOID expected_faulty_addr, ULONG* si_code,
+void begin_catch_exception_msvc(const PVOID expected_faulty_addr, ULONG* si_code,
                       int rv_code, DWORD si_signo){
     if(svp < 0){
         if(SetUnhandledExceptionFilter(TopLevelUnhandledExceptionFilter) != NULL){
@@ -82,7 +82,7 @@ void begin_catch_exception(const PVOID expected_faulty_addr, ULONG* si_code,
     sigact_stack[++svp] = {expected_faulty_addr, si_signo, si_code, rv_code};
 }
 
-void begin_catch_exception(const PVOID* expected_faulty_addr, ULONG* si_code,
+void begin_catch_exception_msvc(const PVOID* expected_faulty_addr, ULONG* si_code,
                       int rv_code, DWORD si_signo){
     if(svp < 0){
         if(SetUnhandledExceptionFilter(TopLevelUnhandledExceptionFilter) != NULL){

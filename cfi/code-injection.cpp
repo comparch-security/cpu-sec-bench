@@ -79,13 +79,13 @@ int main(int argc, char* argv[])
     break;
   }
 
-  begin_catch_exception_wrapper(addr, SEGV_ACCERR);
+  begin_catch_exception(addr, SEGV_ACCERR);
 #ifdef CSB_ARMV8_64
   // bus error on Apple M1
-  begin_catch_exception_wrapper(addr, BUS_ADRALN, RT_CODE_ACCERR, SIGBUS);
+  begin_catch_exception(addr, BUS_ADRALN, RT_CODE_ACCERR, SIGBUS);
 #endif
-  begin_catch_exception_wrapper(addr+4, 0, 0, SIGILL);
-  begin_catch_exception_wrapper(addr+4, 0, 0, SIGFPE);
+  begin_catch_exception(addr+4, 0, 0, SIGILL);
+  begin_catch_exception(addr+4, 0, 0, SIGFPE);
   switch(argv[1][0] - '0') {
   case 0: return_helper(p); break;
   case 1: call_helper(f); break;
