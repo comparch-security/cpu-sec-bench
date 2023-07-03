@@ -25,6 +25,7 @@ ifeq ($(OSType),Windows_NT)
 
   # compiler
   CXX           := cl
+  CLIBAPI       := visualcpp
   OBJDUMP       := dumpbin
 
   CXXFLAGS_BASE := /nologo /W3 /WX- /sdl /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
@@ -51,6 +52,7 @@ else
   else
     CXX         := g++
   endif
+  CLIBAPI       := posix
   OBJDUMP       := objdump
 
   CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
@@ -156,7 +158,7 @@ sec-tests := $(mss-tests) $(mts-tests) $(acc-tests) $(cpi-tests) $(cfi-tests)
 sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
-headers := $(wildcard lib/include/*.hpp) $(wildcard lib/$(ARCH)/*.hpp)
+headers := $(wildcard lib/include/*.hpp) $(wildcard lib/$(ARCH)/*.hpp) $(wildcard lib/$(CLIBAPI)/*.hpp)
 extra_objects := lib/common/global_var.o lib/common/signal.o lib/common/temp_file.o $(addprefix lib/$(ARCH)/, assembly.o)
 
 func-opcode-gen := ./script/get_x86_func_inst.sh
@@ -221,7 +223,7 @@ lib/common/mss.o: %.o : %.cpp lib/include/mss.hpp
 
 rubbish += lib/common/mss.o
 
-$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(headers) lib/common/mss.o
+$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) lib/common/mss.o
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) lib/common/mss.o -o $@ $(LDFLAGS)
 
 rubbish += $(mss-tests)
@@ -251,7 +253,7 @@ rubbish += $(acc-tests)
 $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) libcfi.so
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cpi-tests)
@@ -259,7 +261,7 @@ rubbish += $(cpi-tests)
 $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) libcfi.so
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
 
 rubbish += $(cfi-tests)
