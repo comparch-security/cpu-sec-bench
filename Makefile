@@ -283,12 +283,10 @@ ifeq ($(OSType),Windows_NT)
 
 # cmd can not identify "/", so use powershell remove-item
 # powershell remove-item separates diff items by comma not whitespace
-comma:= ,
-empty:=
-space:= $(empty) $(empty)
-rubbish:= $(subst $(space),$(comma),$(rubbish))
+
+rubbish:= $(subst /,\,$(rubbish))
 clean:
-	powershell Remove-Item -ErrorAction Ignore $(rubbish),*.tmp,$(test-path)/*.tmp,$(test-path)/*.gen;
+	-del /Q $(rubbish),$(test-path) *.tmp *.ilk *.pdb *.obj *.exe
 
 else
 
