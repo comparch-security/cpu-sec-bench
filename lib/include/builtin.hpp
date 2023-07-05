@@ -5,7 +5,7 @@
 
     // detect compiler
     #if defined(_MSC_VER)
-        #include "visualc++/msvc_builtin.hpp"
+        #include "visualcpp/msvc_builtin.hpp"
         #define COMPILER_MSVC
     #endif
 
