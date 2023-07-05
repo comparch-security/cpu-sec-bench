@@ -3,7 +3,7 @@
 #ifndef ASSEMBLY_HPP_INCLUDED
 #define ASSEMBLY_HPP_INCLUDED
 
-#include "include/gcc_builtin.hpp"
+#include "include/builtin.hpp"
 
 // detect ISA
 #if defined(__x86_64) || defined(_MSC_VER)
