@@ -13,7 +13,7 @@
         /*replace begin_catch_exception() with
         begin_catch_exception_msvc() to smooth the gap between diff
         CAPI*/
-        #include "visualc++/signal.hpp"
+        #include "visualcpp/signal.hpp"
         //define posix sig num for visualc++ porting
         #define SIGBUS 20
         //define posix sig code for visualc++ porting
