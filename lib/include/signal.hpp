@@ -22,83 +22,33 @@
         #define SEGV_ACCERR 2
         #define BUS_ADRALN  3
 
-        inline void begin_catch_exception(const void *expected_faulty_addr, 
-        int si_code = 0, int rv_code = RT_CODE_ACCERR, int si_signo = SIGSEGV){
-
-            switch (si_signo)
-            {
-            case SIGSEGV:
-                switch (si_code)
-                {
-                case SEGV_MAPERR:
-                    begin_catch_exception_msvc((PVOID*)expected_faulty_addr, 
-                    (ULONG*)NULL, rv_code, (ULONG)EXCEPTION_IN_PAGE_ERROR);
-                    break;
-                case SEGV_ACCERR:
-                    begin_catch_exception_msvc((PVOID*)expected_faulty_addr, 
-                    (ULONG*)NULL, rv_code, (ULONG)EXCEPTION_ACCESS_VIOLATION);
-                    break;
-                default:
-                    break;
-                }
-                break;
-            case SIGILL:
-                begin_catch_exception_msvc((PVOID*)expected_faulty_addr, 
-                (ULONG*)NULL, rv_code, (ULONG)EXCEPTION_ILLEGAL_INSTRUCTION);
-                break;
-            case SIGFPE:
-                begin_catch_exception_msvc((PVOID*)expected_faulty_addr, 
-                (ULONG*)NULL, rv_code, (ULONG)EXCEPTION_FLT_INVALID_OPERATION);
-                break;
-            case SIGBUS:
-                switch (si_code){
-                    case BUS_ADRALN:
-                        begin_catch_exception_msvc((PVOID*)expected_faulty_addr, 
-                        (ULONG*)NULL, rv_code, (ULONG)EXCEPTION_DATATYPE_MISALIGNMENT);
-                    break;
-                }
-            default:
-                break;
+        inline ULONG msvc_code_conv(const int si_code, const int si_signo) {
+          switch (si_signo) {
+          case SIGSEGV:
+            switch (si_code) {
+            case SEGV_MAPERR: return EXCEPTION_IN_PAGE_ERROR;
+            case SEGV_ACCERR: return EXCEPTION_ACCESS_VIOLATION;
+            default:          break;
             }
+          case SIGILL: return EXCEPTION_ILLEGAL_INSTRUCTION;
+          case SIGFPE: return EXCEPTION_FLT_INVALID_OPERATION;
+          case SIGBUS: return EXCEPTION_DATATYPE_MISALIGNMENT;
+          default: break;
+          }
 
+          return 0; // should not run here?
         }
+
+        inline void begin_catch_exception(const void *expected_faulty_addr, 
+                                          int si_code = 0, int rv_code = RT_CODE_ACCERR, int si_signo = SIGSEGV) {
+          begin_catch_exception_msvc((PVOID*)expected_faulty_addr, 
+                                     (ULONG*)NULL, rv_code, msvc_code_conv(si_code, si_signo));
+        }
+
         inline void begin_catch_exception(const void **expected_faulty_addr,
-        int si_code = 0, int rv_code = RT_CODE_ACCERR, int si_signo = SIGSEGV){
-            switch (si_signo)
-            {
-            case SIGSEGV:
-                switch (si_code)
-                {
-                case SEGV_MAPERR:
-                    begin_catch_exception_msvc((PVOID**)expected_faulty_addr, 
-                    (ULONG*)NULL, rv_code, (ULONG)EXCEPTION_IN_PAGE_ERROR);
-                    break;
-                case SEGV_ACCERR:
-                    begin_catch_exception_msvc((PVOID**)expected_faulty_addr, 
-                    (ULONG*)NULL, rv_code, (ULONG)EXCEPTION_ACCESS_VIOLATION);
-                    break;
-                default:
-                    break;
-                }
-                break;
-            case SIGILL:
-                begin_catch_exception_msvc((PVOID**)expected_faulty_addr, 
-                (ULONG*)NULL, rv_code, (ULONG)EXCEPTION_ILLEGAL_INSTRUCTION);
-                break;
-            case SIGFPE:
-                begin_catch_exception_msvc((PVOID**)expected_faulty_addr, 
-                (ULONG*)NULL, rv_code, (ULONG)EXCEPTION_FLT_INVALID_OPERATION);
-                break;
-            case SIGBUS:
-                switch (si_code){
-                    case BUS_ADRALN:
-                        begin_catch_exception_msvc((PVOID**)expected_faulty_addr, 
-                        (ULONG*)NULL, rv_code, (ULONG)EXCEPTION_DATATYPE_MISALIGNMENT);
-                    break;
-                }
-            default:
-                break;
-            }
+                                          int si_code = 0, int rv_code = RT_CODE_ACCERR, int si_signo = SIGSEGV) {
+          begin_catch_exception_msvc((PVOID**)expected_faulty_addr, 
+                                     (ULONG*)NULL, rv_code, msvc_code_conv(si_code, si_signo));
         }
 
     #endif
