@@ -1,4 +1,4 @@
-// assembly helper functions
+// abi sensitive assembly helper functions
 
 #ifndef ASSEMBLY_HPP_INCLUDED
 #define ASSEMBLY_HPP_INCLUDED
