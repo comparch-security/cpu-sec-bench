@@ -4,9 +4,9 @@
 
 extern "C"
 FORCE_NOINLINE void helper(arch_int_t fsize) {
-  void *exit_label = &helper;
+  void *exit_label = (void*)&helper;
   GET_LABEL_ADDRESS(exit_label,TARGET_LABEL);
-  if(2 == gvar()) { GOTO_SAVED_LABEL(exit_label,TARGET_LABEL);}   // impossible to happen
+  if(2 == gvar()) { GOTO_SAVED_LABEL(exit_label);}   // impossible to happen
 
   PUSH_FAKE_RET(exit_label, fsize);
   return;

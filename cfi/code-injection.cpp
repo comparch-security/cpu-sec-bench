@@ -39,8 +39,8 @@ int main(int argc, char* argv[])
   void *l = NULL;
   char *addr = NULL;
 
-  void* bypass_pos = &main;
-  void* exit_pos   = &main;
+  void* bypass_pos = (void*)&main;
+  void* exit_pos   = (void*)&main;
   GET_LABEL_ADDRESS(bypass_pos,TARGET_LABEL);
   GET_LABEL_ADDRESS(exit_pos,TARGET_LABEL1);
 
@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
   switch(argv[1][0] - '0') {
   case 0: return_helper(p); break;
   case 1: call_helper(f); break;
-  case 2: { GOTO_SAVED_LABEL(l,l);}   // impossible to happen
+  case 2: { GOTO_SAVED_LABEL(l);}   // impossible to happen
   }
 TARGET_LABEL(argc)
   end_catch_exception();

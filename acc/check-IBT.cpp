@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     std::cerr << "goto label is:" << goto_label << std::endl;
   #endif
   unsigned int instr = *(unsigned int *)(goto_label);
-  if((int)(argv[1][0] - '0') == -1) { GOTO_SAVED_LABEL(goto_label,TARGET_LABEL);}   // impossible to happen
+  if((int)(argv[1][0] - '0') == -1) { GOTO_SAVED_LABEL(goto_label);}   // impossible to happen
   COMPILER_BARRIER;
 TARGET_LABEL(argc)
   #ifdef DEBUG_OUTPUT

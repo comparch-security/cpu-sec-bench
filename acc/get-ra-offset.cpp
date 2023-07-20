@@ -63,7 +63,7 @@ extern "C"                                                \
 int test_##FT(int v) {                                    \
   void *ra_label = (void*)&test_##FT;                     \
   GET_LABEL_ADDRESS(ra_label,TARGET_LABEL);               \
-  if(v == -1) { GOTO_SAVED_LABEL(ra_label,TARGET_LABEL);} \
+  if(v == -1) { GOTO_SAVED_LABEL(ra_label);} \
   helper_##FT(ra_label);                                  \
   COMPILER_BARRIER;                                       \
 TARGET_LABEL(v)                                           \

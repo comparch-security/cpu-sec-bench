@@ -6,13 +6,13 @@ int main(int argc, char* argv[])
 {
   int cet_enabled = argv[1][0] - '0';
 
-  void *rand_label = &main;
+  void *rand_label = (void*)&main;
   GET_LABEL_ADDRESS(rand_label,TARGET_LABEL);
 
   // In LLVM, goto is not allow to jump over declaration of local variables.
   void *got = NULL;
 
-  if(cet_enabled == -1) { GOTO_SAVED_LABEL(rand_label,TARGET_LABEL);}   // impossible to happen
+  if(cet_enabled == -1) { GOTO_SAVED_LABEL(rand_label);}   // impossible to happen
 
   get_got_func(&got, rand_label, cet_enabled);
   COMPILER_BARRIER;

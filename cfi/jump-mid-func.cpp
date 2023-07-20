@@ -11,11 +11,11 @@ FORCE_NOINLINE void * helper(int a) {
    * So we set a variable for it and force a use of the variable to
    * make sure the label address is returned as expected.
    */
-  void * lp = &helper;
+  void * lp = (void*)&helper;
   GET_LABEL_ADDRESS(lp,TARGET_LABEL);
   switch(a) {
   case 3: return NULL; // make sure the return value is not constant (rv speculation)
-  case 2: { GOTO_SAVED_LABEL(lp, TARGET_LABEL);}   // impossible to happen
+  case 2: { GOTO_SAVED_LABEL(lp);}   // impossible to happen
   case 1: return lp;
   }
 TARGET_LABEL(a) // illegal jump target

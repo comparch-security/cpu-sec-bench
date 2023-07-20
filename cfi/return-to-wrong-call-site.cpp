@@ -26,9 +26,9 @@ int main(int argc, char* argv[])
   // get the offset of RA on stack
   std::string cmd_offset = argv[1];
   offset = 4 * stoll(cmd_offset);
-  void *ret_label = &main;
+  void *ret_label = (void*)&main;
   GET_LABEL_ADDRESS(ret_label,TARGET_LABEL);
-  if(offset == -1) { GOTO_SAVED_LABEL(ret_label,TARGET_LABEL);}   // impossible to happen
+  if(offset == -1) { GOTO_SAVED_LABEL(ret_label);}   // impossible to happen
 
   // call a function but illegally return
   helper(ret_label);

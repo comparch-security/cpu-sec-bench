@@ -41,7 +41,7 @@ ifeq ($(OSType),Windows_NT)
   DLL_SUFFIX        := .dll
   LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF
   OBJDUMPFLAGS      := /DISASM
-  DYNCFI_OPTION     := lib/common/cfi.lib
+  DYNCFI_OPTION     := lib/common/libcfi.lib
 else
 
   # platform
@@ -174,7 +174,7 @@ headers := $(wildcard lib/include/*.hpp) $(wildcard lib/$(ARCH)/*.hpp) $(wildcar
 extra_objects := lib/common/global_var lib/common/temp_file $(addprefix lib/$(ARCH)/, assembly) $(addprefix lib/$(CLIBAPI)/, signal)
 extra_objects := $(addsuffix $(MIDFILE_SUFFIX), $(extra_objects))
 
-dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/cfi)
+dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
 libmss := $(addsuffix $(MIDFILE_SUFFIX), lib/common/mss)
 
 func-opcode-gen := ./script/get_x86_func_inst.sh
