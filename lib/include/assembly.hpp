@@ -3,12 +3,6 @@
 #ifndef ASSEMBLY_HPP_INCLUDED
 #define ASSEMBLY_HPP_INCLUDED
 
-//#define DEBUG_OUTPUT
-
-#ifdef DEBUG_OUTPUT
-#include <iostream>
-#endif
-
 #include "include/builtin.hpp"
 
 // detect ISA

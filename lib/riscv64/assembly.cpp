@@ -1,12 +1,6 @@
 #include "include/assembly.hpp"
 #include <stdlib.h>
 
-// #define DEBUG_OUTPUT
-
-#ifdef DEBUG_OUTPUT
-#include <iostream>
-#endif
-
 void get_got_func(void **gotp, void *label, int cet) {
   char *pc = (char *)label;
   arch_int_t offset = 0;

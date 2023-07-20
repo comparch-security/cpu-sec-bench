@@ -11,6 +11,10 @@
 #define GLOBAR_VAR_PRE extern
 #endif
 
+#ifdef DEBUG_OUTPUT
+#include <iostream>
+#endif
+
 // detect compiler
 #if defined(_MSC_VER)
   #include<intrin.h>

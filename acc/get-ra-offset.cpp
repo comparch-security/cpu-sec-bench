@@ -55,20 +55,20 @@ void FORCE_NOINLINE helper_v_p_g1(void *ra_label) {
  * If using if (v == 0), the compiler thinks it is likely to happen
  * and make the goto the following branch while adding a jump
  * after calling the helper function,
- * which make the RA pointing to the jump but not the label_func!
+ * which make the RA pointing to the jump but not the TARGET_LABEL!
  * Making if (v == -1) disable the compiler guess?!
  */
-#define TEST_FUNC(FT)                                     \
-extern "C"                                                \
-int test_##FT(int v) {                                    \
-  void *ra_label = (void*)&test_##FT;                     \
-  GET_LABEL_ADDRESS(ra_label,TARGET_LABEL);               \
+#define TEST_FUNC(FT)                        \
+extern "C"                                   \
+int test_##FT(int v) {                       \
+  void *ra_label = (void*)&test_##FT;        \
+  GET_LABEL_ADDRESS(ra_label,TARGET_LABEL);  \
   if(v == -1) { GOTO_SAVED_LABEL(ra_label);} \
-  helper_##FT(ra_label);                                  \
-  COMPILER_BARRIER;                                       \
-TARGET_LABEL(v)                                           \
-  if(gvar() < 0) return 1;                                \
-  return (int)gvar() + 32;                                \
+  helper_##FT(ra_label);                     \
+  COMPILER_BARRIER;                          \
+TARGET_LABEL(v)                              \
+  if(gvar() < 0) return 1;                   \
+  return (int)gvar() + 32;                   \
 }
 
 TEST_FUNC(v_p_g0)

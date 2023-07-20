@@ -219,7 +219,7 @@ $(test-path)/sys_info.txt:
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
 
-rubbish += run-test $(test-path)/sys_info.txt
+rubbish += run-test
 
 endif
 
