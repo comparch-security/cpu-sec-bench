@@ -9,17 +9,18 @@ int FORCE_NOINLINE helper() {
 int main(int argc, char* argv[])
 {
   int cet_enabled = argv[1][0] - '0';
-  void *rand_label = &&RAND_CALL;
+  void *rand_label = &main;
+  GET_LABEL_ADDRESS(rand_label,TARGET_LABEL);
   // In LLVM, goto is not allow to jump over declaration of local variables.
   void *got = NULL;
 
   gvar_init(helper());
 
-  if(cet_enabled == -1) goto *rand_label;   // impossible to happen
+  if(cet_enabled == -1) { GOTO_SAVED_LABEL(rand_label,TARGET_LABEL);}   // impossible to happen
 
   get_got_func(&got, rand_label, cet_enabled);
   COMPILER_BARRIER;
- RAND_CALL:
+TARGET_LABEL(argc)
   rand();
   COMPILER_BARRIER;
 

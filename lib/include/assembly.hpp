@@ -3,15 +3,27 @@
 #ifndef ASSEMBLY_HPP_INCLUDED
 #define ASSEMBLY_HPP_INCLUDED
 
+//#define DEBUG_OUTPUT
+
+#ifdef DEBUG_OUTPUT
+#include <iostream>
+#endif
+
 #include "include/builtin.hpp"
 
 // detect ISA
-#if defined(__x86_64) || defined(_MSC_VER)
-// strange that we cannot find a predefined macro to identify ISA in MSVC
-// We are forced to check the compiler macro and assume Intel x86_64 accordingly
+#if defined(__x86_64) || defined(_M_X64)
   #define CSB_X86_64
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
+#endif
+
+#if defined(COMPILER_MSVC)
+  #include <Windows.h>
+  #include "x86_64/visualcpp_assembly.hpp"
+#elif defined(COMPILER_GCC)
+  #include "x86_64/assembly.hpp"
+#else
   #include "x86_64/assembly.hpp"
 #endif
 

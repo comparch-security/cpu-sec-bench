@@ -711,24 +711,28 @@
         "program": "acc-get-ra-offset",
         "arguments": { "0": ["1", "v-p-g0"] },
         "set-var": { "0": ["stack-offset-v-p-g0"] },
+        "get-code-offset": { "0": ["test_v_p_g0","labelfunc"] },
         "expect-results": { "290": "cheri capabilities enabled."}
     },
     "acc-get-ra-offset-v-p-g1": {
         "program": "acc-get-ra-offset",
         "arguments": { "0": ["1", "v-p-g1"] },
         "set-var": { "0": ["stack-offset-v-p-g1"] },
+        "get-code-offset": { "0": ["test_v_p_g1","labelfunc"] },
         "expect-results": { "290": "cheri capabilities enabled."}
     },
     "acc-get-frame-size": {
         "set-var": { "0": ["frame-size"] }
     },
-    "acc-check-CET": {
+    "acc-check-IBT": {
         "arguments": { "0": ["1"] },
         "set-var": { "0": ["cet-enabled"] },
+        "get-code-offset": { "0": ["main","labelfunc"] },
         "expect-results": { "290": "cheri capabilities enabled."}
     },
     "acc-read-GOT": {
-        "require": { "0": [ [ "acc-check-CET" ] ] },
+        "require": { "0": [ [ "acc-check-IBT" ] ] },
+        "get-code-offset": { "0": ["main","labelfunc"] },
         "arguments": { "0": ["-vcet-enabled"] }
     },
 
@@ -743,12 +747,15 @@
                             "290": "cheri capabilities enabled." }
     },
     "cpi-modify-GOT": {
+        "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "acc-read-GOT" ] ] },
         "arguments": { "0": ["-vcet-enabled"] },
         "expect-results": { "16": "relocation tables under read-only protection." }
     },
 
-    "cfi-call-mid-func": {},
+    "cfi-call-mid-func": {
+        "get-code-offset": { "0": ["helper","labelfunc"] }
+    },
     "cfi-call-wrong-func-within-static-analysis": {
         "arguments": { "0": ["1"] }
     },
@@ -826,18 +833,21 @@
     },
     "cfi-call-instruction-in-rodata": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
     "arguments": { "0": [ "1", "0" ] },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled."}
     },
     "cfi-call-instruction-in-data": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
         "arguments": { "0": [ "1", "1" ] },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled."}
     },
     "cfi-call-instruction-in-stack": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
         "arguments": { "0": [ "1", "2" ] },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)",
@@ -845,15 +855,18 @@
     },
     "cfi-call-instruction-in-heap": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
         "arguments": { "0": [ "1", "3" ] },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled."}
     },
     "cfi-jump-mid-func": {
+        "get-code-offset": { "0": ["helper","labelfunc"] },
         "arguments": { "0": ["1"] }
     },
     "cfi-jump-instruction-in-rodata": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
     "arguments": { "0": ["2", "0", "0"] },
         "expect-results": { "16": "expected excption on the illegal call.",
@@ -861,6 +874,7 @@
     },
     "cfi-jump-instruction-in-data": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
     "arguments": { "0": ["2", "1", "0"] },
         "expect-results": { "16": "expected excption on the illegal call.",
@@ -868,6 +882,7 @@
     },
     "cfi-jump-instruction-in-stack": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
         "arguments": { "0": ["2", "2", "0"] },
         "expect-results": { "16": "expected excption on the illegal call.",
@@ -877,12 +892,14 @@
     },
     "cfi-jump-instruction-in-heap": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
     "arguments": { "0": ["2", "3", "0"] },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled."}
     },
     "cfi-return-to-non-call-site": {
+        "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-return-to-wrong-call-site" ] ] },
         "arguments": { "0": ["-vstack-offset-v-p-g1"] },
         "expect-results": {"290": "cheri capabilities enabled."}
@@ -899,6 +916,7 @@
         "set-var": { "0": ["stack-offset-v-p-g1"],
                      "1": ["stack-offset-v-p-g1"]
                    },
+        "get-code-offset": { "0": ["main","labelfunc"] },
         "retry-results": { "1": "failed to change RA on stack at all, normal return.",
                            "267": "RA is partially written leading to a segment error due to wrong RA.",
                            "251": "When Arm Asan Enabled, the clang compiler pushes two more registers(one for shadow memory, another for alignment)"},
@@ -906,6 +924,7 @@
                         }
     },
     "cfi-return-to-wrong-call-site": {
+        "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-return-to-wrong-call-site-within-static-analysis" ] ] },
         "arguments": { "0": ["-vstack-offset-v-p-g1"] },
         "expect-results": {"290": "cheri capabilities enabled."}
@@ -921,6 +940,7 @@
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "cfi-return-without-call": {
+        "get-code-offset": { "0": ["helper","labelfunc"] },
         "require": { "0": [ [ "acc-get-frame-size" ] ] },
         "arguments": { "0": ["1", "-vframe-size"] },
         "expect-results": {
@@ -930,6 +950,7 @@
     },
     "cfi-return-to-instruction-in-rodata": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
         "arguments": { "0": ["0", "0", "-vstack-offset-v-p-g1"] },
         "expect-results": { "16": "expected excption on the illegal call.",
@@ -937,6 +958,7 @@
     },
     "cfi-return-to-instruction-in-data": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
         "arguments": { "0": ["0", "1", "-vstack-offset-v-p-g1"] },
         "expect-results": { "16": "expected excption on the illegal call." ,
@@ -944,6 +966,7 @@
     },
     "cfi-return-to-instruction-in-stack": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
         "arguments": { "0": ["0", "2", "-vstack-offset-v-p-g1"] },
         "expect-results": { "16": "expected excption on the illegal call.",
@@ -953,6 +976,7 @@
     },
     "cfi-return-to-instruction-in-heap": {
     "program": "cfi-code-injection",
+    "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
         "arguments": { "0": ["0", "3", "-vstack-offset-v-p-g1"] },
         "expect-results": { "16": "expected excption on the illegal call.",

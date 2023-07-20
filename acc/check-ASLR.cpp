@@ -16,7 +16,7 @@ std::string tmp_file = "check-ASLR.tmp";
 int main(int argc, char* argv[]) {
   uintptr_t fp = reinterpret_cast<uintptr_t>(&helper);
   if(argc == 1) {
-    if(0 == system("test/acc-check-ASLR 1")) { // run the inner call
+    if(0 == system("test" PATH_SEPARATOR "acc-check-ASLR 1")) { // run the inner call
       std::ifstream tmpf(tmp_file);
       uintptr_t addr;
       unsigned long long addr_num;

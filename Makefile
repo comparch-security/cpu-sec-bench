@@ -31,10 +31,17 @@ ifeq ($(OSType),Windows_NT)
   CXXFLAGS_BASE := /nologo /W3 /WX- /sdl /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
                    /Gm- /EHsc /MD /GS /Gy /Gd /I./lib
   CXXFLAGS_RUN  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
-  CXXFLAGS      := /$(OPT_LEVEL) $(CXXFLAGS_BASE)
-  LDFLAGS       :=
-  OBJDUMPFLAGS  :=
-
+  CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
+  # If there is a whitespace between windows msvc's output option and output file,
+  # will raise error
+  OUTPUT_EXE_OPTION := /Fotest/ /Fe
+  OUTPUT_LIB_OPTION := /Fo
+  OUTPUT_DYN_OPTION := /LD /Folib/common/ /Fe
+  MIDFILE_SUFFIX    := .obj
+  DLL_SUFFIX        := .dll
+  LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF
+  OBJDUMPFLAGS      := /DISASM
+  DYNCFI_OPTION     := lib/common/cfi.lib
 else
 
   # platform
@@ -57,11 +64,15 @@ else
 
   CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
   CXXFLAGS_RUN  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
-  CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE) 
-  LDFLAGS       :=
-  LD_LIBRARY_PATH := $(test-path)
-  OBJDUMPFLAGS  := -D -l -S
-
+  CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
+  OUTPUT_EXE_OPTION := -o 
+  OUTPUT_LIB_OPTION := -o 
+  OUTPUT_DYN_OPTION := -shared -fPIC -o 
+  MIDFILE_SUFFIX    := .o
+  DLL_SUFFIX        := .so
+  LDFLAGS           :=
+  OBJDUMPFLAGS      := -D -l -S
+  DYNCFI_OPTION    := -Llib/common/ -Wl,-rpath,lib/common/ -lcfi
 endif
 
 # extra security features (comment them out if not needed)
@@ -159,7 +170,12 @@ sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
 headers := $(wildcard lib/include/*.hpp) $(wildcard lib/$(ARCH)/*.hpp) $(wildcard lib/$(CLIBAPI)/*.hpp)
-extra_objects := lib/common/global_var.o lib/common/temp_file.o $(addprefix lib/$(ARCH)/, assembly.o) $(addprefix lib/$(CLIBAPI)/, signal.o)
+
+extra_objects := lib/common/global_var lib/common/temp_file $(addprefix lib/$(ARCH)/, assembly) $(addprefix lib/$(CLIBAPI)/, signal)
+extra_objects := $(addsuffix $(MIDFILE_SUFFIX), $(extra_objects))
+
+dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/cfi)
+libmss := $(addsuffix $(MIDFILE_SUFFIX), lib/common/mss)
 
 func-opcode-gen := ./script/get_x86_func_inst.sh
 ifeq ($(ARCH), aarch64)
@@ -172,7 +188,7 @@ all: run-test
 .PHONY: all
 
 run-test: scheduler/run-test.cpp lib/common/temp_file.cpp lib/include/temp_file.hpp scheduler/json.hpp $(test-path)/sys_info.txt
-	$(CXX) $(CXXFLAGS_RUN) $< lib/common/temp_file.cpp -o $@
+	$(CXX) $(CXXFLAGS_RUN) $< lib/common/temp_file.cpp  $(OUTPUT_EXE_OPTION)$@
 
 ifeq ($(OSType),Windows_NT)
 
@@ -186,7 +202,7 @@ $(test-path)/sys_info.txt:
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
 
-rubbish += run-test.* temp_file.obj $(test-path)/sys_info.txt
+rubbish += run-test.exe
 
 else
 
@@ -208,39 +224,36 @@ rubbish += run-test $(test-path)/sys_info.txt
 endif
 
 
-libcfi.so: lib/common/cfi.cpp  lib/include/cfi.hpp
-	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@
+$(dynlibcfi): lib/common/cfi.cpp  lib/include/cfi.hpp
+	$(CXX) $(CXXFLAGS) $< $(OUTPUT_DYN_OPTION)$@
 
-rubbish += libcfi.so
+cfi_base := $(basename $(dynlibcfi))
+rubbish += $(cfi_base).so $(cfi_base).dll $(cfi_base).pdb $(cfi_base).obj $(cfi_base).lib $(cfi_base).ilk $(cfi_base).exp
 
-$(extra_objects): %.o : %.cpp $(headers)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(extra_objects): %$(MIDFILE_SUFFIX) : %.cpp $(headers)
+	$(CXX) $(CXXFLAGS) -c $< $(OUTPUT_LIB_OPTION)$@
 
 rubbish += $(extra_objects)
 
-lib/common/mss.o: %.o : %.cpp lib/include/mss.hpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(libmss): %$(MIDFILE_SUFFIX) : %.cpp lib/include/mss.hpp
+	$(CXX) $(CXXFLAGS) -c $< $(OUTPUT_LIB_OPTION)$@
 
-rubbish += lib/common/mss.o
+rubbish += $(libmss)
 
-$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) lib/common/mss.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) lib/common/mss.o -o $@ $(LDFLAGS)
-
-rubbish += $(mss-tests)
+$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(libmss)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(mss-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) lib/common/mss.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) lib/common/mss.o -o $@ $(LDFLAGS)
-
-rubbish += $(mts-tests)
+$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(libmss)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
 	$^ helper 8 $@
@@ -248,23 +261,17 @@ $(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-
 $(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-opcode.tmp
 	cp $< $@
 
-rubbish += $(acc-tests)
-
 $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) libcfi.so
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
-
-rubbish += $(cpi-tests)
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(dynlibcfi)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@  $(LDFLAGS)
 
 $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) libcfi.so
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
-
-rubbish += $(cfi-tests)
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) $(dynlibcfi)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
@@ -275,11 +282,7 @@ dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%
 	$(OBJDUMP) $(OBJDUMPFLAGS) $< > $@
 
-rubbish += $(sec-tests-dump)
-
 prep: $(sec-tests-prep)
-
-rubbish += $(sec-tests-prep)
 
 ifeq ($(OSType),Windows_NT)
 
@@ -288,12 +291,12 @@ ifeq ($(OSType),Windows_NT)
 
 rubbish:= $(subst /,\,$(rubbish))
 clean:
-	-del /Q $(rubbish),$(test-path) *.tmp *.ilk *.pdb *.obj *.exe
+	-del /Q $(rubbish) $(test-path) *.tmp *.ilk *.pdb *.obj *.exe *.dump
 
 else
 
 clean:
-	-rm $(rubbish) *.tmp $(test-path)/*.tmp $(test-path)/*.gen > /dev/null 2>&1
+	-rm -rf $(rubbish) $(test-path) *.tmp > /dev/null 2>&1
 
 endif
 

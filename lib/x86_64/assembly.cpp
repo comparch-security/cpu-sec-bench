@@ -1,18 +1,13 @@
 #include "include/assembly.hpp"
 #include <stdlib.h>
 
-//#define DEBUG_READ_GOT
+#define OTHER_OBJECT_GLOBARVAR
 
-#ifdef DEBUG_READ_GOT
+//#define DEBUG_OUTPUT
+
+#ifdef DEBUG_OUTPUT
 #include <iostream>
 #endif
-
-int dummy_leaf_rv = 0;
-
-int FORCE_NOINLINE dummy_leaf_func(int v) {
-  dummy_leaf_rv += rand();
-  return dummy_leaf_rv;
-}
 
 void get_got_func(void **gotp, void *label, int cet) {
   char *pc = (char *)label;
@@ -31,16 +26,30 @@ void get_got_func(void **gotp, void *label, int cet) {
 
   *gotp = pc;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "instruction at the entry of rand(): " << std::hex << **((int **)pc) << std::endl; // this instruction should remain even with ASLR  
 #endif
 }
 
 void replace_got_func(void **fake, void *got) {
-  asm volatile(
-    "movq %1, (%0);" // replace the GPT entry
-    : : "r"(got), "r"(fake)
-  );
+  SET_MEM(got,fake);
 }
 
+#if defined(_MSC_VER)
+  //use this func to mov target_register's val to rcx reg
+  void func_to_modify_caller_parameter(int target_register){
+    //fake use to supress optimization
+    if(target_register < -256) target_register++;
+  }
 
+  x jum_target;
+  CONTEXT sp_loc_context;
+  uintptr_t target_offsets[10];
+  int fake_use_arg = 0;
+  //this func is used as the target func which is searched by bindump tools
+  //so it is necessary to suppress compiler optimization toward it
+  void labelfunc(int& fake_para){
+    if(fake_para == 10) fake_para--; 
+  }
+
+#endif

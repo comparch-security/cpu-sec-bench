@@ -12,8 +12,9 @@ typedef void (*pfunc_t)();
 typedef pfunc_t *pvtable_t;
 
 // create a fake virtual table on heap with `nfunc' number of `pfunc_t'
-extern pvtable_t create_fake_vtable_on_heap(unsigned int nfunc);
-extern void free_fake_vtable_on_heap(pvtable_t addr);
+DllExport extern pvtable_t create_fake_vtable_on_heap(unsigned int nfunc);
+DllExport extern void free_fake_vtable_on_heap(pvtable_t addr);
+
 
 class Base
 {
@@ -72,11 +73,11 @@ public:
 };
 
 // read the vtable pointer of an object
-extern pvtable_t read_vtable_pointer(Base *);
-extern pvtable_t read_vtable_pointer(BaseM *);
+DllExport extern pvtable_t read_vtable_pointer(Base *);
+DllExport extern pvtable_t read_vtable_pointer(BaseM *);
 
 // write the vtable pointer of an object
-extern void write_vtable_pointer(Base *, pvtable_t);
-extern void write_vtable_pointer(BaseM *, pvtable_t);
+DllExport extern void write_vtable_pointer(Base *, pvtable_t);
+DllExport extern void write_vtable_pointer(BaseM *, pvtable_t);
 
 #endif

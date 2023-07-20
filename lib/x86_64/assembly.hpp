@@ -1,5 +1,5 @@
 // assembly helper functions
-// x86_64
+// x86_64 gcc
 
 // get the distance between two pointers
 #define GET_DISTANCE(dis, pa, pb)            \
@@ -70,3 +70,5 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0xf7;
   *p++ = 0xfe;
 }
+
+#define GET_SP_LOC(loc) asm volatile("mov %%rsp, %0;" : "=r"(loc))
