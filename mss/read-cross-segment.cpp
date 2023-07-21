@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
   int acc_type = argv[3][0] - '0';
   long long distance   = 0;
 
-  const char *psrc, *pdes;
+  const char *psrc = NULL, *pdes = NULL;
   char tc;
 
   switch(src_type) {
