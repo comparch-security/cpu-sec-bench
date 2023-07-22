@@ -83,20 +83,4 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x00;
 }
 
-#define RA_POS_TEST        \
-  RA_POS_TEST_ENTRY(0, 0)  \
-  RA_POS_TEST_ENTRY(4, 1)  \
-  RA_POS_TEST_ENTRY(8, 2)  \
-  RA_POS_TEST_ENTRY(12, 3)  \
-  RA_POS_TEST_ENTRY(16, 4)  \
-  RA_POS_TEST_ENTRY(20, 5)  \
-  RA_POS_TEST_ENTRY(24, 6)  \
-  RA_POS_TEST_ENTRY(28, 7)  \
-  RA_POS_TEST_ENTRY(32, 8)  \
-  RA_POS_TEST_ENTRY(36, 9)  \
-  RA_POS_TEST_ENTRY(40, 10)  \
-  RA_POS_TEST_ENTRY(44, 11)  \
-  RA_POS_TEST_ENTRY(48, 12)  \
-  RA_POS_TEST_ENTRY(52, 13)  \
-  RA_POS_TEST_ENTRY(56, 14)  \
-  RA_POS_TEST_ENTRY(60, 15)
+#define GET_SP_LOC(loc) asm volatile("mv %0, sp" : "=r"(loc))

@@ -1,24 +1,12 @@
 #include "include/assembly.hpp"
 #include <stdlib.h>
 
-//#define DEBUG_READ_GOT
-
-#ifdef DEBUG_READ_GOT
-#include <iostream>
-#endif
-
-int dummy_leaf_rv = 0;
-
-int FORCE_NOINLINE dummy_leaf_func(int v) {
-  return v + rand();
-}
-
 #ifdef COMPILER_GCC
 void get_got_func(void **gotp, void *label, int cet) {
   char *pc = (char *)label;
   arch_int_t offset = 0;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "label to rand(): " << std::hex << (unsigned long long)pc << " " << offset << std::endl;
 #endif
 
@@ -33,7 +21,7 @@ void get_got_func(void **gotp, void *label, int cet) {
   offset *= 4;
   pc += offset;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "pos of dyld stub: " << std::hex << (unsigned long long)pc << " " << offset << std::endl;
 #endif
 
@@ -64,13 +52,13 @@ void get_got_func(void **gotp, void *label, int cet) {
   offset *= 8;
   pc += offset;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "pos of GOT entry: " << std::hex << (unsigned long long)pc << " " << offset << std::endl;
 #endif
 
   *gotp = pc;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "instruction at the entry of rand(): " << std::hex << **((int **)pc) << std::endl; // this instruction should remain even with ASLR
 #endif
 }
@@ -82,7 +70,7 @@ void get_got_func(void **gotp, void *label, int cet) {
   char *pc = (char *)label;
   arch_int_t offset = 0;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "label to rand(): " << std::hex << (unsigned long long)pc << " " << offset << std::endl;
 #endif
 
@@ -97,7 +85,7 @@ void get_got_func(void **gotp, void *label, int cet) {
   offset *= 4;
   pc += offset;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "pos of dyld stub: " << std::hex << (unsigned long long)pc << " " << offset << std::endl;
 #endif
 
@@ -114,13 +102,13 @@ void get_got_func(void **gotp, void *label, int cet) {
   offset *= 4;
   pc += offset;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "pos of GOT entry: " << std::hex << (unsigned long long)pc << " " << offset << std::endl;
 #endif
 
   *gotp = pc;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "instruction at the entry of rand(): " << std::hex << **((int **)pc) << std::endl; // this instruction should remain even with ASLR
 #endif
 }

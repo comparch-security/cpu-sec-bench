@@ -22,8 +22,9 @@ int main(int argc, char* argv[])
   // get the offset of RA on stack
   std::string cmd_offset = argv[1];
   offset = 4 * stoll(cmd_offset);
-  void *label = &&RET_POS;
-  if(offset == -1) goto *label; // impossible to go here
+  void *label = (void*)&main;
+  GET_LABEL_ADDRESS(label, TARGET_LABEL);
+  if(offset == -1) { GOTO_SAVED_LABEL(label);}   // impossible to happen
 
   gvar_init(2);
   // call a function but illegally return
@@ -31,6 +32,6 @@ int main(int argc, char* argv[])
   gvar_init(4); // failed if runs here
 
   // the elligal return site
- RET_POS:
+TARGET_LABEL(argc)
   exit(gvar());
 }

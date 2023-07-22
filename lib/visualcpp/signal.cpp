@@ -61,7 +61,7 @@ LONG WINAPI ExceptionHandler(struct _EXCEPTION_POINTERS* pExceptionInfo){
 
   fprintf(stderr,"ExceptionInformation is:");
   for(int i = 0; i != EXCEPTION_MAXIMUM_PARAMETERS; i++){
-    fprintf(stderr," %d",pExceptionInfo->ExceptionRecord->ExceptionInformation[i]);
+    fprintf(stderr," %lld",pExceptionInfo->ExceptionRecord->ExceptionInformation[i]);
   }
   //if(sinfo->si_addr != NULL) fprintf(stderr, "bad data = 0x%lx\n", *(unsigned int *)sinfo->si_addr);
   //for(int i=svp; i>=0; i--) {

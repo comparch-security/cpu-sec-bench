@@ -27,15 +27,16 @@ int main(int argc, char* argv[])
   arch_int_t range_offset = stoll(cmd_range_offset);
 
   offset = 4*(range_offset + var_offset);
-  void *ret_label = &&RET_POS;
+  void *ret_label = (void*)&main;
+  GET_LABEL_ADDRESS(ret_label,TARGET_LABEL);
   gvar_init(0);
-  if(offset == -1) goto *ret_label;  // impossible to run here
+  if(offset == -1) { GOTO_SAVED_LABEL(ret_label);}   // impossible to happen
 
   // call a function but illegally return
   helper(ret_label);
   COMPILER_BARRIER;
   // the elligal return site
- RET_POS:
+TARGET_LABEL(argc)
   if(gvar() < 0) exit(32 - gvar());
   helper(ret_label);
   helper(ret_label);
