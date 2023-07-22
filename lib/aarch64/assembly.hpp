@@ -77,3 +77,5 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   *p++ = 0x00;
   *p++ = 0x00;
 }
+
+#define GET_SP_LOC(loc) asm volatile("mov %0, sp" : "=r"(loc))

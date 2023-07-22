@@ -2,6 +2,8 @@
 #include <cstring>
 #include "include/cfi.hpp"
 
+#define DLL_DEFINITION
+
 void Base::virtual_func() {
   exit(1);
 }
