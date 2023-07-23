@@ -42,6 +42,12 @@ ifeq ($(OSType),Windows_NT)
   LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF
   OBJDUMPFLAGS      := /DISASM
   DYNCFI_OPTION     := lib/common/libcfi.lib
+  func-opcode-gen   := .\script\get_x64_func_inst.bat
+$(test-path)\acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)\acc-read-func.exe
+	$^ helper 8 $@
+
+$(test-path)/acc-read-func.gen: %.gen:% $(test-path)\acc-read-func-func-opcode.tmp
+	copy /Y $(test-path)\acc-read-func.exe $(test-path)\acc-read-func.gen
 else
 
   # platform
@@ -72,7 +78,19 @@ else
   DLL_SUFFIX        := .so
   LDFLAGS           :=
   OBJDUMPFLAGS      := -D -l -S
-  DYNCFI_OPTION    := -Llib/common/ -Wl,-rpath,lib/common/ -lcfi
+  DYNCFI_OPTION     := -Llib/common/ -Wl,-rpath,lib/common/ -lcfi
+  func-opcode-gen   := ./script/get_x64_func_inst.sh
+  ifeq ($(ARCH), aarch64)
+    func-opcode-gen := ./script/get_aarch64_func_inst.sh
+  else ifeq ($(ARCH), riscv64)
+    func-opcode-gen := ./script/get_riscv64_func_inst.sh
+
+$(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
+	$^ helper 8 $@
+
+$(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-opcode.tmp
+	cp $< $@
+endif
 endif
 
 # extra security features (comment them out if not needed)
@@ -185,13 +203,6 @@ extra_objects := $(addsuffix $(MIDFILE_SUFFIX), $(extra_objects))
 dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
 libmss := $(addsuffix $(MIDFILE_SUFFIX), lib/common/mss)
 
-func-opcode-gen := ./script/get_x86_func_inst.sh
-ifeq ($(ARCH), aarch64)
-  func-opcode-gen := ./script/get_aarch64_func_inst.sh
-else ifeq ($(ARCH), riscv64)
-  func-opcode-gen := ./script/get_riscv64_func_inst.sh
-endif
-
 all: run-test
 .PHONY: all
 
@@ -262,12 +273,6 @@ $(mts-cpps-prep): %.prep:%
 
 $(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
-
-$(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
-	$^ helper 8 $@
-
-$(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-opcode.tmp
-	cp $< $@
 
 $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@

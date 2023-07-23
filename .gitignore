@@ -3,6 +3,11 @@ test/*
 *~
 *.o
 *.obj
+*.dll
+*.exp
+*.ilk
+*.pdb
+*.lib
 *.so
 *.tmp
 doc/*.log

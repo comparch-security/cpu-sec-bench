@@ -2,8 +2,8 @@
 #set -u
 #set -e
 #set -x
-#Usage:   ./get_x86_func_inst.sh proc_name func_name byte_nums file_name
-#Example: ./get_x86_func_inst.sh ./test/acc-read-func helper 8 func_helper.tmp
+#Usage:   ./get_x64_func_inst.sh proc_name func_name byte_nums file_name
+#Example: ./get_x64_func_inst.sh ./test/acc-read-func helper 8 func_helper.tmp
 byte_nums=$3
 
 reverse_word_order(){

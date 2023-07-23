@@ -22,7 +22,7 @@ unsigned long long code_num = 0;
  * or correctly to var += cet.
  * Relax the check by reading both locations.
  */
-
+extern "C"
 int FORCE_NOINLINE helper() {
   unsigned long long *code = (unsigned long long *)(&helper);
   return (*code) == code_num
