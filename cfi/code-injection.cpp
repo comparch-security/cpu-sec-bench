@@ -54,6 +54,7 @@ int main(int argc, char* argv[])
     }
     cmd_offset = argv[3];
     offset = 4 * stoll(cmd_offset);
+    GET_RAA_SP_OFFSET(offset);
     addr = (char *)p;
     break;
   case 1: // call

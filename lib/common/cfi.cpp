@@ -1,8 +1,9 @@
 #include <cstdlib>
 #include <cstring>
-#include "include/cfi.hpp"
 
-#define DLL_DEFINITION
+#define DLL_DEFINITION DllExport
+
+#include "include/cfi.hpp"
 
 void Base::virtual_func() {
   exit(1);

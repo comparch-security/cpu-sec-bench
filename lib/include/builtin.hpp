@@ -24,7 +24,7 @@
   #define PATH_SEPARATOR "\\"
   // It is needed add the option "get-code-offset" in configuration
   // before using this inline func
-  void labelfunc(int& fake_para);
+  FORCE_NOINLINE void labelfunc();
   #define GET_LABEL_ADDRESS(p,label_case)   \
     get_label(p)
   #define GOTO_SAVED_LABEL(p)               \
@@ -33,9 +33,9 @@
       jum_target.func_ptr();                \
     }while(0)
   #define TARGET_LABEL(fake_var)            \
-    labelfunc(fake_var);
+    labelfunc();
   #define TARGET_LABEL1(fake_var)           \
-    labelfunc(fake_var);
+    labelfunc();
   #define DllImport   __declspec( dllimport )
   #define DllExport   __declspec( dllexport )
 #endif

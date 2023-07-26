@@ -870,14 +870,14 @@
     },
     "acc-check-IBT": {
         "arguments": { "0": ["1"] },
-        "set-var": { "0": ["cet-enabled"] },
+        "set-var": { "0": ["ibt-enabled"] },
         "get-code-offset": { "0": ["main","labelfunc"] },
         "expect-results": { "290": "cheri capabilities enabled."}
     },
     "acc-read-GOT": {
         "require": { "0": [ [ "acc-check-IBT" ] ] },
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "arguments": { "0": ["-vcet-enabled"] }
+        "arguments": { "0": ["-vibt-enabled"] }
     },
 
     "cpi-read-stack-vtable-pointer": {
@@ -920,7 +920,7 @@
     "cpi-modify-GOT": {
         "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "acc-read-GOT" ] ] },
-        "arguments": { "0": ["-vcet-enabled"] },
+        "arguments": { "0": ["-vibt-enabled"] },
         "expect-results": { "16": "relocation tables under read-only protection." }
     },
 
