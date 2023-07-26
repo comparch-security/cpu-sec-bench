@@ -10,25 +10,26 @@
 union x{void(*func_ptr)(); long long func_num;};
 GLOBAR_VAR_PRE x jum_target;
 GLOBAR_VAR_PRE CONTEXT sp_loc_context;
+FORCE_NOINLINE void func_to_modify_caller_parameter(int target_register);
 
 // get the distance between two pointers
 #define GET_DISTANCE(dis, pa, pb)            \
   dis = pa - pb
 
 // stack related
-#define READ_STACK_DAT(dat, offset)          \
-  dat = *(long long*)((long long)_AddressOfReturnAddress() + offset)
+#define READ_STACK_DAT(dat, offset) READ_STACK_DAT_IMM(dat, offset)
 
 #define READ_STACK_DAT_IMM(dat, offset)      \
   RtlCaptureContext(&sp_loc_context);        \
   dat = (void*)*(long long*)((long long)sp_loc_context.Rsp + offset);
 
-#define MOD_STACK_DAT(dat, offset)                                        \
-  void** ptr = (void**)((long long)_AddressOfReturnAddress() + offset);   \
+#define MOD_STACK_DAT(dat, offset)                                 \
+  RtlCaptureContext(&sp_loc_context);                              \
+  void** ptr = (void**)((long long)sp_loc_context.Rsp + offset);   \
   *ptr = dat
 
 #define SET_MEM(ptr, var)                    \
-  __movsq(reinterpret_cast<unsigned __int64 *>(ptr), reinterpret_cast<const unsigned __int64 *>(var),1)
+  __movsq((unsigned long long*)ptr, (const unsigned long long*)(&var),1)
 
 // jump to a pointer
 #define JMP_DAT(ptr)                         \
@@ -72,4 +73,8 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   RtlCaptureContext(&sp_loc_context);  \
   loc = sp_loc_context.Rsp
 
+#define GET_RAA_SP_OFFSET(offset)                             \
+  RtlCaptureContext(&sp_loc_context);                         \
+  offset = (arch_int_t)((long long) _AddressOfReturnAddress()-\
+           (long long) sp_loc_context.Rsp)
 #endif

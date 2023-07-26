@@ -60,6 +60,7 @@ void FORCE_NOINLINE helper_v_p_g1(void *ra_label) {
  */
 #define TEST_FUNC(FT)                        \
 extern "C"                                   \
+FORCE_NOINLINE                               \
 int test_##FT(int v) {                       \
   void *ra_label = (void*)&test_##FT;        \
   GET_LABEL_ADDRESS(ra_label,TARGET_LABEL);  \

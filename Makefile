@@ -36,18 +36,14 @@ ifeq ($(OSType),Windows_NT)
   # will raise error
   OUTPUT_EXE_OPTION := /Fotest/ /Fe
   OUTPUT_LIB_OPTION := /Fo
-  OUTPUT_DYN_OPTION := /LD /Folib/common/ /Fe
+  OUTPUT_DYN_OPTION := /LD /Fe
   MIDFILE_SUFFIX    := .obj
   DLL_SUFFIX        := .dll
   LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF
   OBJDUMPFLAGS      := /DISASM
-  DYNCFI_OPTION     := lib/common/libcfi.lib
+  DYNCFI_OPTION     := libcfi.lib
   func-opcode-gen   := .\script\get_x64_func_inst.bat
-$(test-path)\acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)\acc-read-func.exe
-	$^ helper 8 $@
-
-$(test-path)/acc-read-func.gen: %.gen:% $(test-path)\acc-read-func-func-opcode.tmp
-	copy /Y $(test-path)\acc-read-func.exe $(test-path)\acc-read-func.gen
+dynlibcfi := $(addsuffix $(DLL_SUFFIX), libcfi)
 else
 
   # platform
@@ -84,13 +80,8 @@ else
     func-opcode-gen := ./script/get_aarch64_func_inst.sh
   else ifeq ($(ARCH), riscv64)
     func-opcode-gen := ./script/get_riscv64_func_inst.sh
-
-$(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
-	$^ helper 8 $@
-
-$(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-opcode.tmp
-	cp $< $@
-endif
+  endif
+dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
 endif
 
 # extra security features (comment them out if not needed)
@@ -192,7 +183,6 @@ headers := $(wildcard lib/include/*.hpp) $(wildcard lib/$(ARCH)/*.hpp) $(wildcar
 extra_objects := lib/common/global_var lib/common/temp_file $(addprefix lib/$(ARCH)/, assembly) $(addprefix lib/$(CLIBAPI)/, signal)
 extra_objects := $(addsuffix $(MIDFILE_SUFFIX), $(extra_objects))
 
-dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
 libmss := $(addsuffix $(MIDFILE_SUFFIX), lib/common/mss)
 
 all: run-test
@@ -239,7 +229,7 @@ $(dynlibcfi): lib/common/cfi.cpp  lib/include/cfi.hpp
 	$(CXX) $(CXXFLAGS) $< $(OUTPUT_DYN_OPTION)$@
 
 cfi_base := $(basename $(dynlibcfi))
-rubbish += $(cfi_base).so $(cfi_base).dll $(cfi_base).pdb $(cfi_base).obj $(cfi_base).lib $(cfi_base).ilk $(cfi_base).exp
+rubbish += $(cfi_base).so $(cfi_base).dll $(cfi_base).pdb $(cfi_base).obj $(cfi_base).lib $(cfi_base).ilk $(cfi_base).exp lib/common/cfi.obj
 
 $(extra_objects): %$(MIDFILE_SUFFIX) : %.cpp $(headers)
 	$(CXX) $(CXXFLAGS) -c $< $(OUTPUT_LIB_OPTION)$@
@@ -265,6 +255,20 @@ $(mts-cpps-prep): %.prep:%
 
 $(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
+
+$(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
+ifeq ($(OSType),Windows_NT)
+	$< $(test-path)\acc-read-func.exe helper 8 $(test-path)\acc-read-func-func-opcode.tmp
+else
+	$^ helper 8 $@
+endif
+
+$(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-opcode.tmp
+ifeq ($(OSType), Windows_NT)
+	copy /Y $(test-path)\acc-read-func.exe $(test-path)\acc-read-func.gen
+else
+	cp $< $@
+endif
 
 $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
@@ -296,7 +300,7 @@ ifeq ($(OSType),Windows_NT)
 
 rubbish:= $(subst /,\,$(rubbish))
 clean:
-	-del /Q $(rubbish) $(test-path) *.tmp *.ilk *.pdb *.obj *.exe *.dump
+	-del /Q $(rubbish) $(test-path) *.tmp *.ilk *.pdb *.obj *.exe *.dump *.dll *.lib *.exp
 
 else
 
