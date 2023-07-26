@@ -37,7 +37,7 @@ delete_blank(){
 
 func_addr="$( objdump -C -t "$1" | grep "$2" | grep -o -E "^[a-f0-9]+" )"
 func_addr="0x""${func_addr}"
-opcode_oneline=$(objdump -C -d --start-address="${func_addr}" "$1" | sed -n '/.*<helper(.*)>:/,/^$/p' | sed '1d' | grep -E -o "\s+([a-f0-9][a-f0-9] )+\s*" | xargs)
+opcode_oneline=$(objdump -C -d --start-address="${func_addr}" "$1" | sed -n '/.*<helper(*.*)*>:/,/^$/p' | sed '1d' | grep -E -o "\s+([a-f0-9][a-f0-9] )+\s*" | xargs)
 opcode_be_dw=$(get_dw_opcode "$opcode_oneline")
 opcode_le_dw=$(reverse_word_order "$opcode_be_dw")
 opcode_unsignedlonglong=$(delete_blank "$opcode_le_dw")

@@ -58,6 +58,7 @@
     TARGET_LABEL1:
   #define DllImport   
   #define DllExport   
+  #define GET_RAA_SP_OFFSET(offset)
 #endif
 
 #endif
