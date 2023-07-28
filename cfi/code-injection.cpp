@@ -12,6 +12,7 @@ std::string cmd_offset;
 
 void FORCE_NOINLINE return_helper(void *p) {
   gvar_init(2);
+  GET_RAA_SP_OFFSET(offset);
   MOD_STACK_DAT(p, offset);
   /* HiFive Unmatched, GCC 11.2.0
    * Make sure offset is modified as otherwise
@@ -54,7 +55,6 @@ int main(int argc, char* argv[])
     }
     cmd_offset = argv[3];
     offset = 4 * stoll(cmd_offset);
-    GET_RAA_SP_OFFSET(offset);
     addr = (char *)p;
     break;
   case 1: // call

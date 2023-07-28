@@ -25,13 +25,15 @@ ifeq ($(OSType),Windows_NT)
 
   # compiler
   CXX           := cl
+  ASM           := ml64
   CLIBAPI       := visualcpp
   OBJDUMP       := dumpbin
 
-  CXXFLAGS_BASE := /nologo /W3 /WX- /sdl /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
+  CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /sdl /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
                    /Gm- /EHsc /MD /GS /Gy /Gd /I./lib
   CXXFLAGS_RUN  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
   CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
+  ASMFLAGS      := /nologo /Zi /c
   # If there is a whitespace between windows msvc's output option and output file,
   # will raise error
   OUTPUT_EXE_OPTION := /Fotest/ /Fe
@@ -39,11 +41,12 @@ ifeq ($(OSType),Windows_NT)
   OUTPUT_DYN_OPTION := /LD /Fe
   MIDFILE_SUFFIX    := .obj
   DLL_SUFFIX        := .dll
-  LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF
+  LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF /NXCOMPAT:NO
   OBJDUMPFLAGS      := /DISASM
   DYNCFI_OPTION     := libcfi.lib
   func-opcode-gen   := .\script\get_x64_func_inst.bat
-dynlibcfi := $(addsuffix $(DLL_SUFFIX), libcfi)
+  dynlibcfi := $(addsuffix $(DLL_SUFFIX), libcfi)
+  independent_assembly := lib/x86_64/visualcpp_indepassembly_func.obj
 else
 
   # platform
@@ -61,12 +64,14 @@ else
   else
     CXX         := g++
   endif
+  ASM           := as
   CLIBAPI       := posix
   OBJDUMP       := objdump
 
   CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
   CXXFLAGS_RUN  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
   CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
+  ASMFLAGS      :=
   OUTPUT_EXE_OPTION := -o 
   OUTPUT_LIB_OPTION := -o 
   OUTPUT_DYN_OPTION := -shared -fPIC -o 
@@ -81,7 +86,8 @@ else
   else ifeq ($(ARCH), riscv64)
     func-opcode-gen := ./script/get_riscv64_func_inst.sh
   endif
-dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
+  dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
+  independent_assembly := 
 endif
 
 # extra security features (comment them out if not needed)
@@ -236,25 +242,30 @@ $(extra_objects): %$(MIDFILE_SUFFIX) : %.cpp $(headers)
 
 rubbish += $(extra_objects)
 
+$(independent_assembly): %$(MIDFILE_SUFFIX) : %.asm
+	$(ASM) $(OUTPUT_LIB_OPTION)$@ $(ASMFLAGS) $^
+
+rubbish += $(independent_assembly)
+
 $(libmss): %$(MIDFILE_SUFFIX) : %.cpp lib/include/mss.hpp
 	$(CXX) $(CXXFLAGS) -c $< $(OUTPUT_LIB_OPTION)$@
 
 rubbish += $(libmss)
 
-$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(libmss)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
+$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(libmss) $(independent_assembly)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(mss-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(libmss)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
+$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(libmss) $(independent_assembly)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
+$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects) $(independent_assembly)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
 ifeq ($(OSType),Windows_NT)
@@ -273,14 +284,14 @@ endif
 $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(dynlibcfi)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@  $(LDFLAGS)
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(dynlibcfi) $(independent_assembly)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@  $(LDFLAGS)
 
 $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) $(dynlibcfi)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) $(dynlibcfi) $(independent_assembly)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@

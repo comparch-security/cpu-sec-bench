@@ -54,6 +54,8 @@
     goto *p;
   #define TARGET_LABEL(fake_var)         \
     TARGET_LABEL:
+  #define TARGET_LABEL_SUPRESS_OPT(fake_var) \
+    TARGET_LABEL:
   #define TARGET_LABEL1(fake_var)        \
     TARGET_LABEL1:
   #define DllImport   
