@@ -12,6 +12,7 @@ std::string cmd_offset;
 
 void FORCE_NOINLINE return_helper(void *p) {
   gvar_init(2);
+  GET_RAA_SP_OFFSET(offset);
   MOD_STACK_DAT(p, offset);
   /* HiFive Unmatched, GCC 11.2.0
    * Make sure offset is modified as otherwise

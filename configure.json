@@ -726,14 +726,14 @@
     },
     "acc-check-IBT": {
         "arguments": { "0": ["1"] },
-        "set-var": { "0": ["cet-enabled"] },
+        "set-var": { "0": ["ibt-enabled"] },
         "get-code-offset": { "0": ["main","labelfunc"] },
         "expect-results": { "290": "cheri capabilities enabled."}
     },
     "acc-read-GOT": {
         "require": { "0": [ [ "acc-check-IBT" ] ] },
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "arguments": { "0": ["-vcet-enabled"] }
+        "arguments": { "0": ["-vibt-enabled"] }
     },
 
     "cpi-read-vtable-pointer": {},
@@ -749,7 +749,7 @@
     "cpi-modify-GOT": {
         "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "acc-read-GOT" ] ] },
-        "arguments": { "0": ["-vcet-enabled"] },
+        "arguments": { "0": ["-vibt-enabled"] },
         "expect-results": { "16": "relocation tables under read-only protection." }
     },
 
@@ -921,7 +921,6 @@
                            "267": "RA is partially written leading to a segment error due to wrong RA.",
                            "251": "When Arm Asan Enabled, the clang compiler pushes two more registers(one for shadow memory, another for alignment)"},
         "expect-results": {"290": "cheri capabilities enabled."}
-                        }
     },
     "cfi-return-to-wrong-call-site": {
         "get-code-offset": { "0": ["main","labelfunc"] },

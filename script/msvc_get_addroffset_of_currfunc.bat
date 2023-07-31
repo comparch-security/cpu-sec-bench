@@ -23,7 +23,9 @@ rem read target line
 type func.dump | findstr %3 > target.dump
 
 for /F "tokens=*" %%T in (target.dump) do call :process %%T
+
 goto label
+
 :process
 set  target_address=%~1
 set  target_address=0x%target_address:~11,5%
@@ -36,4 +38,4 @@ echo %offset%>> offset.tmp
 EXIT /B 0
 
 :label
-rem del file.dump func.dump target.dump
+del file.dump func.dump target.dump

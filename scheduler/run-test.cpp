@@ -433,12 +433,12 @@ bool run_tests(std::list<std::string> cases) {
       }
       #ifdef _MSC_VER
       if(0 == rv && !dbvar.empty()){
-        std::cout << "dump bin: " << prog << std::endl;
-
           if(dbvar.size() != 2){
             std::cerr << "dbvar size is " << dbvar.size() << std::endl;
             std::cerr << "the parameter number is wrong (exactly is 2)" << std::endl;
           }
+        std::cout << "dump bin: " << "script\\msvc_get_addroffset_of_currfunc.bat" << "test/" << prog << ".exe " <<
+                     " " << dbvar.front() << " " << dbvar.back() << std::endl;
           rv = run_cmd(argv_conv("script\\msvc_get_addroffset_of_currfunc.bat", str_list_t{
                                  "test/" + prog +".exe", dbvar.front(), dbvar.back()}));
           

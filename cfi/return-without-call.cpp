@@ -5,11 +5,12 @@
 extern "C"
 FORCE_NOINLINE void helper(arch_int_t fsize) {
   void *exit_label = (void*)&helper;
+  GET_RAA_SP_OFFSET(fsize);
   GET_LABEL_ADDRESS(exit_label,TARGET_LABEL);
   if(2 == gvar()) { GOTO_SAVED_LABEL(exit_label);}   // impossible to happen
 
   PUSH_FAKE_RET(exit_label, fsize);
-  return;
+  if(fsize != 0)return;
 
 TARGET_LABEL(fake_use_arg)
   gvar_decr();
