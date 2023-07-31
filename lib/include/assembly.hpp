@@ -13,7 +13,6 @@
 #endif
 
 #if defined(COMPILER_MSVC)
-  #include <Windows.h>
   #include "x86_64/visualcpp_assembly.hpp"
 #elif defined(COMPILER_GCC)
   #include "x86_64/assembly.hpp"
