@@ -1,6 +1,5 @@
 #include <set>
 #include <cstdlib>
-#include <unistd.h>
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
 
@@ -19,7 +18,7 @@ int main(int argc, char* argv[])
     bufferT = new charBuffer('u','d','o');
     bset.insert(bufferT);
     GET_DISTANCE(distance, (long long)bufferT->data, (long long)buffer->data);
-  } while(sysconf(_SC_PAGESIZE) >= abs(distance));
+  } while(GET_PAGE_SIZE() >= abs(distance));
 
   if(distance > 0) {
     update_by_pointer(buffer->data, 0, distance+8, 1, 'c');

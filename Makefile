@@ -16,6 +16,21 @@ endif
 # set variables
 OPT_LEVEL       ?= O2
 
+# extra security features (comment them out if not needed)
+#disable_stack_nx_protection    = yes
+#disable_stack_protection       = yes
+#enable_aslr_protection         = yes
+#enable_got_protection          = yes
+#enable_stack_protection        = yes
+#enable_vtable_verify           = yes
+#enable_control_flow_protection = yes
+#enable_stack_clash_protection  = yes
+#enable_address_sanitizer       = yes
+# msvc specific safety feature
+#enable_cet_shadow_stack        = yes
+#enable_heap_integrity          = yes
+
+# define paths and objects
 ifeq ($(OSType),Windows_NT)
 
   # platform
@@ -29,8 +44,8 @@ ifeq ($(OSType),Windows_NT)
   CLIBAPI       := visualcpp
   OBJDUMP       := dumpbin
 
-  CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /sdl /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
-                   /Gm- /EHsc /MD /GS /Gy /Gd /I./lib
+  CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
+                  /EHsc /MD /Gy /Gd /I./lib
   CXXFLAGS_RUN  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
   CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
   ASMFLAGS      := /nologo /Zi /c
@@ -41,12 +56,42 @@ ifeq ($(OSType),Windows_NT)
   OUTPUT_DYN_OPTION := /LD /Fe
   MIDFILE_SUFFIX    := .obj
   DLL_SUFFIX        := .dll
-  LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF /NXCOMPAT:NO
+  LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF
   OBJDUMPFLAGS      := /DISASM
   DYNCFI_OPTION     := libcfi.lib
   func-opcode-gen   := .\script\get_x64_func_inst.bat
   dynlibcfi := $(addsuffix $(DLL_SUFFIX), libcfi)
   independent_assembly := lib/x86_64/visualcpp_indepassembly_func.obj
+
+  # define compiling flags
+  ifdef disable_stack_nx_protection
+    LDLAGS += /NXCOMPAT
+  endif
+
+  ifdef disable_stack_protection
+    CXXFLAGS += /GS-
+  endif
+
+  ifdef enable_aslr_protection
+    LDFLAGS  += /DYNAMICBASE
+  endif
+
+  ifdef enable_stack_protection
+    CXXFLAGS += /GS
+  endif
+
+  ifdef enable_control_flow_protection
+    CXXFLAGS += /guard:cf
+    LDFLAGS  += /GUARD:CF
+  endif
+
+  ifdef enable_cet_shadow_stack
+    LDFLAGS += /CETCOMPAT 
+  endif
+
+  ifdef enable_heap_integrity
+    CXXFLAGS += /sdl /GS
+  endif
 else
 
   # platform
@@ -88,70 +133,56 @@ else
   endif
   dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
   independent_assembly := 
-endif
 
-# extra security features (comment them out if not needed)
-#disable_stack_nx_protection    = yes
-#disable_stack_protection       = yes
-#enable_aslr_protection         = yes
-#enable_got_protection          = yes
-#enable_stack_protection        = yes
-#enable_vtable_verify           = yes
-#enable_control_flow_protection = yes
-#enable_stack_clash_protection  = yes
-#enable_address_sanitizer       = yes
+  # define compiling flags
+  ifdef disable_stack_nx_protection
+    CXXFLAGS += -z execstack
+  endif
 
-# define paths and objects
+  ifdef disable_stack_protection
+    CXXFLAGS += -fno-stack-protector
+  endif
 
-# define compiling flags
+  ifdef enable_aslr_protection
+    CXXFLAGS += -pie -fPIE
+    LDFLAGS  += -Wl,-pie
+  endif
 
-ifdef disable_stack_nx_protection
-  CXXFLAGS += -z execstack
-endif
+  ifdef enable_got_protection
+    LDFLAGS  += -Wl,-z,relro,-z,now
+  endif
 
-ifdef disable_stack_protection
-  CXXFLAGS += -fno-stack-protector
-endif
+  ifdef enable_stack_protection
+    CXXFLAGS += -Wstack-protector -fstack-protector-all
+  ifeq ($(ARCH),x86_64)
+    CXXFLAGS += -mstack-protector-guard=tls
+  endif
+  endif
 
-ifdef enable_aslr_protection
-  CXXFLAGS += -pie -fPIE
-  LDFLAGS  += -Wl,-pie
-endif
+  ifdef enable_vtable_verify
+    CXXFLAGS += -fvtable-verify=std
+  endif
 
-ifdef enable_got_protection
-  LDFLAGS  += -Wl,-z,relro,-z,now
-endif
+  ifdef enable_control_flow_protection
+  ifeq ($(ARCH),x86_64)
+    CXXFLAGS += -fcf-protection=full -mcet
+  endif
+  endif
 
-ifdef enable_stack_protection
-  CXXFLAGS += -Wstack-protector -fstack-protector-all
-ifeq ($(ARCH),x86_64)
-  CXXFLAGS += -mstack-protector-guard=tls
-endif
-endif
+  ifdef enable_stack_clash_protection
+    CXXFLAGS += -fstack-clash-protection
+  endif
 
-ifdef enable_vtable_verify
-  CXXFLAGS += -fvtable-verify=std
-endif
-
-ifdef enable_control_flow_protection
-ifeq ($(ARCH),x86_64)
-  CXXFLAGS += -fcf-protection=full -mcet
-endif
-endif
-
-ifdef enable_stack_clash_protection
-  CXXFLAGS += -fstack-clash-protection
-endif
-
-ifdef enable_address_sanitizer
-  CXXFLAGS += -fsanitize=address
-  RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
-ifeq ($(CXX),$(filter $(CXX),clang++ c++))
-  LDFLAGS  += -static-libsan
-else
-  LDFLAGS  += -static-libasan
-  CXXFLAGS += --param=asan-stack=1
-endif
+  ifdef enable_address_sanitizer
+    CXXFLAGS += -fsanitize=address
+    RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
+    ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+      LDFLAGS  += -static-libsan
+    else
+      LDFLAGS  += -static-libasan
+      CXXFLAGS += --param=asan-stack=1
+    endif
+  endif
 endif
 
 # define cases

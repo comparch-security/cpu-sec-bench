@@ -17,6 +17,7 @@
 
 // detect compiler
 #if defined(_MSC_VER)
+  #include <Windows.h>
   #include<intrin.h>
   #include <fstream>
   #include "visualcpp/msvc_builtin.hpp"
@@ -38,9 +39,15 @@
     labelfunc();
   #define DllImport   __declspec( dllimport )
   #define DllExport   __declspec( dllexport )
+  inline long int GET_PAGE_SIZE(){
+      SYSTEM_INFO si;
+      GetSystemInfo(&si);
+      return (long int) si.dwPageSize;
+  }
 #endif
 
 #if defined(__GNUC__)
+  #include <unistd.h>
   #include "posix/gcc_builtin.hpp"
   #if defined(__clang__)
     #define COMPILER_CLANG
@@ -61,6 +68,9 @@
   #define DllImport   
   #define DllExport   
   #define GET_RAA_SP_OFFSET(offset)
+  inline long int GET_PAGE_SIZE(){
+    return sysconf(_SC_PAGESIZE);
+  }
 #endif
 
 #endif

@@ -1,6 +1,5 @@
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
-#include <unistd.h>
 
 int FORCE_NOINLINE helper(const char* b, int level) {
   long long delta = 0;
@@ -16,5 +15,5 @@ int FORCE_NOINLINE helper(const char* b, int level) {
 int main(int argc, char* argv[])
 {
   charBuffer buffer('l','m','n');
-  return helper(buffer.data, sysconf(_SC_PAGESIZE)/(sizeof(charBuffer)+sizeof(long long)+sizeof(void *)) + 1);
+  return helper(buffer.data, GET_PAGE_SIZE()/(sizeof(charBuffer)+sizeof(long long)+sizeof(void *)) + 1);
 }
