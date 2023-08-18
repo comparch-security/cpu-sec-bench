@@ -105,6 +105,6 @@ TARGET_LABEL(argc)
 #endif
   end_catch_exception();
 TARGET_LABEL1(argc)
-  delete m_heap;
+  delete [] m_heap;
   return gvar();
 }

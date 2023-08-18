@@ -63,6 +63,7 @@ int main(int argc, char** argv){
     switch(flag_option){
         case 1:
             if(*(uintptr_t*)addr_buffer == (uintptr_t)global_ra_pos)
+                free(addr_buffer);
                 return 0;
             break;
         case 2:
@@ -73,6 +74,7 @@ int main(int argc, char** argv){
                 //goto *jmp_target;
                 JMP_DAT_PTR(addr_buffer);
                 //if prog has run at this, it means the jump failed
+                free(addr_buffer);
                 return gvar();
             }
             break;

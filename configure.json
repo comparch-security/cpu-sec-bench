@@ -948,6 +948,7 @@
     },
     "cfi-call-wrong-func-heap-vtable-offset": {
         "program": "cfi-call-wrong-func-vtable-offset",
+        "arguments": { "0": ["0"]},
         "require": { "0": [ [ "cpi-write-heap-vtable-pointer" ] ] }
     },
     "cfi-call-wrong-func-vtable": {

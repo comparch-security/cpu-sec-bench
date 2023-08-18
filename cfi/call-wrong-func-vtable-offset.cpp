@@ -1,8 +1,9 @@
 #include "include/cfi.hpp"
 #include <cstdlib>
 
-int main()
+int main(int argc, char** argv)
 {
+  bool fake_flag = argv[1][0] - '0';
   BaseM *orig = new Helper1M();
   BaseM *fake = new Helper1M();
   int rv = 0;
@@ -10,11 +11,15 @@ int main()
   rv += orig->virtual_funcM0();
   rv += fake->virtual_funcM0();
   /* The following delete operations are commented out
-     as they cause segment error on tests compiled by G++ 11.2.0
+     as they cause segment error on tests compiled by G++ 11.2.0,
+     because the content of orig was crashed
   */
-  // delete orig;
-  // delete fake;
 
   // use exit instead of return, try to avoid memory leak detection in ASan
-  exit(rv == 7 ? 0 : 1);
+  if(!fake_flag) exit(rv == 7 ? 0 : 1);
+
+  delete orig;
+  delete fake;
+
+  return 0;
 }
