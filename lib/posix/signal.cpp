@@ -22,6 +22,7 @@ void xcpt_handler(int signo, siginfo_t *sinfo, void *context) {
     if((sigact_stack[i].si_signo == sinfo->si_signo) &&
        (sigact_stack[i].si_code == 0 || sinfo->si_code == sigact_stack[i].si_code) &&
       (sigact_stack[i].daddr == NULL || sigact_stack[i].daddr == sinfo->si_addr))
+      psignal(sinfo->si_code,"");
       exit(sigact_stack[i].rv_code);
   }
 
