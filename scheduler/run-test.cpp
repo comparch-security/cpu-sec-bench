@@ -1,6 +1,12 @@
+#ifdef _MSC_VER
+// Windows MSVC
+#define _CRT_SECURE_NO_WARNINGS
+#include <process.h>
+#else
 // POSIX APIs (linux variant)
 #include <spawn.h>
 #include <sys/wait.h>
+#endif
 
 // standard cpp library
 #include <cstdlib>
@@ -47,7 +53,8 @@ std::list<char *> extra_run_prefix;
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
-int case_parser(const std::string& cn, str_list_t& arg_list, str_list_t& vn, std::set<int> &results);
+int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, str_list_t& vn,
+                str_list_t& dbf, std::set<int> &expect_results, std::set<int> &retry_results);
 char ** argv_conv(const std::string &cmd, const str_list_t &args);
 int run_cmd(const char *argv[]);
 bool run_tests(std::list<std::string> cases);
@@ -132,6 +139,17 @@ bool dump_json(json &db, const std::string& fn, bool notice) {
   }
 }
 
+str_list_t& append_str_list(str_list_t &l, const char *str_const) {
+  char str[256];
+  strcpy(str, str_const);
+  char *pch = strtok(str, " ");
+  while(pch != NULL) {
+    l.push_back(std::string(pch));
+    pch = strtok(NULL, " ");
+  }
+  return l;
+}
+
 void report_gen() {
   std::ofstream report_file("results.dat");
 
@@ -158,7 +176,7 @@ std::list<std::string> collect_case_list() {
 }
 
 int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, str_list_t& vn,
-                 std::set<int> &expect_results, std::set<int> &retry_results) {
+                str_list_t &dbf, std::set<int> &expect_results, std::set<int> &retry_results) {
   // check whether the case exist
   if(!config_db.count(cn)) {
     std::cerr << "Fail to parse test case " << cn << std::endl;
@@ -280,6 +298,14 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   } else
     vn.clear();
 
+  //dbf's size should be 2,
+  //one is for current searched func name, the other is for target code name
+  if(tcase.count("get-code-offset") && tcase["get-code-offset"].count(req_case_str)){
+    dbf = tcase["get-code-offset"][req_case_str].get<str_list_t>();
+  }else{
+    dbf.clear();
+  }
+
   // collect the known exit code other than 0
   expect_results.clear();
   if(tcase.count("expect-results")) {
@@ -298,6 +324,35 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   return 0;
 }
 
+#ifdef _MSC_VER
+// Windows MSVC
+int run_cmd(char* argv[], char** runv = NULL) {
+  auto pid = _spawnvp(_P_NOWAIT, argv[0], argv);
+  if (pid == -1) {
+    std::cerr << "Fail to spawn the executable!" << std::endl;
+    exit(1);
+  }
+
+  int status;
+  if (_cwait(&status, pid, _WAIT_CHILD) == -1) {
+    #include <errno.h>
+    errno_t err;
+    _get_errno(&err);
+    std::cerr << "errno = " << err;
+    std::cerr << "ECHILD =" << ECHILD << std::endl;
+    std::cerr << "EINVAL =" << EINVAL << std::endl;
+    std::cerr << "Cannot wait for the executable!" << std::endl;
+    exit(1);
+  }
+
+  if (status != 0)
+    std::cout << "Terminated with code " << status << std::endl;
+
+  return status;
+}
+
+#else
+// POSIX version (Linux variant)
 int run_cmd(char *argv[], char **runv = NULL) {
   pid_t pid;
   if(runv == NULL) runv = org_env;
@@ -307,6 +362,11 @@ int run_cmd(char *argv[], char **runv = NULL) {
   while(runv[envi] != NULL) std::cout << std::string(runv[envi++]) << std::endl;
   std::cout << std::endl;
   */
+
+  /*
+  int argi = 0;
+  while(argv[argi] != NULL) std::cout << std::string(argv[argi++]) << std::endl;
+  */  
   int rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, runv);
   if(rv) {
     if(rv == ENOSYS) {
@@ -337,6 +397,8 @@ int run_cmd(char *argv[], char **runv = NULL) {
   return -2;  // should not run here!
 }
 
+#endif
+
 char ** argv_conv(const std::string &cmd, const str_list_t &args) {
   int i = 0;
   strcpy(arg_pool[i++], cmd.c_str());
@@ -354,11 +416,12 @@ bool run_tests(std::list<std::string> cases) {
   str_llist_t alist;
   str_list_t gvar;
   std::set<int> expect_results, retry_results, rvs;
+  str_list_t dbvar;
   while(!cases.empty()) {
     auto cn = cases.front();
     cases.pop_front();
     //std::cerr << "case: " << cn << std::endl; // keep in case needed in debug
-    int test_cond = case_parser(cn, prog, alist, gvar, expect_results, retry_results);
+    int test_cond = case_parser(cn, prog, alist, gvar, dbvar, expect_results, retry_results);
     if(!test_run || test_cond == 0) {
       std::cout << "\n========== " << cn << " =========" << std::endl;
       std::cout << "make test/" << prog << std::endl;
@@ -371,6 +434,19 @@ bool run_tests(std::list<std::string> cases) {
           rv = -1;
         }
       }
+      #ifdef _MSC_VER
+      if(0 == rv && !dbvar.empty()){
+          if(dbvar.size() != 2){
+            std::cerr << "dbvar size is " << dbvar.size() << std::endl;
+            std::cerr << "the parameter number is wrong (exactly is 2)" << std::endl;
+          }
+        std::cout << "dump bin: " << "script\\msvc_get_addroffset_of_currfunc.bat" << "test/" << prog << ".exe " <<
+                     " " << dbvar.front() << " " << dbvar.back() << std::endl;
+          rv = run_cmd(argv_conv("script\\msvc_get_addroffset_of_currfunc.bat", str_list_t{
+                                 "test/" + prog +".exe", dbvar.front(), dbvar.back()}));
+          
+      }
+      #endif
 
       if(0 == rv && test_run) { // run the test case
         for(auto arg:alist) {
@@ -387,7 +463,7 @@ bool run_tests(std::list<std::string> cases) {
             rv = 0;
           }
 
-          if(!gvar.empty() && rv == 64) { // a run-time parameter recorded in atmp file
+          if(!gvar.empty() && rv == 64) { // a run-time parameter recorded in a tmp file
             std::ifstream tmpf(temp_file_name(cmd, arg));
             if(tmpf.good()) {
               for(auto i =  gvar.begin(); i != gvar.end(); i++){

@@ -2,7 +2,8 @@
 #include "include/global_var.hpp"
 #include "include/assembly.hpp"
 
-void * FORCE_NOINLINE helper(int a) {
+extern "C"
+FORCE_NOINLINE void * helper(int a) {
   /* On Xeon 5220 Ubuntu 18.04 g++ 7.5.0
    * Directly return the address of a label using return &&helper_mid does not work
    * as g++ seems to think the address is useless outside the function
@@ -10,14 +11,14 @@ void * FORCE_NOINLINE helper(int a) {
    * So we set a variable for it and force a use of the variable to
    * make sure the label address is returned as expected.
    */
-  void * lp = &&helper_mid;
-
+  void * lp = (void*)&helper;
+  GET_LABEL_ADDRESS(lp,TARGET_LABEL);
   switch(a) {
   case 3: return NULL; // make sure the return value is not constant (rv speculation)
-  case 2: goto *lp;    // fake use of the label
+  case 2: { GOTO_SAVED_LABEL(lp);}   // impossible to happen
   case 1: return lp;
   }
-helper_mid: // illegal jump target
+TARGET_LABEL(a) // illegal jump target
     exit(gvar() - 2);
 }
 

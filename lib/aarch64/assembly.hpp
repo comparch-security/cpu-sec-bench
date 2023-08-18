@@ -110,3 +110,5 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   RA_POS_TEST_ENTRY(52, 13)  \
   RA_POS_TEST_ENTRY(56, 14)  \
   RA_POS_TEST_ENTRY(60, 15)
+
+#define GET_SP_LOC(loc) asm volatile("mov %0, sp" : "=r"(loc))

@@ -1,6 +1,13 @@
 test/*
+*.exe
 *~
 *.o
+*.obj
+*.dll
+*.exp
+*.ilk
+*.pdb
+*.lib
 *.so
 *.tmp
 doc/*.log
@@ -14,3 +21,4 @@ variables.json
 run-test
 *.log
 .vscode/
+.vs/
