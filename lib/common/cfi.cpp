@@ -1,5 +1,8 @@
 #include <cstdlib>
 #include <cstring>
+
+#define DLL_DEFINITION DllExport
+
 #include "include/cfi.hpp"
 
 void Base::virtual_func() {

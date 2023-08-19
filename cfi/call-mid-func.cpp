@@ -6,8 +6,8 @@
  * which can be messed up when running at the middle of a function.
  * To cope with this effect, an external function is called (gavr_decr()).
  */
-
-void * FORCE_NOINLINE helper() {
+extern "C"
+FORCE_NOINLINE void * helper() {
   /* On Apple M1 Darwin 20.6.0 clang 12.0.5:
    * Load the address of a label by adr failed.
    * Using adrp+add is affected by compiler optimization and failed as well.
@@ -18,10 +18,11 @@ void * FORCE_NOINLINE helper() {
    * On x86-64 Ubuntu 18.04 GCC 7.5:
    * The GCC load label address feature works only when the loaded variable acturally being used (at least for goto)
    */
-  void * rv = &&func_mid;
-  if(0 == gvar()) goto *rv;
+  void * rv = (void*)&helper;
+  GET_LABEL_ADDRESS(rv,TARGET_LABEL);
+  if(0 == gvar()) { GOTO_SAVED_LABEL(rv);}   // impossible to happen
   else return rv;
-func_mid:
+TARGET_LABEL(fake_use_arg)
   exit(gvar()-1);
 }
 

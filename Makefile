@@ -1,22 +1,20 @@
 SHELL := /bin/bash
 
-# default variables
-ARCH          ?= $(shell arch)
-OSType        ?= $(shell uname)
-GCC_OPT_LEVEL ?= O2
-CXX           ?= g++
-OBJDUMP       ?= objdump
+# check whether it is a windows env
+OSType          ?= $(shell echo %OS%)
 
-# Apple's Darwin OS on M1 list Arm core differently
-ifeq ($(ARCH),arm64)
-  ARCH := aarch64
-endif
-
-ifeq ($(OSType),Darwin)
-  CPU_INFO := $(shell sysctl -n machdep.cpu.brand_string)
+ifeq ($(OSType),Windows_NT)
+  ARCH          ?= x86_64
 else
-  CPU_INFO := $(shell grep -m 1 "model name" /proc/cpuinfo)
+  ARCH          ?= $(shell arch)
+  OSType        := $(shell uname)
+  ifeq ($(ARCH),arm64)
+    ARCH        := aarch64
+  endif
 endif
+
+# set variables
+OPT_LEVEL       ?= O2
 
 # extra security features (comment them out if not needed)
 #disable_stack_nx_protection    = yes
@@ -28,69 +26,166 @@ endif
 #enable_control_flow_protection = yes
 #enable_stack_clash_protection  = yes
 #enable_address_sanitizer       = yes
+# msvc specific safety feature
+#enable_cet_shadow_stack        = yes
+#enable_heap_integrity          = yes
 
 # extra hardware secrutiy features
 #enable_riscv64_cheri       = yes
 
 # define paths and objects
-base = .
+ifeq ($(OSType),Windows_NT)
 
-test-path = $(base)/test
-LD_LIBRARY_PATH=$(test-path)
+  # platform
+  CPU_INFO      ?= $(shell echo %PROCESSOR_IDENTIFIER%)
+  RUN_PREFIX    :=
+  test-path     := test
 
-# define compiling flags
-CXXFLAGS := -I./lib -$(GCC_OPT_LEVEL) -std=c++11 -Wall
-LDFLAGS  :=
-OBJDUMPFLAGS := -D -l -S
-RUN_PREFIX :=
+  # compiler
+  CXX           := cl
+  ASM           := ml64
+  CLIBAPI       := visualcpp
+  OBJDUMP       := dumpbin
 
-ifdef disable_stack_nx_protection
-  CXXFLAGS += -z execstack
-endif
+  CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
+                  /EHsc /MD /Gy /Gd /I./lib
+  CXXFLAGS_RUN  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
+  CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
+  ASMFLAGS      := /nologo /Zi /c
+  # If there is a whitespace between windows msvc's output option and output file,
+  # will raise error
+  OUTPUT_EXE_OPTION := /Fotest/ /Fe
+  OUTPUT_LIB_OPTION := /Fo
+  OUTPUT_DYN_OPTION := /LD /Fe
+  MIDFILE_SUFFIX    := .obj
+  DLL_SUFFIX        := .dll
+  LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF
+  OBJDUMPFLAGS      := /DISASM
+  DYNCFI_OPTION     := libcfi.lib
+  func-opcode-gen   := .\script\get_x64_func_inst.bat
+  dynlibcfi := $(addsuffix $(DLL_SUFFIX), libcfi)
+  independent_assembly := lib/x86_64/visualcpp_indepassembly_func.obj
 
-ifdef disable_stack_protection
-  CXXFLAGS += -fno-stack-protector
-endif
+  # define compiling flags
+  ifdef disable_stack_nx_protection
+    LDLAGS += /NXCOMPAT
+  endif
 
-ifdef enable_aslr_protection
-  CXXFLAGS += -pie -fPIE
-  LDFLAGS  += -Wl,-pie
-endif
+  ifdef disable_stack_protection
+    CXXFLAGS += /GS-
+  endif
 
-ifdef enable_got_protection
-  LDFLAGS  += -Wl,-z,relro,-z,now
-endif
+  ifdef enable_aslr_protection
+    LDFLAGS  += /DYNAMICBASE
+  endif
 
-ifdef enable_stack_protection
-  CXXFLAGS += -Wstack-protector -fstack-protector-all
-ifeq ($(ARCH),x86_64)
-  CXXFLAGS += -mstack-protector-guard=tls
-endif
-endif
+  ifdef enable_stack_protection
+    CXXFLAGS += /GS
+  endif
 
-ifdef enable_vtable_verify
-  CXXFLAGS += -fvtable-verify=std
-endif
+  ifdef enable_control_flow_protection
+    CXXFLAGS += /guard:cf
+    LDFLAGS  += /GUARD:CF
+  endif
 
-ifdef enable_control_flow_protection
-ifeq ($(ARCH),x86_64)
-  CXXFLAGS += -fcf-protection=full -mcet
-endif
-endif
+  ifdef enable_cet_shadow_stack
+    LDFLAGS += /CETCOMPAT 
+  endif
 
-ifdef enable_stack_clash_protection
-  CXXFLAGS += -fstack-clash-protection
-endif
-
-ifdef enable_address_sanitizer
-  CXXFLAGS += -fsanitize=address
-  RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
-ifeq ($(CXX),$(filter $(CXX),clang++ c++))
-  LDFLAGS  += -static-libsan
+  ifdef enable_heap_integrity
+    CXXFLAGS += /sdl /GS
+  endif
 else
-  LDFLAGS  += -static-libasan
-  CXXFLAGS += --param=asan-stack=1
-endif
+
+  # platform
+  ifeq ($(OSType),Darwin)
+    CPU_INFO    = $(shell sysctl -n machdep.cpu.brand_string)
+  else
+    CPU_INFO    = $(shell grep -m 1 "model name" /proc/cpuinfo)
+  endif
+  RUN_PREFIX    :=
+  test-path     := test
+
+  #compiler
+  ifeq ($(OSType),Darwin)
+    CXX         := clang++
+  else
+    CXX         := g++
+  endif
+  ASM           := as
+  CLIBAPI       := posix
+  OBJDUMP       := objdump
+
+  CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
+  CXXFLAGS_RUN  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
+  CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
+  ASMFLAGS      :=
+  OUTPUT_EXE_OPTION := -o 
+  OUTPUT_LIB_OPTION := -o 
+  OUTPUT_DYN_OPTION := -shared -fPIC -o 
+  MIDFILE_SUFFIX    := .o
+  DLL_SUFFIX        := .so
+  LDFLAGS           :=
+  OBJDUMPFLAGS      := -D -l -S
+  DYNCFI_OPTION     := -Llib/common/ -Wl,-rpath,lib/common/ -lcfi
+  func-opcode-gen   := ./script/get_x64_func_inst.sh
+  ifeq ($(ARCH), aarch64)
+    func-opcode-gen := ./script/get_aarch64_func_inst.sh
+  else ifeq ($(ARCH), riscv64)
+    func-opcode-gen := ./script/get_riscv64_func_inst.sh
+  endif
+  dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
+  independent_assembly := 
+
+  # define compiling flags
+  ifdef disable_stack_nx_protection
+    CXXFLAGS += -z execstack
+  endif
+
+  ifdef disable_stack_protection
+    CXXFLAGS += -fno-stack-protector
+  endif
+
+  ifdef enable_aslr_protection
+    CXXFLAGS += -pie -fPIE
+    LDFLAGS  += -Wl,-pie
+  endif
+
+  ifdef enable_got_protection
+    LDFLAGS  += -Wl,-z,relro,-z,now
+  endif
+
+  ifdef enable_stack_protection
+    CXXFLAGS += -Wstack-protector -fstack-protector-all
+  ifeq ($(ARCH),x86_64)
+    CXXFLAGS += -mstack-protector-guard=tls
+  endif
+  endif
+
+  ifdef enable_vtable_verify
+    CXXFLAGS += -fvtable-verify=std
+  endif
+
+  ifdef enable_control_flow_protection
+  ifeq ($(ARCH),x86_64)
+    CXXFLAGS += -fcf-protection=full -mcet
+  endif
+  endif
+
+  ifdef enable_stack_clash_protection
+    CXXFLAGS += -fstack-clash-protection
+  endif
+
+  ifdef enable_address_sanitizer
+    CXXFLAGS += -fsanitize=address
+    RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
+    ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+      LDFLAGS  += -static-libsan
+    else
+      LDFLAGS  += -static-libasan
+      CXXFLAGS += --param=asan-stack=1
+    endif
+  endif
 endif
 
 ifdef enable_riscv64_cheri
@@ -99,27 +194,27 @@ ifdef enable_riscv64_cheri
 endif
 
 # define cases
-mss-path  = $(base)/mss
+mss-path  = mss
 mss-cpps  = $(wildcard $(mss-path)/*.cpp)
 mss-tests = $(addprefix $(test-path)/mss-, $(basename $(notdir $(mss-cpps))))
 mss-cpps-prep = $(addsuffix .prep, $(mss-cpps))
 
-mts-path  = $(base)/mts
+mts-path  = mts
 mts-cpps  = $(wildcard $(mts-path)/*.cpp)
 mts-tests = $(addprefix $(test-path)/mts-, $(basename $(notdir $(mts-cpps))))
 mts-cpps-prep = $(addsuffix .prep, $(mts-cpps))
 
-acc-path  = $(base)/acc
+acc-path  = acc
 acc-cpps  = $(wildcard $(acc-path)/*.cpp)
 acc-tests = $(addprefix $(test-path)/acc-, $(basename $(notdir $(acc-cpps))))
 acc-cpps-prep = $(addsuffix .prep, $(acc-cpps))
 
-cpi-path  = $(base)/cpi
+cpi-path  = cpi
 cpi-cpps  = $(wildcard $(cpi-path)/*.cpp)
 cpi-tests = $(addprefix $(test-path)/cpi-, $(basename $(notdir $(cpi-cpps))))
 cpi-cpps-prep = $(addsuffix .prep, $(cpi-cpps))
 
-cfi-path  = $(base)/cfi
+cfi-path  = cfi
 cfi-cpps  = $(wildcard $(cfi-path)/*.cpp)
 cfi-tests = $(addprefix $(test-path)/cfi-, $(basename $(notdir $(cfi-cpps))))
 cfi-cpps-prep = $(addsuffix .prep, $(cfi-cpps))
@@ -128,26 +223,34 @@ sec-tests := $(mss-tests) $(mts-tests) $(acc-tests) $(cpi-tests) $(cfi-tests)
 sec-tests-dump = $(addsuffix .dump, $(sec-tests))
 sec-tests-prep := $(mss-cpps-prep) $(mts-cpps-prep) $(acc-cpps-prep) $(cpi-cpps-prep) $(cfi-cpps-prep)
 
-headers := $(wildcard $(base)/lib/include/*.hpp) $(wildcard $(base)/lib/$(ARCH)/*.hpp)
-extra_objects := $(base)/lib/common/global_var.o $(base)/lib/common/signal.o $(base)/lib/common/temp_file.o $(addprefix $(base)/lib/$(ARCH)/, assembly.o)
+headers := $(wildcard lib/include/*.hpp) $(wildcard lib/$(ARCH)/*.hpp) $(wildcard lib/$(CLIBAPI)/*.hpp)
 
-func-opcode-gen := ./script/get_x86_func_inst.sh
-ifeq ($(ARCH), aarch64)
-  func-opcode-gen := ./script/get_aarch64_func_inst.sh
-else ifeq ($(ARCH), riscv64)
-  func-opcode-gen := ./script/get_riscv64_func_inst.sh
-endif
+extra_objects := lib/common/global_var lib/common/temp_file $(addprefix lib/$(ARCH)/, assembly) $(addprefix lib/$(CLIBAPI)/, signal)
+extra_objects := $(addsuffix $(MIDFILE_SUFFIX), $(extra_objects))
 
-# compile targets
+libmss := $(addsuffix $(MIDFILE_SUFFIX), lib/common/mss)
 
 all: run-test
 .PHONY: all
 
-# json.hpp needs C++11, which might be problematic on some systems
-run-test: $(base)/scheduler/run-test.cpp $(base)/lib/common/temp_file.cpp $(base)/lib/include/temp_file.hpp $(base)/scheduler/json.hpp $(test-path)/sys_info.txt
-	$(CXX) -O2 --std=c++11 -I. -I./lib -DRUN_PREFIX="\"$(RUN_PREFIX)\"" $< $(base)/lib/common/temp_file.cpp -o $@
+run-test: scheduler/run-test.cpp lib/common/temp_file.cpp lib/include/temp_file.hpp scheduler/json.hpp $(test-path)/sys_info.txt
+	$(CXX) $(CXXFLAGS_RUN) $< lib/common/temp_file.cpp  $(OUTPUT_EXE_OPTION)$@
 
-rubbish += run-test
+ifeq ($(OSType),Windows_NT)
+
+$(test-path)/sys_info.txt:
+	-mkdir $(test-path)
+	echo "CPU: & System : " > $(test-path)/sys_info.txt
+	systeminfo | findstr /C:"Windows" /C:"Intel" >> $(test-path)/sys_info.txt
+	echo "Compiler : " >> $(test-path)/sys_info.txt
+	echo "VSCMD_VER=" %VSCMD_VER% " UCRTVersion=" %UCRTVersion% " VCToolsVersion=" %VCToolsVersion% >> $(test-path)/sys_info.txt
+	echo "Flags : " >> $(test-path)/sys_info.txt
+	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
+	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
+
+rubbish += run-test.exe
+
+else
 
 $(test-path)/sys_info.txt:
 	-mkdir -p $(test-path)
@@ -160,67 +263,74 @@ $(test-path)/sys_info.txt:
 	$(OBJDUMP) --version >> $(test-path)/sys_info.txt
 	echo "Flags : " >> $(test-path)/sys_info.txt
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
-	echo "LDFLAGS = "$(LDFLAGS) >> $(test-path)/sys_info.txt
+	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
 
-rubbish += $(test-path)/sys_info.txt
+rubbish += run-test
 
-libcfi.so: $(base)/lib/common/cfi.cpp  $(base)/lib/include/cfi.hpp
-	$(CXX) $(CXXFLAGS) -shared -fPIC $< -o $@
+endif
 
-rubbish += libcfi.so
 
-$(extra_objects): %.o : %.cpp $(headers)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(dynlibcfi): lib/common/cfi.cpp  lib/include/cfi.hpp
+	$(CXX) $(CXXFLAGS) $< $(OUTPUT_DYN_OPTION)$@
+
+cfi_base := $(basename $(dynlibcfi))
+rubbish += $(cfi_base).so $(cfi_base).dll $(cfi_base).pdb $(cfi_base).obj $(cfi_base).lib $(cfi_base).ilk $(cfi_base).exp lib/common/cfi.obj
+
+$(extra_objects): %$(MIDFILE_SUFFIX) : %.cpp $(headers)
+	$(CXX) $(CXXFLAGS) -c $< $(OUTPUT_LIB_OPTION)$@
 
 rubbish += $(extra_objects)
 
-$(base)/lib/common/mss.o: %.o : %.cpp $(base)/lib/include/mss.hpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(independent_assembly): %$(MIDFILE_SUFFIX) : %.asm
+	$(ASM) $(OUTPUT_LIB_OPTION)$@ $(ASMFLAGS) $^
 
-rubbish += $(base)/lib/common/mss.o
+rubbish += $(independent_assembly)
 
-$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(headers) $(base)/lib/common/mss.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@ $(LDFLAGS)
+$(libmss): %$(MIDFILE_SUFFIX) : %.cpp lib/include/mss.hpp
+	$(CXX) $(CXXFLAGS) -c $< $(OUTPUT_LIB_OPTION)$@
 
-rubbish += $(mss-tests)
+rubbish += $(libmss)
+
+$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(libmss) $(independent_assembly)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(mss-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(base)/lib/common/mss.o
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(base)/lib/common/mss.o -o $@ $(LDFLAGS)
-
-rubbish += $(mts-tests)
+$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(libmss) $(independent_assembly)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -o $@ $(LDFLAGS)
+$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects) $(independent_assembly)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
+ifeq ($(OSType),Windows_NT)
+	$< $(test-path)\acc-read-func.exe helper 8 $(test-path)\acc-read-func-func-opcode.tmp
+else
 	$^ helper 8 $@
+endif
 
 $(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-opcode.tmp
+ifeq ($(OSType), Windows_NT)
+	copy /Y $(test-path)\acc-read-func.exe $(test-path)\acc-read-func.gen
+else
 	cp $< $@
-
-rubbish += $(acc-tests)
+endif
 
 $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
-
-rubbish += $(cpi-tests)
+$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(dynlibcfi) $(independent_assembly)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@  $(LDFLAGS)
 
 $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) libcfi.so $(headers)
-	$(CXX) $(CXXFLAGS) $< $(extra_objects) -L. -Wl,-rpath,. -o $@ -lcfi $(LDFLAGS)
-
-rubbish += $(cfi-tests)
+$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) $(dynlibcfi) $(independent_assembly)
+	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
@@ -231,14 +341,23 @@ dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%
 	$(OBJDUMP) $(OBJDUMPFLAGS) $< > $@
 
-rubbish += $(sec-tests-dump)
-
 prep: $(sec-tests-prep)
 
-rubbish += $(sec-tests-prep)
+ifeq ($(OSType),Windows_NT)
+
+# cmd can not identify "/", so use powershell remove-item
+# powershell remove-item separates diff items by comma not whitespace
+
+rubbish:= $(subst /,\,$(rubbish))
+clean:
+	-del /Q $(rubbish) $(test-path) *.tmp *.ilk *.pdb *.obj *.exe *.dump *.dll *.lib *.exp
+
+else
 
 clean:
-	-rm $(rubbish) *.tmp $(test-path)/*.tmp $(test-path)/*.gen > /dev/null 2>&1
+	-rm -rf $(rubbish) $(test-path) *.tmp > /dev/null 2>&1
+
+endif
 
 .PHONY: clean run dump prep
 

@@ -1,11 +1,13 @@
 #include "include/mss.hpp"
 #include <map>
 #include <vector>
+charBuffer* dangle;
+#define RELOC_NUM 64
 
 int main() {
   std::map<charBuffer *, int> pmap;
   std::vector<charBuffer *> pvec(RELOC_NUM);
-  charBuffer *buffer, *dangle;
+  charBuffer *buffer;
 
   for(int i=0; i<RELOC_NUM; i++) {
     buffer = new charBuffer;

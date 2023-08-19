@@ -1,15 +1,22 @@
-// assembly helper functions
+// abi sensitive assembly helper functions
 
 #ifndef ASSEMBLY_HPP_INCLUDED
 #define ASSEMBLY_HPP_INCLUDED
 
-#include "include/gcc_builtin.hpp"
+#include "include/builtin.hpp"
 
 // detect ISA
-#ifdef __x86_64
+#if defined(__x86_64) || defined(_M_X64)
   #define CSB_X86_64
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
+#endif
+
+#if defined(COMPILER_MSVC)
+  #include "x86_64/visualcpp_assembly.hpp"
+#elif defined(COMPILER_GCC)
+  #include "x86_64/assembly.hpp"
+#else
   #include "x86_64/assembly.hpp"
 #endif
 
@@ -32,15 +39,6 @@
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
   #include "cheri_riscv64/assembly.hpp"
-#endif
-
-// detect compiler
-#if defined(__GNUC__)
-  #if defined(__clang__)
-    #define COMPILER_CLANG
-  #else
-    #define COMPILER_GCC
-  #endif
 #endif
 
 extern void get_got_func(void **gotp, void *label, int cet);

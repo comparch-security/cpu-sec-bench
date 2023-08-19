@@ -1,7 +1,7 @@
 #ifndef BOF_HPP_INCLUDED
 #define BOF_HPP_INCLUDED
 
-#include "include/gcc_builtin.hpp"
+#include "include/builtin.hpp"
 #define CB_BUF_LEN 8
 
 class LargeMemberBufferBase

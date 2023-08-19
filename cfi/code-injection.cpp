@@ -12,6 +12,7 @@ std::string cmd_offset;
 
 void FORCE_NOINLINE return_helper(void *p) {
   gvar_init(2);
+  GET_RAA_SP_OFFSET(offset);
   MOD_STACK_DAT(p, offset);
   /* HiFive Unmatched, GCC 11.2.0
    * Make sure offset is modified as otherwise
@@ -39,6 +40,11 @@ int main(int argc, char* argv[])
   void *l = NULL;
   char *addr = NULL;
 
+  void* bypass_pos = (void*)&main;
+  void* exit_pos   = (void*)&main;
+  GET_LABEL_ADDRESS(bypass_pos,TARGET_LABEL);
+  GET_LABEL_ADDRESS(exit_pos,TARGET_LABEL1);
+
   switch(argv[1][0] - '0') {
   case 0: // return
     switch(argv[2][0] - '0') {
@@ -53,26 +59,26 @@ int main(int argc, char* argv[])
     break;
   case 1: // call
     switch(argv[2][0] - '0') {
-    case 0: f = (func_t)(m_rodata); break;
-    case 1: f = (func_t)(m_data); break;
-    case 2: f = (func_t)(m_stack); break;
-    case 3: f = (func_t)(m_heap); break;
+    case 0: f = (func_t)(void*)(m_rodata); break;
+    case 1: f = (func_t)(void*)(m_data); break;
+    case 2: f = (func_t)(void*)(m_stack); break;
+    case 3: f = (func_t)(void*)(m_heap); break;
     }
     addr = (char *)f;
     break;
   case 2: // jump
     switch(argv[2][0] - '0') {
     case 0:
-      l = argv[3][0] - '0' ? &&BYPASS_POS : &&EXIT_POS; // neither of them is used
+      l = argv[3][0] - '0' ? bypass_pos : exit_pos; // neither of them is used
       SET_MEM(&l, m_rodata); break;
     case 1:
-      l = argv[3][0] - '0' ? &&BYPASS_POS : &&EXIT_POS; // neither of them is used
+      l = argv[3][0] - '0' ? bypass_pos : exit_pos; // neither of them is used
       SET_MEM(&l, m_data); break;
     case 2:
-      l = argv[3][0] - '0' ? &&BYPASS_POS : &&EXIT_POS; // neither of them is used
+      l = argv[3][0] - '0' ? bypass_pos : exit_pos; // neither of them is used
       SET_MEM(&l, m_stack); break;
     case 3:
-      l = argv[3][0] - '0' ? &&BYPASS_POS : &&EXIT_POS; // neither of them is used
+      l = argv[3][0] - '0' ? bypass_pos : exit_pos; // neither of them is used
       SET_MEM(&l, m_heap); break;
     }
     addr = (char *)l;
@@ -89,16 +95,16 @@ int main(int argc, char* argv[])
   switch(argv[1][0] - '0') {
   case 0: return_helper(p); break;
   case 1: call_helper(f); break;
-  case 2: goto *l;
+  case 2: { GOTO_SAVED_LABEL(l);}   // impossible to happen
   }
- BYPASS_POS:
+TARGET_LABEL(argc)
   end_catch_exception();
   end_catch_exception();
 #ifdef CSB_ARMV8_64
   end_catch_exception();
 #endif
   end_catch_exception();
- EXIT_POS:
+TARGET_LABEL1(argc)
   delete m_heap;
   return gvar();
 }
