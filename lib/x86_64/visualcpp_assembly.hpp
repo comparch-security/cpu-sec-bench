@@ -38,6 +38,10 @@ FORCE_NOINLINE void func_to_modify_caller_parameter(int target_register);
   jum_target.func_num = (long long) ptr;              \
   jum_target.func_ptr()
 
+#define JMP_DAT_PTR(ptr)                         \
+  jum_target.func_num = (long long) ptr;              \
+  jum_target.func_ptr()
+
 #define GOTO_SITEA {}
 
 //pass an integer argument
