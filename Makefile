@@ -17,6 +17,7 @@ endif
 OPT_LEVEL       ?= O2
 
 # extra security features (comment them out if not needed)
+
 #disable_stack_nx_protection    = yes
 #disable_stack_protection       = yes
 #enable_aslr_protection         = yes
@@ -26,12 +27,16 @@ OPT_LEVEL       ?= O2
 #enable_control_flow_protection = yes
 #enable_stack_clash_protection  = yes
 #enable_address_sanitizer       = yes
+
 # msvc specific safety feature
+
 #enable_cet_shadow_stack        = yes
 #enable_heap_integrity          = yes
 
-# extra hardware secrutiy features
-#enable_riscv64_cheri       = yes
+# specific hardware secrutiy features
+
+#enable_riscv64_cheri           = yes
+#enable_aarch64_mte             = yes
 
 # define paths and objects
 ifeq ($(OSType),Windows_NT)
@@ -48,14 +53,15 @@ ifeq ($(OSType),Windows_NT)
   OBJDUMP       := dumpbin
 
   CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
-                  /EHsc /MD /Gy /Gd /I./lib
-  CXXFLAGS_RUN  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
+                   /EHsc /MD /Gy /Gd /I./lib
+  SCHEDULER_CXXFLAGS  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
+  OBJECT_CXXFLAGS     := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
   CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
   ASMFLAGS      := /nologo /Zi /c
   # If there is a whitespace between windows msvc's output option and output file,
   # will raise error
-  OUTPUT_EXE_OPTION := /Fotest/ /Fe
-  OUTPUT_LIB_OPTION := /Fo
+  OUTPUT_EXE_OPTION := /Fe
+  OUTPUT_LIB_OPTION := /c /Fo
   OUTPUT_DYN_OPTION := /LD /Fe
   MIDFILE_SUFFIX    := .obj
   DLL_SUFFIX        := .dll
@@ -117,11 +123,12 @@ else
   OBJDUMP       := objdump
 
   CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
-  CXXFLAGS_RUN  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
+  SCHEDULER_CXXFLAGS  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
+  OBJECT_CXXFLAGS     := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
   CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
   ASMFLAGS      :=
   OUTPUT_EXE_OPTION := -o 
-  OUTPUT_LIB_OPTION := -o 
+  OUTPUT_LIB_OPTION := -c 
   OUTPUT_DYN_OPTION := -shared -fPIC -o 
   MIDFILE_SUFFIX    := .o
   DLL_SUFFIX        := .so
@@ -193,29 +200,38 @@ ifdef enable_riscv64_cheri
   CXXFLAGS += -cheri -cheri-bounds=very-aggressive
 endif
 
+ifdef enable_aarch64_mte
+  CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=hwaddress
+endif
+
 # define cases
 mss-path  = mss
 mss-cpps  = $(wildcard $(mss-path)/*.cpp)
+mss-obj   = $(addsuffix $(MIDFILE_SUFFIX),$(addprefix $(test-path)/mss-, $(basename $(notdir $(mss-cpps)))))
 mss-tests = $(addprefix $(test-path)/mss-, $(basename $(notdir $(mss-cpps))))
 mss-cpps-prep = $(addsuffix .prep, $(mss-cpps))
 
 mts-path  = mts
 mts-cpps  = $(wildcard $(mts-path)/*.cpp)
+mts-obj   = $(addsuffix $(MIDFILE_SUFFIX), $(addprefix $(test-path)/mts-, $(basename $(notdir $(mts-cpps)))))
 mts-tests = $(addprefix $(test-path)/mts-, $(basename $(notdir $(mts-cpps))))
 mts-cpps-prep = $(addsuffix .prep, $(mts-cpps))
 
 acc-path  = acc
 acc-cpps  = $(wildcard $(acc-path)/*.cpp)
+acc-obj   = $(addsuffix $(MIDFILE_SUFFIX), $(addprefix $(test-path)/acc-, $(basename $(notdir $(acc-cpps)))))
 acc-tests = $(addprefix $(test-path)/acc-, $(basename $(notdir $(acc-cpps))))
 acc-cpps-prep = $(addsuffix .prep, $(acc-cpps))
 
 cpi-path  = cpi
 cpi-cpps  = $(wildcard $(cpi-path)/*.cpp)
+cpi-obj   = $(addsuffix $(MIDFILE_SUFFIX), $(addprefix $(test-path)/cpi-, $(basename $(notdir $(cpi-cpps)))))
 cpi-tests = $(addprefix $(test-path)/cpi-, $(basename $(notdir $(cpi-cpps))))
 cpi-cpps-prep = $(addsuffix .prep, $(cpi-cpps))
 
 cfi-path  = cfi
 cfi-cpps  = $(wildcard $(cfi-path)/*.cpp)
+cfi-obj   = $(addsuffix $(MIDFILE_SUFFIX), $(addprefix $(test-path)/cfi-, $(basename $(notdir $(cfi-cpps)))))
 cfi-tests = $(addprefix $(test-path)/cfi-, $(basename $(notdir $(cfi-cpps))))
 cfi-cpps-prep = $(addsuffix .prep, $(cfi-cpps))
 
@@ -234,7 +250,7 @@ all: run-test
 .PHONY: all
 
 run-test: scheduler/run-test.cpp lib/common/temp_file.cpp lib/include/temp_file.hpp scheduler/json.hpp $(test-path)/sys_info.txt
-	$(CXX) $(CXXFLAGS_RUN) $< lib/common/temp_file.cpp  $(OUTPUT_EXE_OPTION)$@
+	$(CXX) $(SCHEDULER_CXXFLAGS) $< lib/common/temp_file.cpp  $(OUTPUT_EXE_OPTION)$@
 
 ifeq ($(OSType),Windows_NT)
 
@@ -277,7 +293,7 @@ cfi_base := $(basename $(dynlibcfi))
 rubbish += $(cfi_base).so $(cfi_base).dll $(cfi_base).pdb $(cfi_base).obj $(cfi_base).lib $(cfi_base).ilk $(cfi_base).exp lib/common/cfi.obj
 
 $(extra_objects): %$(MIDFILE_SUFFIX) : %.cpp $(headers)
-	$(CXX) $(CXXFLAGS) -c $< $(OUTPUT_LIB_OPTION)$@
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
 
 rubbish += $(extra_objects)
 
@@ -287,23 +303,32 @@ $(independent_assembly): %$(MIDFILE_SUFFIX) : %.asm
 rubbish += $(independent_assembly)
 
 $(libmss): %$(MIDFILE_SUFFIX) : %.cpp lib/include/mss.hpp
-	$(CXX) $(CXXFLAGS) -c $< $(OUTPUT_LIB_OPTION)$@
+	$(CXX) $(OBJECT_CXXFLAGS) -c $< $(OUTPUT_LIB_OPTION)$@
 
 rubbish += $(libmss)
 
-$(mss-tests): $(test-path)/mss-%:$(mss-path)/%.cpp $(extra_objects) $(libmss) $(independent_assembly)
+$(mss-obj): $(test-path)/mss-%$(MIDFILE_SUFFIX):$(mss-path)/%.cpp
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
+
+$(mss-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(libmss) $(independent_assembly)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(mss-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(mts-tests): $(test-path)/mts-%:$(mts-path)/%.cpp $(extra_objects) $(libmss) $(independent_assembly)
+$(mts-obj): $(test-path)/mts-%$(MIDFILE_SUFFIX):$(mts-path)/%.cpp
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
+
+$(mts-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(libmss) $(independent_assembly)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(acc-tests): $(test-path)/acc-%:$(acc-path)/%.cpp $(extra_objects) $(independent_assembly)
+$(acc-obj): $(test-path)/acc-%$(MIDFILE_SUFFIX):$(acc-path)/%.cpp
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
+
+$(acc-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(independent_assembly)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
@@ -323,13 +348,19 @@ endif
 $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cpi-tests): $(test-path)/cpi-%:$(cpi-path)/%.cpp $(extra_objects) $(dynlibcfi) $(independent_assembly)
+$(cpi-obj): $(test-path)/cpi-%$(MIDFILE_SUFFIX):$(cpi-path)/%.cpp
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
+
+$(cpi-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(dynlibcfi) $(independent_assembly)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@  $(LDFLAGS)
 
 $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-$(cfi-tests): $(test-path)/cfi-%:$(cfi-path)/%.cpp $(extra_objects) $(dynlibcfi) $(independent_assembly)
+$(cfi-obj): $(test-path)/cfi-%$(MIDFILE_SUFFIX):$(cfi-path)/%.cpp
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
+
+$(cfi-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(dynlibcfi) $(independent_assembly)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
 $(cfi-cpps-prep): %.prep:%

@@ -31,14 +31,15 @@ void FORCE_NOINLINE helper(void* addr, void*ra_label){
 }
 
 void FORCE_NOINLINE ra_target_func(void* addr_buffer ,int flutter_option){
-    void* ra_pos = &&RA_POS;
+    void* ra_pos;
+    GET_LABEL_ADDRESS(ra_pos,TARGET_LABEL);
     global_ra_pos = ra_pos;
-    if(flutter_option == 1) goto *ra_pos;  // fake use
+    if(flutter_option == 1) { GOTO_SAVED_LABEL(ra_pos);} // fake use
 
     COMPILER_BARRIER;
     helper(addr_buffer,ra_pos);
     COMPILER_BARRIER;
-RA_POS:
+TARGET_LABEL(flutter_option)
     if(direct_exit) exit(0);
     else gvar_incr();
     COMPILER_BARRIER;
@@ -63,6 +64,7 @@ int main(int argc, char** argv){
     switch(flag_option){
         case 1:
             if(*(uintptr_t*)addr_buffer == (uintptr_t)global_ra_pos)
+                free(addr_buffer);
                 return 0;
             break;
         case 2:
@@ -73,6 +75,7 @@ int main(int argc, char** argv){
                 //goto *jmp_target;
                 JMP_DAT_PTR(addr_buffer);
                 //if prog has run at this, it means the jump failed
+                free(addr_buffer);
                 return gvar();
             }
             break;
