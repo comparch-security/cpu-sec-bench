@@ -53,9 +53,9 @@ ifeq ($(OSType),Windows_NT)
   OBJDUMP       := dumpbin
 
   CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
-                  /EHsc /MD /Gy /Gd /I./lib
+                   /EHsc /MD /Gy /Gd /I./lib
   SCHEDULER_CXXFLAGS  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
-	OBJECT_CXXFLAGS     := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
+  OBJECT_CXXFLAGS     := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
   CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
   ASMFLAGS      := /nologo /Zi /c
   # If there is a whitespace between windows msvc's output option and output file,
@@ -124,7 +124,7 @@ else
 
   CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
   SCHEDULER_CXXFLAGS  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
-	OBJECT_CXXFLAGS     := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
+  OBJECT_CXXFLAGS     := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
   CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
   ASMFLAGS      :=
   OUTPUT_EXE_OPTION := -o 
