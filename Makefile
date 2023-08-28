@@ -125,10 +125,10 @@ else
   CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
   SCHEDULER_CXXFLAGS  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
   OBJECT_CXXFLAGS     := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
-  CXXFLAGS      := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
+  CXXFLAGS      := $(CXXFLAGS_BASE)
   ASMFLAGS      :=
   OUTPUT_EXE_OPTION := -o 
-  OUTPUT_LIB_OPTION := -c 
+  OUTPUT_LIB_OPTION := -c -o 
   OUTPUT_DYN_OPTION := -shared -fPIC -o 
   MIDFILE_SUFFIX    := .o
   DLL_SUFFIX        := .so
@@ -198,10 +198,12 @@ endif
 ifdef enable_riscv64_cheri
   ARCH := cheri_riscv64
   CXXFLAGS += -cheri -cheri-bounds=very-aggressive
+  OBJECT_CXXFLAGS += -cheri -cheri-bounds=very-aggressive
 endif
 
 ifdef enable_aarch64_mte
-  CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=hwaddress
+  CXXFLAGS := -fuse-ld=lld $(CXXFLAGS) -march=armv8.5-a+memtag -fsanitize=hwaddress
+  OBJECT_CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=hwaddress
 endif
 
 # define cases
@@ -261,6 +263,7 @@ $(test-path)/sys_info.txt:
 	echo "Compiler : " >> $(test-path)/sys_info.txt
 	echo "VSCMD_VER=" %VSCMD_VER% " UCRTVersion=" %UCRTVersion% " VCToolsVersion=" %VCToolsVersion% >> $(test-path)/sys_info.txt
 	echo "Flags : " >> $(test-path)/sys_info.txt
+  echo "OBJECT_CXXFLAGS = " $(OBJECT_CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
 
@@ -287,7 +290,7 @@ endif
 
 
 $(dynlibcfi): lib/common/cfi.cpp  lib/include/cfi.hpp
-	$(CXX) $(CXXFLAGS) $< $(OUTPUT_DYN_OPTION)$@
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_DYN_OPTION)$@
 
 cfi_base := $(basename $(dynlibcfi))
 rubbish += $(cfi_base).so $(cfi_base).dll $(cfi_base).pdb $(cfi_base).obj $(cfi_base).lib $(cfi_base).ilk $(cfi_base).exp lib/common/cfi.obj
