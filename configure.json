@@ -31,508 +31,505 @@
         "program": "mss-check-intra-redzone",
         "arguments": { "0": ["3"]}
     },
-    "mss-overflow-read-index-stack": {
-        "program": "mss-read-by-index",
+    "mss-read-by-enclosing-array-index-overflow-stack": {
+        "program": "mss-read-by-enclosing-array-index",
         "arguments": { "0": ["0", "0"] },
         "reference": { "cwe": ["119", "125", "126", "788"] },
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-index-heap": {
-        "program": "mss-read-by-index",
+    "mss-read-by-enclosing-array-index-overflow-heap": {
+        "program": "mss-read-by-enclosing-array-index",
         "arguments": { "0": ["1", "0"] },
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-index-data": {
-        "program": "mss-read-by-index",
+    "mss-read-by-enclosing-array-index-overflow-data": {
+        "program": "mss-read-by-enclosing-array-index",
         "arguments": { "0": ["2", "0"] },
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-index-rodata": {
-        "program": "mss-read-by-index",
+    "mss-read-by-enclosing-array-index-overflow-rodata": {
+        "program": "mss-read-by-enclosing-array-index",
         "arguments": { "0": ["3", "0"] },
-        "require": { "0": [["mss-check-intra-obj-rodata-redzone"]] },
         "reference": { "cwe": ["119", "125", "126", "788"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-index-stack": {
-        "program": "mss-read-by-index",
+    "mss-read-by-enclosing-array-index-underflow-stack": {
+        "program": "mss-read-by-enclosing-array-index",
         "arguments": { "0": ["0", "1"] },
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-index-heap": {
-        "program": "mss-read-by-index",
+    "mss-read-by-enclosing-array-index-underflow-heap": {
+        "program": "mss-read-by-enclosing-array-index",
         "arguments": { "0": ["1", "1"] },
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-index-data": {
-        "program": "mss-read-by-index",
+    "mss-read-by-enclosing-array-index-underflow-data": {
+        "program": "mss-read-by-enclosing-array-index",
         "arguments": { "0": ["2", "1"] },
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-index-rodata": {
-        "program": "mss-read-by-index",
+    "mss-read-by-enclosing-array-index-underflow-rodata": {
+        "program": "mss-read-by-enclosing-array-index",
         "arguments": { "0": ["3", "1"] },
-        "require": { "0": [["mss-check-intra-obj-rodata-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-ptr-stack": {
-        "program": "mss-read-by-pointer",
+
+    "mss-read-by-enclosing-array-pointer-overflow-stack": {
+        "program": "mss-read-by-enclosing-array-pointer",
         "arguments": { "0": ["0", "0"] },
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-ptr-heap": {
-        "program": "mss-read-by-pointer",
+    "mss-read-by-enclosing-array-pointer-overflow-heap": {
+        "program": "mss-read-by-enclosing-array-pointer",
         "arguments": { "0": ["1", "0"] },
         "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-ptr-data": {
-        "program": "mss-read-by-pointer",
+    "mss-read-by-enclosing-array-pointer-overflow-data": {
+        "program": "mss-read-by-enclosing-array-pointer",
         "arguments": { "0": ["2", "0"] },
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-ptr-rodata": {
-        "program": "mss-read-by-pointer",
+    "mss-read-by-enclosing-array-pointer-overflow-rodata": {
+        "program": "mss-read-by-enclosing-array-pointer",
         "arguments": { "0": ["3", "0"] },
-        "require": { "0": [["mss-check-intra-obj-rodata-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-ptr-stack": {
-        "program": "mss-read-by-pointer",
+    "mss-read-by-enclosing-array-pointer-underflow-stack": {
+        "program": "mss-read-by-enclosing-array-pointer",
         "arguments": { "0": ["0", "1"] },
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-ptr-heap": {
-        "program": "mss-read-by-pointer",
+    "mss-read-by-enclosing-array-pointer-underflow-heap": {
+        "program": "mss-read-by-enclosing-array-pointer",
         "arguments": { "0": ["1", "1"] },
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-ptr-data": {
-        "program": "mss-read-by-pointer",
+    "mss-read-by-enclosing-array-pointer-underflow-data": {
+        "program": "mss-read-by-enclosing-array-pointer",
         "arguments": { "0": ["2", "1"] },
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-ptr-rodata": {
-        "program": "mss-read-by-pointer",
+    "mss-read-by-enclosing-array-pointer-underflow-rodata": {
+        "program": "mss-read-by-enclosing-array-pointer",
         "arguments": { "0": ["3", "1"] },
-        "require": { "0": [["mss-check-intra-obj-rodata-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
 
-    "mss-overflow-read-ptr-array-stack": {
-        "program": "mss-read-by-array-pointer",
+    "mss-read-by-bare-array-pointer-overflow-stack": {
+        "program": "mss-read-by-bare-array-pointer",
         "arguments": { "0": ["0", "0"] },
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-ptr-array-heap": {
-        "program": "mss-read-by-array-pointer",
+    "mss-read-by-bare-array-pointer-overflow-heap": {
+        "program": "mss-read-by-bare-array-pointer",
         "arguments": { "0": ["1", "0"] },
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-ptr-array-data": {
-        "program": "mss-read-by-array-pointer",
+    "mss-read-by-bare-array-pointer-overflow-data": {
+        "program": "mss-read-by-bare-array-pointer",
         "arguments": { "0": ["2", "0"] },
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-ptr-array-rodata": {
-        "program": "mss-read-by-array-pointer",
+    "mss-read-by-bare-array-pointer-overflow-rodata": {
+        "program": "mss-read-by-bare-array-pointer",
         "arguments": { "0": ["3", "0"] },
-        "require": { "0": [["mss-check-intra-obj-rodata-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-ptr-array-stack": {
-        "program": "mss-read-by-array-pointer",
+    "mss-read-by-bare-array-pointer-underflow-stack": {
+        "program": "mss-read-by-bare-array-pointer",
         "arguments": { "0": ["0", "1"] },
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-ptr-array-heap": {
-        "program": "mss-read-by-array-pointer",
+    "mss-read-by-bare-array-pointer-underflow-heap": {
+        "program": "mss-read-by-bare-array-pointer",
         "arguments": { "0": ["1", "1"] },
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-ptr-array-data": {
-        "program": "mss-read-by-array-pointer",
+    "mss-read-by-bare-array-pointer-underflow-data": {
+        "program": "mss-read-by-bare-array-pointer",
         "arguments": { "0": ["2", "1"] },
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-read-ptr-array-rodata": {
-        "program": "mss-read-by-array-pointer",
+    "mss-read-by-bare-array-pointer-underflow-rodata": {
+        "program": "mss-read-by-bare-array-pointer",
         "arguments": { "0": ["3", "1"] },
-        "require": { "0": [["mss-check-intra-obj-rodata-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
 
-    "mss-overflow-large-read-ptr-stack": {
-        "program": "mss-read-large-member-inter-object",
+    "mss-read-by-enclosing-array-pointer-large-count-overflow-stack": {
+        "program": "mss-read-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["0", "0","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-large-read-ptr-heap": {
-        "program": "mss-read-large-member-inter-object",
+    "mss-read-by-enclosing-array-pointer-large-count-overflow-heap": {
+        "program": "mss-read-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["1", "0","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-large-read-ptr-data": {
-        "program": "mss-read-large-member-inter-object",
+    "mss-read-by-enclosing-array-pointer-large-count-overflow-data": {
+        "program": "mss-read-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["2", "0","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-large-read-ptr-rodata": {
-        "program": "mss-read-large-member-inter-object",
+    "mss-read-by-enclosing-array-pointer-large-count-overflow-rodata": {
+        "program": "mss-read-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["3", "0","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-rodata-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-large-read-ptr-stack": {
-        "program": "mss-read-large-member-inter-object",
+    "mss-read-by-enclosing-array-pointer-large-count-underflow-stack": {
+        "program": "mss-read-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["0", "1","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-large-read-ptr-heap": {
-        "program": "mss-read-large-member-inter-object",
+    "mss-read-by-enclosing-array-pointer-large-count-underflow-heap": {
+        "program": "mss-read-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["1", "1","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-large-read-ptr-data": {
-        "program": "mss-read-large-member-inter-object",
+    "mss-read-by-enclosing-array-pointer-large-count-underflow-data": {
+        "program": "mss-read-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["2", "1","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-large-read-ptr-rodata": {
-        "program": "mss-read-large-member-inter-object",
+    "mss-read-by-enclosing-array-pointer-large-count-underflow-rodata": {
+        "program": "mss-read-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["3", "1","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-rodata-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
 
-    "mss-overflow-write-index-stack": {
-        "program": "mss-write-by-index",
+    "mss-write-by-enclosing-array-index-overflow-stack": {
+        "program": "mss-write-by-enclosing-array-index",
         "arguments": { "0": ["0", "0"] },
         "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-write-index-heap": {
-        "program": "mss-write-by-index",
+    "mss-write-by-enclosing-array-index-overflow-heap": {
+        "program": "mss-write-by-enclosing-array-index",
         "arguments": { "0": ["1", "0"] },
         "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-write-index-data": {
-        "program": "mss-write-by-index",
+    "mss-write-by-enclosing-array-index-overflow-data": {
+        "program": "mss-write-by-enclosing-array-index",
         "arguments": { "0": ["2", "0"] },
         "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-index-stack": {
-        "program": "mss-write-by-index",
+    "mss-write-by-enclosing-array-index-underflow-stack": {
+        "program": "mss-write-by-enclosing-array-index",
         "arguments": { "0": ["0", "1"] },
         "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "reference": { "cwe": ["119"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-index-heap": {
-        "program": "mss-write-by-index",
+    "mss-write-by-enclosing-array-index-underflow-heap": {
+        "program": "mss-write-by-enclosing-array-index",
         "arguments": { "0": ["1", "1"] },
         "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "reference": { "cwe": ["119"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-index-data": {
-        "program": "mss-write-by-index",
+    "mss-write-by-enclosing-array-index-underflow-data": {
+        "program": "mss-write-by-enclosing-array-index",
         "arguments": { "0": ["2", "1"] },
         "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "reference": { "cwe": ["119"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-write-ptr-stack": {
-        "program": "mss-write-by-pointer",
-        "arguments": { "0": ["0", "0"] },
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
-        "reference": { "cwe": ["119", "121", "125", "126", "788"] },
-        "expect-results": {"290": "cheri capabilities enabled."}
-    },
-    "mss-overflow-write-ptr-heap": {
-        "program": "mss-write-by-pointer",
-        "arguments": { "0": ["1", "0"] },
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
-        "expect-results": {"290": "cheri capabilities enabled."}
-    },
-    "mss-overflow-write-ptr-data": {
-        "program": "mss-write-by-pointer",
-        "arguments": { "0": ["2", "0"] },
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
-        "expect-results": {"290": "cheri capabilities enabled."}
-    },
-    "mss-underflow-write-ptr-stack": {
-        "program": "mss-write-by-pointer",
-        "arguments": { "0": ["0", "1"] },
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
-        "reference": { "cwe": ["119"] },
-        "expect-results": {"290": "cheri capabilities enabled."}
-    },
-    "mss-underflow-write-ptr-heap": {
-        "program": "mss-write-by-pointer",
-        "arguments": { "0": ["1", "1"] },
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
-        "reference": { "cwe": ["119"] },
-        "expect-results": {"290": "cheri capabilities enabled."}
-    },
-    "mss-underflow-write-ptr-data": {
-        "program": "mss-write-by-pointer",
-        "arguments": { "0": ["2", "1"] },
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
-        "reference": { "cwe": ["119"] },
-        "expect-results": {"290": "cheri capabilities enabled."}
-    },
-    "mss-overflow-write-ptr-array-stack": {
-        "program": "mss-write-by-array-pointer",
+
+    "mss-write-by-enclosing-array-pointer-overflow-stack": {
+        "program": "mss-write-by-enclosing-array-pointer",
         "arguments": { "0": ["0", "0"] },
         "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "reference": { "cwe": ["119", "121", "125", "126", "788"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-write-ptr-array-heap": {
-        "program": "mss-write-by-array-pointer",
+    "mss-write-by-enclosing-array-pointer-overflow-heap": {
+        "program": "mss-write-by-enclosing-array-pointer",
         "arguments": { "0": ["1", "0"] },
         "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-write-ptr-array-data": {
-        "program": "mss-write-by-array-pointer",
+    "mss-write-by-enclosing-array-pointer-overflow-data": {
+        "program": "mss-write-by-enclosing-array-pointer",
         "arguments": { "0": ["2", "0"] },
         "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-ptr-array-stack": {
-        "program": "mss-write-by-array-pointer",
+    "mss-write-by-enclosing-array-pointer-underflow-stack": {
+        "program": "mss-write-by-enclosing-array-pointer",
+        "arguments": { "0": ["0", "1"] },
+        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
+        "reference": { "cwe": ["119"] },
+        "expect-results": {"290": "cheri capabilities enabled."}
+    },
+    "mss-write-by-enclosing-array-pointer-underflow-heap": {
+        "program": "mss-write-by-enclosing-array-pointer",
+        "arguments": { "0": ["1", "1"] },
+        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
+        "reference": { "cwe": ["119"] },
+        "expect-results": {"290": "cheri capabilities enabled."}
+    },
+    "mss-write-by-enclosing-array-pointer-underflow-data": {
+        "program": "mss-write-by-enclosing-array-pointer",
+        "arguments": { "0": ["2", "1"] },
+        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
+        "reference": { "cwe": ["119"] },
+        "expect-results": {"290": "cheri capabilities enabled."}
+    },
+
+    "mss-write-by-bare-array-pointer-overflow-stack": {
+        "program": "mss-write-by-bare-array-pointer",
+        "arguments": { "0": ["0", "0"] },
+        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
+        "reference": { "cwe": ["119", "121", "125", "126", "788"] },
+        "expect-results": {"290": "cheri capabilities enabled."}
+    },
+    "mss-write-by-bare-array-pointer-overflow-heap": {
+        "program": "mss-write-by-bare-array-pointer",
+        "arguments": { "0": ["1", "0"] },
+        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
+        "expect-results": {"290": "cheri capabilities enabled."}
+    },
+    "mss-write-by-bare-array-pointer-overflow-data": {
+        "program": "mss-write-by-bare-array-pointer",
+        "arguments": { "0": ["2", "0"] },
+        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
+        "expect-results": {"290": "cheri capabilities enabled."}
+    },
+    "mss-write-by-bare-array-pointer-underflow-stack": {
+        "program": "mss-write-by-bare-array-pointer",
         "arguments": { "0": ["0", "1"] },
         "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-ptr-array-heap": {
-        "program": "mss-write-by-array-pointer",
+    "mss-write-by-bare-array-pointer-underflow-heap": {
+        "program": "mss-write-by-bare-array-pointer",
         "arguments": { "0": ["1", "1"] },
         "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-ptr-array-data": {
-        "program": "mss-write-by-array-pointer",
+    "mss-write-by-bare-array-pointer-underflow-data": {
+        "program": "mss-write-by-bare-array-pointer",
         "arguments": { "0": ["2", "1"] },
         "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-large-write-ptr-stack": {
-        "program": "mss-write-large-member-inter-object",
+
+    "mss-write-by-enclosing-array-pointer-large-count-overflow-stack": {
+        "program": "mss-write-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["0", "0","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-large-write-ptr-heap": {
-        "program": "mss-write-large-member-inter-object",
+    "mss-write-by-enclosing-array-pointer-large-count-overflow-heap": {
+        "program": "mss-write-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["1", "0","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-large-write-ptr-data": {
-        "program": "mss-write-large-member-inter-object",
+    "mss-write-by-enclosing-array-pointer-large-count-overflow-data": {
+        "program": "mss-write-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["2", "0","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-large-write-ptr-stack": {
-        "program": "mss-write-large-member-inter-object",
+    "mss-write-by-enclosing-array-pointer-large-count-underflow-stack": {
+        "program": "mss-write-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["0", "1","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-large-write-ptr-heap": {
-        "program": "mss-write-large-member-inter-object",
+    "mss-write-by-enclosing-array-pointer-large-count-underflow-heap": {
+        "program": "mss-write-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["1", "1","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-large-write-ptr-data": {
-        "program": "mss-write-large-member-inter-object",
+    "mss-write-by-enclosing-array-pointer-large-count-underflow-data": {
+        "program": "mss-write-by-enclosing-array-pointer-large-count",
         "arguments": { "0": ["2", "1","-rsize"] },
         "size": [0, 9, 1],
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
 
     "mss-read-cross-object-index-stack": {
         "program": "mss-read-cross-object-by-index",
-        "arguments": { "0": ["0"] },
-        "require": { "0": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack" ] ] },
+        "arguments": { "0": ["0"],
+                       "1": ["1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-stack"]],
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-stack"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-object-index-heap": {
         "program": "mss-read-cross-object-by-index",
         "arguments": { "0": ["1"] },
-        "require": { "0": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap" ] ] },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-heap"] ], 
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-heap"] ]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-object-index-data": {
         "program": "mss-read-cross-object-by-index",
-        "arguments": { "0": ["2"] },
-        "require": { "0": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data" ] ] },
+        "arguments": { "0": ["2"], 
+                       "1": ["2"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-data"]],
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-object-index-rodata": {
         "program": "mss-read-cross-object-by-index",
-        "arguments": { "0": ["3"] },
-        "require": { "0": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata" ] ] },
+        "arguments": { "0": ["3"],
+                       "1": ["3"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-rodata"]],
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-rodata" ]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-object-ptr-stack": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": { "0": ["0"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack" ] ] },
+        "arguments": { "0": ["0"],
+                       "1": ["0"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-stack" ] ], 
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-stack"] ]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-object-ptr-heap": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": { "0": ["1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap" ] ] },
+        "arguments": { "0": ["1"],
+                       "1": ["1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-heap"]], 
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-heap"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-object-ptr-data": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": { "0": ["2"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data" ] ] },
+        "arguments": { "0": ["2"],
+                       "1": ["2"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-data"]],
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-object-ptr-rodata": {
         "program": "mss-read-cross-object-by-pointer",
-        "arguments": { "0": ["3"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata" ] ] },
+        "arguments": { "0": ["3"],
+                       "1": ["3"]
+                    },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-rodata"]],
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-rodata"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-write-cross-object-index-stack": {
+    "mss-write-cross-object-index-overflow-stack": {
         "program": "mss-write-cross-object-by-index",
         "arguments": { "0": ["0", "0"] },
-        "require": { "0": [ ["mss-overflow-write-index-stack"] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-index-overflow-stack"] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-write-cross-object-index-heap": {
+    "mss-write-cross-object-index-overflow-heap": {
         "program": "mss-write-cross-object-by-index",
         "arguments": { "0": ["1", "0"] },
-        "require": { "0": [ ["mss-overflow-write-index-heap"] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-index-overflow-heap"] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-write-cross-object-index-data": {
+    "mss-write-cross-object-index-overflow-data": {
         "program": "mss-write-cross-object-by-index",
         "arguments": { "0": ["2", "0"] },
-        "require": { "0": [ ["mss-overflow-write-index-data"] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-index-overflow-data"] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-cross-object-index-stack": {
+    "mss-write-cross-object-index-underflow-stack": {
         "program": "mss-write-cross-object-by-index",
         "arguments": { "0": ["0", "1"] },
-        "require": { "0": [ ["mss-underflow-write-index-stack" ] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-index-underflow-stack" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-cross-object-index-heap": {
+    "mss-write-cross-object-index-underflow-heap": {
         "program": "mss-write-cross-object-by-index",
         "arguments": { "0": ["1", "1"] },
-        "require": { "0": [ ["mss-underflow-write-index-heap" ] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-index-underflow-heap" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-cross-object-index-data": {
+    "mss-write-cross-object-index-underflow-data": {
         "program": "mss-write-cross-object-by-index",
         "arguments": { "0": ["2", "1"] },
-        "require": { "0": [ ["mss-underflow-write-index-data" ] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-index-underflow-data" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-write-cross-object-ptr-stack": {
+    "mss-write-cross-object-ptr-overflow-stack": {
         "program": "mss-write-cross-object-by-pointer",
         "arguments": { "0": ["0", "0"] },
-        "require": { "0": [ ["mss-overflow-write-ptr-stack"] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-pointer-overflow-stack"] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-write-cross-object-ptr-heap": {
+    "mss-write-cross-object-ptr-overflow-heap": {
         "program": "mss-write-cross-object-by-pointer",
         "arguments": { "0": ["1", "0"] },
-        "require": { "0": [ ["mss-overflow-write-ptr-heap"] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-pointer-overflow-heap"] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-write-cross-object-ptr-data": {
+    "mss-write-cross-object-ptr-overflow-data": {
         "program": "mss-write-cross-object-by-pointer",
         "arguments": { "0": ["2", "0"] },
-        "require": { "0": [ ["mss-overflow-write-ptr-data"] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-pointer-overflow-data"] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-cross-object-ptr-stack": {
+    "mss-write-cross-object-ptr-underflow-stack": {
         "program": "mss-write-cross-object-by-pointer",
         "arguments": { "0": ["0", "1"] },
-        "require": { "0": [ ["mss-underflow-write-ptr-stack" ] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-pointer-underflow-stack" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-cross-object-ptr-heap": {
+    "mss-write-cross-object-ptr-underflow-heap": {
         "program": "mss-write-cross-object-by-pointer",
         "arguments": { "0": ["1", "1"] },
-        "require": { "0": [ ["mss-underflow-write-ptr-heap" ] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-pointer-underflow-heap" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-underflow-write-cross-object-ptr-data": {
+    "mss-write-cross-object-ptr-underflow-data": {
         "program": "mss-write-cross-object-by-pointer",
         "arguments": { "0": ["2", "1"] },
-        "require": { "0": [ ["mss-underflow-write-ptr-data" ] ] },
+        "require": { "0": [ ["mss-write-by-enclosing-array-pointer-underflow-data" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-frame-index": {
         "program": "mss-read-cross-frame-by-index",
-        "require": { "0": [ [ "mss-underflow-read-index-stack" ] ] },
+        "require": { "0": [ [ "mss-read-by-enclosing-array-index-underflow-stack" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-frame-ptr": {
         "program": "mss-read-cross-frame-by-pointer",
-        "require": { "0": [ [ "mss-underflow-read-ptr-stack" ] ] },
+        "require": { "0": [ [ "mss-read-by-enclosing-array-pointer-underflow-stack" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-frame-index": {
         "program": "mss-write-cross-frame-by-index",
-        "require": { "0": [ [ "mss-underflow-write-index-stack" ] ] },
+        "require": { "0": [ [ "mss-write-by-enclosing-array-index-underflow-stack" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-frame-ptr": {
         "program": "mss-write-cross-frame-by-pointer",
-        "require": { "0": [ [ "mss-underflow-write-ptr-stack" ] ] },
+        "require": { "0": [ [ "mss-write-by-enclosing-array-pointer-underflow-stack" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-page-index-stack": {
@@ -557,290 +554,434 @@
     },
     "mss-read-cross-segment-stack-to-heap-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["0", "1", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ] },
+        "arguments": { "0": ["0", "1", "0"],
+                       "1": ["0", "1", "0"]
+                     },
+        "require": { "0": [["mss-read-by-enclosing-array-index-overflow-stack" ]], 
+                     "1": [["mss-read-by-enclosing-array-index-underflow-stack"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-stack-to-heap-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["0", "1", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ] },
+        "arguments": { "0": ["0", "1", "1"],
+                       "1": ["0", "1", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-stack" ] ], 
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-stack"] ]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-stack-to-data-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["0", "2", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ] },
+        "arguments": { "0": ["0", "2", "0"],
+                       "1": ["0", "2", "0"] 
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-stack"]],
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-stack"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-stack-to-data-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["0", "2", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ] },
+        "arguments": { "0": ["0", "2", "1"],
+                       "1": ["0", "2", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-stack" ] ], 
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-stack"] ]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-stack-to-rodata-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["0", "3", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-stack", "mss-underflow-read-index-stack"] ] },
+        "arguments": { "0": ["0", "3", "0"], 
+                       "1": ["0", "3", "0"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-stack"]], 
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-stack"]] 
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-stack-to-rodata-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["0", "3", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-stack", "mss-underflow-read-ptr-stack"] ] },
+        "arguments": { "0": ["0", "3", "1"],
+                       "1": ["0", "3", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-stack" ] ], 
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-stack"] ]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-heap-to-stack-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["1", "0", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ] },
+        "arguments": { "0": ["1", "0", "0"], 
+                       "1": ["1", "0", "0"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-heap"] ], 
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-heap"] ]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-heap-to-stack-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["1", "0", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ] },
+        "arguments": { "0": ["1", "0", "1"],
+                       "1": ["1", "0", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-heap"]], 
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-heap"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-heap-to-data-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["1", "2", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ] },
+        "arguments": { "0": ["1", "2", "0"], 
+                       "1": ["1", "2", "0"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-heap"] ], 
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-heap"] ]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-heap-to-data-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["1", "2", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ] },
+        "arguments": { "0": ["1", "2", "1"],
+                       "1": ["1", "2", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-heap"]], 
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-heap"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-heap-to-rodata-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["1", "3", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-heap", "mss-underflow-read-index-heap"] ] },
+        "arguments": { "0": ["1", "3", "0"],
+                       "1": ["1", "3", "0"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-heap"] ], 
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-heap"] ]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-heap-to-rodata-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["1", "3", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-heap", "mss-underflow-read-ptr-heap"] ] },
+        "arguments": { "0": ["1", "3", "1"],
+                       "1": ["1", "3", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-heap"]], 
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-heap"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-data-to-stack-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["2", "0", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ] },
+        "arguments": { "0": ["2", "0", "0"], 
+                       "1": ["2", "0", "0"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-data"]],
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-data-to-stack-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["2", "0", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ] },
+        "arguments": { "0": ["2", "0", "1"],
+                       "1": ["2", "0", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-data"]],
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-data-to-heap-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["2", "1", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ] },
+        "arguments": { "0": ["2", "1", "0"], 
+                       "1": ["2", "1", "0"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-data"]],
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-data-to-heap-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["2", "1", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ] },
+        "arguments": { "0": ["2", "1", "1"],
+                       "1": ["2", "1", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-data"]],
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-data-to-rodata-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["2", "3", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-data", "mss-underflow-read-index-data"] ] },
+        "arguments": { "0": ["2", "3", "0"],
+                       "1": ["2", "3", "0"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-data"]],
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-data-to-rodata-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["2", "3", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-data", "mss-underflow-read-ptr-data"] ] },
+        "arguments": { "0": ["2", "3", "1"],
+                       "1": ["2", "3", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-data"]],
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-rodata-to-stack-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["3", "0", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ] },
+        "arguments": { "0": ["3", "0", "0"], 
+                       "1": ["3", "0", "0"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-rodata"]],
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-rodata" ]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-rodata-to-stack-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["3", "0", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ] },
+        "arguments": { "0": ["3", "0", "1"],
+                       "1": ["3", "0", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-rodata"]],
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-rodata"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-rodata-to-heap-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["3", "1", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ] },
+        "arguments": { "0": ["3", "1", "0"],
+                       "1": ["3", "1", "0"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-rodata"]],
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-rodata" ]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-rodata-to-heap-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["3", "1", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ] },
+        "arguments": { "0": ["3", "1", "1"],
+                       "1": ["3", "1", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-rodata"]],
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-rodata"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-rodata-to-data-index": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["3", "2", "0"] },
-        "require": { "0": [ ["mss-overflow-read-index-rodata", "mss-underflow-read-index-rodata"] ] },
+        "arguments": { "0": ["3", "2", "0"],
+                       "1": ["3", "2", "0"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-index-overflow-rodata"]],
+                     "1": [ ["mss-read-by-enclosing-array-index-underflow-rodata" ]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-segment-rodata-to-data-ptr": {
         "program": "mss-read-cross-segment",
-        "arguments": { "0": ["3", "2", "1"] },
-        "require": { "0": [ ["mss-overflow-read-ptr-rodata", "mss-underflow-read-ptr-rodata"] ] },
+        "arguments": { "0": ["3", "2", "1"],
+                       "1": ["3", "2", "1"]
+                     },
+        "require": { "0": [ ["mss-read-by-enclosing-array-pointer-overflow-rodata"]],
+                     "1": [ ["mss-read-by-enclosing-array-pointer-underflow-rodata"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-stack-to-heap-index": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["0", "1", "0"] },
-        "require": { "0": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack"] ] },
+        "arguments": { "0": ["0", "1", "0"],
+                       "1": ["0", "1", "0"]
+                     },
+        "require": { "0": [ ["mss-write-by-enclosing-array-index-overflow-stack"]],
+                     "1": [ ["mss-write-by-enclosing-array-index-underflow-stack"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-stack-to-heap-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["0", "1", "1"] },
-        "require": { "0": [ ["mss-overflow-write-ptr-stack", "mss-underflow-write-ptr-stack"] ] },
+        "arguments": { "0": ["0", "1", "1"],
+                       "1": ["0", "1", "1"]
+                     },
+        "require": { "0": [["mss-write-by-enclosing-array-pointer-overflow-stack"]], 
+                     "1": [["mss-write-by-enclosing-array-pointer-underflow-stack"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-stack-to-data-index": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["0", "2", "0"] },
-        "require": { "0": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack"] ] },
+        "arguments": { "0": ["0", "2", "0"],
+                       "1": ["0", "2"," 0"]
+                     },
+        "require": { "0": [ ["mss-write-by-enclosing-array-index-overflow-stack"]],
+                     "1": [ ["mss-write-by-enclosing-array-index-underflow-stack"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-stack-to-data-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["0", "2", "1"] },
-        "require": { "0": [ ["mss-overflow-write-ptr-stack", "mss-underflow-write-ptr-stack"] ] },
+        "arguments": { "0": ["0", "2", "1"],
+                       "1": ["0", "2", "1"]
+                     },
+        "require": { "0": [["mss-write-by-enclosing-array-pointer-overflow-stack"]], 
+                     "1": [["mss-write-by-enclosing-array-pointer-underflow-stack"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-heap-to-stack-index": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["1", "0", "0"] },
-        "require": { "0": [ ["mss-overflow-write-index-heap", "mss-underflow-write-index-heap"] ] },
+        "arguments": { "0": ["1", "0", "0"],
+                       "1": ["1", "0", "0"]
+                     },
+        "require": { "0": [["mss-write-by-enclosing-array-index-overflow-heap"]],
+                     "1": [["mss-write-by-enclosing-array-index-underflow-heap"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-heap-to-stack-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["1", "0", "1"] },
-        "require": { "0": [ ["mss-overflow-write-ptr-heap", "mss-underflow-write-ptr-heap"] ] },
+        "arguments": { "0": ["1", "0", "1"],
+                       "1": ["1", "0", "1"]
+                     },
+        "require": { "0": [ ["mss-write-by-enclosing-array-pointer-overflow-heap"]],
+                     "1": [ ["mss-write-by-enclosing-array-pointer-underflow-heap"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-heap-to-data-index": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["1", "2", "0"] },
-        "require": { "0": [ ["mss-overflow-write-index-heap", "mss-underflow-write-index-heap"] ] },
+        "arguments": { "0": ["1", "2", "0"],
+                       "1": ["1", "2", "0"]
+                     },
+        "require": { "0": [["mss-write-by-enclosing-array-index-overflow-heap"]],
+                     "1": [["mss-write-by-enclosing-array-index-underflow-heap"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-heap-to-data-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["1", "2", "1"] },
-        "require": { "0": [ ["mss-overflow-write-ptr-heap", "mss-underflow-write-ptr-heap"] ] },
+        "arguments": { "0": ["1", "2", "1"],
+                       "1": ["1", "2", "1"]
+                     },
+        "require": { "0": [ ["mss-write-by-enclosing-array-pointer-overflow-heap"]],
+                     "1": [ ["mss-write-by-enclosing-array-pointer-underflow-heap"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-data-to-stack-index": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["2", "0", "0"] },
-        "require": { "0": [ ["mss-overflow-write-index-data", "mss-underflow-write-index-data"] ] },
+        "arguments": { "0": ["2", "0", "0"],
+                       "1": ["2", "0", "0"]
+                     },
+        "require": { "0": [ ["mss-write-by-enclosing-array-index-overflow-data"]], 
+                     "1": [ ["mss-write-by-enclosing-array-index-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-data-to-stack-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["2", "0", "1"] },
-        "require": { "0": [ ["mss-overflow-write-ptr-data", "mss-underflow-write-ptr-data"] ] },
+        "arguments": { "0": ["2", "0", "1"],
+                       "1": ["2", "0", "1"]
+                     },
+        "require": { "0": [["mss-write-by-enclosing-array-pointer-overflow-data"]],
+                     "1": [["mss-write-by-enclosing-array-pointer-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-data-to-heap-index": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["2", "1", "0"] },
-        "require": { "0": [ ["mss-overflow-write-index-data", "mss-underflow-write-index-data"] ] },
+        "arguments": { "0": ["2", "1", "0"],
+                       "1": ["2", "1", "0"]
+                     },
+        "require": { "0": [ ["mss-write-by-enclosing-array-index-overflow-data"]], 
+                     "1": [ ["mss-write-by-enclosing-array-index-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-segment-data-to-heap-ptr": {
         "program": "mss-write-cross-segment",
-        "arguments": { "0": ["2", "1", "1"] },
-        "require": { "0": [ ["mss-overflow-write-ptr-data", "mss-underflow-write-ptr-data"] ] },
+        "arguments": { "0": ["2", "1", "1"],
+                       "1": ["2", "1", "1"]
+                     },
+        "require": { "0": [["mss-write-by-enclosing-array-pointer-overflow-data"]],
+                     "1": [["mss-write-by-enclosing-array-pointer-underflow-data"]]
+                   },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-spray-cross-object-stack": {
-        "program": "mss-spray-cross-object",
+    "mss-write-spray-cross-object-stack": {
+        "program": "mss-write-spray-cross-object",
         "arguments": { "0": ["0"] },
-        "require": { "0": [ [ "mss-overflow-write-cross-object-ptr-stack" ], [ "mss-underflow-write-cross-object-ptr-stack" ] ] },
+        "require": { "0": [ [ "mss-write-cross-object-ptr-overflow-stack" ], [ "mss-write-cross-object-ptr-underflow-stack" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-spray-cross-object-heap": {
-        "program": "mss-spray-cross-object",
+    "mss-write-spray-cross-object-heap": {
+        "program": "mss-write-spray-cross-object",
         "arguments": { "0": ["1"] },
-        "require": { "0": [ [ "mss-overflow-write-cross-object-ptr-heap" ], [ "mss-underflow-write-cross-object-ptr-heap" ] ] },
+        "require": { "0": [ [ "mss-write-cross-object-ptr-overflow-heap" ], [ "mss-write-cross-object-ptr-underflow-heap" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-spray-cross-object-data": {
-        "program": "mss-spray-cross-object",
+    "mss-write-spray-cross-object-data": {
+        "program": "mss-write-spray-cross-object",
         "arguments": { "0": ["2"] },
-        "require": { "0": [ [ "mss-overflow-write-cross-object-ptr-data" ], [ "mss-underflow-write-cross-object-ptr-data" ] ] },
+        "require": { "0": [ [ "mss-write-cross-object-ptr-overflow-data" ], [ "mss-write-cross-object-ptr-underflow-data" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-spray-cross-frame": {
-        "program": "mss-spray-cross-frame",
+    "mss-write-spray-cross-frame": {
+        "program": "mss-write-spray-cross-frame",
         "require": { "0": [ [ "mss-write-cross-frame-ptr" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-spray-cross-page-stack": {
-        "program": "mss-spray-cross-page-in-stack",
+    "mss-write-spray-cross-page-in-stack": {
+        "program": "mss-write-spray-cross-page-in-stack",
         "require": { "0": [ [ "mss-write-cross-page-ptr-stack" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-spray-cross-page-heap": {
-        "program": "mss-spray-cross-page-in-heap",
-        "require": { "0": [ [ "mss-spray-cross-object-heap" ] ] },
+    "mss-write-spray-cross-page-in-heap": {
+        "program": "mss-write-spray-cross-page-in-heap",
+        "require": { "0": [ [ "mss-write-spray-cross-object-heap" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-scalar-cast-to-array-stack":{
-        "program": "mss-overflow-read-scalar-cast-to-array",
+    "mss-read-scalar-cast-to-array-overflow-stack":{
+        "program": "mss-read-scalar-cast-to-array-overflow",
         "arguments": { "0": ["0"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-scalar-cast-to-array-heap":{
-        "program": "mss-overflow-read-scalar-cast-to-array",
+    "mss-read-scalar-cast-to-array-overflow-heap":{
+        "program": "mss-read-scalar-cast-to-array-overflow",
         "arguments": { "0": ["1"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-scalar-cast-to-array-data":{
-        "program": "mss-overflow-read-scalar-cast-to-array",
+    "mss-read-scalar-cast-to-array-overflow-data":{
+        "program": "mss-read-scalar-cast-to-array-overflow",
         "arguments": { "0": ["2"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-scalar-cast-to-array-rodata":{
-        "program": "mss-overflow-read-scalar-cast-to-array",
+    "mss-read-scalar-cast-to-array-overflow-rodata":{
+        "program": "mss-read-scalar-cast-to-array-overflow",
         "arguments": { "0": ["3"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-scalar-cast-to-scalar-stack": {
-        "program": "mss-overflow-read-scalar-cast-to-scalar",
+    "mss-read-scalar-cast-to-scalar-overflow-stack": {
+        "program": "mss-read-scalar-cast-to-scalar-overflow",
         "arguments": { "0": ["0"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-scalar-cast-to-scalar-heap": {
-        "program": "mss-overflow-read-scalar-cast-to-scalar",
+    "mss-read-scalar-cast-to-scalar-overflow-heap": {
+        "program": "mss-read-scalar-cast-to-scalar-overflow",
         "arguments": { "0": ["1"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-scalar-cast-to-scalar-data": {
-        "program": "mss-overflow-read-scalar-cast-to-scalar",
+    "mss-read-scalar-cast-to-scalar-overflow-data": {
+        "program": "mss-read-scalar-cast-to-scalar-overflow",
         "arguments": { "0": ["2"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
-    "mss-overflow-read-scalar-cast-to-scalar-rodata": {
-        "program": "mss-overflow-read-scalar-cast-to-scalar",
+    "mss-read-scalar-cast-to-scalar-overflow-rodata": {
+        "program": "mss-read-scalar-cast-to-scalar-overflow",
         "arguments": { "0": ["3"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
@@ -1179,12 +1320,17 @@
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "cfi-return-to-wrong-call-site-within-static-analysis": {
-        "require": { "0": [ [ "acc-get-ra-offset-v-p-g1" ] ],
-                     "1": [ ["mss-overflow-write-index-stack", "mss-underflow-write-index-stack",
-                             "mss-overflow-write-ptr-stack",   "mss-underflow-write-ptr-stack"] ]
+        "require": { "0": [ ["acc-get-ra-offset-v-p-g1"]],
+                     "1": [ ["mss-write-by-enclosing-array-index-overflow-stack"]],
+                     "2": [ ["mss-write-by-enclosing-array-index-underflow-stack"]],
+                     "3": [ ["mss-write-by-enclosing-array-pointer-overflow-stack"]],
+                     "4": [ ["mss-write-by-enclosing-array-pointer-underflow-stack"]]
                    },
         "arguments": { "0": ["-vstack-offset-v-p-g1", "-roffset"],
-                       "1": ["-roffset"]
+                       "1": ["-roffset"],
+                       "2": ["-roffset"],
+                       "3": ["-roffset"],
+                       "4": ["-roffset"]
                      },
         "offset": [0, 8, 1],
         "set-var": { "0": ["stack-offset-v-p-g1"],

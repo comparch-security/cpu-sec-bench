@@ -52,11 +52,11 @@ ifeq ($(OSType),Windows_NT)
   CLIBAPI       := visualcpp
   OBJDUMP       := dumpbin
 
-  CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
-                   /EHsc /MD /Gy /Gd /I./lib
+  CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /Oi /DNDEBUG /D_CONSOLE /D_UNICODE \
+                   /EHsc /MD /Gd /I./lib /sdl- /GS- /guard:cf- /GR-
   SCHEDULER_CXXFLAGS  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
   OBJECT_CXXFLAGS     := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
-  CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
+  CXXFLAGS      := /Od /Zi $(CXXFLAGS_BASE)
   ASMFLAGS      := /nologo /Zi /c
   # If there is a whitespace between windows msvc's output option and output file,
   # will raise error
@@ -65,7 +65,7 @@ ifeq ($(OSType),Windows_NT)
   OUTPUT_DYN_OPTION := /LD /Fe
   MIDFILE_SUFFIX    := .obj
   DLL_SUFFIX        := .dll
-  LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF
+  LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF /GUARD:NO
   OBJDUMPFLAGS      := /DISASM
   DYNCFI_OPTION     := libcfi.lib
   func-opcode-gen   := .\script\get_x64_func_inst.bat
@@ -263,7 +263,7 @@ $(test-path)/sys_info.txt:
 	echo "Compiler : " >> $(test-path)/sys_info.txt
 	echo "VSCMD_VER=" %VSCMD_VER% " UCRTVersion=" %UCRTVersion% " VCToolsVersion=" %VCToolsVersion% >> $(test-path)/sys_info.txt
 	echo "Flags : " >> $(test-path)/sys_info.txt
-  echo "OBJECT_CXXFLAGS = " $(OBJECT_CXXFLAGS) >> $(test-path)/sys_info.txt
+	echo "OBJECT_CXXFLAGS = " $(OBJECT_CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
 
@@ -281,6 +281,7 @@ $(test-path)/sys_info.txt:
 	echo "LIBC : " >> $(test-path)/sys_info.txt
 	$(OBJDUMP) --version >> $(test-path)/sys_info.txt
 	echo "Flags : " >> $(test-path)/sys_info.txt
+	echo "OBJECT_CXXFLAGS = " $(OBJECT_CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
 
