@@ -263,7 +263,7 @@ $(test-path)/sys_info.txt:
 	echo "Compiler : " >> $(test-path)/sys_info.txt
 	echo "VSCMD_VER=" %VSCMD_VER% " UCRTVersion=" %UCRTVersion% " VCToolsVersion=" %VCToolsVersion% >> $(test-path)/sys_info.txt
 	echo "Flags : " >> $(test-path)/sys_info.txt
-  echo "OBJECT_CXXFLAGS = " $(OBJECT_CXXFLAGS) >> $(test-path)/sys_info.txt
+	echo "OBJECT_CXXFLAGS = " $(OBJECT_CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
 
@@ -281,6 +281,7 @@ $(test-path)/sys_info.txt:
 	echo "LIBC : " >> $(test-path)/sys_info.txt
 	$(OBJDUMP) --version >> $(test-path)/sys_info.txt
 	echo "Flags : " >> $(test-path)/sys_info.txt
+	echo "OBJECT_CXXFLAGS = " $(OBJECT_CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "LDFLAGS = " $(LDFLAGS) >> $(test-path)/sys_info.txt
 
