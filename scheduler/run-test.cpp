@@ -35,6 +35,7 @@ bool debug_run = false;
 bool make_run = true;
 bool test_run = true;
 bool report_run = false;
+bool run_all = false;
 
 // json related functions
 bool file_exist(const std::string& fn);
@@ -75,6 +76,7 @@ int main(int argc, char* argv[], char* envp[]) {
       std::cout << "  make-only   Make the test cases without running them." << std::endl;
       std::cout << "  no-make     Due to make the test cases as they are made aleady." << std::endl;
       std::cout << "  report      Generate a report after finishing all test cases." << std::endl;
+      std::cout << "  run-all     Run all tests without the constraint of requirement" << std::endl;
       return 0;
     }
 
@@ -83,6 +85,7 @@ int main(int argc, char* argv[], char* envp[]) {
     if(param == "make-only") test_run   = false;
     if(param == "no-make")   make_run   = false;
     if(param == "report")    report_run = true;
+    if(param == "run-all")   { run_all    = true; report_run = true;}
   }
 
   // read the configure file
@@ -235,7 +238,13 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
     } while(!req_case_tested || !req_case_ok);
 
     if(!req_case_all_tested) return 1; // prerequisit not tested yet
-    if(!req_case_ok) return 1024; // no need to test as all prerequisit tested and failed
+    if(!req_case_ok){
+      if(run_all)
+        return 0;
+      else{
+        return 1024;
+      }
+    }// no need to test as all prerequisit tested and failed
   }
 
   // get the argument lists
@@ -412,6 +421,7 @@ bool run_tests(std::list<std::string> cases) {
   //check current test dependency and avoid endless loop
   int current_test_checkdep_count = 0;
   int total_cases = cases.size();
+  std::cout << "The num of all cases is: " << total_cases << std::endl;
   std::string prog, cmd;
   str_llist_t alist;
   str_list_t gvar;
