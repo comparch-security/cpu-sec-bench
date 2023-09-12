@@ -262,6 +262,7 @@ $(test-path)/sys_info.txt:
 	systeminfo | findstr /C:"Windows" /C:"Intel" >> $(test-path)/sys_info.txt
 	echo "Compiler : " >> $(test-path)/sys_info.txt
 	echo "VSCMD_VER=" %VSCMD_VER% " UCRTVersion=" %UCRTVersion% " VCToolsVersion=" %VCToolsVersion% >> $(test-path)/sys_info.txt
+	Reg Query "HKLM\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\v10.0" >> $(test-path)/sys_info.txt
 	echo "Flags : " >> $(test-path)/sys_info.txt
 	echo "OBJECT_CXXFLAGS = " $(OBJECT_CXXFLAGS) >> $(test-path)/sys_info.txt
 	echo "CXXFLAGS = " $(CXXFLAGS) >> $(test-path)/sys_info.txt
