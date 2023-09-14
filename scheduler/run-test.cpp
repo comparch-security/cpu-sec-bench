@@ -67,6 +67,7 @@ void add_arguments(std::string arg, nlohmann::ordered_json tcase, str_llist_t &a
 char ** argv_conv(const std::string &cmd, const str_list_t &args);
 int run_cmd(char* argv[], char** runv, long long& time_count);
 bool run_tests(std::list<std::string> cases);
+auto get_file_size(const std::string& filename);
 
 int main(int argc, char* argv[], char* envp[]) {
   // parse argument
@@ -125,6 +126,12 @@ bool file_exist(const std::string& fn) {
     return false;
 }
 
+auto get_file_size(const std::string& filename)
+{
+    std::ifstream in(filename, std::ios::binary);
+    return in.rdbuf() -> pubseekoff(0, std::ios::end, std::ios::in);
+}
+
 bool read_json(json &db, const std::string& fn, bool notice) {
   std::ifstream db_file(fn);
   if(db_file.good()) {
@@ -178,7 +185,8 @@ void report_gen() {
   for(auto record: result_db.get<std::map<std::string, json> >()){
     report_file << setw(70) << left << record.first << " result: ";
     report_file << setw(15) << left << std::to_string((int)record.second["result"]);
-    report_file << " make time: " << record.second["make-time"] << " run-time: " << record.second["run-time"] << " microseconds" << std::endl;
+    report_file << " make time: " << record.second["make-time"] << " run-time: " << record.second["run-time"] << " microseconds";
+    report_file << "file_size:" << record.second["file-size"] << " bytes" << std::endl;
   }
 
   // record test time
@@ -475,14 +483,23 @@ bool run_tests(std::list<std::string> cases) {
       int rv = 0;
       rvs.clear();
       if(0 == rv && make_run) {
-        long long curr_time;
+        long long curr_time, curr_size;
         rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)), NULL, curr_time);
         make_time_count += curr_time;
         result_db[cn]["make-time"] = curr_time;
         if(rv){
           std::cout << "fail to make " << prog << " with error status " << rv << std::endl;
           rv = -1;
+          curr_size = 0;
+        }else{
+          #ifdef _MSC_VER
+          curr_size = get_file_size("test/" + prog + ".exe");
+          if(curr_size == -1) curr_size = get_file_size("test/" + prog);
+          #else
+          curr_size = get_file_size("test/" + prog);
+          #endif
         }
+        result_db[cn]["file-size"] = curr_size;
       }
       #ifdef _MSC_VER
       long long curr_script_time = 0;
