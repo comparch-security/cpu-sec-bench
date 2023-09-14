@@ -19,13 +19,16 @@
 #include <vector>
 
 #include <chrono>
-
+#include <iomanip>
 // 3rd party library
 #include "scheduler/json.hpp"
 
 // internal library
 #include "lib/include/temp_file.hpp"
 
+using std::left;
+using std::right;
+using std::setw;
 using json = nlohmann::basic_json<nlohmann::ordered_map>;
 static json config_db, result_db, var_db;
 char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
@@ -172,8 +175,11 @@ void report_gen() {
   sys_info_file.close();
 
   // record test result
-  for(auto record: result_db.get<std::map<std::string, json> >())
-    report_file << record.first << " " << record.second["result"] << std::endl;
+  for(auto record: result_db.get<std::map<std::string, json> >()){
+    report_file << setw(70) << left << record.first << " result: ";
+    report_file << setw(15) << left << std::to_string((int)record.second["result"]);
+    report_file << " make time: " << record.second["make-time"] << " run-time: " << record.second["run-time"] << " microseconds" << std::endl;
+  }
 
   // record test time
   report_file << "Compilation time: " << make_time_count << " microseconds" << std::endl;
@@ -451,7 +457,7 @@ char ** argv_conv(const std::string &cmd, const str_list_t &args) {
 bool run_tests(std::list<std::string> cases) {
   //check current test dependency and avoid endless loop
   int current_test_checkdep_count = 0;
-  int total_cases = cases.size();
+  size_t total_cases = cases.size();
   std::cout << "The num of all cases is: " << total_cases << std::endl;
   std::string prog, cmd;
   str_llist_t alist;
@@ -472,14 +478,15 @@ bool run_tests(std::list<std::string> cases) {
         long long curr_time;
         rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)), NULL, curr_time);
         make_time_count += curr_time;
+        result_db[cn]["make-time"] = curr_time;
         if(rv){
           std::cout << "fail to make " << prog << " with error status " << rv << std::endl;
           rv = -1;
         }
       }
       #ifdef _MSC_VER
+      long long curr_script_time = 0;
       if(0 == rv && !dbvar.empty()){
-        long long curr_time;
         if(dbvar.size() != 2){
           std::cerr << "dbvar size is " << dbvar.size() << std::endl;
           std::cerr << "the parameter number is wrong (exactly is 2)" << std::endl;
@@ -487,8 +494,7 @@ bool run_tests(std::list<std::string> cases) {
         std::cout << "dump bin: " << "script\\msvc_get_addroffset_of_currfunc.bat" << "test/" << prog << ".exe " <<
                      " " << dbvar.front() << " " << dbvar.back() << std::endl;
         rv = run_cmd(argv_conv("script\\msvc_get_addroffset_of_currfunc.bat", str_list_t{
-                              "test/" + prog +".exe", dbvar.front(), dbvar.back()}), NULL, curr_time);
-        run_time_count += curr_time;
+                              "test/" + prog +".exe", dbvar.front(), dbvar.back()}), NULL, curr_script_time);
       }
       #endif
 
@@ -500,7 +506,11 @@ bool run_tests(std::list<std::string> cases) {
           if(!extra_run_prefix.empty()) for(auto a:extra_run_prefix) std::cout << std::string(a) << " ";
           std::cout << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
           rv = run_cmd(argv_conv(cmd, arg), run_env, curr_time);
+          #ifdef _MSC_VER
+          curr_time += curr_script_time;
+          #endif
           run_time_count += curr_time;
+          result_db[cn]["run-time"] = curr_time;
 
           // record run-time parameter
           if(gvar.size() == 1 && rv >= 32 && rv < 64) { // successfully find a run-time parameter
