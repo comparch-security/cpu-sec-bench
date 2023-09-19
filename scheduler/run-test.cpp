@@ -18,12 +18,17 @@
 #include <cstring>
 #include <vector>
 
+#include <chrono>
+#include <iomanip>
 // 3rd party library
 #include "scheduler/json.hpp"
 
 // internal library
 #include "lib/include/temp_file.hpp"
 
+using std::left;
+using std::right;
+using std::setw;
 using json = nlohmann::basic_json<nlohmann::ordered_map>;
 static json config_db, result_db, var_db;
 char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
@@ -35,12 +40,15 @@ bool debug_run = false;
 bool make_run = true;
 bool test_run = true;
 bool report_run = false;
+bool exhausted_run = false;
 
 // json related functions
 bool file_exist(const std::string& fn);
 bool read_json(json &db, const std::string& fn, bool notice);
 bool dump_json(json &db, const std::string& fn, bool notice);
 void report_gen();
+
+long long make_time_count = 0, run_time_count = 0;
 
 // test case related
 char **org_env;
@@ -55,9 +63,11 @@ typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
 int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, str_list_t& vn,
                 str_list_t& dbf, std::set<int> &expect_results, std::set<int> &retry_results);
+void add_arguments(std::string arg, nlohmann::ordered_json tcase, str_llist_t &arg_list);
 char ** argv_conv(const std::string &cmd, const str_list_t &args);
-int run_cmd(const char *argv[]);
+int run_cmd(char* argv[], char** runv, long long& time_count);
 bool run_tests(std::list<std::string> cases);
+auto get_file_size(const std::string& filename);
 
 int main(int argc, char* argv[], char* envp[]) {
   // parse argument
@@ -74,15 +84,18 @@ int main(int argc, char* argv[], char* envp[]) {
       std::cout << "  debug       Stop testing on the first unexpected exit status." << std::endl;
       std::cout << "  make-only   Make the test cases without running them." << std::endl;
       std::cout << "  no-make     Due to make the test cases as they are made aleady." << std::endl;
-      std::cout << "  report      Generate a report after finishing all test cases." << std::endl;
+      std::cout << "  fast-run      Only run the test case that their requirement runs successfully, and then generate a report." << std::endl;
+      std::cout << "  exhausted-run   Run all tests until the total test case is exhausted, and then generate a report." << std::endl;
       return 0;
     }
 
-    if(param == "continue")  cond_run   = true;
-    if(param == "debug")     debug_run  = true;
-    if(param == "make-only") test_run   = false;
-    if(param == "no-make")   make_run   = false;
-    if(param == "report")    report_run = true;
+    else if(param == "continue")  cond_run   = true;
+    else if(param == "debug")     debug_run  = true;
+    else if(param == "make-only") test_run   = false;
+    else if(param == "no-make")   make_run   = false;
+    else if(param == "fast-run")  report_run = true;
+    else if(param == "exhausted-run")   { exhausted_run    = true; report_run = true;}
+    else {std::cout << "The scheduler has no "<< param << param << " option" << std::endl;}
   }
 
   // read the configure file
@@ -111,6 +124,12 @@ bool file_exist(const std::string& fn) {
     return true;
   } else
     return false;
+}
+
+auto get_file_size(const std::string& filename)
+{
+    std::ifstream in(filename, std::ios::binary);
+    return in.rdbuf() -> pubseekoff(0, std::ios::end, std::ios::in);
 }
 
 bool read_json(json &db, const std::string& fn, bool notice) {
@@ -163,8 +182,16 @@ void report_gen() {
   sys_info_file.close();
 
   // record test result
-  for(auto record: result_db.get<std::map<std::string, json> >())
-    report_file << record.first << " " << record.second["result"] << std::endl;
+  for(auto record: result_db.get<std::map<std::string, json> >()){
+    report_file << setw(70) << left << record.first << " result: ";
+    report_file << setw(15) << left << std::to_string((int)record.second["result"]);
+    report_file << " make time: " << record.second["make-time"] << " run-time: " << record.second["run-time"] << " microseconds";
+    report_file << "file_size:" << record.second["file-size"] << " bytes" << std::endl;
+  }
+
+  // record test time
+  report_file << "Compilation time: " << make_time_count << " microseconds" << std::endl;
+  report_file << "Run time: " << run_time_count << " microseconds" << std::endl;
   report_file.close();  
 }
 
@@ -192,6 +219,7 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
     pn = cn;
 
   // check requirement
+  bool use_default_option = false;
   int req_case = 0;
   std::string req_case_str = "0";
   if(tcase.count("require")) {
@@ -235,15 +263,63 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
     } while(!req_case_tested || !req_case_ok);
 
     if(!req_case_all_tested) return 1; // prerequisit not tested yet
-    if(!req_case_ok) return 1024; // no need to test as all prerequisit tested and failed
+    if(!req_case_ok){
+      if(!exhausted_run){
+        return 1024;
+      }else{
+        use_default_option = true;
+      }
+    }// no need to test as all prerequisit tested and failed
   }
 
   // get the argument lists
   arg_list.clear();
   arg_list.push_back(str_list_t());
-  if(tcase.count("arguments")) {
+  if(tcase.count("arguments") && !use_default_option) {
     auto arguments = tcase["arguments"][req_case_str].get<str_list_t>();
     for(auto arg : arguments) {
+      add_arguments(arg,tcase,arg_list);
+    }
+  }else if(tcase.count("default_arguments") && use_default_option) {
+    auto arguments = tcase["default_arguments"].get<str_list_t>();
+    for(auto arg : arguments) {
+      add_arguments(arg,tcase,arg_list);
+    }
+  }
+
+  // check whether the case store a global variable
+  if(tcase.count("set-var") && tcase["set-var"].count(req_case_str)) {
+    vn = tcase["set-var"][req_case_str].get<str_list_t>();
+  } else
+    vn.clear();
+
+  //dbf's size should be 2,
+  //one is for current searched func name, the other is for target code name
+  if(tcase.count("get-code-offset") && tcase["get-code-offset"].count(req_case_str)){
+    dbf = tcase["get-code-offset"][req_case_str].get<str_list_t>();
+  }else{
+    dbf.clear();
+  }
+
+  // collect the known exit code other than 0
+  expect_results.clear();
+  if(tcase.count("expect-results")) {
+    for(auto r: tcase["expect-results"].get<std::map<std::string, json> >()) {
+      expect_results.insert(std::stoi(r.first));
+    }
+  }
+  retry_results.clear();
+  if(tcase.count("retry-results")) {
+    for(auto r: tcase["retry-results"].get<std::map<std::string, json> >()) {
+      retry_results.insert(std::stoi(r.first));
+    }
+  }
+
+  //std::cout << "\nrun " << cn << " with requirements case " << req_case_str << std::endl;
+  return 0;
+}
+
+void add_arguments(std::string arg, nlohmann::ordered_json tcase, str_llist_t &arg_list){
       if(arg.size() >= 3) {
         auto atype = arg.substr(0,2);
         if(atype == "-r") { // range
@@ -289,45 +365,18 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
           for(auto &ale : arg_list) ale.push_back(arg);
       } else
         for(auto &ale : arg_list) ale.push_back(arg);
-    }
-  }
-
-  // check whether the case store a global variable
-  if(tcase.count("set-var") && tcase["set-var"].count(req_case_str)) {
-    vn = tcase["set-var"][req_case_str].get<str_list_t>();
-  } else
-    vn.clear();
-
-  //dbf's size should be 2,
-  //one is for current searched func name, the other is for target code name
-  if(tcase.count("get-code-offset") && tcase["get-code-offset"].count(req_case_str)){
-    dbf = tcase["get-code-offset"][req_case_str].get<str_list_t>();
-  }else{
-    dbf.clear();
-  }
-
-  // collect the known exit code other than 0
-  expect_results.clear();
-  if(tcase.count("expect-results")) {
-    for(auto r: tcase["expect-results"].get<std::map<std::string, json> >()) {
-      expect_results.insert(std::stoi(r.first));
-    }
-  }
-  retry_results.clear();
-  if(tcase.count("retry-results")) {
-    for(auto r: tcase["retry-results"].get<std::map<std::string, json> >()) {
-      retry_results.insert(std::stoi(r.first));
-    }
-  }
-
-  //std::cout << "\nrun " << cn << " with requirements case " << req_case_str << std::endl;
-  return 0;
 }
 
 #ifdef _MSC_VER
 // Windows MSVC
-int run_cmd(char* argv[], char** runv = NULL) {
+int run_cmd(char* argv[], char** runv, long long& time_count) {
+
+  auto start = std::chrono::high_resolution_clock::now();
   auto pid = _spawnvp(_P_NOWAIT, argv[0], argv);
+  auto stop = std::chrono::high_resolution_clock::now();
+  time_count = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+  std::cout << "The time consumed by current process is " << time_count << " microseconds" << std::endl;
+
   if (pid == -1) {
     std::cerr << "Fail to spawn the executable!" << std::endl;
     exit(1);
@@ -353,7 +402,7 @@ int run_cmd(char* argv[], char** runv = NULL) {
 
 #else
 // POSIX version (Linux variant)
-int run_cmd(char *argv[], char **runv = NULL) {
+int run_cmd(char *argv[], char **runv, long long& time_count) {
   pid_t pid;
   if(runv == NULL) runv = org_env;
   /* debug env
@@ -366,8 +415,13 @@ int run_cmd(char *argv[], char **runv = NULL) {
   /*
   int argi = 0;
   while(argv[argi] != NULL) std::cout << std::string(argv[argi++]) << std::endl;
-  */  
+  */
+  auto start = std::chrono::high_resolution_clock::now();
   int rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, runv);
+  auto stop = std::chrono::high_resolution_clock::now();
+  time_count = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+  std::cout << "The time consumed by current process is " << time_count << " microseconds" << std::endl;
+
   if(rv) {
     if(rv == ENOSYS) {
       std::cerr << "posix_spawn() is NOT supported in this system!" << std::endl;
@@ -411,7 +465,8 @@ char ** argv_conv(const std::string &cmd, const str_list_t &args) {
 bool run_tests(std::list<std::string> cases) {
   //check current test dependency and avoid endless loop
   int current_test_checkdep_count = 0;
-  int total_cases = cases.size();
+  size_t total_cases = cases.size();
+  std::cout << "The num of all cases is: " << total_cases << std::endl;
   std::string prog, cmd;
   str_llist_t alist;
   str_list_t gvar;
@@ -428,33 +483,51 @@ bool run_tests(std::list<std::string> cases) {
       int rv = 0;
       rvs.clear();
       if(0 == rv && make_run) {
-        rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)));
+        long long curr_time, curr_size;
+        rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)), NULL, curr_time);
+        make_time_count += curr_time;
+        result_db[cn]["make-time"] = curr_time;
         if(rv){
           std::cout << "fail to make " << prog << " with error status " << rv << std::endl;
           rv = -1;
+          curr_size = 0;
+        }else{
+          #ifdef _MSC_VER
+          curr_size = get_file_size("test/" + prog + ".exe");
+          if(curr_size == -1) curr_size = get_file_size("test/" + prog);
+          #else
+          curr_size = get_file_size("test/" + prog);
+          #endif
         }
+        result_db[cn]["file-size"] = curr_size;
       }
       #ifdef _MSC_VER
+      long long curr_script_time = 0;
       if(0 == rv && !dbvar.empty()){
-          if(dbvar.size() != 2){
-            std::cerr << "dbvar size is " << dbvar.size() << std::endl;
-            std::cerr << "the parameter number is wrong (exactly is 2)" << std::endl;
-          }
+        if(dbvar.size() != 2){
+          std::cerr << "dbvar size is " << dbvar.size() << std::endl;
+          std::cerr << "the parameter number is wrong (exactly is 2)" << std::endl;
+        }
         std::cout << "dump bin: " << "script\\msvc_get_addroffset_of_currfunc.bat" << "test/" << prog << ".exe " <<
                      " " << dbvar.front() << " " << dbvar.back() << std::endl;
-          rv = run_cmd(argv_conv("script\\msvc_get_addroffset_of_currfunc.bat", str_list_t{
-                                 "test/" + prog +".exe", dbvar.front(), dbvar.back()}));
-          
+        rv = run_cmd(argv_conv("script\\msvc_get_addroffset_of_currfunc.bat", str_list_t{
+                              "test/" + prog +".exe", dbvar.front(), dbvar.back()}), NULL, curr_script_time);
       }
       #endif
 
       if(0 == rv && test_run) { // run the test case
         for(auto arg:alist) {
+          long long curr_time;
           cmd = "test/" + prog;
           std::cout << "\n";
           if(!extra_run_prefix.empty()) for(auto a:extra_run_prefix) std::cout << std::string(a) << " ";
           std::cout << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
-          rv = run_cmd(argv_conv(cmd, arg), run_env);
+          rv = run_cmd(argv_conv(cmd, arg), run_env, curr_time);
+          #ifdef _MSC_VER
+          curr_time += curr_script_time;
+          #endif
+          run_time_count += curr_time;
+          result_db[cn]["run-time"] = curr_time;
 
           // record run-time parameter
           if(gvar.size() == 1 && rv >= 32 && rv < 64) { // successfully find a run-time parameter
