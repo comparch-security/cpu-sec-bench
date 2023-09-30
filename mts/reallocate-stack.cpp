@@ -1,4 +1,5 @@
 #include "include/mss.hpp"
+#include "include/conf.hpp"
 #include <cstdint>
 
 charBuffer *pb;

@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
+#include "include/conf.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -21,11 +22,11 @@ int main(int argc, char* argv[])
   } while(GET_PAGE_SIZE() >= abs(distance));
 
   if(distance > 0) {
-    update_by_pointer(buffer->data, 0, distance+8, 1, 'c');
-    exit(check(bufferT->data,  8,  1, 'c'));
+    update_by_pointer(buffer->data, 0, distance+BUFFER_SIZE, 1, 'c');
+    exit(check(bufferT->data,  BUFFER_SIZE,  1, 'c'));
   } else {
-    update_by_pointer(bufferT->data, 0, -distance+8, 1, 'c');
-    exit(check(buffer->data,  8,  1, 'c'));
+    update_by_pointer(bufferT->data, 0, -distance+BUFFER_SIZE, 1, 'c');
+    exit(check(buffer->data,  BUFFER_SIZE,  1, 'c'));
   }
 
   exit(2);

@@ -1,4 +1,5 @@
 #include "include/mss.hpp"
+#include "include/conf.hpp"
 
 charBuffer *gbuffer;
 
@@ -11,6 +12,6 @@ void helper() {
 
 int main() {
   helper();
-  update_by_pointer(gbuffer->data, 0, 8,  1, 'c');
-  return check(gbuffer->data, 8,  1, 'c');
+  update_by_pointer(gbuffer->data, 0, BUFFER_SIZE,  1, 'c');
+  return check(gbuffer->data, BUFFER_SIZE,  1, 'c');
 }

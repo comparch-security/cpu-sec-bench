@@ -1,4 +1,5 @@
 #include "include/mss.hpp"
+#include "include/conf.hpp"
 #include <iostream>
 
 const long long compare_target = 0x6464646400000001ll;

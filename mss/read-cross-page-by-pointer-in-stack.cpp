@@ -1,5 +1,6 @@
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
+#include "include/conf.hpp"
 
 int FORCE_NOINLINE helper(const char* b, int level) {
   long long delta = 0;
@@ -8,7 +9,7 @@ int FORCE_NOINLINE helper(const char* b, int level) {
     return helper(b, level-1);
   else {
     GET_DISTANCE(delta, (long long)b, (long long)dummy.data);
-    return read_by_pointer(dummy.data, delta, 7, 1, 'm');
+    return read_by_pointer(dummy.data, delta, BUFFER_SIZE-1, 1, 'm');
   }
 }
 

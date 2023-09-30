@@ -52,8 +52,20 @@ ifeq ($(OSType),Windows_NT)
   CLIBAPI       := visualcpp
   OBJDUMP       := dumpbin
 
-  CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
-                   /EHsc /MD /Gy /Gd /I./lib
+  CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE                 \
+									 /EHsc /MD /Gy /Gd /I./lib
+  ifdef BUFFER_SIZE
+		CXXFLAGS_BASE += /DBUFFER_SIZE=$(BUFFER_SIZE)
+  endif
+	ifdef BUFFER_KIND
+		CXXFLAGS_BASE += /DBUFFER_KIND=$(BUFFER_KIND)
+	endif
+	ifdef REGION_KIND
+		CXXFLAGS_BASE += /DREGION_KIND=$(REGION_KIND)
+	endif
+	ifneq ($(and $(BUFFER_VAL_UNDERFLOW),$(BUFFER_VAL_MID),$(BUFFER_VAL_OVERFLOW)),)
+		CXXFLAGS_BASE += /DBUFFER_VAL_UNDERFLOW=$(BUFFER_VAL_UNDERFLOW) /DBUFFER_VAL_MID=$(BUFFER_VAL_MID) /DBUFFER_VAL_OVERFLOW=$(BUFFER_VAL_OVERFLOW)
+	endif
   SCHEDULER_CXXFLAGS  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
   OBJECT_CXXFLAGS     := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
   CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
@@ -65,7 +77,7 @@ ifeq ($(OSType),Windows_NT)
   OUTPUT_DYN_OPTION := /LD /Fe
   MIDFILE_SUFFIX    := .obj
   DLL_SUFFIX        := .dll
-  LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF
+  LDFLAGS           := /link /incremental:no /OPT:NOREF /OPT:NOICF
   OBJDUMPFLAGS      := /DISASM
   DYNCFI_OPTION     := libcfi.lib
   func-opcode-gen   := .\script\get_x64_func_inst.bat

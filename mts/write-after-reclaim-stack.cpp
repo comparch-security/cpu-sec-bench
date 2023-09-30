@@ -1,13 +1,14 @@
 #include "include/builtin.hpp"
 #include "include/mss.hpp"
+#include "include/conf.hpp"
 
 charBuffer *pb;
 
 int FORCE_NOINLINE helper(bool option, char target_val, char cmp_val) {
   charBuffer buffer('u','d','o');
   if(option) {
-    update_by_pointer(pb->data, 0, 8,  1, target_val);
-    return check(buffer.data, 7,  1, cmp_val);
+    update_by_pointer(pb->data, 0, BUFFER_SIZE,  1, target_val);
+    return check(buffer.data, BUFFER_SIZE-1,  1, cmp_val);
   } else {
     pb = &buffer;
     buffer.updateBuffer('u', 'd', 'o');

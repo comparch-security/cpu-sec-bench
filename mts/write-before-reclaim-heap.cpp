@@ -1,4 +1,5 @@
 #include "include/mss.hpp"
+#include "include/conf.hpp"
 #include <set>
 
 int main(int argc, char** argv) {
@@ -6,9 +7,9 @@ int main(int argc, char** argv) {
   charBuffer *buffer = new charBuffer('u','d','o');
   pset.insert(buffer);
   delete buffer;
-  update_by_pointer(buffer->underflow, 0, 8,  1, 't');
-  update_by_pointer(buffer->data, 0, 8,  1, 'c');
-  update_by_pointer(buffer->overflow, 0, 8,  1, 'n');
+  update_by_pointer(buffer->underflow, 0, BUFFER_SIZE,  1, 't');
+  update_by_pointer(buffer->data, 0, BUFFER_SIZE,  1, 'c');
+  update_by_pointer(buffer->overflow, 0, BUFFER_SIZE,  1, 'n');
 
   int region_flag = argv[1][0] - '0';
 
@@ -20,13 +21,13 @@ int main(int argc, char** argv) {
       switch (region_flag)
       {
       case 0:
-        rv = check(buffer->underflow, 8,  1, 't');
+        rv = check(buffer->underflow, BUFFER_SIZE,  1, 't');
         break;
       case 1:
-        rv = check(buffer->data, 8,  1, 'c');
+        rv = check(buffer->data, BUFFER_SIZE,  1, 'c');
         break;
       case 2:
-        rv = check(buffer->overflow, 8,  1, 'n');
+        rv = check(buffer->overflow, BUFFER_SIZE,  1, 'n');
         break;
       default:
         break;
@@ -38,7 +39,7 @@ int main(int argc, char** argv) {
       buffer->updateBuffer('u', 'd', 'o');
     }
     delete buffer;
-    update_by_pointer(buffer->data, 0, 8,  1, 'c');
+    update_by_pointer(buffer->data, 0, BUFFER_SIZE,  1, 'c');
   }
   return 2;
 }

@@ -1,4 +1,5 @@
 #include "include/mss.hpp"
+#include "include/conf.hpp"
 
 const long long compare_target = 0x0064646464646464ll; // = "ddddddd"
 
@@ -16,10 +17,10 @@ int main(int argc, char* argv[])
   int rv;
 
   switch(store_type) {
-  case 0: rv = check((long long *)&buffer_stack.target, 2, 1, compare_target); break;
-  case 1: rv = check((long long *)&buffer_heap->target, 2, 1, compare_target); break;
-  case 2: rv = check((long long *)&buffer_data.target, 2, 1, compare_target); break;
-  case 3: rv = check((const long long *)&buffer_rodata.target, 2, 1, compare_target); break;
+    case 0: rv = check((long long *)&buffer_stack.target, 2, 1, compare_target); break;
+    case 1: rv = check((long long *)&buffer_heap->target, 2, 1, compare_target); break;
+    case 2: rv = check((long long *)&buffer_data.target, 2, 1, compare_target); break;
+    case 3: rv = check((const long long *)&buffer_rodata.target, 2, 1, compare_target); break;
   }
 
   delete buffer_heap;
