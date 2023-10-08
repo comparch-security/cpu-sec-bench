@@ -8,11 +8,13 @@ typedef unsigned int (*func_type)(void);
 
 int FORCE_NOINLINE helper(func_type fp) {
   gv = fp();
+  WRITE_TRACE("Success Jumped", "");
   return gv;
 }
 
 int main()
 {
+  INIT_TRACE_FILE;
   unsigned char m[] = FUNC_MACHINE_CODE;
   int rv = m[0];
   printf("dummy print: m = %p\n", m);

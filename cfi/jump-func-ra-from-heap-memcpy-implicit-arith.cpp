@@ -48,6 +48,7 @@ TARGET_LABEL(flutter_option)
 
 int main(int argc, char** argv){
 
+    INIT_TRACE_FILE;
     int flutter_option = atoi(argv[1]);
     //To avoid setting exit entry in the lr register in Mac M1 clang
     direct_exit = (bool) (argv[2][0] - '0');
@@ -75,6 +76,7 @@ int main(int argc, char** argv){
                 //goto *jmp_target;
                 JMP_DAT_PTR(addr_buffer);
                 //if prog has run at this, it means the jump failed
+                WRITE_TRACE("Successful Jumped", "");
                 free(addr_buffer);
                 return gvar();
             }

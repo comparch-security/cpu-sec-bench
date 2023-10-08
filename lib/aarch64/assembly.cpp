@@ -1,3 +1,4 @@
+#define TRACE_EXTERN_RELATED_GLOBALVAR
 #include "include/assembly.hpp"
 #include <stdlib.h>
 

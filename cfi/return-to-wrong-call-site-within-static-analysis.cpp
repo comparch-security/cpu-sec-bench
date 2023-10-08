@@ -14,12 +14,20 @@ void FORCE_NOINLINE helper(void *label) {
      * as used by the later exit() after EXIT_POS.
      */
     gvar_init(-offset/4);
+    #ifdef TRACE_RUN
+      GET_RA_ADDR(ra_addr);
+      WRITE_TRACE("RA address: 0x", ra_addr);
+      WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
+    #endif
     MOD_STACK_DAT(label, offset);
+    WRITE_TRACE("RA address: 0x", ra_addr);
+    WRITE_TRACE("RA after modified: 0x", *(long long*)ra_addr);
   }
 }
 
 int main(int argc, char* argv[])
 {
+  INIT_TRACE_FILE;
   // get the offset of RA on stack
   std::string cmd_var_offset = argv[1];
   std::string cmd_range_offset = argv[2];

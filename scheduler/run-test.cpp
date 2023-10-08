@@ -35,12 +35,13 @@ char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
 char * gargv[33];
 
 // global configure parameters
-bool cond_run = false;
-bool debug_run = false;
-bool make_run = true;
-bool test_run = true;
-bool report_run = false;
+bool cond_run      = false;
+bool debug_run     = false;
+bool make_run      = true;
+bool test_run      = true;
+bool report_run    = false;
 bool exhausted_run = false;
+bool trace_run     = false;
 
 // json related functions
 bool file_exist(const std::string& fn);
@@ -80,13 +81,14 @@ int main(int argc, char* argv[], char* envp[]) {
       std::cout << "Run Script for the Security Test Benchmark." << std::endl;
       std::cout << std::endl;
       std::cout << "Possible parameters:" << std::endl;
-      std::cout << "  help        Show this help information." << std::endl;
-      std::cout << "  continue    Continue a previous test by reading the results.json file first." << std::endl;
-      std::cout << "  debug       Stop testing on the first unexpected exit status." << std::endl;
-      std::cout << "  make-only   Make the test cases without running them." << std::endl;
-      std::cout << "  no-make     Due to make the test cases as they are made aleady." << std::endl;
+      std::cout << "  help          Show this help information." << std::endl;
+      std::cout << "  continue      Continue a previous test by reading the results.json file first." << std::endl;
+      std::cout << "  debug         Stop testing on the first unexpected exit status." << std::endl;
+      std::cout << "  make-only     Make the test cases without running them." << std::endl;
+      std::cout << "  no-make       Due to make the test cases as they are made aleady." << std::endl;
       std::cout << "  fast-run      Only run the test case that their requirement runs successfully, and then generate a report." << std::endl;
-      std::cout << "  exhausted-run   Run all tests until the total test case is exhausted, and then generate a report." << std::endl;
+      std::cout << "  exhausted-run Run all tests until the total test case is exhausted, and then generate a report." << std::endl;
+      std::cout << "  print-trace   Print the trace log of the attacked target." << std::endl;
       return 0;
     }
 
@@ -96,6 +98,7 @@ int main(int argc, char* argv[], char* envp[]) {
     else if(param == "no-make")   make_run   = false;
     else if(param == "fast-run")  report_run = true;
     else if(param == "exhausted-run")   { exhausted_run    = true; report_run = true;}
+    else if(param == "print-trace") {trace_run = true; }
     else {std::cout << "The scheduler has no "<< param << param << " option" << std::endl;}
   }
 
@@ -503,11 +506,22 @@ bool run_tests(std::list<std::string> cases) {
       if(0 == rv && make_run) {
         long long curr_time, curr_size;
         if(!make_config_macro.empty()){
-          std::cout << "make -B test/" << prog << make_config_macro << std::endl;
-          rv = run_cmd(argv_conv("make", str_list_t(1, "-B test/" + prog + make_config_macro)), NULL, curr_time);
+          if(!trace_run){
+            std::cout << "make -B test/" << prog << make_config_macro << std::endl;
+            rv = run_cmd(argv_conv("make", str_list_t(1, "-B test/" + prog + make_config_macro)), NULL, curr_time);
+          }else{
+            std::cout << "make -B test/" << prog << make_config_macro << " TRACE_RUN=1 " << std::endl;
+            rv = run_cmd(argv_conv("make", str_list_t(1, "-B test/" + prog + make_config_macro + " TRACE_RUN=1")), NULL, curr_time);
+          }
         }else{
-          std::cout << "make test/" << prog << std::endl;
-          rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)), NULL, curr_time);
+          if(!trace_run){
+            std::cout << "make test/" << prog << std::endl;
+            rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)), NULL, curr_time);
+          }else{
+            std::cout << "make test/" << prog << "TRACE_RUN=1" << std::endl;
+            rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog + " TRACE_RUN=1")), NULL, curr_time); 
+          }
+
         }
         make_time_count += curr_time;
         result_db[cn]["make-time"] = curr_time;

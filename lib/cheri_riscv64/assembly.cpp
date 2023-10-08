@@ -1,11 +1,6 @@
+#define TRACE_EXTERN_RELATED_GLOBALVAR
 #include "include/assembly.hpp"
 #include <stdlib.h>
-
-// #define DEBUG_READ_GOT
-
-#ifdef DEBUG_READ_GOT
-#include <iostream>
-#endif
 
 int dummy_leaf_rv = 0;
 
@@ -18,7 +13,7 @@ void get_got_func(void **gotp, void *label, int cet) {
   arch_int_t offset = 0;
   int instr;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "label to rand(): " << std::hex << (unsigned long long)pc << " " << offset << std::endl;
 #endif
 
@@ -34,7 +29,7 @@ void get_got_func(void **gotp, void *label, int cet) {
   if(offset & 0x00100000) offset |= 0xfffffffffff00000llu; // sign extension
   pc += offset;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "pos of PLT stub: " << std::hex << (unsigned long long)pc << " " << offset << std::endl;
 #endif
 
@@ -54,7 +49,7 @@ void get_got_func(void **gotp, void *label, int cet) {
 
   *gotp = *(void **)pc;
 
-#ifdef DEBUG_READ_GOT
+#ifdef DEBUG_OUTPUT
   std::cout << "pos of GOT entry: " << std::hex << (unsigned long long)pc << " " << (unsigned long long)gotp << " " << offset << std::endl;
   std::cout << "instruction at the entry of rand(): " << std::hex << **((int **)gotp) << std::endl; // this instruction should remain even with ASLR
 #endif

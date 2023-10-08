@@ -2,8 +2,12 @@
 #include <cstdlib>
 #include <cstdint>
 #include "include/builtin.hpp"
-#include <fstream>
-//#include <iostream>
+#if !defined(TRACE_RUN)
+  #include <fstream>
+#endif
+#if !defined(TRACE_RUN) && !defined(DEBUG_OUTPUT)
+  #include <iostream>
+#endif
 
 int FORCE_NOINLINE helper(uintptr_t p0, uintptr_t p1) {
   // if debug code is really needed for future use, keep it simple and commented out

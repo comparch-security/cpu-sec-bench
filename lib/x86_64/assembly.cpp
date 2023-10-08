@@ -1,4 +1,5 @@
-#define OTHER_OBJECT_GLOBARVAR
+#define MSVC_INTERN_RELATED_GLOBALVAR
+#define TRACE_EXTERN_RELATED_GLOBALVAR
 #include "include/assembly.hpp"
 #include <stdlib.h>
 

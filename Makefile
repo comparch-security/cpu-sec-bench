@@ -45,6 +45,7 @@ ifeq ($(OSType),Windows_NT)
   CPU_INFO      ?= $(shell echo %PROCESSOR_IDENTIFIER%)
   RUN_PREFIX    :=
   test-path     := test
+  log-path      := trace-log
 
   # compiler
   CXX           := cl
@@ -66,6 +67,9 @@ ifeq ($(OSType),Windows_NT)
 	ifneq ($(and $(BUFFER_VAL_UNDERFLOW),$(BUFFER_VAL_MID),$(BUFFER_VAL_OVERFLOW)),)
 		CXXFLAGS_BASE += /DBUFFER_VAL_UNDERFLOW=$(BUFFER_VAL_UNDERFLOW) /DBUFFER_VAL_MID=$(BUFFER_VAL_MID) /DBUFFER_VAL_OVERFLOW=$(BUFFER_VAL_OVERFLOW)
 	endif
+  ifdef TRACE_RUN
+    CXXFLAGS_BASE += /DTRACE_RUN=$(TRACE_RUN)
+  endif
   SCHEDULER_CXXFLAGS  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
   OBJECT_CXXFLAGS     := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
   CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
@@ -123,6 +127,7 @@ else
   endif
   RUN_PREFIX    :=
   test-path     := test
+  log-path      := trace-log
 
   #compiler
   ifeq ($(OSType),Darwin)
@@ -270,6 +275,7 @@ ifeq ($(OSType),Windows_NT)
 
 $(test-path)/sys_info.txt:
 	-mkdir $(test-path)
+	-mkdir $(log-path)
 	echo "CPU: & System : " > $(test-path)/sys_info.txt
 	systeminfo | findstr /C:"Windows" /C:"Intel" >> $(test-path)/sys_info.txt
 	echo "Compiler : " >> $(test-path)/sys_info.txt
@@ -286,6 +292,7 @@ else
 
 $(test-path)/sys_info.txt:
 	-mkdir -p $(test-path)
+  -mkdir -p $(log-path)
 	echo "CPU: $(CPU_INFO)" > $(test-path)/sys_info.txt
 	echo "System : " >> $(test-path)/sys_info.txt
 	uname -srp >> $(test-path)/sys_info.txt
@@ -398,12 +405,12 @@ ifeq ($(OSType),Windows_NT)
 
 rubbish:= $(subst /,\,$(rubbish))
 clean:
-	-del /Q $(rubbish) $(test-path) *.tmp *.ilk *.pdb *.obj *.exe *.dump *.dll *.lib *.exp
+	-del /Q $(rubbish) $(test-path) $(log-path) *.tmp *.ilk *.pdb *.obj *.exe *.dump *.dll *.lib *.exp
 
 else
 
 clean:
-	-rm -rf $(rubbish) $(test-path) *.tmp > /dev/null 2>&1
+	-rm -rf $(rubbish) $(test-path) $(log-path) *.tmp > /dev/null 2>&1
 
 endif
 

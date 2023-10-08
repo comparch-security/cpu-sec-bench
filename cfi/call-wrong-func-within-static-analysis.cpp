@@ -12,6 +12,7 @@ void FORCE_NOINLINE helper2() {
 
 int main(int argc, char* argv[])
 {
+  INIT_TRACE_FILE;
   gvar_init(argv[1][0] - '0');
   volatile Fun pFun = gvar() ? helper1 : helper2;
   volatile Fun tmp = helper2;
@@ -21,7 +22,9 @@ int main(int argc, char* argv[])
    * Instead of using a memory exchange, now we directly set the wrong value to the victim (function pointer)
    * Seems the compiler is then happy with it.
    */
+  WRITE_TRACE("Func pointer before modified: 0x", pFun);
   SET_MEM(&pFun, tmp);
+  WRITE_TRACE("Func pointer after modified: 0x", pFun);
   pFun();
   return gvar();
 }

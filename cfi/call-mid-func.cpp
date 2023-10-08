@@ -20,15 +20,18 @@ FORCE_NOINLINE void * helper() {
    */
   void * rv = (void*)&helper;
   GET_LABEL_ADDRESS(rv,TARGET_LABEL);
+  WRITE_TRACE("Mid Func Address is: 0x", rv);
   if(0 == gvar()) { GOTO_SAVED_LABEL(rv);}   // impossible to happen
   else return rv;
 TARGET_LABEL(fake_use_arg)
+  WRITE_TRACE("Successfully Jumped","");
   exit(gvar()-1);
 }
 
 typedef void (*fp_t)();
 
-int main() {
+int main(int argc, char** argv) {
+  INIT_TRACE_FILE;
   gvar_init(1);
   fp_t fp = (fp_t)helper();
   fp();

@@ -1,3 +1,4 @@
+#define TRACE_EXTERN_RELATED_GLOBALVAR
 #include "include/signal.hpp"
 
 // information recorded for exception checking
