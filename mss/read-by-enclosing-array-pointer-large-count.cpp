@@ -13,9 +13,9 @@ int main(int argc, char* argv[])
   int rv = -1;
 
   if(flow_type == 0){
-    rv = read_by_pointer(STR2(STR2(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), [large_ind]),->get_const_data()), large_buf_lens[large_ind], 1, 1, 'o');
+    rv = read_by_pointer(ARROW(STR2BR(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), large_ind),get_const_data()), large_buf_lens[large_ind], 1, 1, 'o');
   }else if(flow_type == 1){
-    rv = read_by_pointer(STR2(STR2(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), [large_ind]),->get_const_data()), -2, 1, 1, 'u');
+    rv = read_by_pointer(ARROW(STR2BR(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), large_ind),get_const_data()), -2, 1, 1, 'u');
   }
   UNINIT_BUFFER;
   return rv;

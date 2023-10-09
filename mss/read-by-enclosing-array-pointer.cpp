@@ -8,9 +8,9 @@ int main(int argc, char* argv[])
   int rv = -1;
 
   if(flow_type == 0){
-    rv = read_by_pointer(STR2(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND))), data),  BUFFER_SIZE, BUFFER_SIZE-1, 1, 'o');
+    rv = read_by_pointer(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), data),  BUFFER_SIZE, BUFFER_SIZE-1, 1, 'o');
   }else if(flow_type == 1){
-    rv = read_by_pointer(STR2(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND))), data), -BUFFER_SIZE, BUFFER_SIZE-1, 1, 'u');
+    rv = read_by_pointer(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), data), -BUFFER_SIZE, BUFFER_SIZE-1, 1, 'u');
   }
 
   UNINIT_BUFFER;

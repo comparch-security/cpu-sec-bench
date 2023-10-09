@@ -22,9 +22,9 @@ int main(int argc, char* argv[])
    * Instead of using a memory exchange, now we directly set the wrong value to the victim (function pointer)
    * Seems the compiler is then happy with it.
    */
-  WRITE_TRACE("Func pointer before modified: 0x", pFun);
+  WRITE_TRACE("Func pointer before modified: 0x", (&pFun));
   SET_MEM(&pFun, tmp);
-  WRITE_TRACE("Func pointer after modified: 0x", pFun);
+  WRITE_TRACE("Func pointer after modified: 0x", (&pFun));
   pFun();
   return gvar();
 }

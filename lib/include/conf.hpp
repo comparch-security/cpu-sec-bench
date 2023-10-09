@@ -1,15 +1,3 @@
-#define STR_(X) #X
-#define STR(x) STR_(x)
-#define STR2_(X,Y) X ## Y
-#define STR2(X,Y) STR2_(X,Y)
-#define STR2UL(X,Y) STR2(STR2(X,_),Y)
-#define RSTR(x) STR2(REGION_KIND_STR_,x)
-#define BSTR(x) STR2(BUFFER_KIND_STR_,x)
-#define MEMBEROP_(X) X.
-#define MEMBEROP(X) MEMBEROP_(X)
-#define DEREF_(X) X
-#define DEREF(X) DEREF_(X)
-
 #define STACK  0
 #define HEAP   1
 #define DATA   2
@@ -29,6 +17,22 @@
 #define BUFFER_KIND_STR_1 enclosing_array
 #define BUFFER_KIND_STR_2 symm_array
 #define BUFFER_KIND_STR_3 large_array
+
+#define STR_(X) #X
+#define STR(x) STR_(x)
+#define STR2_(X,Y) X ## Y
+#define STR2(X,Y) STR2_(X,Y)
+#define STR2UL(X,Y) STR2(STR2(X,_),Y)
+#define STR2BR_(X,Y) X[Y]
+#define STR2BR(X,Y) STR2BR_(X,Y)
+#define RSTR(x) STR2(REGION_KIND_STR_,x)
+#define BSTR(x) STR2(BUFFER_KIND_STR_,x)
+#define MEMBEROP_(X,Y) X.Y
+#define MEMBEROP(X,Y) MEMBEROP_(X,Y)
+#define ARROW_(X,Y) X->Y
+#define ARROW(X,Y) ARROW_(X,Y)
+#define DEREF_(X) X
+#define DEREF(X) DEREF_(X)
 
 // 117 is ascii code of "u"
 #define VAL_1U     117
@@ -247,8 +251,8 @@ public:
 
     #define DEREF_(X) *X
     #define DEREF(X) DEREF_(X)
-    #define MEMBEROP_(X) X->
-    #define MEMBEROP(X) MEMBEROP_(X)
+    #define MEMBEROP_(X,Y) X->Y
+    #define MEMBEROP(X,Y) MEMBEROP_(X,Y)
 
     #if BUFFER_KIND == BARE_ARRAY
 

@@ -58,11 +58,11 @@ void add_extra_run_prefix(char **);
 #ifdef RUN_PREFIX
   static char run_prefix[] = RUN_PREFIX;
 #endif
-std::string make_config_macro;
 std::list<char *> extra_run_prefix;
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
+str_list_t make_config_macro;
 int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, str_list_t& vn,
                 str_list_t& dbf, std::set<int> &expect_results, std::set<int> &retry_results);
 void add_arguments(std::string arg, nlohmann::ordered_json tcase, str_llist_t &arg_list);
@@ -99,7 +99,7 @@ int main(int argc, char* argv[], char* envp[]) {
     else if(param == "fast-run")  report_run = true;
     else if(param == "exhausted-run")   { exhausted_run    = true; report_run = true;}
     else if(param == "print-trace") {trace_run = true; }
-    else {std::cout << "The scheduler has no "<< param << param << " option" << std::endl;}
+    else {std::cout << "The scheduler has no "<< param << " option" << std::endl; exit(1);}
   }
 
   // read the configure file
@@ -323,7 +323,7 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
     }
   }
 
-  make_config_macro = "";
+  make_config_macro.clear();
   if(tcase.count("conf-macro")){
     std::map<std::string, std::string> conf_args;
     if(use_default_option){
@@ -332,7 +332,7 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
       conf_args = tcase["conf-macro"][req_case_str].get<std::map<std::string,std::string>>();
     }
     for(auto ca:conf_args){
-      make_config_macro = make_config_macro + " " + ca.first + "=" + ca.second;
+      make_config_macro.push_back(ca.first + "=" + ca.second);
     }
   }
 
@@ -497,7 +497,6 @@ bool run_tests(std::list<std::string> cases) {
     auto cn = cases.front();
     cases.pop_front();
     //std::cerr << "case: " << cn << std::endl; // keep in case needed in debug
-      std::cout << "\n========== " << cn << " =========" << std::endl;
     int test_cond = case_parser(cn, prog, alist, gvar, dbvar, expect_results, retry_results);
     if(!test_run || test_cond == 0) {
       std::cout << "\n========== " << cn << " =========" << std::endl;
@@ -506,20 +505,25 @@ bool run_tests(std::list<std::string> cases) {
       if(0 == rv && make_run) {
         long long curr_time, curr_size;
         if(!make_config_macro.empty()){
-          if(!trace_run){
-            std::cout << "make -B test/" << prog << make_config_macro << std::endl;
-            rv = run_cmd(argv_conv("make", str_list_t(1, "-B test/" + prog + make_config_macro)), NULL, curr_time);
-          }else{
-            std::cout << "make -B test/" << prog << make_config_macro << " TRACE_RUN=1 " << std::endl;
-            rv = run_cmd(argv_conv("make", str_list_t(1, "-B test/" + prog + make_config_macro + " TRACE_RUN=1")), NULL, curr_time);
+          make_config_macro.push_front("test/" + prog);
+          make_config_macro.push_front("-B");
+          if(trace_run){
+            make_config_macro.push_back("TRACE_RUN=1");
           }
+          std::cout << "make";
+          for(auto str:make_config_macro){
+            std::cout << " " << str;
+          }
+          std::cout << std::endl;
+          rv = run_cmd(argv_conv("make", make_config_macro), NULL, curr_time);
         }else{
           if(!trace_run){
             std::cout << "make test/" << prog << std::endl;
             rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)), NULL, curr_time);
           }else{
             std::cout << "make test/" << prog << "TRACE_RUN=1" << std::endl;
-            rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog + " TRACE_RUN=1")), NULL, curr_time); 
+            str_list_t no_make_config_macro = {"test/" + prog, "TRACE_RUN=1"};
+            rv = run_cmd(argv_conv("make", no_make_config_macro), NULL, curr_time); 
           }
 
         }

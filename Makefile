@@ -140,6 +140,21 @@ else
   OBJDUMP       := objdump
 
   CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
+  ifdef BUFFER_SIZE
+		CXXFLAGS_BASE += -DBUFFER_SIZE=$(BUFFER_SIZE)
+  endif
+	ifdef BUFFER_KIND
+		CXXFLAGS_BASE += -DBUFFER_KIND=$(BUFFER_KIND)
+	endif
+	ifdef REGION_KIND
+		CXXFLAGS_BASE += -DREGION_KIND=$(REGION_KIND)
+	endif
+	ifneq ($(and $(BUFFER_VAL_UNDERFLOW),$(BUFFER_VAL_MID),$(BUFFER_VAL_OVERFLOW)),)
+		CXXFLAGS_BASE += -DBUFFER_VAL_UNDERFLOW=$(BUFFER_VAL_UNDERFLOW) -DBUFFER_VAL_MID=$(BUFFER_VAL_MID) -DBUFFER_VAL_OVERFLOW=$(BUFFER_VAL_OVERFLOW)
+	endif
+  ifdef TRACE_RUN
+    CXXFLAGS_BASE += -DTRACE_RUN=$(TRACE_RUN)
+  endif
   SCHEDULER_CXXFLAGS  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
   OBJECT_CXXFLAGS     := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
   CXXFLAGS      := $(CXXFLAGS_BASE)
@@ -292,7 +307,7 @@ else
 
 $(test-path)/sys_info.txt:
 	-mkdir -p $(test-path)
-  -mkdir -p $(log-path)
+	-mkdir -p $(log-path)
 	echo "CPU: $(CPU_INFO)" > $(test-path)/sys_info.txt
 	echo "System : " >> $(test-path)/sys_info.txt
 	uname -srp >> $(test-path)/sys_info.txt
