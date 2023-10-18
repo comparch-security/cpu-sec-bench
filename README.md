@@ -5,8 +5,7 @@ This project aims to provide a generic test benchmark to
 systematically evaluate the security features
 supported by a processor hardware.
 
-Copyright (c) 2017-2022 [Wei Song](mailto:wsong83@gmail.com) at
-the State Key Laboratory of Information Security,
+Copyright (c) 2017-2023 [Wei Song](mailto:wsong83@gmail.com) at
 the Institute of Information Engineering,
 Chinese Academy of Sciences.
 
