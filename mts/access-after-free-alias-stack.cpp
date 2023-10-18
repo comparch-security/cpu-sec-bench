@@ -1,5 +1,5 @@
 #include "include/mss.hpp"
-
+#include "include/conf.hpp"
 charBuffer *gbuffer;
 
 void FORCE_NOINLINE helper() {
@@ -9,5 +9,5 @@ void FORCE_NOINLINE helper() {
 
 int main() {
   helper();
-  return check(gbuffer->data, 7,  1, 'd');
+  return check(gbuffer->data, BUFFER_SIZE-1,  1, 'd');
 }

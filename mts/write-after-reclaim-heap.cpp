@@ -1,8 +1,8 @@
 #include "include/mss.hpp"
+#include "include/conf.hpp"
 #include <map>
 #include <vector>
 charBuffer* dangle;
-#define RELOC_NUM 64
 
 int main() {
   std::map<charBuffer *, int> pmap;
@@ -25,8 +25,8 @@ int main() {
   if(pmap.size() == RELOC_NUM)
     return 2;
   else {
-    update_by_pointer(dangle->data, 0, 8,  1, 'c');
-    int rv = check(buffer->data, 8,  1, 'c');
+    update_by_pointer(dangle->data, 0, BUFFER_SIZE,  1, 'c');
+    int rv = check(buffer->data, BUFFER_SIZE,  1, 'c');
     delete buffer;
     return rv;
   }

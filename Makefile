@@ -45,6 +45,7 @@ ifeq ($(OSType),Windows_NT)
   CPU_INFO      ?= $(shell echo %PROCESSOR_IDENTIFIER%)
   RUN_PREFIX    :=
   test-path     := test
+  log-path      := trace-log
 
   # compiler
   CXX           := cl
@@ -52,8 +53,23 @@ ifeq ($(OSType),Windows_NT)
   CLIBAPI       := visualcpp
   OBJDUMP       := dumpbin
 
-  CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE \
-                   /EHsc /MD /Gy /Gd /I./lib
+  CXXFLAGS_BASE := /std:c11 /nologo /W3 /WX- /Oi /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE                 \
+									 /EHsc /MD /Gy /Gd /I./lib
+  ifdef BUFFER_SIZE
+		CXXFLAGS_BASE += /DBUFFER_SIZE=$(BUFFER_SIZE)
+  endif
+	ifdef BUFFER_KIND
+		CXXFLAGS_BASE += /DBUFFER_KIND=$(BUFFER_KIND)
+	endif
+	ifdef REGION_KIND
+		CXXFLAGS_BASE += /DREGION_KIND=$(REGION_KIND)
+	endif
+	ifneq ($(and $(BUFFER_VAL_UNDERFLOW),$(BUFFER_VAL_MID),$(BUFFER_VAL_OVERFLOW)),)
+		CXXFLAGS_BASE += /DBUFFER_VAL_UNDERFLOW=$(BUFFER_VAL_UNDERFLOW) /DBUFFER_VAL_MID=$(BUFFER_VAL_MID) /DBUFFER_VAL_OVERFLOW=$(BUFFER_VAL_OVERFLOW)
+	endif
+  ifdef TRACE_RUN
+    CXXFLAGS_BASE += /DTRACE_RUN=$(TRACE_RUN)
+  endif
   SCHEDULER_CXXFLAGS  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
   OBJECT_CXXFLAGS     := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
   CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
@@ -65,7 +81,7 @@ ifeq ($(OSType),Windows_NT)
   OUTPUT_DYN_OPTION := /LD /Fe
   MIDFILE_SUFFIX    := .obj
   DLL_SUFFIX        := .dll
-  LDFLAGS           := /link /incremental:no /OPT:REF /OPT:ICF
+  LDFLAGS           := /link /incremental:no /OPT:NOREF /OPT:NOICF
   OBJDUMPFLAGS      := /DISASM
   DYNCFI_OPTION     := libcfi.lib
   func-opcode-gen   := .\script\get_x64_func_inst.bat
@@ -111,6 +127,7 @@ else
   endif
   RUN_PREFIX    :=
   test-path     := test
+  log-path      := trace-log
 
   #compiler
   ifeq ($(OSType),Darwin)
@@ -123,6 +140,21 @@ else
   OBJDUMP       := objdump
 
   CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
+  ifdef BUFFER_SIZE
+		CXXFLAGS_BASE += -DBUFFER_SIZE=$(BUFFER_SIZE)
+  endif
+	ifdef BUFFER_KIND
+		CXXFLAGS_BASE += -DBUFFER_KIND=$(BUFFER_KIND)
+	endif
+	ifdef REGION_KIND
+		CXXFLAGS_BASE += -DREGION_KIND=$(REGION_KIND)
+	endif
+	ifneq ($(and $(BUFFER_VAL_UNDERFLOW),$(BUFFER_VAL_MID),$(BUFFER_VAL_OVERFLOW)),)
+		CXXFLAGS_BASE += -DBUFFER_VAL_UNDERFLOW=$(BUFFER_VAL_UNDERFLOW) -DBUFFER_VAL_MID=$(BUFFER_VAL_MID) -DBUFFER_VAL_OVERFLOW=$(BUFFER_VAL_OVERFLOW)
+	endif
+  ifdef TRACE_RUN
+    CXXFLAGS_BASE += -DTRACE_RUN=$(TRACE_RUN)
+  endif
   SCHEDULER_CXXFLAGS  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
   OBJECT_CXXFLAGS     := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
   CXXFLAGS      := $(CXXFLAGS_BASE)
@@ -258,6 +290,7 @@ ifeq ($(OSType),Windows_NT)
 
 $(test-path)/sys_info.txt:
 	-mkdir $(test-path)
+	-mkdir $(log-path)
 	echo "CPU: & System : " > $(test-path)/sys_info.txt
 	systeminfo | findstr /C:"Windows" /C:"Intel" >> $(test-path)/sys_info.txt
 	echo "Compiler : " >> $(test-path)/sys_info.txt
@@ -274,6 +307,7 @@ else
 
 $(test-path)/sys_info.txt:
 	-mkdir -p $(test-path)
+	-mkdir -p $(log-path)
 	echo "CPU: $(CPU_INFO)" > $(test-path)/sys_info.txt
 	echo "System : " >> $(test-path)/sys_info.txt
 	uname -srp >> $(test-path)/sys_info.txt
@@ -386,12 +420,12 @@ ifeq ($(OSType),Windows_NT)
 
 rubbish:= $(subst /,\,$(rubbish))
 clean:
-	-del /Q $(rubbish) $(test-path) *.tmp *.ilk *.pdb *.obj *.exe *.dump *.dll *.lib *.exp
+	-del /Q $(rubbish) $(test-path) $(log-path) *.tmp *.ilk *.pdb *.obj *.exe *.dump *.dll *.lib *.exp
 
 else
 
 clean:
-	-rm -rf $(rubbish) $(test-path) *.tmp > /dev/null 2>&1
+	-rm -rf $(rubbish) $(test-path) $(log-path) *.tmp > /dev/null 2>&1
 
 endif
 

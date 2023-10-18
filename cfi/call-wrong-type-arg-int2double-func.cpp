@@ -2,13 +2,15 @@
 #include "include/global_var.hpp"
 
 void FORCE_NOINLINE helper(double var) {
+  WRITE_TRACE("Wrong Type But Success Jumped", "");
   gvar_init((var != 0.0) ? 0 : 2);
 }
 
 static double d;
 
-int main()
+int main(int argc, char** argv)
 {
+  INIT_TRACE_FILE;
   gvar_init(1);
 #ifndef SUPPORT_FP
   return 0; // bypass when FPU is enabled for RV64/32

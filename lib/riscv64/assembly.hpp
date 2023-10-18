@@ -20,6 +20,12 @@
     "ld %0, " #offset "(sp);"                \
     : "=r"(dat)                              )
 
+#define GET_RA_ADDR(ra_addr)                 \
+  asm volatile(                              \
+    "add %0, %0, sp;"                        \
+    : "+r"(ra_addr)                          \
+                                             )
+
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
     "add %0, %0, sp;"                        \
@@ -39,9 +45,9 @@
                                             )
 
 // jump to a dat stored in a pointer
-#define JMP_DAT_PTR(ptr)                      \
+#define JMP_DAT_PTR(ptr)                     \
   asm volatile(                              \
-    "ld t0,(%0);"                              \
+    "ld t0,(%0);"                            \
     "jalr x0, t0, 0;"                        \
     : : "r"(ptr)                             \
     : "t0"                                   \

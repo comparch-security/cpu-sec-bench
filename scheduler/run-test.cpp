@@ -35,12 +35,13 @@ char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
 char * gargv[33];
 
 // global configure parameters
-bool cond_run = false;
-bool debug_run = false;
-bool make_run = true;
-bool test_run = true;
-bool report_run = false;
+bool cond_run      = false;
+bool debug_run     = false;
+bool make_run      = true;
+bool test_run      = true;
+bool report_run    = false;
 bool exhausted_run = false;
+bool trace_run     = false;
 
 // json related functions
 bool file_exist(const std::string& fn);
@@ -61,13 +62,14 @@ std::list<char *> extra_run_prefix;
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
+str_list_t make_config_macro;
 int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, str_list_t& vn,
                 str_list_t& dbf, std::set<int> &expect_results, std::set<int> &retry_results);
 void add_arguments(std::string arg, nlohmann::ordered_json tcase, str_llist_t &arg_list);
 char ** argv_conv(const std::string &cmd, const str_list_t &args);
 int run_cmd(char* argv[], char** runv, long long& time_count);
 bool run_tests(std::list<std::string> cases);
-auto get_file_size(const std::string& filename);
+long long get_file_size(const std::string& filename);
 
 int main(int argc, char* argv[], char* envp[]) {
   // parse argument
@@ -79,13 +81,14 @@ int main(int argc, char* argv[], char* envp[]) {
       std::cout << "Run Script for the Security Test Benchmark." << std::endl;
       std::cout << std::endl;
       std::cout << "Possible parameters:" << std::endl;
-      std::cout << "  help        Show this help information." << std::endl;
-      std::cout << "  continue    Continue a previous test by reading the results.json file first." << std::endl;
-      std::cout << "  debug       Stop testing on the first unexpected exit status." << std::endl;
-      std::cout << "  make-only   Make the test cases without running them." << std::endl;
-      std::cout << "  no-make     Due to make the test cases as they are made aleady." << std::endl;
+      std::cout << "  help          Show this help information." << std::endl;
+      std::cout << "  continue      Continue a previous test by reading the results.json file first." << std::endl;
+      std::cout << "  debug         Stop testing on the first unexpected exit status." << std::endl;
+      std::cout << "  make-only     Make the test cases without running them." << std::endl;
+      std::cout << "  no-make       Due to make the test cases as they are made aleady." << std::endl;
       std::cout << "  fast-run      Only run the test case that their requirement runs successfully, and then generate a report." << std::endl;
-      std::cout << "  exhausted-run   Run all tests until the total test case is exhausted, and then generate a report." << std::endl;
+      std::cout << "  exhausted-run Run all tests until the total test case is exhausted, and then generate a report." << std::endl;
+      std::cout << "  print-trace   Print the trace log of the attacked target." << std::endl;
       return 0;
     }
 
@@ -95,7 +98,8 @@ int main(int argc, char* argv[], char* envp[]) {
     else if(param == "no-make")   make_run   = false;
     else if(param == "fast-run")  report_run = true;
     else if(param == "exhausted-run")   { exhausted_run    = true; report_run = true;}
-    else {std::cout << "The scheduler has no "<< param << param << " option" << std::endl;}
+    else if(param == "print-trace") {trace_run = true; }
+    else {std::cout << "The scheduler has no "<< param << " option" << std::endl; exit(1);}
   }
 
   // read the configure file
@@ -126,7 +130,7 @@ bool file_exist(const std::string& fn) {
     return false;
 }
 
-auto get_file_size(const std::string& filename)
+long long get_file_size(const std::string& filename)
 {
     std::ifstream in(filename, std::ios::binary);
     return in.rdbuf() -> pubseekoff(0, std::ios::end, std::ios::in);
@@ -228,7 +232,11 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
     bool req_case_ok = false;
     do {
       req_case_str = std::to_string(req_case++);
-      if(!tcase["require"].count(req_case_str)) break;
+      if(!tcase["require"].count(req_case_str)){
+        req_case = std::stoi(req_case_str) - 1;
+        req_case_str = std::to_string(req_case);
+        break;
+      }
       req_case_tested = true;
 
       // get the prerequisit list
@@ -312,6 +320,19 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
   if(tcase.count("retry-results")) {
     for(auto r: tcase["retry-results"].get<std::map<std::string, json> >()) {
       retry_results.insert(std::stoi(r.first));
+    }
+  }
+
+  make_config_macro.clear();
+  if(tcase.count("conf-macro")){
+    std::map<std::string, std::string> conf_args;
+    if(use_default_option){
+      conf_args = tcase["conf-macro"]["0"].get<std::map<std::string,std::string>>();
+    }else{
+      conf_args = tcase["conf-macro"][req_case_str].get<std::map<std::string,std::string>>();
+    }
+    for(auto ca:conf_args){
+      make_config_macro.push_back(ca.first + "=" + ca.second);
     }
   }
 
@@ -479,12 +500,33 @@ bool run_tests(std::list<std::string> cases) {
     int test_cond = case_parser(cn, prog, alist, gvar, dbvar, expect_results, retry_results);
     if(!test_run || test_cond == 0) {
       std::cout << "\n========== " << cn << " =========" << std::endl;
-      std::cout << "make test/" << prog << std::endl;
       int rv = 0;
       rvs.clear();
       if(0 == rv && make_run) {
         long long curr_time, curr_size;
-        rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)), NULL, curr_time);
+        if(!make_config_macro.empty()){
+          make_config_macro.push_front("test/" + prog);
+          make_config_macro.push_front("-B");
+          if(trace_run){
+            make_config_macro.push_back("TRACE_RUN=1");
+          }
+          std::cout << "make";
+          for(auto str:make_config_macro){
+            std::cout << " " << str;
+          }
+          std::cout << std::endl;
+          rv = run_cmd(argv_conv("make", make_config_macro), NULL, curr_time);
+        }else{
+          if(!trace_run){
+            std::cout << "make test/" << prog << std::endl;
+            rv = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)), NULL, curr_time);
+          }else{
+            std::cout << "make test/" << prog << "TRACE_RUN=1" << std::endl;
+            str_list_t no_make_config_macro = {"test/" + prog, "TRACE_RUN=1"};
+            rv = run_cmd(argv_conv("make", no_make_config_macro), NULL, curr_time); 
+          }
+
+        }
         make_time_count += curr_time;
         result_db[cn]["make-time"] = curr_time;
         if(rv){

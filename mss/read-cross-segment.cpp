@@ -1,5 +1,6 @@
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
+#include "include/conf.hpp"
 #include <cstdio>
 
 const charBuffer buffer_rodata('q','r','s');
@@ -42,10 +43,10 @@ int main(int argc, char* argv[])
 
   if(acc_type == 0) {
     switch(src_type) {
-    case 0: rv = read_by_index(buffer_stack,  distance, 7, 1, tc); break;
-    case 1: rv = read_by_index(*buffer_heap,  distance, 7, 1, tc); break;
-    case 2: rv = read_by_index(buffer_data,   distance, 7, 1, tc); break;
-    case 3: rv = read_by_index(buffer_rodata, distance, 7, 1, tc); break;
+    case 0: rv = read_by_index(buffer_stack.data,  distance, 7, 1, tc); break;
+    case 1: rv = read_by_index(buffer_heap->data,  distance, 7, 1, tc); break;
+    case 2: rv = read_by_index(buffer_data.data,   distance, 7, 1, tc); break;
+    case 3: rv = read_by_index(buffer_rodata.data, distance, 7, 1, tc); break;
     }
   } else {
     rv = read_by_pointer(psrc, distance, 7, 1, tc);

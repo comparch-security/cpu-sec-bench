@@ -1,3 +1,4 @@
+#define TRACE_EXTERN_RELATED_GLOBALVAR
 #include "include/global_var.hpp"
 
 volatile static arch_int_t g = 0;

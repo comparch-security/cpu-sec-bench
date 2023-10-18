@@ -29,6 +29,12 @@
  * is used instead.
  */
 
+#define GET_RA_ADDR(ra_addr)                 \
+  asm volatile(                              \
+    "add %0, sp, %0;"                        \
+    : "+r"(ra_addr)                          \
+  )
+
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
     "add  %0, sp, %0;"                       \

@@ -10,8 +10,8 @@
 extern "C" void push_fake_ret(void*,  arch_int_t);
 
 union x{void(*func_ptr)(); long long func_num;};
-GLOBAR_VAR_PRE x jum_target;
-GLOBAR_VAR_PRE CONTEXT sp_loc_context;
+MSVC_GLOBAR_VAR_PRE x jum_target;
+MSVC_GLOBAR_VAR_PRE CONTEXT sp_loc_context;
 FORCE_NOINLINE void func_to_modify_caller_parameter(int target_register);
 
 // get the distance between two pointers
@@ -25,9 +25,14 @@ FORCE_NOINLINE void func_to_modify_caller_parameter(int target_register);
   RtlCaptureContext(&sp_loc_context);        \
   dat = (void*)*(long long*)((long long)sp_loc_context.Rsp + offset);
 
-#define MOD_STACK_DAT(dat, offset)                                 \
-  RtlCaptureContext(&sp_loc_context);                              \
-  void** ptr = (void**)((long long)sp_loc_context.Rsp + offset);   \
+#define GET_RA_ADDR(ra_addr)                 \
+  RtlCaptureContext(&sp_loc_context);        \
+  ra_addr += (long long)sp_loc_context.Rsp ; \
+
+#define MOD_STACK_DAT(dat, offset)           \
+  RtlCaptureContext(&sp_loc_context);        \
+  offset += (long long)sp_loc_context.Rsp ;  \
+  void** ptr = (void**)offset;               \
   *ptr = dat
 
 #define SET_MEM(ptr, var)                    \
@@ -35,11 +40,11 @@ FORCE_NOINLINE void func_to_modify_caller_parameter(int target_register);
 
 // jump to a pointer
 #define JMP_DAT(ptr)                         \
-  jum_target.func_num = (long long) ptr;              \
+  jum_target.func_num = (long long) ptr;     \
   jum_target.func_ptr()
 
-#define JMP_DAT_PTR(ptr)                         \
-  jum_target.func_num = (long long) ptr;              \
+#define JMP_DAT_PTR(ptr)                     \
+  jum_target.func_num = (long long) ptr;     \
   jum_target.func_ptr()
 
 #define GOTO_SITEA {}

@@ -13,7 +13,14 @@ std::string cmd_offset;
 void FORCE_NOINLINE return_helper(void *p) {
   gvar_init(2);
   GET_RAA_SP_OFFSET(offset);
+  #ifdef TRACE_RUN
+    GET_RA_ADDR(ra_addr);
+    WRITE_TRACE("RA address: 0x", ra_addr);
+    WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
+  #endif
   MOD_STACK_DAT(p, offset);
+  WRITE_TRACE("RA address: 0x", ra_addr);
+  WRITE_TRACE("RA after modified: 0x", *(long long*)ra_addr);
   /* HiFive Unmatched, GCC 11.2.0
    * Make sure offset is modified as otherwise
    * the stack is not expanded similarily with
@@ -26,10 +33,12 @@ void FORCE_NOINLINE call_helper(func_t f) {
   gvar_init(2);
   COMPILER_BARRIER;
   f();
+  WRITE_TRACE("Successful Jumped", "");
 }
 
 int main(int argc, char* argv[])
 {
+  INIT_TRACE_FILE;
   gvar_init(1);
   unsigned char m_stack[] = FUNC_MACHINE_CODE;
   unsigned char *m_heap = new unsigned char [16];
@@ -95,7 +104,7 @@ int main(int argc, char* argv[])
   switch(argv[1][0] - '0') {
   case 0: return_helper(p); break;
   case 1: call_helper(f); break;
-  case 2: { GOTO_SAVED_LABEL(l);}   // impossible to happen
+  case 2: { GOTO_SAVED_LABEL(l);WRITE_TRACE("Successful Jumped", "");}
   }
 TARGET_LABEL(argc)
   end_catch_exception();

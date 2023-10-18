@@ -1,4 +1,5 @@
 #include "include/mss.hpp"
+#include "include/conf.hpp"
 
 int main(int argc, char** argv) {
   charBuffer *buffer = new charBuffer('u','d','o');
@@ -8,13 +9,13 @@ int main(int argc, char** argv) {
   switch (region_flag)
   {
   case 0:
-    return check(buffer->underflow, 7,  1, 'u');
+    return check(buffer->underflow, BUFFER_SIZE-1,  1, 'u');
     break;
   case 1:
-    return check(buffer->data, 7,  1, 'd');
+    return check(buffer->data, BUFFER_SIZE-1,  1, 'd');
     break;
   case 2:
-    return check(buffer->overflow, 7,  1, 'o');
+    return check(buffer->overflow, BUFFER_SIZE-1,  1, 'o');
     break;
   default:
     break;

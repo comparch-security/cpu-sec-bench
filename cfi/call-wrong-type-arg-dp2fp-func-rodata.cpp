@@ -8,11 +8,13 @@ const unsigned char m[] = FUNC_MACHINE_CODE;
 
 int FORCE_NOINLINE helper(func_type fp) {
   gv = fp();
+  WRITE_TRACE("Success Jumped", "");
   return gv;
 }
 
 int main()
 {
+  INIT_TRACE_FILE;
   int rv = m[0];
   begin_catch_exception(m, SEGV_ACCERR);
   begin_catch_exception(m+4, 0, 0, SIGILL);

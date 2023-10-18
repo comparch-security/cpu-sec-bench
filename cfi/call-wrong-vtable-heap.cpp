@@ -6,6 +6,7 @@ void fake_func() { exit(0); }
 
 int main()
 {
+  INIT_TRACE_FILE;
   Helper *orig = new Helper();
 
   //creat a fake vtable with 1 function pointer
@@ -13,7 +14,9 @@ int main()
   *fake_vtable = fake_func;
 
   // replace the vtable pointer 
+  WRITE_TRACE("Vtable pointer before modified: 0x", orig);
   SET_MEM(orig, fake_vtable);
+  WRITE_TRACE("Vtable pointer after modified: 0x", orig);
 
   orig->virtual_func();
 

@@ -1,4 +1,5 @@
 #include "include/mss.hpp"
+#include "include/conf.hpp"
 #include "include/assembly.hpp"
 #include <cstdio>
 // buffer in data
@@ -35,9 +36,9 @@ int main(int argc, char* argv[])
 
   if(acc_type == 0) {
     switch(src_type) {
-    case 0: update_by_index(buffer_stack,  distance, 8, 1, 'c'); break;
-    case 1: update_by_index(*buffer_heap,  distance, 8, 1, 'c'); break;
-    case 2: update_by_index(buffer_data,   distance, 8, 1, 'c'); break;
+    case 0: update_by_index(buffer_stack.data,  distance, 8, 1, 'c'); break;
+    case 1: update_by_index(buffer_heap->data,  distance, 8, 1, 'c'); break;
+    case 2: update_by_index(buffer_data.data,   distance, 8, 1, 'c'); break;
     }
   } else {
     update_by_pointer(psrc, distance, 8, 1, 'c');

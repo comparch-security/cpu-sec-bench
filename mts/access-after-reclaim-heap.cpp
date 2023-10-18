@@ -1,4 +1,5 @@
 #include "include/mss.hpp"
+#include "include/conf.hpp"
 #include <map>
 #include <vector>
 
@@ -15,13 +16,13 @@ int main(int argc, char** argv) {
       switch (region_flag)
       {
       case 0:
-        rv = check(pvec[i]->underflow, 7,  1, 'u');
+        rv = check(pvec[i]->underflow, BUFFER_SIZE-1,  1, 'u');
         break;
       case 1:
-        rv = check(pvec[i]->data, 7,  1, 'd');
+        rv = check(pvec[i]->data, BUFFER_SIZE-1,  1, 'd');
         break;
       case 2:
-        rv = check(pvec[i]->overflow, 7,  1, 'o');
+        rv = check(pvec[i]->overflow, BUFFER_SIZE-1,  1, 'o');
         break;
       default:
         break;

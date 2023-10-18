@@ -3,11 +3,14 @@
 
 int main(int argc, char** argv)
 {
+  INIT_TRACE_FILE;
   bool fake_flag = argv[1][0] - '0';
   BaseM *orig = new Helper1M();
   BaseM *fake = new Helper1M();
   int rv = 0;
+  WRITE_TRACE("Vtable pointer before modified: 0x", orig);
   write_vtable_pointer(orig, read_vtable_pointer(fake)+1);
+  WRITE_TRACE("Vtable pointer after modified: 0x", orig);
   rv += orig->virtual_funcM0();
   rv += fake->virtual_funcM0();
   /* The following delete operations are commented out

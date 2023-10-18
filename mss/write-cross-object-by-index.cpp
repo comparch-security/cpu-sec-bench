@@ -1,68 +1,24 @@
 #include "include/mss.hpp"
 #include "include/assembly.hpp"
-
-const charBuffer buffer_rodataU('u','d','o');
-const charBuffer buffer_rodataM('u','d','o');
-const charBuffer buffer_rodataD('u','d','o');
-
-// buffer in data
-charBuffer buffer_dataU('u','d','o');
-charBuffer buffer_dataM('u','d','o');
-charBuffer buffer_dataD('u','d','o');
+#include "include/conf.hpp"
 
 int main(int argc, char* argv[])
 {
-  // buffer in local stack
-  charBuffer buffer_stackU('u','d','o');
-  charBuffer buffer_stackM('u','d','o');
-  charBuffer buffer_stackD('u','d','o');
-
-  // buffer allocated in heap
-  charBuffer *buffer_heapU = new charBuffer('u','d','o');
-  charBuffer *buffer_heapM = new charBuffer('u','d','o');
-  charBuffer *buffer_heapD = new charBuffer('u','d','o');
-
-  int store_type = argv[1][0] - '0';
+  INIT_BUFFER;
   int flow_type = argv[1][0] - '0';
   long long distance_up   = 0;
   long long distance_down = 0;
 
-  int rv;
+  int rv = -1;
 
-  switch(store_type) {
-  case 0: { // stack
-    GET_DISTANCE(distance_up,   (long long)buffer_stackU.data, (long long)buffer_stackM.data);
-    GET_DISTANCE(distance_down, (long long)buffer_stackD.data, (long long)buffer_stackM.data);
-    char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_stackU.data : buffer_stackD.data;
-    long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up        : distance_down;
-    update_by_index(buffer_stackM, distance,   8, 1, 'c');
-    rv = check(buf,  8,  1, 'c');
-    break;
-  }
-  case 1: { // heap
-    GET_DISTANCE(distance_up,   (long long)buffer_heapU->data, (long long)buffer_heapM->data);
-    GET_DISTANCE(distance_down, (long long)buffer_heapD->data, (long long)buffer_heapM->data);
-    char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_heapU->data : buffer_heapD->data;
-    long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up        : distance_down;
-    update_by_index(*buffer_heapM, distance,   8, 1, 'c');
-    rv = check(buf,  8,  1, 'c');
-    break;
-  }
-  case 2: { // data
-    GET_DISTANCE(distance_up,   (long long)buffer_dataU.data, (long long)buffer_dataM.data);
-    GET_DISTANCE(distance_down, (long long)buffer_dataD.data, (long long)buffer_dataM.data);
-    char *buf          = (distance_up > 0) ^ (flow_type == 1) ? buffer_dataU.data : buffer_dataD.data;
-    long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up       : distance_down;
-    update_by_index(buffer_dataM, distance,   8, 1, 'c');
-    rv = check(buf,  8,  1, 'c');
-    break;
-  }
-  default:
-    rv = -1;
-  }
+  GET_DISTANCE(distance_up,   (long long)MEMBEROP(STR2(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), _underflow), data), (long long)MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),data));
+  GET_DISTANCE(distance_down, (long long)MEMBEROP(STR2(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),  _overflow), data), (long long)MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),data));
+  char *buf = (distance_up > 0) ^ (flow_type == 1) ? MEMBEROP(STR2UL(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), underflow), data) : 
+                                                     MEMBEROP(STR2UL(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),  overflow), data);
+  long long distance = (distance_up > 0) ^ (flow_type == 1) ? distance_up        : distance_down;
+  update_by_index(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), data), distance,   BUFFER_SIZE, 1, 'c');
+  rv = check(buf,  BUFFER_SIZE,  1, 'c');
 
-  delete buffer_heapU;
-  delete buffer_heapM;
-  delete buffer_heapD;
+  UNINIT_BUFFER;
   return rv;
 }

@@ -13,6 +13,7 @@ FORCE_NOINLINE void * helper(int a) {
    */
   void * lp = (void*)&helper;
   GET_LABEL_ADDRESS(lp,TARGET_LABEL);
+  WRITE_TRACE("The Mid Address of Func: 0x", lp);
   switch(a) {
   case 3: return NULL; // make sure the return value is not constant (rv speculation)
   case 2: { GOTO_SAVED_LABEL(lp);}   // impossible to happen
@@ -24,6 +25,7 @@ TARGET_LABEL(a) // illegal jump target
 
 int main(int argc, char* argv[])
 {
+  INIT_TRACE_FILE;
   gvar_init(2);
   void *target = helper(argv[1][0] - '0');
 
@@ -33,5 +35,6 @@ int main(int argc, char* argv[])
    * and then jump to this return address (JMP_LABEL() -> JMP_DAT()).
    */
   JMP_DAT(target);
+  WRITE_TRACE("Successful Jumped", "");
   return gvar();
 }

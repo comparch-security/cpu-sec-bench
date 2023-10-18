@@ -49,6 +49,7 @@ TARGET_LABEL(flutter_option)
 
 int main(int argc, char** argv){
 
+    INIT_TRACE_FILE;
     int flutter_option = atoi(argv[1]);
     int flag_option    = atoi(argv[2]);
 
@@ -75,6 +76,7 @@ int main(int argc, char** argv){
                 direct_exit = true;
                 //goto *jmp_target;
                 JMP_DAT_PTR(jmp_target);
+                WRITE_TRACE("Successful Jumped", "");
                 //if prog has run at this, it means the jump failed
             }
             return gvar();
@@ -82,6 +84,6 @@ int main(int argc, char** argv){
         default:
             break;
     }
-
+    free(jmp_target);
     return 1;
 }

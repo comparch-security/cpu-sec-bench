@@ -8,7 +8,7 @@
   #define READ_STACK_DAT(dat, offset)          \
     asm volatile(                              \
       "add %1,sp,%1;"                          \
-      "cincoffset ca1,csp,%1;"                   \
+      "cincoffset ca1,csp,%1;"                 \
       "clc %0,(ca1);"                          \
       : "=C"(dat) :  "r"(offset)              )
 
@@ -20,11 +20,17 @@
       "clc %0, (ca0);"                         \
       : "=C"(dat) : :"ca0"                     )
 
+  #define GET_RA_ADDR(ra_addr)                 \
+    asm volatile(                              \
+      "add %0, sp, %0;"                        \
+      : "+r"(ra_addr)                          \
+                                               )
+
   #define MOD_STACK_DAT(dat, offset)           \
     asm volatile(                              \
       "cincoffset ca0, csp, %0;"               \
       "csc %1, 0(ca0);"                        \
-      : :"r"(offset), "C"(dat)                )
+      : :"r"(offset), "C"(dat)                 )
 
   #define SET_MEM(ptr, var)                    \
     asm volatile(                              \
@@ -34,9 +40,9 @@
   // jump to a pointer
   #define JMP_DAT(ptr)                         \
     asm volatile(                              \
-      "cjalr ca0, %0, 0;"                        \
+      "cjalr ca0, %0, 0;"                      \
       : : "C"(ptr)                             \
-                                              )
+                                               )
 
   // jump to a dat stored in a pointer
   #define JMP_DAT_PTR(ptr)                      \

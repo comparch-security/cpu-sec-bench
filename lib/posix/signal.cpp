@@ -1,3 +1,4 @@
+#define TRACE_EXTERN_RELATED_GLOBALVAR
 #include "include/signal.hpp"
 
 // information recorded for exception checking
@@ -21,8 +22,9 @@ void xcpt_handler(int signo, siginfo_t *sinfo, void *context) {
   for(int i=svp; i>=0; i--) {
     if((sigact_stack[i].si_signo == sinfo->si_signo) &&
        (sigact_stack[i].si_code == 0 || sinfo->si_code == sigact_stack[i].si_code) &&
-      (sigact_stack[i].daddr == NULL || sigact_stack[i].daddr == sinfo->si_addr))
-      psignal(sinfo->si_code,"");
+      (sigact_stack[i].daddr == NULL || sigact_stack[i].daddr == sinfo->si_addr)){
+        psignal(sinfo->si_code,"");
+        }
       exit(sigact_stack[i].rv_code);
   }
 
