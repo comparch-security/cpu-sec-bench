@@ -1,5 +1,4 @@
-Copyright (c) 2017-2022 [Wei Song](mailto:wsong83@gmail.com)
-the State Key Laboratory of Information Security,
+Copyright (c) 2017-2023 [Wei Song](mailto:wsong83@gmail.com)
 the Institute of Information Engineering,
 Chinese Academy of Sciences.
 
