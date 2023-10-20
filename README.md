@@ -20,10 +20,16 @@ See [LICENSE](LICENSE.md) for more details.
   make
 ~~~
 
-* Run the test bench with a report
+* Run the test bench in exhaustive mode with a report
 
 ~~~bash
-  ./run-test report
+  ./run-test exhausted-run
+~~~
+
+* Run the test bench in fast mode with a report
+
+~~~bash
+  ./run-test fast-run
 ~~~
 
 * Extra functions provided by the `run-test` helper
@@ -33,13 +39,14 @@ Usage: ./run-test [OPTION]
 Run Script for the Security Test Benchmark.
 
 Possible parameters:
-  help        Show this help information.
-  continue    Continue a previous test by reading the results.json file first.
-  debug       Stop testing on the first unexpected exit status.
-  make-only   Make the test cases without running them.
-  no-make     Don't make the test cases as they are made aleady (normally on embedded systems).
-  report      Generate a report after finishing all test cases.
-~~~
+  help          Show this help information.
+  continue      Continue a previous test by reading the results.json file first.
+  debug         Stop testing on the first unexpected exit status.
+  make-only     Make the test cases without running them.
+  no-make       Due to make the test cases as they are made aleady.
+  fast-run      Only run the test case that their requirement runs successfully, and then generate a report.
+  exhausted-run Run all tests until the total test case is exhausted, and then generate a report.
+  print-trace   Print the trace log of the attacked target.
 
 * Extra targets provided by the `Makefile` script
 
