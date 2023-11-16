@@ -36,7 +36,10 @@ OPT_LEVEL       ?= O2
 # specific hardware secrutiy features
 
 #enable_riscv64_cheri           = yes
+#enable_aarch64_morello         = yes
 #enable_aarch64_mte             = yes
+#enable_aarch64_pa              = yes
+#enable_aarch64_bti             = yes
 
 # define paths and objects
 ifeq ($(OSType),Windows_NT)
@@ -234,9 +237,24 @@ ifdef enable_riscv64_cheri
   OBJECT_CXXFLAGS += -mno-relax -cheri-bounds=very-aggressive
 endif
 
+ifdef enable_aarch64_morello
+  CXXFLAGS += -cheri -cheri-bounds=very-aggressive
+  OBJECT_CXXFLAGS += -cheri -cheri-bounds=very-aggressive
+endif
+
 ifdef enable_aarch64_mte
   CXXFLAGS := -fuse-ld=lld $(CXXFLAGS) -march=armv8.5-a+memtag -fsanitize=hwaddress
   OBJECT_CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=hwaddress
+endif
+
+ifdef enable_aarch64_pa
+  CXXFLAGS := -fuse-ld=lld $(CXXFLAGS) -march=armv8.3-a+pauth -mbranch-protection=pac-ret
+  OBJECT_CXXFLAGS += -march=armv8.3-a+pauth -mbranch-protection=pac-ret
+endif
+
+ifdef enable_aarch64_bti
+  CXXFLAGS := -fuse-ld=lld $(CXXFLAGS) -march=armv8.5-a -mbranch-protection=bti
+  OBJECT_CXXFLAGS += -march=armv8.5-a -mbranch-protection=bti
 endif
 
 # define cases
