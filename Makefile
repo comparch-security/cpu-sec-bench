@@ -210,7 +210,7 @@ else
 
   ifdef enable_control_flow_protection
   ifeq ($(ARCH),x86_64)
-    CXXFLAGS += -fcf-protection=full -mcet
+    CXXFLAGS += -fcf-protection=full -mcet -z cet-report=error
   endif
   endif
 
