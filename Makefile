@@ -232,9 +232,9 @@ endif
 
 ifdef enable_riscv64_cheri
   ARCH := cheri_riscv64
-  CXXFLAGS += -mno-relax -cheri-bounds=very-aggressive
+  CXXFLAGS += -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=very-aggressive
   SCHEDULER_CXXFLAGS += -mno-relax
-  OBJECT_CXXFLAGS += -mno-relax -cheri-bounds=very-aggressive
+  OBJECT_CXXFLAGS += -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=very-aggressive
 endif
 
 ifdef enable_aarch64_morello
