@@ -288,8 +288,13 @@ int case_parser(const std::string& cn, std::string& pn, str_llist_t& arg_list, s
     for(auto arg : arguments) {
       add_arguments(arg,tcase,arg_list);
     }
-  }else if(tcase.count("default_arguments") && use_default_option) {
-    auto arguments = tcase["default_arguments"].get<str_list_t>();
+  }else if(use_default_option) {
+    str_list_t arguments;
+    if(tcase.count("default_arguments"))
+      arguments = tcase["default_arguments"].get<str_list_t>();
+    else if(tcase.count("arguments")){
+      arguments = tcase["arguments"][req_case_str].get<str_list_t>();
+    }
     for(auto arg : arguments) {
       add_arguments(arg,tcase,arg_list);
     }

@@ -16,16 +16,21 @@ db = {
 }
 
 for entry in sys.stdin:
-    result = entry.split(' ')
-    case_name = result.pop(0)
-    if case_name in [
-            "cfi-call-wrong-type-arg-vtable",
-            "cfi-call-wrong-type-arg-vtable-heap",
-            "cfi-call-wrong-type-arg-vtable-with-data-modification",
-            "cfi-call-wrong-vtable-heap",
-            "cfi-call-wrong-num-arg-vtable-heap",
-            "cfi-call-wrong-num-func-vtable"]:
+
+    result = entry.split()
+    case_name = result[0]
+    if case_name[0] == "#" or case_name == "Compilation" or case_name == "Run":
         continue
+    result_val = result[2]
+    #print("case_name is {}, result is {}".format(case_name, result_val))
+    # if case_name in [
+    #         "cfi-call-wrong-type-arg-vtable",
+    #         "cfi-call-wrong-type-arg-vtable-heap",
+    #         "cfi-call-wrong-type-arg-vtable-with-data-modification",
+    #         "cfi-call-wrong-vtable-heap",
+    #         "cfi-call-wrong-num-arg-vtable-heap",
+    #         "cfi-call-wrong-num-func-vtable"]:
+    #     continue
     case_name = case_name.split('-')
     if case_name[0] == "cfi":
         if case_name[1] == "return":
@@ -34,7 +39,7 @@ for entry in sys.stdin:
             case_name[0] = "cfi-f"
     db["total"][1] += 1
     db[case_name[0]][1] += 1
-    if int(result[0]) == 0:
+    if int(result_val) == 0:
         db["total"][0] += 1
         db[case_name[0]][0] += 1
         
