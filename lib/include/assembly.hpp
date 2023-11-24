@@ -33,7 +33,7 @@
   #include "riscv64/assembly.hpp"
 #endif
 
-#if __CHERI_CAPABILITY_WIDTH__ == 128 && _riscv_arch == cheri  && defined(__CHERI__ )
+#if defined(__riscv) && __CHERI_CAPABILITY_WIDTH__ == 128 && _riscv_arch == cheri  && defined(__CHERI__ )
   #define CSB_RV64GC
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
