@@ -1,7 +1,9 @@
 {
     "mss-check-inter-obj-stack-redzone":{
         "program": "mss-check-inter-nonalloc-redzone",
-        "conf-macro": {"0": {"BUFFER_SIZE":"128" , "REGION_KIND":"0", "BUFFER_KIND":"2"} }
+        "arguments": { "0": ["0"] },
+        "conf-macro": {"0": {"BUFFER_SIZE":"128" , "REGION_KIND":"0", "BUFFER_KIND":"2"} },
+        "set-var": {"0": ["redzone_inter_obj_stack"]}
     },
     "mss-check-inter-obj-heap-redzone":{
         "program": "mss-check-inter-alloc-redzone",
@@ -9,134 +11,249 @@
     },
     "mss-check-inter-obj-data-redzone":{
         "program": "mss-check-inter-nonalloc-redzone",
-        "conf-macro": {"0": {"BUFFER_SIZE":"128" , "REGION_KIND":"2", "BUFFER_KIND":"2"} }
+        "arguments": { "0": ["1"] },
+        "conf-macro": {"0": {"BUFFER_SIZE":"128" , "REGION_KIND":"2", "BUFFER_KIND":"2"} },
+        "set-var": {"0": ["redzone_inter_obj_data"]}
     },
     "mss-check-inter-obj-rodata-redzone":{
         "program": "mss-check-inter-nonalloc-redzone",
-        "conf-macro": {"0": {"BUFFER_SIZE":"128" , "REGION_KIND":"3", "BUFFER_KIND":"2"} }
+        "arguments": { "0": ["2"] },
+        "conf-macro": {"0": {"BUFFER_SIZE":"128" , "REGION_KIND":"3", "BUFFER_KIND":"2"} },
+        "set-var": {"0": ["redzone_inter_obj_rodata"]}
     },
     "mss-check-intra-obj-stack-redzone":{
         "program": "mss-check-intra-redzone",
-        "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"0", "BUFFER_KIND":"1"} }
+        "arguments": { "0": ["0"] },
+        "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"0", "BUFFER_KIND":"1"} },
+        "set-var": {"0": ["redzone_intra_obj_stack"]}
     },
     "mss-check-intra-obj-heap-redzone":{
         "program": "mss-check-intra-redzone",
-        "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"1", "BUFFER_KIND":"1"} }
+        "arguments": { "0": ["1"] },
+        "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"1", "BUFFER_KIND":"1"} },
+        "set-var": {"0": ["redzone_intra_obj_heap"]}
     },
     "mss-check-intra-obj-data-redzone":{
         "program": "mss-check-intra-redzone",
-        "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"2", "BUFFER_KIND":"1"} }
+        "arguments": { "0": ["2"] },
+        "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"2", "BUFFER_KIND":"1"} },
+        "set-var": {"0": ["redzone_intra_obj_data"]}
     },
     "mss-check-intra-obj-rodata-redzone":{
         "program": "mss-check-intra-redzone",
-        "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"3", "BUFFER_KIND":"1"} }
+        "arguments": { "0": ["3"] },
+        "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"3", "BUFFER_KIND":"1"} },
+        "set-var": {"0": ["redzone_intra_obj_rodata"]}
     },
     "mss-read-by-enclosing-array-index-overflow-stack": {
         "program": "mss-read-by-enclosing-array-index",
-        "require": {"0": [["mss-check-intra-obj-stack-redzone"]]},
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-stack-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_stack"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"0", "BUFFER_KIND":"1"} },
         "reference": { "cwe": ["119", "125", "126", "788"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-index-overflow-heap": {
         "program": "mss-read-by-enclosing-array-index",
-        "require": {"0": [["mss-check-intra-obj-heap-redzone"]]},
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-heap-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_heap"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"1", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-index-overflow-data": {
         "program": "mss-read-by-enclosing-array-index",
-        "require": {"0": [["mss-check-intra-obj-data-redzone"]]},
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-data-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_data"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"2", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-index-overflow-rodata": {
         "program": "mss-read-by-enclosing-array-index",
-        "require": {"0": [["mss-check-intra-obj-rodata-redzone"]]},
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-rodata-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_rodata"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"3", "BUFFER_KIND":"1"} },
         "reference": { "cwe": ["119", "125", "126", "788"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-index-underflow-stack": {
         "program": "mss-read-by-enclosing-array-index",
-        "require": {"0": [["mss-check-intra-obj-stack-redzone"]]},
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-stack-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_stack"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"0", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-index-underflow-heap": {
         "program": "mss-read-by-enclosing-array-index",
-        "require": {"0": [["mss-check-intra-obj-heap-redzone"]]},
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-heap-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_heap"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"1", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-index-underflow-data": {
         "program": "mss-read-by-enclosing-array-index",
-        "require": {"0": [["mss-check-intra-obj-data-redzone"]]},
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-data-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_data"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"2", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-index-underflow-rodata": {
         "program": "mss-read-by-enclosing-array-index",
-        "require": {"0": [["mss-check-intra-obj-rodata-redzone"]]},
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-rodata-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_rodata"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"3", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
 
     "mss-read-by-enclosing-array-pointer-overflow-stack": {
         "program": "mss-read-by-enclosing-array-pointer",
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-stack-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_stack"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"0", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-pointer-overflow-heap": {
         "program": "mss-read-by-enclosing-array-pointer",
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-heap-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_heap"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"1", "BUFFER_KIND":"1"} },
         "default_arguments": ["0"] ,
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-pointer-overflow-data": {
         "program": "mss-read-by-enclosing-array-pointer",
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-data-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_data"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"2", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-pointer-overflow-rodata": {
         "program": "mss-read-by-enclosing-array-pointer",
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-rodata-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_rodata"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"3", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-pointer-underflow-stack": {
         "program": "mss-read-by-enclosing-array-pointer",
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-stack-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_stack"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"0", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-pointer-underflow-heap": {
         "program": "mss-read-by-enclosing-array-pointer",
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-heap-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_heap"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"1", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-pointer-underflow-data": {
         "program": "mss-read-by-enclosing-array-pointer",
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-data-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_data"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"2", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-by-enclosing-array-pointer-underflow-rodata": {
         "program": "mss-read-by-enclosing-array-pointer",
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-rodata-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_rodata"]
+                     },
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"3", "BUFFER_KIND":"1"} },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
@@ -385,105 +502,177 @@
 
     "mss-write-by-enclosing-array-index-overflow-stack": {
         "program": "mss-write-by-enclosing-array-index",
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-stack-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_stack"]
+                     },
         "default_arguments": ["0"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"0","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-by-enclosing-array-index-overflow-heap": {
         "program": "mss-write-by-enclosing-array-index",
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-heap-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_heap"]
+                     },
         "default_arguments": ["0"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"1","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-by-enclosing-array-index-overflow-data": {
         "program": "mss-write-by-enclosing-array-index",
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-data-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_data"]
+                     },
         "default_arguments": ["0"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"2","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-by-enclosing-array-index-underflow-stack": {
         "program": "mss-write-by-enclosing-array-index",
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-stack-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_stack"]
+                     },
         "default_arguments": ["1"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"0","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "reference": { "cwe": ["119"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-by-enclosing-array-index-underflow-heap": {
         "program": "mss-write-by-enclosing-array-index",
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-heap-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_heap"]
+                     },
         "default_arguments": ["1"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"1","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "reference": { "cwe": ["119"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-by-enclosing-array-index-underflow-data": {
         "program": "mss-write-by-enclosing-array-index",
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-data-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_data"]
+                     },
         "default_arguments": ["1"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"2","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "reference": { "cwe": ["119"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
 
     "mss-write-by-enclosing-array-pointer-overflow-stack": {
         "program": "mss-write-by-enclosing-array-pointer",
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-stack-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_stack"]
+                     },
         "default_arguments": ["0"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"0","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "reference": { "cwe": ["119", "121", "125", "126", "788"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-by-enclosing-array-pointer-overflow-heap": {
         "program": "mss-write-by-enclosing-array-pointer",
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-heap-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_heap"]
+                     },
         "default_arguments": ["0"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"1","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-by-enclosing-array-pointer-overflow-data": {
         "program": "mss-write-by-enclosing-array-pointer",
-        "arguments": { "0": ["0"] },
+        "require": {"0": [["mss-check-intra-obj-data-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["0"],
+                       "1": ["2"],
+                       "2": ["4","-vredzone_intra_obj_data"]
+                     },
         "default_arguments": ["0"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"2","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-by-enclosing-array-pointer-underflow-stack": {
         "program": "mss-write-by-enclosing-array-pointer",
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-stack-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_stack"]
+                     },
         "default_arguments": ["1"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"0","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-stack-redzone"]] },
         "reference": { "cwe": ["119"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-by-enclosing-array-pointer-underflow-heap": {
         "program": "mss-write-by-enclosing-array-pointer",
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-heap-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_heap"]
+                     },
         "default_arguments": ["1"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"1","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-heap-redzone"]] },
         "reference": { "cwe": ["119"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-by-enclosing-array-pointer-underflow-data": {
         "program": "mss-write-by-enclosing-array-pointer",
-        "arguments": { "0": ["1"] },
+        "require": {"0": [["mss-check-intra-obj-data-redzone"]],
+                    "1": [["cpi-func-pointer-arithmetic"]],
+                    "2": []
+        },
+        "arguments": { "0": ["1"],
+                       "1": ["3"],
+                       "2": ["5","-vredzone_intra_obj_data"]
+                     },
         "default_arguments": ["1"] ,
         "conf-macro": {"0": {"BUFFER_SIZE":"8","REGION_KIND":"2","BUFFER_KIND":"1"}},
-        "require": { "0": [["mss-check-intra-obj-data-redzone"]] },
         "reference": { "cwe": ["119"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
@@ -1210,34 +1399,34 @@
     "mss-write-spray-cross-object-stack": {
         "program": "mss-write-spray-cross-object",
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"0", "BUFFER_KIND":"1"} },
-        "require": { "0": [ [ "mss-write-cross-object-ptr-overflow-stack" ], [ "mss-write-cross-object-ptr-underflow-stack" ] ] },
+        "require": { "0": [ ["mss-check-inter-obj-stack-redzone"], [ "mss-write-cross-object-ptr-overflow-stack", "mss-write-cross-object-ptr-underflow-stack" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-spray-cross-object-heap": {
         "program": "mss-write-spray-cross-object",
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"1", "BUFFER_KIND":"1"} },
-        "require": { "0": [ [ "mss-write-cross-object-ptr-overflow-heap" ], [ "mss-write-cross-object-ptr-underflow-heap" ] ] },
+        "require": { "0": [ ["mss-check-inter-obj-heap-redzone"], [ "mss-write-cross-object-ptr-overflow-heap", "mss-write-cross-object-ptr-underflow-heap" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-spray-cross-object-data": {
         "program": "mss-write-spray-cross-object",
         "conf-macro": {"0": {"BUFFER_SIZE":"8" , "REGION_KIND":"2", "BUFFER_KIND":"1"} },
-        "require": { "0": [ [ "mss-write-cross-object-ptr-overflow-data" ], [ "mss-write-cross-object-ptr-underflow-data" ] ] },
+        "require": { "0": [ ["mss-check-inter-obj-data-redzone"], [ "mss-write-cross-object-ptr-overflow-data", "mss-write-cross-object-ptr-underflow-data" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-spray-cross-frame": {
         "program": "mss-write-spray-cross-frame",
-        "require": { "0": [ [ "mss-write-cross-frame-ptr" ] ] },
+        "require": { "0": [ ["mss-check-inter-obj-stack-redzone"], ["mss-write-cross-frame-ptr"] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-spray-cross-page-in-stack": {
         "program": "mss-write-spray-cross-page-in-stack",
-        "require": { "0": [ [ "mss-write-cross-page-ptr-stack" ] ] },
+        "require": { "0": [ ["mss-check-inter-obj-stack-redzone"],["mss-write-cross-page-ptr-stack"] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-spray-cross-page-in-heap": {
         "program": "mss-write-spray-cross-page-in-heap",
-        "require": { "0": [ [ "mss-write-spray-cross-object-heap" ] ] },
+        "require": { "0": [ ["mss-check-inter-obj-heap-redzone"],["mss-write-spray-cross-object-heap"] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-scalar-cast-to-array-overflow-stack":{

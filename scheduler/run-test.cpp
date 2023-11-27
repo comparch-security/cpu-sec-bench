@@ -583,7 +583,7 @@ bool run_tests(std::list<std::string> cases) {
             rv = 0;
           }
 
-          if(!gvar.empty() && rv == 64) { // a run-time parameter recorded in a tmp file
+          if(!gvar.empty() && (rv == 64 || rv ==65)) { // a run-time parameter recorded in a tmp file
             std::ifstream tmpf(temp_file_name(cmd, arg));
             if(tmpf.good()) {
               for(auto i =  gvar.begin(); i != gvar.end(); i++){
@@ -591,7 +591,11 @@ bool run_tests(std::list<std::string> cases) {
                 var_db[*i] = value; dump_json(var_db, "variables.json", false);
                 std::cerr << "set runtime variable " << *i << " to " << value << " by reading " << temp_file_name(cmd, arg) << std::endl;
               }
-              rv = 0;
+              if(rv==64)
+                rv = 0;
+              else{
+                rv = 2;
+              }
               tmpf.close();
             }
           }
