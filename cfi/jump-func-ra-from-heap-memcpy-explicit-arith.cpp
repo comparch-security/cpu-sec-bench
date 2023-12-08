@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdint>
+#include <iostream>
 
 int ra_offset = sizeof(void*) * 16; //  Maximum height of stack data/ra copy
 int ra_index = 0;
@@ -33,7 +34,7 @@ void FORCE_NOINLINE helper(void* addr, void*ra_pos){
 void FORCE_NOINLINE ra_target_func(void* addr_buffer ,int flutter_option){
     void* ra_pos;
     GET_LABEL_ADDRESS(ra_pos,TARGET_LABEL);
-    void* global_ra_pos = ra_pos;
+    global_ra_pos = ra_pos;
     if(flutter_option == 1) { GOTO_SAVED_LABEL(ra_pos);} // fake use
 
     COMPILER_BARRIER;
