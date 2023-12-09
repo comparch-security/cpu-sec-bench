@@ -10,8 +10,8 @@
 extern "C" void push_fake_ret(void*,  arch_int_t);
 
 union x{void(*func_ptr)(); long long func_num;};
-MSVC_GLOBAR_VAR_PRE x jum_target;
-MSVC_GLOBAR_VAR_PRE CONTEXT sp_loc_context;
+GLOBAR_VAR_PRE x jum_target;
+GLOBAR_VAR_PRE CONTEXT sp_loc_context;
 FORCE_NOINLINE void func_to_modify_caller_parameter(int target_register);
 
 // get the distance between two pointers

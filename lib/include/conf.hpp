@@ -257,16 +257,16 @@ public:
     #if BUFFER_KIND == BARE_ARRAY
 
         #define INIT_BUFFER char* heap_bare_array_underflow = (char*) malloc(sizeof(char) * BUFFER_SIZE);   \
-                            char* heap_bare_array       = (char*) malloc(sizeof(char) * BUFFER_SIZE);   \
+                            char* heap_bare_array       = (char*) malloc(sizeof(char) * BUFFER_SIZE);       \
                             char* heap_bare_array_overflow  = (char*) malloc(sizeof(char) * BUFFER_SIZE);   \
-                            memset(heap_bare_array_underflow,'u',BUFFER_SIZE /(sizeof(int) / sizeof(char)));\
-                            memset(heap_bare_array,'d',BUFFER_SIZE /(sizeof(int) / sizeof(char)));      \
-                            memset(heap_bare_array_overflow,'o',BUFFER_SIZE /(sizeof(int) / sizeof(char))); \
-                            heap_bare_array_underflow[BUFFER_SIZE-1] = 0;                                              \
-                            heap_bare_array[BUFFER_SIZE-1]      = 0;                                              \
-                            heap_bare_array_overflow[BUFFER_SIZE-1]  = 0
+                            memset(heap_bare_array_underflow, 'u', BUFFER_SIZE);                            \
+                            memset(heap_bare_array, 'd' ,BUFFER_SIZE);                                      \
+                            memset(heap_bare_array_overflow, 'o', BUFFER_SIZE);                             \
+                            heap_bare_array_underflow[BUFFER_SIZE-1] = '\0';                                \
+                            heap_bare_array[BUFFER_SIZE-1]      = '\0';                                     \
+                            heap_bare_array_overflow[BUFFER_SIZE-1]  = '\0'
         #define UNINIT_BUFFER  free(heap_bare_array_underflow);  \
-                               free(heap_bare_array);        \
+                               free(heap_bare_array);            \
                                free(heap_bare_array_overflow)
 
     #elif BUFFER_KIND == ENCLOSING_ARRAY

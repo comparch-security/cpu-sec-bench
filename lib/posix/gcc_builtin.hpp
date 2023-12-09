@@ -10,5 +10,6 @@
 
 // code/data alignment
 #define ALIGN(NByte) __attribute__ ((aligned (NByte)))
+GLOBAR_VAR_PRE int fake_use_arg;
 
 #endif

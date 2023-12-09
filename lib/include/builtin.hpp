@@ -3,14 +3,14 @@
 #ifndef BUILTIN_HPP_INCLUDED
 #define BUILTIN_HPP_INCLUDED
 
-#if defined(MSVC_INTERN_RELATED_GLOBALVAR)
+#if defined(INTERN_RELATED_GLOBALVAR)
 //header file with the definition of globar var in source file
-#define MSVC_GLOBAR_VAR_PRE
-#elif defined(MSVC_EXTERN_RELATED_GLOBALVAR)
+#define GLOBAR_VAR_PRE
+#elif defined(EXTERN_RELATED_GLOBALVAR)
 //header file without the definition of globar var in source file
-#define MSVC_GLOBAR_VAR_PRE extern
+#define GLOBAR_VAR_PRE extern
 #else
-#define MSVC_GLOBAR_VAR_PRE extern
+#define GLOBAR_VAR_PRE extern
 #endif
 
 #if defined(TRACE_INTERN_RELATED_GLOBALVAR)

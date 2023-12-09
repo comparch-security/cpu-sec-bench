@@ -12,8 +12,8 @@
 // code/data alignment
 #define ALIGN(NByte) __declspec ((aligned (NByte)))
 
-MSVC_GLOBAR_VAR_PRE uintptr_t target_offsets[10];
-MSVC_GLOBAR_VAR_PRE int fake_use_arg;
+GLOBAR_VAR_PRE uintptr_t target_offsets[10];
+GLOBAR_VAR_PRE int fake_use_arg;
 
 // It is needed add the option "get-code-offset" in configuration
 // before using this inline func

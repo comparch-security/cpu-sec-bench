@@ -17,16 +17,16 @@ int main(int argc, char* argv[])
     update_by_index(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), data), 0, -(BUFFER_SIZE+1),  -1, 'c');
     rv = check(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), underflow),      BUFFER_SIZE,  1, 'c');
   }else if(flow_type >= 2 && flow_type < 4){
-    int assem_dist;
-    long long pa = (long long)MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),data);
+    long long assem_dist;
+    long long src = (long long)MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),data);
     if (flow_type == 2){
-      long long pb = (long long)MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),overflow);
-      GET_DISTANCE(assem_dist, pa, pb);
+      long long dst = (long long)MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),overflow);
+      GET_DISTANCE(assem_dist, dst, src);
       update_by_index(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), data), assem_dist, BUFFER_SIZE,  1, 'c');
       rv = check(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), overflow),      BUFFER_SIZE,  1, 'c');
     }else if(flow_type == 3){
-      long long pb = (long long)MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),underflow);
-      GET_DISTANCE(assem_dist, pa, pb);
+      long long dst = (long long)MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),underflow);
+      GET_DISTANCE(assem_dist, dst, src);
       update_by_index(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), data), assem_dist, -(BUFFER_SIZE+1),  -1, 'c');
       rv = check(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), underflow),      BUFFER_SIZE,  1, 'c');
     }
