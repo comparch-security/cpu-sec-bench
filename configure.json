@@ -1847,12 +1847,11 @@
     "cfi-return-to-wrong-call-site-within-static-analysis": {
         "require": { "0": [ ["acc-get-ra-offset-v-p-g1"]]},
         "arguments": { "0": ["-vstack-offset-v-p-g1", "-roffset"],
-                       "1": ["-roffset"],
-                       "2": ["-roffset"],
-                       "3": ["-roffset"],
-                       "4": ["-roffset"]
+                       "1": ["-roffset"]
                      },
-        "default_args":{"0":["-rextend_offset"]},
+        "default_args":{ "0": ["-vstack-offset-v-p-g1", "-roffset"],
+                         "1": ["-rextend_offset"]
+        },
         "offset": [0, 8, 1],
         "extend_offset": [0,16,1],
         "set-var": { "0": ["stack-offset-v-p-g1"]
