@@ -256,7 +256,7 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
    1. check whether all requirement cases are tested.
    2. check whether the ind's corresponding case is ok
   */
-  if(tcase.count("require")) {
+  if(tcase.count("require")  && !exhausted_run) {
     for(auto require_lists = tcase["require"].begin(); require_lists != tcase["require"].end(); require_lists++){
       auto require_list = (*require_lists).get<str_llist_t>();
       for(auto and_conds : require_list) {
@@ -285,6 +285,7 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
         if(!has_passed_case) return 1024;
       }
     }
+    if(debug_run)std::cout << "\nrun " << cn << " with requirements case " << ind << std::endl;
   }
 
   // check whether the case store a global variable
@@ -325,7 +326,6 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
     }
   }
 
-  if(debug_run)std::cout << "\nrun " << cn << " with requirements case " << ind << std::endl;
   return 0;
 }
 
@@ -492,8 +492,6 @@ bool run_tests(std::list<std::string> cases) {
     if(!config_db.count(cn)) {
       std::cerr << "Fail to parse test case " << cn << std::endl;
       std::cerr << "Test abnormality: " << cn << " does not exist in the configure.json file." << std::endl;
-      if(debug_run) exit(1);
-      else continue;
     }
     bool has_make = false;
     int test_cond = 0;
@@ -505,7 +503,7 @@ bool run_tests(std::list<std::string> cases) {
       auto alist = alists[ind];
       test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results, retry_results);
       if(debug_run)std::cout << "test cond is: " << test_cond << std::endl;
-      if(!test_run || test_cond == 0 || (exhausted_run && test_cond == 1024)) {
+      if(!test_run || test_cond == 0) {
         std::cout << "\n========== " << cn << " =========" << std::endl;
         int make_result = 0;
         if(0 == make_result && make_run && !has_make) {
@@ -610,7 +608,6 @@ bool run_tests(std::list<std::string> cases) {
             if(!expect_results.count(test_result) && !retry_results.count(test_result)) {
               std::cerr << "Try test failed: " << cn;
               std::cerr << " failed with unexpected exit value " << test_result << std::endl;
-              if(debug_run) exit(1);
             }
           }
         }
@@ -630,7 +627,7 @@ bool run_tests(std::list<std::string> cases) {
           }
           exit(1);
         }
-      }else if(test_run && !exhausted_run) {
+      }else if(test_run && test_cond == 1024) {
         std::cerr << "Required case failed: " << cn << " failed with unexpected exit value " << test_cond << std::endl;
         break;
         current_test_checkdep_count = 0;
@@ -639,7 +636,7 @@ bool run_tests(std::list<std::string> cases) {
     if(test_cond == 1){
       continue;
     }
-    if(test_cond == 1024 && !exhausted_run){
+    if(test_cond == 1024){
       result_db[cn]["result"] = 1024; dump_json(result_db, "results.json", debug_run);
       continue;
     }
@@ -650,7 +647,6 @@ bool run_tests(std::list<std::string> cases) {
       for(auto v:test_results) if(expect_results.count(v)) test_result = v;
       if(!expect_results.count(test_result)){
         std::cerr << "Test abnormality: " << cn << " failed with unexpected exit value " << test_result << std::endl;
-        if(debug_run) exit(1);
       }
     }
     result_db[cn]["result"] = test_result; dump_json(result_db, "results.json", debug_run);
