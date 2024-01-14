@@ -14,8 +14,6 @@ void FORCE_NOINLINE helper(void *label) {
     WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
   #endif
   MOD_STACK_DAT(label, offset);
-  WRITE_TRACE("RA address: 0x", ra_addr);
-  WRITE_TRACE("RA after modified: 0x", *(long long*)ra_addr);
   /* HiFive Unmatched, GCC 11.2.0
    * Make sure offset is modified as otherwise
    * the stack is not expanded similarily with
