@@ -1484,47 +1484,56 @@
     },
     "mss-read-scalar-cast-to-array-overflow-stack":{
         "program": "mss-read-scalar-cast-to-array-overflow",
+        "require": {"0": [[ "acc-check-intra-obj-stack-redzone" ]] },
         "arguments": { "0": ["0"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-scalar-cast-to-array-overflow-heap":{
         "program": "mss-read-scalar-cast-to-array-overflow",
+        "require": {"0": [[ "acc-check-intra-obj-heap-redzone" ]] },
         "arguments": { "0": ["1"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-scalar-cast-to-array-overflow-data":{
         "program": "mss-read-scalar-cast-to-array-overflow",
+        "require": {"0": [[ "acc-check-intra-obj-data-redzone" ]] },
         "arguments": { "0": ["2"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-scalar-cast-to-array-overflow-rodata":{
         "program": "mss-read-scalar-cast-to-array-overflow",
+        "require": {"0": [[ "acc-check-intra-obj-rodata-redzone" ]] },
         "arguments": { "0": ["3"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-scalar-cast-to-scalar-overflow-stack": {
         "program": "mss-read-scalar-cast-to-scalar-overflow",
+        "require": {"0": [[ "acc-check-intra-obj-stack-redzone" ]] },
         "arguments": { "0": ["0"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-scalar-cast-to-scalar-overflow-heap": {
         "program": "mss-read-scalar-cast-to-scalar-overflow",
+        "require": {"0": [[ "acc-check-intra-obj-heap-redzone" ]] },
         "arguments": { "0": ["1"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-scalar-cast-to-scalar-overflow-data": {
         "program": "mss-read-scalar-cast-to-scalar-overflow",
+        "require": {"0": [[ "acc-check-intra-obj-data-redzone" ]] },
         "arguments": { "0": ["2"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-scalar-cast-to-scalar-overflow-rodata": {
         "program": "mss-read-scalar-cast-to-scalar-overflow",
+        "require": {"0": [[ "acc-check-intra-obj-rodata-redzone" ]] },
         "arguments": { "0": ["3"] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
 
     "mts-double-free": {
         "arguments": {"0": ["0","0","-rsize","7","0"]},
+        "require": { "0": [ [ "mts-reallocate-heap" ] ] },
         "size": [0, 8, 1],
         "expect-results": {"262": "freebsd jemalloc check mechannism enabled"}
     },
@@ -1542,7 +1551,9 @@
         "size": [0, 8, 1],
         "expect-results": {"262": "freebsd jemalloc check mechannism enabled"}        
     },
-    "mts-access-after-free-alias-stack": {},
+    "mts-access-after-free-alias-stack": {
+        "require": {"0": [[ "mts-reallocate-stack" ]]}
+    },
     "mts-reallocate-stack": {},
     "mts-access-after-reclaim-stack": {
         "require": { "0": [ ["mts-reallocate-stack"] ] }
@@ -1557,11 +1568,13 @@
     },
     "mts-access-after-free-org-heap": {
         "arguments": {"0": ["-rsize"]},
+        "require": {"0": [[ "mts-reallocate-heap" ]]},
         "size": [0,3,1],
         "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
     },
     "mts-access-after-free-alias-heap": {
         "arguments": {"0": ["-rsize"]},
+        "require": {"0": [[ "mts-reallocate-heap" ]]},
         "size": [0,3,1],
         "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
     },
@@ -1603,6 +1616,7 @@
         "arguments": {"0": ["2","0","1"]}
     },
     "acc-check-ASLR": {
+        "require": { "0": [ [ "cpi-func-pointer-assign" ] ] },
         "expect-results": { "1": "ASLR enabled."}
     },
     "acc-read-func": {
@@ -1630,6 +1644,7 @@
     "acc-check-IBT": {
         "arguments": { "0": ["1"] },
         "set-var": { "0": ["ibt-enabled"] },
+        "require": { "0": [ [ "cpi-func-pointer-assign" ] ] },
         "get-code-offset": { "0": ["main","labelfunc"] },
         "expect-results": { "290": "cheri capabilities enabled."}
     },
@@ -1643,18 +1658,22 @@
 
     "cpi-read-stack-vtable-pointer": {
         "program": "cpi-read-vtable-pointer",
+        "require": { "0": [ [ "cpi-func-pointer-assign" ] ] },
         "arguments": { "0": ["0"]}
     },
     "cpi-read-heap-vtable-pointer": {
         "program": "cpi-read-vtable-pointer",
+        "require": { "0": [ [ "cpi-func-pointer-assign" ] ] },
         "arguments": { "0": ["1"]}
     },
     "cpi-read-data-vtable-pointer": {
         "program": "cpi-read-vtable-pointer",
+        "require": { "0": [ [ "cpi-func-pointer-assign" ] ] },
         "arguments": { "0": ["2"]}
     },
     "cpi-read-rodata-vtable-pointer": {
         "program": "cpi-read-vtable-pointer",
+        "require": { "0": [ [ "cpi-func-pointer-assign" ] ] },
         "arguments": { "0": ["3"]}
     },
     "cpi-write-stack-vtable-pointer": {
@@ -1688,6 +1707,7 @@
     },
 
     "cfi-call-mid-func": {
+        "require": { "0": [ [ "cpi-func-pointer-assign", "mts-access-after-reclaim-stack"]] },
         "get-code-offset": { "0": ["helper","labelfunc"] }
     },
     "cfi-call-wrong-func-within-static-analysis": {
@@ -1697,57 +1717,85 @@
         "require": { "0": [ [ "cfi-call-wrong-func-within-static-analysis"],["cpi-func-pointer-assign"] ] },
         "arguments": { "0": ["1"] }
     },
-    "cfi-call-wrong-func-stack-vtable-parent": {
-        "program": "cfi-call-wrong-func-vtable-parent",
-        "require": { "0": [ [ "cpi-write-stack-vtable-pointer" ] ] }
+    "cfi-call-fake-vtable-func-num-stack": {
+        "program": "cfi-call-fake-vtable-func-num",
+        "arguments": { "0": ["0"] },
+        "require": { "0": [ [ "cfi-call-fake-vtable" ], [ "cpi-write-stack-vtable-pointer" ] ] }
     },
-    "cfi-call-wrong-func-heap-vtable-sibling": {
-        "program": "cfi-call-wrong-func-vtable-sibling",
-        "require": { "0": [ [ "cpi-write-stack-vtable-pointer" ] ] }
+    "cfi-call-fake-vtable-func-num-heap": {
+        "program": "cfi-call-fake-vtable-func-num",
+        "arguments": { "0": ["1"] },
+        "require": { "0": [ [ "cfi-call-fake-vtable" ]]}
     },
-    "cfi-call-wrong-func-stack-vtable-child": {
-        "program": "cfi-call-wrong-func-vtable-child",
-        "require": { "0": [ [ "cpi-write-stack-vtable-pointer" ] ] }
+    "cfi-call-fake-vtable-func-num-data": {
+        "program": "cfi-call-fake-vtable-func-num",
+        "arguments": { "0": ["2"] },
+        "require": { "0": [ [ "cfi-call-fake-vtable" ], [ "cpi-write-data-vtable-pointer" ] ] }
     },
-    "cfi-call-wrong-func-stack-vtable-offset": {
-        "program": "cfi-call-wrong-func-vtable-offset",
+    "cfi-call-fake-vtable-arg-num":{
+        "require": { "0": [ [ "cfi-call-fake-vtable" ]] }
+    },
+    "cfi-call-fake-vtable-arg-type":{
+        "require": { "0": [ [ "cfi-call-fake-vtable" ] ] }
+    },
+    "cfi-call-fake-vtable-arg-type-modified":{
+        "require": { "0": [ [ "cfi-call-fake-vtable-arg-type" ]] }
+    },
+    "cfi-call-fake-vtable": {
+        "require": { "0": [ [ "cpi-write-heap-vtable-pointer" ] ] }
+    },
+    "cfi-call-wrong-vtable-func-num": {
+        "require": { "0": [ [ "cfi-call-wrong-vtable" ] ] }
+    },
+    "cfi-call-wrong-vtable-arg-num": {
+        "require": { "0": [ [ "cfi-call-wrong-vtable" ] ] }
+    },
+    "cfi-call-wrong-vtable-arg-type": {
+        "require": {"0": [[ "cfi-call-wrong-vtable" ]]}
+    },
+    "cfi-call-wrong-vtable-parent": {
+        "program": "cfi-call-wrong-vtable-parent",
+        "require": { "0": [ [ "cpi-write-heap-vtable-pointer" ] ] }
+    },
+    "cfi-call-wrong-vtable-sibling": {
+        "program": "cfi-call-wrong-vtable-sibling",
+        "require": { "0": [ [ "cpi-write-heap-vtable-pointer" ] ] }
+    },
+    "cfi-call-wrong-vtable-child": {
+        "program": "cfi-call-wrong-vtable-child",
+        "require": { "0": [ [ "cpi-write-heap-vtable-pointer" ] ] }
+    },
+    "cfi-call-wrong-vtable-offset": {
+        "program": "cfi-call-wrong-vtable-offset",
         "arguments": { "0": ["0"]},
-        "require": { "0": [ [ "cpi-write-stack-vtable-pointer" ] ] }
+        "require": { "0": [ ["cfi-call-wrong-vtable"], ["cpi-func-pointer-arithmetic"]] }
     },
-    "cfi-call-wrong-func-vtable": {
-        "require": { "0": [ [ "cfi-call-wrong-func-stack-vtable-child" ] ] }
+    "cfi-call-wrong-vtable": {
+        "require": { "0": [ [ "cfi-call-wrong-vtable-child" ] ] }
     },
-    "cfi-call-wrong-func-vtable-released": {
-        "require": { "0": [ [ "cfi-call-wrong-func-vtable" ] ] },
+    "cfi-call-wrong-vtable-released": {
+        "require": { "0": [ ["cfi-call-wrong-vtable", "mts-access-after-free-org-heap"], ["cfi-call-wrong-vtable", "mts-access-after-free-alias-heap"] ] },
         "expect-results": { "17": "vtable pointer is cleaned after release (SEGV_MAPERR).",
                             "18": "vtable pointer is cleaned after release (SEGV_ACCERR)."
                           }
     },
-    "cfi-call-wrong-num-arg-func": {},
-    "cfi-call-wrong-num-func-vtable": {
-        "require": { "0": [ [ "cfi-call-wrong-func-vtable" ] ] }
+    "cfi-call-wrong-num-arg-func": {
+        "require": {"0": [ [ "cpi-func-pointer-assign" ] ]}
     },
-    "cfi-call-wrong-num-arg-vtable": {
-        "require": { "0": [ [ "cfi-call-wrong-func-vtable" ] ] }
+    "cfi-call-wrong-type-arg-int2double-func": {
+        "require": {"0": [ [ "cpi-func-pointer-assign" ] ]}
     },
-    "cfi-call-wrong-num-func-vtable-data": {
-        "require": { "0": [ [ "cfi-call-wrong-num-func-vtable" ] ] }
-    },
-    "cfi-call-wrong-num-func-vtable-stack": {
-        "require": { "0": [ [ "cfi-call-wrong-num-func-vtable" ] ] }
-    },
-    "cfi-call-wrong-num-func-vtable-heap": {
-        "require": { "0": [ [ "cfi-call-wrong-num-func-vtable" ] ] }
-    },
-    "cfi-call-wrong-type-arg-int2double-func": {},
     "cfi-call-wrong-type-arg-op2doublep-func": {
-        "arguments": { "0": ["2"] }
+        "arguments": { "0": ["2"] },
+        "require": {"0": [ [ "cpi-func-pointer-assign" ] ]}
     },
     "cfi-call-wrong-type-arg-op2intp-func": {
-        "arguments": { "0": ["2"] }
+        "arguments": { "0": ["2"] },
+        "require": {"0": [ [ "cpi-func-pointer-assign" ] ]}
     },
     "cfi-call-wrong-type-arg-fp2dp-func": {
-        "expect-results": { "290": "cheri capabilities enabled." }
+        "expect-results": { "290": "cheri capabilities enabled." },
+        "require": {"0": [ [ "cpi-func-pointer-assign" ] ]}
     },
     "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
         "require": { "0": [ [ "cfi-call-mid-func" ], [ "cfi-call-instruction-in-rodata" ] ]
@@ -1777,21 +1825,30 @@
     "cfi-call-instruction-in-rodata": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "arguments": { "0": [ "1", "0" ] },
+        "require": {"0": [["acc-read-func"]]},
+        "arguments": { "0": [ "1", "0" ], 
+                       "1": [ "1", "0" ]
+                     },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled."}
     },
     "cfi-call-instruction-in-data": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "arguments": { "0": [ "1", "1" ] },
+        "require": {"0": [["acc-read-func"]]},
+        "arguments": { "0": [ "1", "1" ],
+                       "1": [ "1", "1" ]
+                     },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled."}
     },
     "cfi-call-instruction-in-stack": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "arguments": { "0": [ "1", "2" ] },
+        "require": {"0": [["acc-read-func"]]},
+        "arguments": { "0": [ "1", "2" ],
+                       "1": [ "1", "2" ]
+                     },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)",
                             "290": "cheri capabilities enabled."}
@@ -1799,14 +1856,17 @@
     "cfi-call-instruction-in-heap": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "arguments": { "0": [ "1", "3" ] },
+        "require": {"0": [["acc-read-func"]]},
+        "arguments": { "0": [ "1", "3" ],
+                       "1": [ "1", "3" ]
+                     },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled."}
     },
     "cfi-jump-mid-func": {
         "get-code-offset": { "0": ["helper","labelfunc"] },
         "arguments": { "0": ["1"] },
-        "require": {"0": [[ "cpi-func-pointer-assign" ]]}
+        "require": {"0": [[ "cpi-func-pointer-assign" ], ["mts-access-after-reclaim-stack"]]}
     },
     "cfi-jump-func-ra-from-heap-memcpy-explicit-arith": {
         "require": {"0": [["cpi-func-pointer-arithmetic","acc-copy-stackra-to-heap-explicit-arith"], ["cfi-jump-instruction-in-heap"]]},
@@ -1820,7 +1880,7 @@
     "cfi-jump-instruction-in-rodata": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
+        "require": { "0": [ [ "cfi-jump-mid-func" ], ["acc-read-func"]] },
         "arguments": { "0": ["2", "0", "0"] },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled."
@@ -1829,7 +1889,7 @@
     "cfi-jump-instruction-in-data": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
+        "require": { "0": [ [ "cfi-jump-mid-func" ], ["acc-read-func"]] },
         "arguments": { "0": ["2", "1", "0"] },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled."
@@ -1838,7 +1898,7 @@
     "cfi-jump-instruction-in-stack": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
+        "require": { "0": [ [ "cfi-jump-mid-func" ], ["acc-read-func"] ] },
         "arguments": { "0": ["2", "2", "0"] },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)",
@@ -1848,7 +1908,7 @@
     "cfi-jump-instruction-in-heap": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "require": { "0": [ [ "cfi-jump-mid-func" ] ] },
+        "require": { "0": [ [ "cfi-jump-mid-func" ], ["acc-read-func"] ] },
         "arguments": { "0": ["2", "3", "0"] },
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled."}
@@ -1903,7 +1963,7 @@
     },
     "cfi-return-without-call": {
         "get-code-offset": { "0": ["helper","labelfunc"] },
-        "require": { "0": [ [ "acc-get-frame-size" ] ] },
+        "require": { "0": [ [ "acc-get-frame-size", "cpi-func-pointer-assign"] ] },
         "arguments": { "0": ["1", "-vframe-size"] },
         "default_args":{"0":["1", "-rsize"]},
         "size": [0,16,1],
@@ -1915,7 +1975,7 @@
     "cfi-return-to-instruction-in-rodata": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
+        "require": { "0": [ [ "cfi-return-to-non-call-site" ], ["acc-read-func"] ] },
         "arguments": { "0": ["0", "0", "-vstack-offset-v-p-g1"] },
         "default_args":{"0":["-rsize"]},
         "size": [0,16,1],
@@ -1925,7 +1985,7 @@
     "cfi-return-to-instruction-in-data": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
+        "require": { "0": [ [ "cfi-return-to-non-call-site" ], ["acc-read-func"] ] },
         "arguments": { "0": ["0", "1", "-vstack-offset-v-p-g1"] },
         "default_args":{"0":["-rsize"]},
         "size": [0,16,1],
@@ -1935,7 +1995,7 @@
     "cfi-return-to-instruction-in-stack": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
+        "require": { "0": [ [ "cfi-return-to-non-call-site" ], ["acc-read-func"] ] },
         "arguments": { "0": ["0", "2", "-vstack-offset-v-p-g1"] },
         "default_args":{"0":["-rsize"]},
         "size": [0,16,1],
@@ -1947,7 +2007,7 @@
     "cfi-return-to-instruction-in-heap": {
         "program": "cfi-code-injection",
         "get-code-offset": { "0": ["main","labelfunc"] },
-        "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
+        "require": { "0": [ [ "cfi-return-to-non-call-site" ], ["acc-read-func"] ] },
         "arguments": { "0": ["0", "3", "-vstack-offset-v-p-g1"] },
         "default_args":{"0":["-rsize"]},
         "size": [0,16,1],
