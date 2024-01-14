@@ -10,6 +10,7 @@
   #define CSB_X86_64
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
+  #define OP_ENDBR 0xfa1e0ff3
   #if defined(COMPILER_MSVC)
     #include "x86_64/visualcpp_assembly.hpp"
   #elif defined(COMPILER_GCC)
@@ -23,6 +24,7 @@
   #define CSB_ARMV8_64
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
+  #define OP_ENDBR
   #include "aarch64/assembly.hpp"
 #endif
 
@@ -30,6 +32,7 @@
   #define CSB_RV64GC
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
+  #define OP_ENDBR
   #include "riscv64/assembly.hpp"
 #endif
 
@@ -37,6 +40,7 @@
   #define CSB_RV64GC
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
+  #define OP_ENDBR
   #include "cheri_riscv64/assembly.hpp"
 #endif
 
