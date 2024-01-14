@@ -383,9 +383,6 @@ int run_cmd(char* argv[], char** runv, long long& time_count) {
 
   auto start = std::chrono::high_resolution_clock::now();
   auto pid = _spawnvp(_P_NOWAIT, argv[0], argv);
-  auto stop = std::chrono::high_resolution_clock::now();
-  time_count = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
-  std::cout << "The time consumed by current process is " << time_count << " microseconds" << std::endl;
 
   if (pid == -1) {
     std::cerr << "Fail to spawn the executable!" << std::endl;
@@ -402,6 +399,10 @@ int run_cmd(char* argv[], char** runv, long long& time_count) {
     std::cerr << "EINVAL =" << EINVAL << std::endl;
     std::cerr << "Cannot wait for the executable!" << std::endl;
     exit(1);
+  }else{
+    auto stop = std::chrono::high_resolution_clock::now();
+    time_count = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+    std::cout << "The time consumed by current process is " << time_count << " microseconds" << std::endl;
   }
 
   if (status != 0)
@@ -428,9 +429,6 @@ int run_cmd(char *argv[], char **runv, long long& time_count) {
   */
   auto start = std::chrono::high_resolution_clock::now();
   int rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, runv);
-  auto stop = std::chrono::high_resolution_clock::now();
-  time_count = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
-  std::cout << "The time consumed by current process is " << time_count << " microseconds" << std::endl;
 
   if(rv) {
     if(rv == ENOSYS) {
@@ -449,6 +447,10 @@ int run_cmd(char *argv[], char **runv, long long& time_count) {
        exit(1);
      }
   } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+
+  auto stop = std::chrono::high_resolution_clock::now();
+  time_count = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+  std::cout << "The time consumed by current process is " << time_count << " microseconds" << std::endl;
 
   if(WIFSIGNALED(status)) {
     std::cout << argv[0] << " terminated with signal " << WTERMSIG(status) << std::endl;
