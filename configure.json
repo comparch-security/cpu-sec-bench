@@ -1014,22 +1014,22 @@
     },
     "mss-read-cross-frame-index": {
         "program": "mss-read-cross-frame-by-index",
-        "require": { "0": [ [ "mss-read-cross-page-index-stack" ] ] },
+        "require": { "0": [ [ "mss-read-cross-object-index-stack" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-frame-ptr": {
         "program": "mss-read-cross-frame-by-pointer",
-        "require": { "0": [ [ "mss-read-cross-page-ptr-stack" ] ] },
+        "require": { "0": [ [ "mss-read-cross-object-ptr-stack" ] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-frame-index": {
         "program": "mss-write-cross-frame-by-index",
-        "require": { "0": [ [ "mss-write-cross-page-index-stack" ] ] },
+        "require": { "0": [ ["mss-write-cross-object-index-overflow-stack"], ["mss-write-cross-object-index-underflow-stack"] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-write-cross-frame-ptr": {
         "program": "mss-write-cross-frame-by-pointer",
-        "require": { "0": [ [ "mss-write-cross-page-ptr-stack" ] ] },
+        "require": { "0": [ ["mss-write-cross-object-ptr-overflow-stack"], ["mss-write-cross-object-ptr-underflow-stack"] ] },
         "expect-results": {"290": "cheri capabilities enabled."}
     },
     "mss-read-cross-page-index-stack": {
@@ -1602,7 +1602,12 @@
     },
     "cpi-func-pointer-assign": {},
     "cpi-func-pointer-arithmetic": {
-        "require": { "0": [ [ "cpi-func-pointer-assign" ] ] },
+        "require": { "0": [ ["cpi-func-pointer-assign","acc-check-data-pointer-arithmetic-stack"],
+                            ["cpi-func-pointer-assign","acc-check-data-pointer-arithmetic-heap"],
+                            ["cpi-func-pointer-assign","acc-check-data-pointer-arithmetic-data"],
+                            ["cpi-func-pointer-assign","acc-check-data-pointer-arithmetic-rodata"]
+                          ]
+                   },
         "expect-results": { "-1": "arithmetic on a pointer to the function pointer is prohibited on Clang 12.",
                             "290": "cheri capabilities enabled." }
     },
