@@ -1,7 +1,8 @@
 #include "include/assembly.hpp"
 #include "include/conf.hpp"
+#include <cstdlib>
+#include <cstring>
 #include <cstdint>
-
 int main(){
 
     long long assem_dist;

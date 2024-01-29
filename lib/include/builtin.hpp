@@ -53,7 +53,7 @@ TRACE_GLOBAR_VAR_PRE long long ra_addr;
 #else
 
   #define INIT_TRACE_FILE {}
-  #define WRITE_TRACE {}
+  #define WRITE_TRACE(prompt,ptr) {}
 
 #endif
 
