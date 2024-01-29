@@ -28,7 +28,16 @@ return 0;
 template<typename T> FORCE_NOINLINE
 int check(const T *buf, int size, int step, T c) {
   for(int i=0; i!= size; i += step){
-     std::cout << "buf[i] is: " << buf[i] << "buf + i is: " << (long long)&(buf[i]) << std::endl;
+    if(fake_use_arg) std::cout << "buf[i] is: " << buf[i] << "buf + i is: " << (long long)&(buf[i]) << std::endl;
+    if(buf[i] != c) return 1;
+  }
+  return 0;
+}
+
+template<typename T> FORCE_INLINE
+int inline_check(const T *buf, int size, int step, T c) {
+  for(int i=0; i!= size; i += step){
+    if(fake_use_arg) std::cout << "buf[i] is: " << buf[i] << "buf + i is: " << (long long)&(buf[i]) << std::endl;
     if(buf[i] != c) return 1;
   }
   return 0;

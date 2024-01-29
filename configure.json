@@ -1466,10 +1466,12 @@
         "expect-results": {"262": "freebsd jemalloc check mechannism enabled"}        
     },
     "mts-access-after-free-alias-stack": {
+        "arguments": {"0":["0"]},
         "require": {"0": [[ "mts-reallocate-stack" ]]}
     },
     "mts-reallocate-stack": {},
     "mts-access-after-reclaim-stack": {
+        "arguments": {"0":["0"]},
         "require": { "0": [ ["mts-reallocate-stack"] ] }
     },
     "mts-write-after-free-stack": {},
@@ -1481,13 +1483,13 @@
         "arguments": {"0": ["c","c"]}
     },
     "mts-access-after-free-org-heap": {
-        "arguments": {"0": ["-rsize"]},
+        "arguments": {"0": ["-rsize", "0"]},
         "require": {"0": [[ "mts-reallocate-heap" ]]},
         "size": [0,3,1],
         "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
     },
     "mts-access-after-free-alias-heap": {
-        "arguments": {"0": ["-rsize"]},
+        "arguments": {"0": ["-rsize", "0"]},
         "require": {"0": [[ "mts-reallocate-heap" ]]},
         "size": [0,3,1],
         "expect-results": { "1": "expected when freed space is refilled with rubbish or cleaned." }
@@ -1632,20 +1634,20 @@
         "require": { "0": [ [ "cfi-call-wrong-func-within-static-analysis"] ] },
         "arguments": { "0": ["1"] }
     },
-    "cfi-call-fake-vtable-func-num-stack": {
-        "program": "cfi-call-fake-vtable-func-num",
+    "cfi-call-fake-vtable-with-func-stack": {
+        "program": "cfi-call-fake-vtable-with-func",
         "arguments": { "0": ["0"] },
         "require": { "0": [ [ "cfi-call-fake-vtable" ], [ "cpi-write-stack-vtable-pointer" ], 
         ["cpi-read-stack-vtable-pointer"]
         ] }
     },
-    "cfi-call-fake-vtable-func-num-heap": {
-        "program": "cfi-call-fake-vtable-func-num",
+    "cfi-call-fake-vtable-with-func-heap": {
+        "program": "cfi-call-fake-vtable-with-func",
         "arguments": { "0": ["1"] },
         "require": { "0": [ [ "cfi-call-fake-vtable" ]]}
     },
-    "cfi-call-fake-vtable-func-num-data": {
-        "program": "cfi-call-fake-vtable-func-num",
+    "cfi-call-fake-vtable-with-func-data": {
+        "program": "cfi-call-fake-vtable-with-func",
         "arguments": { "0": ["2"] },
         "require": { "0": [ [ "cfi-call-fake-vtable" ], [ "cpi-write-data-vtable-pointer" ],
         [ "cpi-read-data-vtable-pointer" ]
@@ -1655,9 +1657,11 @@
         "require": { "0": [ [ "cfi-call-fake-vtable" ]] }
     },
     "cfi-call-fake-vtable-arg-type":{
+        "arguments": { "0": ["4"]},
         "require": { "0": [ [ "cfi-call-fake-vtable" ] ] }
     },
     "cfi-call-fake-vtable-arg-type-modified":{
+        "arguments": { "0": ["4"]},
         "require": { "0": [ [ "cfi-call-fake-vtable-arg-type" ]] }
     },
     "cfi-call-fake-vtable": {
@@ -1671,6 +1675,9 @@
     },
     "cfi-call-wrong-vtable-arg-type": {
         "require": {"0": [[ "cfi-call-wrong-vtable" ]]}
+    },
+    "cfi-call-wrong-vtable-arg-type-modified": {
+        "require": {"0": [[ "cfi-call-wrong-vtable-arg-type" ]]}
     },
     "cfi-call-wrong-vtable-parent": {
         "program": "cfi-call-wrong-vtable-parent",
