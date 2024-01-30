@@ -93,7 +93,8 @@ ifeq ($(OSType),Windows_NT)
 
   # define compiling flags
   ifdef disable_stack_nx_protection
-    LDLAGS += /NXCOMPAT
+    LDFLAGS += /NXCOMPAT:NO
+    LIB_LDFLAGS += /NXCOMPAT:NO
   endif
 
   ifdef disable_stack_protection

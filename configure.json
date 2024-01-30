@@ -1528,9 +1528,17 @@
         "program": "cfi-jump-func-ra-from-heap-memcpy-implicit-arith",
         "arguments": {"0": ["2","0","1"]}
     },
-    "acc-check-ASLR": {
+    "acc-check-prog-ASLR": {
+        "program": "acc-check-ASLR",
+        "arguments": {"0": ["0","0"]},
         "require": { "0": [ [ "cpi-func-pointer-assign" ] ] },
-        "expect-results": { "1": "ASLR enabled."}
+        "expect-results": { "1": "ASLR in prog base is enabled."}
+    },
+    "acc-check-stack-region-ASLR": {
+        "program": "acc-check-ASLR",
+        "arguments": {"0": ["0", "1"]},
+        "require": { "0": [ [ "cpi-func-pointer-assign" ] ] },
+        "expect-results": { "1": "ASLR in stack region is enabled."}
     },
     "acc-read-func": {
         "program": "acc-read-func.gen",
