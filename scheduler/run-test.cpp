@@ -280,6 +280,14 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
           if(debug_run)std::cout << "result_db[or_cond] is: " << result_db[or_cond] << std::endl;
           if(result_db[or_cond]["result"] == 0) {
             has_passed_case = true;
+          }else{
+            if(config_db.count(or_cond) && config_db[or_cond].count("expect-results")) {
+              for(auto r: config_db[or_cond]["expect-results"].get<std::map<std::string, json> >()) {
+                if(result_db[or_cond]["result"] ==  std::stoi(r.first)){
+                  has_passed_case = true;
+                }
+              }
+            }
           }
         }
         if(!has_passed_case) return 1024;
