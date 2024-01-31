@@ -1898,7 +1898,7 @@
         "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
         "arguments": { "0": ["0", "0", "-vstack-offset-v-p-g1"] },
-        "default_args":{"0":["-rsize"]},
+        "default_args":{"0":["0", "0", "-rsize"]},
         "size": [0,16,1],
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled." }
@@ -1908,7 +1908,7 @@
         "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-return-to-non-call-site" ] ] },
         "arguments": { "0": ["0", "1", "-vstack-offset-v-p-g1"] },
-        "default_args":{"0":["-rsize"]},
+        "default_args":{"0":["0", "1", "-rsize"]},
         "size": [0,16,1],
         "expect-results": { "16": "expected excption on the illegal call." ,
                             "290": "cheri capabilities enabled." }
@@ -1918,7 +1918,7 @@
         "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-return-to-func" ] ] },
         "arguments": { "0": ["0", "2", "-vstack-offset-v-p-g1"] },
-        "default_args":{"0":["-rsize"]},
+        "default_args":{"0":["0", "2", "-rsize"]},
         "size": [0,16,1],
         "expect-results": { "16": "expected excption on the illegal call.",
                             "267": "expected exception on the illegal call (uncatchable EXC_BAD_ACCESS SIGSEV on MAC M1)",
@@ -1930,7 +1930,7 @@
         "get-code-offset": { "0": ["main","labelfunc"] },
         "require": { "0": [ [ "cfi-return-to-non-call-site" ]] },
         "arguments": { "0": ["0", "3", "-vstack-offset-v-p-g1"] },
-        "default_args":{"0":["-rsize"]},
+        "default_args":{"0":["0", "3", "-rsize"]},
         "size": [0,16,1],
         "expect-results": { "16": "expected excption on the illegal call.",
                             "290": "cheri capabilities enabled." }
