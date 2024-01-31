@@ -97,7 +97,10 @@ int main(int argc, char* argv[])
   begin_catch_exception(addr, SEGV_ACCERR);
 #ifdef CSB_ARMV8_64
   // bus error on Apple M1
-  begin_catch_exception(addr, BUS_ADRALN, RT_CODE_ACCERR, SIGBUS);
+  begin_catch_exception(addr, BUS_ADRALN, RT_CODE_ACCERR, SEGV_ACCESS);
+#endif
+#ifdef COMPILER_MSVC
+  begin_catch_exception(addr+4, 0, RT_CODE_MAPERR, SIGILL);
 #endif
   begin_catch_exception(addr+4, 0, RT_CODE_ACCERR, SIGILL);
   begin_catch_exception(addr+4, 0, RT_CODE_ACCERR, SIGFPE);
@@ -110,6 +113,9 @@ TARGET_LABEL(argc)
   end_catch_exception();
   end_catch_exception();
 #ifdef CSB_ARMV8_64
+  end_catch_exception();
+#endif
+#ifdef COMPILER_MSVC
   end_catch_exception();
 #endif
   end_catch_exception();

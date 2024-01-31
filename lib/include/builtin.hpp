@@ -89,7 +89,7 @@ TRACE_GLOBAR_VAR_PRE long long ra_addr;
   #define LOG_PATH ".\\trace-log\\"
 #endif
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) || !defined(_MSC_VER)
   #if defined(TRACE_RUN)
     #include <fstream>
   #endif
