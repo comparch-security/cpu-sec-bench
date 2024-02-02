@@ -18,19 +18,28 @@ OPT_LEVEL       ?= O2
 
 # extra security features (comment them out if not needed)
 
+# common option in Windows and Linux
+
+#enable_stack_nx_protection     = yes
 #disable_stack_nx_protection    = yes
+#enable_stack_protection        = yes
 #disable_stack_protection       = yes
 #enable_aslr_protection         = yes
+#disable_aslr_protection        = yes
+#enable_cet_shadow_stack        = yes
+
+# common option in Linux
 #enable_got_protection          = yes
-#enable_stack_protection        = yes
+#disable_got_protection         = yes
 #enable_vtable_verify           = yes
+#disable_vtable_verify          = yes
 #enable_control_flow_protection = yes
+#disable_control_flow_protection= yes
 #enable_stack_clash_protection  = yes
 #enable_address_sanitizer       = yes
 
-# msvc specific safety feature
-
-#enable_cet_shadow_stack        = yes
+# common option in Windows, msvc specific safety feature
+#enable_extra_stack_protection  = yes
 #enable_heap_integrity          = yes
 
 # specific hardware secrutiy features
@@ -93,9 +102,20 @@ ifeq ($(OSType),Windows_NT)
   independent_assembly := lib/x86_64/visualcpp_indepassembly_func.obj
 
   # define compiling flags
+  ifdef enable_stack_nx_protection
+    CXXFLAGS += /NXCOMPAT
+    LDFLAGS += /NXCOMPAT
+    LIB_LDFLAGS += /NXCOMPAT
+  endif
+
   ifdef disable_stack_nx_protection
+    CXXFLAGS += /NXCOMPAT:NO
     LDFLAGS += /NXCOMPAT:NO
     LIB_LDFLAGS += /NXCOMPAT:NO
+  endif
+
+  ifdef enable_stack_protection
+    CXXFLAGS += /GS
   endif
 
   ifdef disable_stack_protection
@@ -107,13 +127,19 @@ ifeq ($(OSType),Windows_NT)
     LIB_LDFLAGS += /DYNAMICBASE /LARGEADDRESSAWARE /HIGHENTROPYVA
   endif
 
-  ifdef enable_stack_protection
-    CXXFLAGS += /GS
+  ifdef disable_aslr_protection
+    LDFLAGS  += /DYNAMICBASE:NO /LARGEADDRESSAWARE:NO /HIGHENTROPYVA:NO
+    LIB_LDFLAGS += /DYNAMICBASE:NO /LARGEADDRESSAWARE:NO /HIGHENTROPYVA:NO
   endif
 
   ifdef enable_control_flow_protection
     CXXFLAGS += /guard:cf
     LDFLAGS  += /GUARD:CF
+  endif
+
+  ifdef disable_control_flow_protection
+    CXXFLAGS += /guard:cf-
+    LDFLAGS  += /GUARD:NO
   endif
 
   ifdef enable_cet_shadow_stack
@@ -123,6 +149,15 @@ ifeq ($(OSType),Windows_NT)
   ifdef enable_heap_integrity
     CXXFLAGS += /sdl /GS
   endif
+
+  ifdef enable_extra_stack_protection
+    CXXFLAGS += /RTCs
+  endif
+
+  ifdef enable_address_sanitizer
+    CXXFLAGS += /fsanitize=address
+  endif
+
 else
 
   # platform
@@ -188,33 +223,60 @@ else
     CXXFLAGS += -z execstack
   endif
 
+  ifdef disable_stack_nx_protection
+    CXXFLAGS += -z noexecstack
+  endif
+
+  ifdef enable_stack_protection
+    CXXFLAGS += -Wstack-protector -fstack-protector-all
+  ifeq ($(ARCH),x86_64)
+    CXXFLAGS += -mstack-protector-guard=guard
+  endif
+  endif
+
   ifdef disable_stack_protection
     CXXFLAGS += -fno-stack-protector
   endif
 
   ifdef enable_aslr_protection
-    CXXFLAGS += -pie -fPIE
-    LDFLAGS  += -Wl,-pie
+    CXXFLAGS += pie -fPIE
+    LDFLAGS  += -Wl, pie
+  endif
+
+  ifdef disable_aslr_protection
+    CXXFLAGS += -no-pie
+    LDFLAGS  += -Wl,-no-pie
   endif
 
   ifdef enable_got_protection
     LDFLAGS  += -Wl,-z,relro,-z,now
   endif
 
-  ifdef enable_stack_protection
-    CXXFLAGS += -Wstack-protector -fstack-protector-all
-  ifeq ($(ARCH),x86_64)
-    CXXFLAGS += -mstack-protector-guard=tls
-  endif
+  ifdef disable_got_protection
+    LDFLAGS  += -Wl,-z, norelro,-z,lazy
   endif
 
   ifdef enable_vtable_verify
     CXXFLAGS += -fvtable-verify=std
   endif
 
+  ifdef disable_vtable_verify
+    CXXFLAGS += -fvtable-verify=none
+  endif
+
   ifdef enable_control_flow_protection
   ifeq ($(ARCH),x86_64)
-    CXXFLAGS += -fcf-protection=full -mcet -z cet-report=error
+    CXXFLAGS += -fcf-protection=full
+  endif
+  endif
+
+  ifdef enable_cet_shadow_stack
+    CXXFLAGS += -fcf-protection=return
+  endif
+
+  ifdef disable_control_flow_protection
+  ifeq ($(ARCH),x86_64)
+    CXXFLAGS += -fcf-protection=none
   endif
   endif
 
