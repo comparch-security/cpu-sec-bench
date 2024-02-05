@@ -1,6 +1,7 @@
 import igraph as ig
 import matplotlib.pyplot as plt
 import json as js
+import json as js
 
 ig.config["plotting.backend"] = "matplotlib"
 
@@ -130,6 +131,18 @@ g.es["category"] = edges_category
 # g.vs["gender"] = ["f", "m", "f", "m", "f", "m", "m"]
 # g.es["is_formal"] = [False, False, True, True, True, False, True, False, False]
 
+#g.vs["label"] = g.vs["name"]
+layout= g.layout("fr")
+
+visual_style = {}
+visual_style["layout"] = layout
+visual_style["vertex_color"] = [color_dict[c] for c in g.vs["category"]]
+visual_style["edge_width"] = [0.5]
+visual_style["curved"]     = 10
+visual_style["vertex_size"] = 10
+# visual_style["vertex_label"] = g.vs["name"]
+# visual_style["vertex_label_size"] = 7
+g.write_gml("1.gml")
 #g.vs["label"] = g.vs["name"]
 layout= g.layout("fr")
 
