@@ -94,6 +94,7 @@ ifeq ($(OSType),Windows_NT)
   MIDFILE_SUFFIX    := .obj
   DLL_SUFFIX        := .dll
   LDFLAGS           := /link /incremental:no /OPT:NOREF /OPT:NOICF
+  LIB_LDFLAGS       := /link
   OBJDUMPFLAGS      := /DISASM
   DYNCFI_OPTION     := libcfi.lib
   func-opcode-gen   := .\script\get_x64_func_inst.bat
@@ -122,7 +123,8 @@ ifeq ($(OSType),Windows_NT)
   endif
 
   ifdef enable_aslr_protection
-    LDFLAGS  += /DYNAMICBASE
+    LDFLAGS  += /DYNAMICBASE /LARGEADDRESSAWARE /HIGHENTROPYVA
+    LIB_LDFLAGS += /DYNAMICBASE /LARGEADDRESSAWARE /HIGHENTROPYVA
   endif
 
   ifdef disable_aslr_protection
@@ -178,7 +180,7 @@ else
   CLIBAPI       := posix
   OBJDUMP       := objdump
 
-  CXXFLAGS_BASE := -I./lib -std=c++11 -Wall
+  CXXFLAGS_BASE = ${CXXFLAGS} -I./lib -std=c++11 -Wall
   ifdef BUFFER_SIZE
 		CXXFLAGS_BASE += -DBUFFER_SIZE=$(BUFFER_SIZE)
   endif
@@ -204,6 +206,7 @@ else
   MIDFILE_SUFFIX    := .o
   DLL_SUFFIX        := .so
   LDFLAGS           :=
+  LIB_LDFLAGS       :=
   OBJDUMPFLAGS      := -D -l -S
   DYNCFI_OPTION     := -Llib/common/ -Wl,-rpath,lib/common/ -lcfi
   func-opcode-gen   := ./script/get_x64_func_inst.sh
@@ -408,28 +411,28 @@ endif
 
 
 $(dynlibcfi): lib/common/cfi.cpp  lib/include/cfi.hpp
-	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_DYN_OPTION)$@
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_DYN_OPTION)$@ $(LIB_LDFLAGS)
 
 cfi_base := $(basename $(dynlibcfi))
 rubbish += $(cfi_base).so $(cfi_base).dll $(cfi_base).pdb $(cfi_base).obj $(cfi_base).lib $(cfi_base).ilk $(cfi_base).exp lib/common/cfi.obj
 
 $(extra_objects): %$(MIDFILE_SUFFIX) : %.cpp $(headers)
-	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@ $(LIB_LDFLAGS)
 
 rubbish += $(extra_objects)
 
 $(independent_assembly): %$(MIDFILE_SUFFIX) : %.asm
-	$(ASM) $(OUTPUT_LIB_OPTION)$@ $(ASMFLAGS) $^
+	$(ASM) $(OUTPUT_LIB_OPTION)$@ $(ASMFLAGS) $^ $(LIB_LDFLAGS)
 
 rubbish += $(independent_assembly)
 
 $(libmss): %$(MIDFILE_SUFFIX) : %.cpp lib/include/mss.hpp
-	$(CXX) $(OBJECT_CXXFLAGS) -c $< $(OUTPUT_LIB_OPTION)$@
+	$(CXX) $(OBJECT_CXXFLAGS) -c $< $(OUTPUT_LIB_OPTION)$@ $(LIB_LDFLAGS)
 
 rubbish += $(libmss)
 
 $(mss-obj): $(test-path)/mss-%$(MIDFILE_SUFFIX):$(mss-path)/%.cpp
-	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@ $(LIB_LDFLAGS)
 
 $(mss-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(libmss) $(independent_assembly)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
@@ -438,7 +441,7 @@ $(mss-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(mts-obj): $(test-path)/mts-%$(MIDFILE_SUFFIX):$(mts-path)/%.cpp
-	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@ $(LIB_LDFLAGS)
 
 $(mts-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(libmss) $(independent_assembly)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(libmss) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
@@ -447,7 +450,7 @@ $(mts-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(acc-obj): $(test-path)/acc-%$(MIDFILE_SUFFIX):$(acc-path)/%.cpp
-	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@ $(LIB_LDFLAGS)
 
 $(acc-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(independent_assembly)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
@@ -470,7 +473,7 @@ $(acc-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(cpi-obj): $(test-path)/cpi-%$(MIDFILE_SUFFIX):$(cpi-path)/%.cpp
-	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@ $(LIB_LDFLAGS)
 
 $(cpi-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(dynlibcfi) $(independent_assembly)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@  $(LDFLAGS)
@@ -479,7 +482,7 @@ $(cpi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
 $(cfi-obj): $(test-path)/cfi-%$(MIDFILE_SUFFIX):$(cfi-path)/%.cpp
-	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@
+	$(CXX) $(OBJECT_CXXFLAGS) $< $(OUTPUT_LIB_OPTION)$@ $(LIB_LDFLAGS)
 
 $(cfi-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(dynlibcfi) $(independent_assembly)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(DYNCFI_OPTION) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
