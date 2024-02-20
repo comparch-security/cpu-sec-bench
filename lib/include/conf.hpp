@@ -1,3 +1,5 @@
+#include <cstdlib>
+#include <cstring>
 #define STACK  0
 #define HEAP   1
 #define DATA   2
