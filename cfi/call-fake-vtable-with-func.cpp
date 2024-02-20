@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
   for(int i=0; i<3; i++){
     stack_fake_vtable[i] = fake_func;
     data_fake_vtable[i] = fake_func;
+    heap_fake_vtable[i] = fake_func;
   }
   Helper *orig = new Helper();
 

@@ -1,12 +1,24 @@
 #include "include/mss.hpp"
 #include "include/conf.hpp"
 
+charBuffer fake_use_buffer('a','b','c');
 charBuffer *buffer;
 
 int main(int argc, char** argv) {
   charBuffer *tmp = new charBuffer;
   buffer = tmp;
   tmp->updateBuffer('u', 'd', 'o');
+
+  char* pend;
+  fake_use_arg = std::strtoll(argv[2],&pend,10);
+  if(fake_use_arg){
+    for(int i = 0; i != BUFFER_SIZE; i++){
+      fake_use_buffer.overflow[i]  = buffer->overflow[i];
+      fake_use_buffer.underflow[i] = buffer->underflow[i];
+      fake_use_buffer.data[i]      = buffer->data[i];
+    }
+  }
+
   delete tmp;
   int region_flag = argv[1][0] - '0';
 
