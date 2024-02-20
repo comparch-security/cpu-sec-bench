@@ -257,8 +257,10 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
    2. check whether the ind's corresponding case is ok
   */
   if(tcase.count("require")  && !exhausted_run) {
-    for(auto require_lists = tcase["require"].begin(); require_lists != tcase["require"].end(); require_lists++){
-      auto require_list = (*require_lists).get<str_llist_t>();
+    if(!tcase["require"][std::to_string(ind)].empty()){
+      if(debug_run)std::cout << "reuire case ind is: " << ind << std::endl;
+      auto require_list = tcase["require"][std::to_string(ind)].get<str_llist_t>();
+
       for(auto and_conds : require_list) {
         for(auto or_cond : and_conds) {
           if(!result_db.count(or_cond)) {
@@ -267,12 +269,10 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
           }
         }
       }
-    }
-    if(debug_run)std::cout << "all require cases are tested" << std::endl;
-    if(!tcase["require"][std::to_string(ind)].empty()){
-      if(debug_run)std::cout << "reuire case ind is: " << ind << std::endl;
+
+      if(debug_run)std::cout << "all require cases are tested" << std::endl;
       if(debug_run)std::cout << "curr require case is: " <<tcase["require"][std::to_string(ind)] << std::endl;
-      auto require_list = tcase["require"][std::to_string(ind)].get<str_llist_t>();
+
       for(auto and_conds : require_list) {
         bool has_passed_case = false;
         for(auto or_cond : and_conds) {
@@ -280,6 +280,14 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
           if(debug_run)std::cout << "result_db[or_cond] is: " << result_db[or_cond] << std::endl;
           if(result_db[or_cond]["result"] == 0) {
             has_passed_case = true;
+          }else{
+            if(config_db.count(or_cond) && config_db[or_cond].count("expect-results")) {
+              for(auto r: config_db[or_cond]["expect-results"].get<std::map<std::string, json> >()) {
+                if(result_db[or_cond]["result"] ==  std::stoi(r.first)){
+                  has_passed_case = true;
+                }
+              }
+            }
           }
         }
         if(!has_passed_case) return 1024;
@@ -500,6 +508,7 @@ bool run_tests(std::list<std::string> cases) {
     auto tcase = config_db[cn];
     arg_parser(tcase,alists);
     if(debug_run)std::cout << "alists.size() is: " << alists.size() << std:: endl;
+    long long curr_exec_time_sum = 0;
     for(int ind = 0; ind != alists.size(); ind++){
       if(debug_run)std::cout << "ind is: " << ind << std::endl;
       auto alist = alists[ind];
@@ -578,7 +587,7 @@ bool run_tests(std::list<std::string> cases) {
             curr_time += curr_script_time;
             #endif
             run_time_count += curr_time;
-            result_db[cn]["run-time"] = curr_time;
+            curr_exec_time_sum += curr_time;
 
             // record run-time parameter
             if(gvar.size() == 1 && test_result >= 32 && test_result < 64) { // successfully find a run-time parameter
@@ -619,7 +628,7 @@ bool run_tests(std::list<std::string> cases) {
           if(debug_run)std::cerr << "push cn: "<< cn << std::endl;
           cases.push_back(cn);
           current_test_checkdep_count++;
-          break;
+          continue;
         }else{
           std::cerr << "Parse abnormality: impossible to resolve the dependencies for the following test cases:" << std::endl;
           while(!cases.empty()){
@@ -631,7 +640,7 @@ bool run_tests(std::list<std::string> cases) {
         }
       }else if(test_run && test_cond == 1024) {
         std::cerr << "Required case failed: " << cn << " failed with unexpected exit value " << test_cond << std::endl;
-        break;
+        continue;
         current_test_checkdep_count = 0;
       }
     }
@@ -639,6 +648,7 @@ bool run_tests(std::list<std::string> cases) {
       continue;
     }
     if(test_cond == 1024){
+      result_db[cn]["run-time"] = curr_exec_time_sum;
       result_db[cn]["result"] = 1024; dump_json(result_db, "results.json", debug_run);
       continue;
     }
@@ -651,6 +661,7 @@ bool run_tests(std::list<std::string> cases) {
         std::cerr << "Test abnormality: " << cn << " failed with unexpected exit value " << test_result << std::endl;
       }
     }
+    result_db[cn]["run-time"] = curr_exec_time_sum;
     result_db[cn]["result"] = test_result; dump_json(result_db, "results.json", debug_run);
     current_test_checkdep_count = 0;
   }
