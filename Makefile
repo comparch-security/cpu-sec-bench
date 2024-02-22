@@ -304,8 +304,8 @@ ifdef enable_riscv64_cheri
 endif
 
 ifdef enable_aarch64_morello
-  CXXFLAGS += -cheri -cheri-bounds=very-aggressive
-  OBJECT_CXXFLAGS += -cheri -cheri-bounds=very-aggressive
+  CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=very-aggressive
+  OBJECT_CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=very-aggressive
 endif
 
 ifdef enable_aarch64_mte
