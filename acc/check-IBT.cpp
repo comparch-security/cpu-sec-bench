@@ -18,6 +18,8 @@ TARGET_LABEL(argc)
     std::cerr << "instr is:" << std::hex << instr << std::endl;
   #endif
   // assuming only Intel x86_64 would add a endbr64 instruction here
+  #ifdef OP_ENDBR
   if((instr & 0xffffffff) == OP_ENDBR) return 32+1;
-  else return 32;
+  #endif
+  return 32;
 }
