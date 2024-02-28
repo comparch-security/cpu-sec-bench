@@ -219,7 +219,9 @@ else
   independent_assembly := 
 
   ifeq ($(CXX),$(filter $(CXX),clang++ c++))
-    CXXFLAGS += -fuse-ld=lld
+    ifneq ($(OSType),Darwin)
+      CXXFLAGS += -fuse-ld=lld
+    endif
   endif
 
   # define compiling flags
