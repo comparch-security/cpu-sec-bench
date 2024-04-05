@@ -2,13 +2,14 @@
 
 import re
 import sys
+import csv
 from operator import add
 from functools import reduce
 
 db = {
+    "acc": [0, 0],
     "mss": [0, 0],
     "mts": [0, 0],
-    "acc": [0, 0],
     "cpi": [0, 0],
     "cfi-b": [0, 0],
     "cfi-f": [0, 0],
@@ -42,11 +43,20 @@ for entry in sys.stdin:
     if int(result_val) == 0:
         db["total"][0] += 1
         db[case_name[0]][0] += 1
-        
+
+print("acc   " + str(db["acc"]))
 print("mss   " + str(db["mss"]))
 print("mts   " + str(db["mts"]))
-print("acc   " + str(db["acc"]))
 print("cpi   " + str(db["cpi"]))
 print("cfi-b " + str(db["cfi-b"]))
 print("cfi-f " + str(db["cfi-f"]))
 print("total " + str(db["total"]))
+
+# Open the file in write mode (w)
+with open('./results.csv', 'a', newline='') as f:
+    # Create the CSV writer
+    writer = csv.writer(f)
+    l = []
+    for (k,n) in db.items():
+        l.append(n[0])
+    writer.writerow(l) 
