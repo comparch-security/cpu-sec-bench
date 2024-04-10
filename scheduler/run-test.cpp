@@ -328,7 +328,7 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
   if(tcase.count("conf-macro")){
     std::map<std::string, std::string> conf_args;
     //Currently, only the case of a single conf macro is being considered
-    conf_args = tcase["conf-macro"]["0"].get<std::map<std::string,std::string>>();
+    conf_args = tcase["conf-macro"][std::to_string(ind)].get<std::map<std::string,std::string>>();
     for(auto ca:conf_args){
       make_config_macro.push_back(ca.first + "=" + ca.second);
     }
