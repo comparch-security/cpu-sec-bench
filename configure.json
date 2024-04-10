@@ -5262,7 +5262,14 @@
         "require": {
             "0": [
                 [
-                    "cfi-call-wrong-func",
+                    "cfi-call-wrong-func"
+                ]
+            ],
+            "1": [
+                [
+                    "cpi-func-pointer-arithmetic"
+                ],
+                [
                     "acc-read-func"
                 ]
             ]
@@ -5275,6 +5282,7 @@
         }
     },
     "cfi-call-wrong-func-within-static-analysis": {
+        "comment": "add chain type support",
         "arguments": {
             "0": [
                 "1"
@@ -5282,6 +5290,9 @@
         },
         "require": {
             "0": [
+                [
+                    "acc-read-func"
+                ],
                 [
                     "cpi-func-pointer-assign"
                 ]
@@ -5313,10 +5324,7 @@
             "0": [
                 [
                     "cfi-call-fake-vtable",
-                    "cpi-write-stack-vtable-pointer"
-                ],
-                [
-                    "cpi-read-stack-vtable-pointer"
+                    "cfi-call-instruction-in-stack"
                 ]
             ]
         }
@@ -5331,7 +5339,8 @@
         "require": {
             "0": [
                 [
-                    "cfi-call-fake-vtable"
+                    "cfi-call-fake-vtable",
+                    "cfi-call-instruction-in-heap"
                 ]
             ]
         }
@@ -5347,10 +5356,7 @@
             "0": [
                 [
                     "cfi-call-fake-vtable",
-                    "cpi-write-data-vtable-pointer"
-                ],
-                [
-                    "cpi-read-data-vtable-pointer"
+                    "cfi-call-instruction-in-data"
                 ]
             ]
         }
@@ -5393,6 +5399,7 @@
         }
     },
     "cfi-call-fake-vtable": {
+        "comment": "add chain type support",
         "require": {
             "0": [
                 [
@@ -5400,6 +5407,22 @@
                 ],
                 [
                     "cpi-read-heap-vtable-pointer"
+                ]
+            ],
+            "1": [
+                [
+                    "cpi-write-stack-vtable-pointer"
+                ],
+                [
+                    "cpi-read-stack-vtable-pointer"
+                ]
+            ],
+            "2": [
+                [
+                    "cpi-write-data-vtable-pointer"
+                ],
+                [
+                    "cpi-read-data-vtable-pointer"
                 ]
             ]
         }
@@ -5461,6 +5484,7 @@
         }
     },
     "cfi-call-wrong-vtable-child": {
+        "comment": "add chain type support",
         "program": "cfi-call-wrong-vtable-child",
         "require": {
             "0": [
@@ -5469,6 +5493,22 @@
                 ],
                 [
                     "cpi-read-heap-vtable-pointer"
+                ]
+            ],
+            "1": [
+                [
+                    "cpi-write-stack-vtable-pointer"
+                ],
+                [
+                    "cpi-read-stack-vtable-pointer"
+                ]
+            ],
+            "2": [
+                [
+                    "cpi-write-data-vtable-pointer"
+                ],
+                [
+                    "cpi-read-data-vtable-pointer"
                 ]
             ]
         }
@@ -5578,7 +5618,8 @@
         "require": {
             "0": [
                 [
-                    "cfi-call-instruction-in-rodata"
+                    "cfi-call-instruction-in-rodata",
+                    "cfi-call-wrong-type-arg-fp2dp-func"
                 ]
             ]
         },
@@ -5590,7 +5631,8 @@
         "require": {
             "0": [
                 [
-                    "cfi-call-instruction-in-data"
+                    "cfi-call-instruction-in-data",
+                    "cfi-call-wrong-type-arg-fp2dp-func"
                 ]
             ]
         },
@@ -5603,7 +5645,8 @@
         "require": {
             "0": [
                 [
-                    "cfi-call-instruction-in-stack"
+                    "cfi-call-instruction-in-stack",
+                    "cfi-call-wrong-type-arg-fp2dp-func"
                 ]
             ]
         },
@@ -5626,7 +5669,8 @@
         "require": {
             "0": [
                 [
-                    "cfi-call-instruction-in-heap"
+                    "cfi-call-instruction-in-heap",
+                    "cfi-call-wrong-type-arg-fp2dp-func"
                 ]
             ]
         },
@@ -5761,6 +5805,7 @@
         }
     },
     "cfi-jump-mid-func": {
+        "comment": "add chain type support",
         "get-code-offset": {
             "0": [
                 "helper",
@@ -5775,8 +5820,10 @@
         "require": {
             "0": [
                 [
-                    "cpi-func-pointer-assign",
                     "acc-read-func"
+                ],
+                [
+                    "cpi-func-pointer-assign"
                 ]
             ]
         }
@@ -5964,15 +6011,18 @@
         }
     },
     "cfi-return-to-wrong-call-site-within-static-analysis": {
+        "comment": "add chain type support",
         "require": {
             "0": [
                 [
-                    "acc-get-ra-offset-v-p-g1"
+                    "mss-write-by-enclosing-array-pointer-large-count-overflow-stack"
                 ]
             ],
             "1": [
                 [
-                    "cpi-func-pointer-arithmetic",
+                    "acc-get-ra-offset-v-p-g1"
+                ],
+                [
                     "acc-read-func"
                 ]
             ]
@@ -6240,7 +6290,7 @@
         "require": {
             "0": [
                 [
-                    "cfi-return-to-func"
+                    "cfi-return-to-non-call-site"
                 ]
             ]
         },
