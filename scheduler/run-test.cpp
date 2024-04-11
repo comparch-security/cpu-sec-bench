@@ -253,8 +253,8 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
     pn = cn;
 
   /*check requirements
-   1. check whether all requirement cases are tested.
-   2. check whether the ind's corresponding case is ok
+   1. check whether the ind's requirement cases is tested.
+   2. check whether the ind's corresponding case's result is ok
   */
   if(tcase.count("require")  && !exhausted_run) {
     if(!tcase["require"][std::to_string(ind)].empty()){
@@ -264,7 +264,7 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
       for(auto and_conds : require_list) {
         for(auto or_cond : and_conds) {
           if(!result_db.count(or_cond)) {
-            if(debug_run)std::cout << "has untested require tests" << std::endl;
+            std::cout << "has untested require tests: " << or_cond << std::endl;
             return 1;
           }
         }
@@ -497,7 +497,7 @@ bool run_tests(std::list<std::string> cases) {
     test_results.clear();
     auto cn = cases.front();
     cases.pop_front();
-    if(debug_run)std::cerr << "case: " << cn << std::endl; // keep in case needed in debug
+    std::cerr << "\n========== start: " << cn << " =========" << std::endl; // keep in case needed in debug
     // check whether the case exist
     if(!config_db.count(cn)) {
       std::cerr << "Fail to parse test case " << cn << std::endl;
@@ -510,12 +510,11 @@ bool run_tests(std::list<std::string> cases) {
     if(debug_run)std::cout << "alists.size() is: " << alists.size() << std:: endl;
     long long curr_exec_time_sum = 0;
     for(int ind = 0; ind != alists.size(); ind++){
-      if(debug_run)std::cout << "ind is: " << ind << std::endl;
+      std::cout << "\"arguments\" ind is: " << ind << std::endl;
       auto alist = alists[ind];
       test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results, retry_results);
-      if(debug_run)std::cout << "test cond is: " << test_cond << std::endl;
       if(!test_run || test_cond == 0) {
-        std::cout << "\n========== " << cn << " =========" << std::endl;
+        std::cout << "\n------ " << cn << " ------" << std::endl;
         int make_result = 0;
         if(0 == make_result && make_run && !has_make) {
           long long curr_time, curr_size;
@@ -624,8 +623,9 @@ bool run_tests(std::list<std::string> cases) {
         }
         if(0 == test_result) break; 
       } else if(test_run && test_cond == 1){
+        std::cerr << "\n------ " << cn << " ------" << std::endl;
         if(current_test_checkdep_count < total_cases){
-          if(debug_run)std::cerr << "push cn: "<< cn << std::endl;
+          std::cerr << "push the curr case, and go to check the next argument's corresponding requirement" << std::endl;
           cases.push_back(cn);
           current_test_checkdep_count++;
           continue;
@@ -639,17 +639,20 @@ bool run_tests(std::list<std::string> cases) {
           exit(1);
         }
       }else if(test_run && test_cond == 1024) {
-        std::cerr << "Required case failed: " << cn << " failed with unexpected exit value " << test_cond << std::endl;
+        std::cerr << "\n------ " << cn << " ------" << std::endl;
+        std::cerr << "Required case failed: " << cn << ", so curr case failed with unexpected exit value " << test_cond << std::endl;
         continue;
         current_test_checkdep_count = 0;
       }
     }
     if(test_cond == 1){
+      std::cerr << "\n========== end: " << cn << " =========" << std::endl;
       continue;
     }
     if(test_cond == 1024){
       result_db[cn]["run-time"] = curr_exec_time_sum;
       result_db[cn]["result"] = 1024; dump_json(result_db, "results.json", debug_run);
+      std::cerr << "\n========== end: " << cn << " =========" << std::endl;
       continue;
     }
     //handle the results
@@ -664,6 +667,7 @@ bool run_tests(std::list<std::string> cases) {
     result_db[cn]["run-time"] = curr_exec_time_sum;
     result_db[cn]["result"] = test_result; dump_json(result_db, "results.json", debug_run);
     current_test_checkdep_count = 0;
+    std::cerr << "\n========== end: " << cn << " =========" << std::endl;
   }
   return true;
 }
