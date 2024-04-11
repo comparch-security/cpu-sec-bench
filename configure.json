@@ -2400,6 +2400,21 @@
             "290": "cheri capabilities enabled."
         }
     },
+    "mss-write-by-stack-pointer": {
+        "arguments": {
+            "0": [
+                "-roffset"
+            ]
+        },
+        "conf-macro": {
+            "0": {
+                "STEP": "8"
+            }
+        },
+        "require": {
+            "0": []
+        }
+    },
     "mss-write-by-bare-array-pointer-overflow-stack": {
         "program": "mss-write-by-bare-array-pointer",
         "default_args": {
@@ -5278,6 +5293,10 @@
             "0": [
                 "helper",
                 "labelfunc"
+            ],
+            "1": [
+                "helper",
+                "labelfunc"
             ]
         }
     },
@@ -5685,6 +5704,10 @@
             "0": [
                 "main",
                 "labelfunc"
+            ],
+            "1": [
+                "main",
+                "labelfunc"
             ]
         },
         "require": {
@@ -5714,6 +5737,10 @@
         "program": "cfi-code-injection",
         "get-code-offset": {
             "0": [
+                "main",
+                "labelfunc"
+            ],
+            "1": [
                 "main",
                 "labelfunc"
             ]
@@ -5747,6 +5774,10 @@
             "0": [
                 "main",
                 "labelfunc"
+            ],
+            "1": [
+                "main",
+                "labelfunc"
             ]
         },
         "require": {
@@ -5777,6 +5808,10 @@
         "program": "cfi-code-injection",
         "get-code-offset": {
             "0": [
+                "main",
+                "labelfunc"
+            ],
+            "1": [
                 "main",
                 "labelfunc"
             ]
@@ -6029,19 +6064,18 @@
         },
         "arguments": {
             "0": [
-                "-vstack-offset-v-p-g1",
+                "0",
+                "0",
                 "-roffset"
             ],
             "1": [
+                "1",
+                "-vstack-offset-v-p-g1",
                 "-roffset"
             ]
         },
         "default_args": {
             "0": [
-                "-vstack-offset-v-p-g1",
-                "-roffset"
-            ],
-            "1": [
                 "-rextend_offset"
             ]
         },
@@ -6064,15 +6098,17 @@
             "0": [
                 "main",
                 "labelfunc"
+            ],
+            "1": [
+                "main",
+                "labelfunc"
             ]
         },
-        "retry-results": {
+        "expect-results": {
+            "290": "cheri capabilities enabled.",
             "1": "failed to change RA on stack at all, normal return.",
             "267": "RA is partially written leading to a segment error due to wrong RA.",
             "251": "When Arm Asan Enabled, the clang compiler pushes two more registers(one for shadow memory, another for alignment)"
-        },
-        "expect-results": {
-            "290": "cheri capabilities enabled."
         }
     },
     "cfi-return-to-wrong-call-site": {
