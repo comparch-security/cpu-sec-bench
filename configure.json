@@ -2415,6 +2415,333 @@
             "0": []
         }
     },
+    "mss-write-by-bare-array-index-overflow-stack": {
+        "program": "mss-write-by-bare-array-index",
+        "default_args": {
+            "0": [
+                "2"
+            ]
+        },
+        "conf-macro": {
+            "0": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "0",
+                "BUFFER_KIND": "0"
+            },
+            "1": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "0",
+                "BUFFER_KIND": "0"
+            },
+            "2": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "0",
+                "BUFFER_KIND": "0"
+            }
+        },
+        "require": {
+            "0": [
+                [
+                    "acc-check-inter-obj-stack-redzone"
+                ]
+            ],
+            "1": [
+                [
+                    "acc-check-data-pointer-arithmetic-stack"
+                ]
+            ],
+            "2": []
+        },
+        "arguments": {
+            "0": [
+                "0"
+            ],
+            "1": [
+                "2"
+            ],
+            "2": [
+                "4",
+                "-vredzone_inter_obj_stack"
+            ]
+        },
+        "reference": {
+            "cwe": [
+                "119",
+                "121",
+                "125",
+                "126",
+                "788"
+            ]
+        },
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
+    "mss-write-by-bare-array-index-overflow-heap": {
+        "program": "mss-write-by-bare-array-index",
+        "default_args": {
+            "0": [
+                "2"
+            ]
+        },
+        "require": {
+            "0": [
+                [
+                    "acc-check-inter-obj-heap-redzone"
+                ]
+            ],
+            "1": [
+                [
+                    "acc-check-data-pointer-arithmetic-heap"
+                ]
+            ],
+            "2": []
+        },
+        "arguments": {
+            "0": [
+                "0"
+            ],
+            "1": [
+                "2"
+            ],
+            "2": [
+                "4",
+                "-vredzone_inter_obj_heap"
+            ]
+        },
+        "conf-macro": {
+            "0": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "1",
+                "BUFFER_KIND": "0"
+            },
+            "1": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "1",
+                "BUFFER_KIND": "0"
+            },
+            "2": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "1",
+                "BUFFER_KIND": "0"
+            }
+        },
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
+    "mss-write-by-bare-array-index-overflow-data": {
+        "program": "mss-write-by-bare-array-index",
+        "require": {
+            "0": [
+                [
+                    "acc-check-inter-obj-data-redzone"
+                ]
+            ],
+            "1": [
+                [
+                    "acc-check-data-pointer-arithmetic-data"
+                ]
+            ],
+            "2": []
+        },
+        "arguments": {
+            "0": [
+                "0"
+            ],
+            "1": [
+                "2"
+            ],
+            "2": [
+                "4",
+                "-vredzone_inter_obj_data"
+            ]
+        },
+        "default_args": {
+            "0": [
+                "2"
+            ]
+        },
+        "conf-macro": {
+            "0": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "2",
+                "BUFFER_KIND": "0"
+            },
+            "1": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "2",
+                "BUFFER_KIND": "0"
+            },
+            "2": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "2",
+                "BUFFER_KIND": "0"
+            }
+        },
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
+    "mss-write-by-bare-array-index-underflow-stack": {
+        "program": "mss-write-by-bare-array-index",
+        "default_args": {
+            "0": [
+                "3"
+            ]
+        },
+        "require": {
+            "0": [
+                [
+                    "acc-check-inter-obj-stack-redzone"
+                ]
+            ],
+            "1": [
+                [
+                    "acc-check-data-pointer-arithmetic-stack"
+                ]
+            ],
+            "2": []
+        },
+        "arguments": {
+            "0": [
+                "1"
+            ],
+            "1": [
+                "3"
+            ],
+            "2": [
+                "5",
+                "-vredzone_inter_obj_stack"
+            ]
+        },
+        "conf-macro": {
+            "0": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "0",
+                "BUFFER_KIND": "0"
+            },
+            "1": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "0",
+                "BUFFER_KIND": "0"
+            },
+            "2": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "0",
+                "BUFFER_KIND": "0"
+            }
+        },
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
+    "mss-write-by-bare-array-index-underflow-heap": {
+        "program": "mss-write-by-bare-array-index",
+        "default_args": {
+            "0": [
+                "3"
+            ]
+        },
+        "require": {
+            "0": [
+                [
+                    "acc-check-inter-obj-heap-redzone"
+                ]
+            ],
+            "1": [
+                [
+                    "acc-check-data-pointer-arithmetic-heap"
+                ]
+            ],
+            "2": []
+        },
+        "arguments": {
+            "0": [
+                "1"
+            ],
+            "1": [
+                "3"
+            ],
+            "2": [
+                "5",
+                "-vredzone_inter_obj_heap"
+            ]
+        },
+        "conf-macro": {
+            "0": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "1",
+                "BUFFER_KIND": "0"
+            },
+            "1": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "1",
+                "BUFFER_KIND": "0"
+            },
+            "2": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "1",
+                "BUFFER_KIND": "0"
+            }
+        },
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
+    "mss-write-by-bare-array-index-underflow-data": {
+        "program": "mss-write-by-bare-array-index",
+        "default_args": {
+            "0": [
+                "3"
+            ]
+        },
+        "require": {
+            "0": [
+                [
+                    "acc-check-inter-obj-data-redzone"
+                ]
+            ],
+            "1": [
+                [
+                    "acc-check-data-pointer-arithmetic-data"
+                ]
+            ],
+            "2": []
+        },
+        "arguments": {
+            "0": [
+                "1"
+            ],
+            "1": [
+                "3"
+            ],
+            "2": [
+                "5",
+                "-vredzone_inter_obj_data"
+            ]
+        },
+        "conf-macro": {
+            "0": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "2",
+                "BUFFER_KIND": "0"
+            },
+            "1": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "2",
+                "BUFFER_KIND": "0"
+            },
+            "2": {
+                "BUFFER_SIZE": "8",
+                "REGION_KIND": "2",
+                "BUFFER_KIND": "0"
+            }
+        },
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
     "mss-write-by-bare-array-pointer-overflow-stack": {
         "program": "mss-write-by-bare-array-pointer",
         "default_args": {
@@ -5566,7 +5893,8 @@
                     "cfi-call-wrong-vtable"
                 ],
                 [
-                    "mts-access-after-free-org-heap"
+                    "mts-access-after-free-org-heap",
+                    "mts-write-after-free-stack"
                 ]
             ]
         },
@@ -6055,7 +6383,8 @@
             ],
             "1": [
                 [
-                    "acc-get-ra-offset-v-p-g1"
+                    "acc-get-ra-offset-v-p-g1",
+                    "acc-get-ra-offset-v-p-g0"
                 ],
                 [
                     "mss-write-by-stack-pointer"
