@@ -6058,7 +6058,7 @@
                     "acc-get-ra-offset-v-p-g1"
                 ],
                 [
-                    "acc-read-func"
+                    "mss-write-by-stack-pointer"
                 ]
             ]
         },
