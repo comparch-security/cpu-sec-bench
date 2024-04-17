@@ -218,6 +218,12 @@ else
   dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
   independent_assembly := 
 
+  ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+    ifneq ($(OSType),Darwin)
+      CXXFLAGS += -fuse-ld=lld
+    endif
+  endif
+
   # define compiling flags
   ifdef disable_stack_nx_protection
     CXXFLAGS += -z execstack
@@ -304,22 +310,23 @@ ifdef enable_riscv64_cheri
 endif
 
 ifdef enable_aarch64_morello
+  ARCH        := aarch64
   CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=very-aggressive
   OBJECT_CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=very-aggressive
 endif
 
 ifdef enable_aarch64_mte
-  CXXFLAGS := -fuse-ld=lld $(CXXFLAGS) -march=armv8.5-a+memtag -fsanitize=hwaddress
+  CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag -fsanitize=hwaddress
   OBJECT_CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=hwaddress
 endif
 
 ifdef enable_aarch64_pa
-  CXXFLAGS := -fuse-ld=lld $(CXXFLAGS) -march=armv8.3-a+pauth -mbranch-protection=pac-ret
+  CXXFLAGS := $(CXXFLAGS) -march=armv8.3-a+pauth -mbranch-protection=pac-ret
   OBJECT_CXXFLAGS += -march=armv8.3-a+pauth -mbranch-protection=pac-ret
 endif
 
 ifdef enable_aarch64_bti
-  CXXFLAGS := -fuse-ld=lld $(CXXFLAGS) -march=armv8.5-a -mbranch-protection=bti
+  CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a -mbranch-protection=bti
   OBJECT_CXXFLAGS += -march=armv8.5-a -mbranch-protection=bti
 endif
 

@@ -22,3 +22,5 @@ run-test
 *.log
 .vscode/
 .vs/
+*.xml
+*.csv
