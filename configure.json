@@ -196,6 +196,10 @@
     },
     "mss-read-by-enclosing-array-index-overflow-stack": {
         "program": "mss-read-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -252,6 +256,10 @@
     },
     "mss-read-by-enclosing-array-index-overflow-heap": {
         "program": "mss-read-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -300,6 +308,10 @@
     },
     "mss-read-by-enclosing-array-index-overflow-data": {
         "program": "mss-read-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -348,6 +360,10 @@
     },
     "mss-read-by-enclosing-array-index-overflow-rodata": {
         "program": "mss-read-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -404,6 +420,10 @@
     },
     "mss-read-by-enclosing-array-index-underflow-stack": {
         "program": "mss-read-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -452,6 +472,10 @@
     },
     "mss-read-by-enclosing-array-index-underflow-heap": {
         "program": "mss-read-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -500,6 +524,10 @@
     },
     "mss-read-by-enclosing-array-index-underflow-data": {
         "program": "mss-read-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -548,6 +576,10 @@
     },
     "mss-read-by-enclosing-array-index-underflow-rodata": {
         "program": "mss-read-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -596,6 +628,9 @@
     },
     "mss-read-by-enclosing-array-pointer-overflow-stack": {
         "program": "mss-read-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -640,6 +675,9 @@
     },
     "mss-read-by-enclosing-array-pointer-overflow-heap": {
         "program": "mss-read-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -689,6 +727,9 @@
     },
     "mss-read-by-enclosing-array-pointer-overflow-data": {
         "program": "mss-read-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -733,6 +774,9 @@
     },
     "mss-read-by-enclosing-array-pointer-overflow-rodata": {
         "program": "mss-read-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -777,6 +821,9 @@
     },
     "mss-read-by-enclosing-array-pointer-underflow-stack": {
         "program": "mss-read-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -821,6 +868,9 @@
     },
     "mss-read-by-enclosing-array-pointer-underflow-heap": {
         "program": "mss-read-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -865,6 +915,9 @@
     },
     "mss-read-by-enclosing-array-pointer-underflow-data": {
         "program": "mss-read-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -909,6 +962,9 @@
     },
     "mss-read-by-enclosing-array-pointer-underflow-rodata": {
         "program": "mss-read-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -979,6 +1035,10 @@
                 "BUFFER_VAL_OVERFLOW": "VAL_4O,VAL_2O,VAL_1O"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1036,6 +1096,10 @@
                 "BUFFER_VAL_OVERFLOW": "VAL_4O,VAL_2O,VAL_1O"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1093,6 +1157,10 @@
                 "BUFFER_VAL_OVERFLOW": "VAL_4O,VAL_2O,VAL_1O"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1150,6 +1218,10 @@
                 "BUFFER_VAL_OVERFLOW": "VAL_4O,VAL_2O,VAL_1O"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1207,6 +1279,10 @@
                 "BUFFER_VAL_OVERFLOW": "VAL_4O,VAL_2O,VAL_1O"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1264,6 +1340,10 @@
                 "BUFFER_VAL_OVERFLOW": "VAL_4O,VAL_2O,VAL_1O"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1321,6 +1401,10 @@
                 "BUFFER_VAL_OVERFLOW": "VAL_4O,VAL_2O,VAL_1O"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1378,6 +1462,10 @@
                 "BUFFER_VAL_OVERFLOW": "VAL_4O,VAL_2O,VAL_1O"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1431,6 +1519,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1475,6 +1567,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1519,6 +1615,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1563,6 +1663,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1591,6 +1695,10 @@
                 "-rsize"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1641,6 +1749,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1685,6 +1797,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1729,6 +1845,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1751,6 +1871,10 @@
     },
     "mss-write-by-enclosing-array-index-overflow-stack": {
         "program": "mss-write-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1804,6 +1928,10 @@
     },
     "mss-write-by-enclosing-array-index-overflow-heap": {
         "program": "mss-write-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1857,6 +1985,10 @@
     },
     "mss-write-by-enclosing-array-index-overflow-data": {
         "program": "mss-write-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1910,6 +2042,10 @@
     },
     "mss-write-by-enclosing-array-index-underflow-stack": {
         "program": "mss-write-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -1968,6 +2104,10 @@
     },
     "mss-write-by-enclosing-array-index-underflow-heap": {
         "program": "mss-write-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2026,6 +2166,10 @@
     },
     "mss-write-by-enclosing-array-index-underflow-data": {
         "program": "mss-write-by-enclosing-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2084,6 +2228,9 @@
     },
     "mss-write-by-enclosing-array-pointer-overflow-stack": {
         "program": "mss-write-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -2142,6 +2289,9 @@
     },
     "mss-write-by-enclosing-array-pointer-overflow-heap": {
         "program": "mss-write-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -2191,6 +2341,9 @@
     },
     "mss-write-by-enclosing-array-pointer-overflow-data": {
         "program": "mss-write-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -2240,6 +2393,9 @@
     },
     "mss-write-by-enclosing-array-pointer-underflow-stack": {
         "program": "mss-write-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -2294,6 +2450,9 @@
     },
     "mss-write-by-enclosing-array-pointer-underflow-heap": {
         "program": "mss-write-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -2348,6 +2507,9 @@
     },
     "mss-write-by-enclosing-array-pointer-underflow-data": {
         "program": "mss-write-by-enclosing-array-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -2439,6 +2601,10 @@
                 "BUFFER_KIND": "0"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2484,6 +2650,10 @@
                 "2"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2532,6 +2702,10 @@
     },
     "mss-write-by-bare-array-index-overflow-data": {
         "program": "mss-write-by-bare-array-index",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2590,6 +2764,10 @@
                 "3"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2643,6 +2821,10 @@
                 "3"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2696,6 +2878,10 @@
                 "3"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2766,6 +2952,10 @@
                 "BUFFER_KIND": "0"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2811,6 +3001,10 @@
                 "2"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2859,6 +3053,10 @@
     },
     "mss-write-by-bare-array-pointer-overflow-data": {
         "program": "mss-write-by-bare-array-pointer",
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2917,6 +3115,10 @@
                 "3"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -2970,6 +3172,10 @@
                 "3"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -3023,6 +3229,10 @@
                 "3"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -3093,6 +3303,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -3138,6 +3352,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -3183,6 +3401,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -3228,6 +3450,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -3273,6 +3499,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -3318,6 +3548,10 @@
                 "BUFFER_KIND": "3"
             }
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -3353,6 +3587,10 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3383,6 +3621,10 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3413,6 +3655,10 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3443,6 +3689,10 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3473,6 +3723,10 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3503,6 +3757,10 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3533,6 +3791,10 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3563,6 +3825,10 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3593,6 +3859,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3618,6 +3887,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3643,6 +3915,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3668,6 +3943,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3693,6 +3971,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3718,6 +3999,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3743,6 +4027,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3768,6 +4055,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3793,6 +4083,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3818,6 +4111,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3843,6 +4139,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3868,6 +4167,9 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3881,6 +4183,9 @@
     },
     "mss-read-cross-frame-index": {
         "program": "mss-read-cross-frame-by-index",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3894,6 +4199,9 @@
     },
     "mss-read-cross-frame-ptr": {
         "program": "mss-read-cross-frame-by-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3907,6 +4215,10 @@
     },
     "mss-write-cross-frame-index": {
         "program": "mss-write-cross-frame-by-index",
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3921,6 +4233,10 @@
     },
     "mss-write-cross-frame-ptr": {
         "program": "mss-write-cross-frame-by-pointer",
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3935,6 +4251,9 @@
     },
     "mss-read-cross-page-index-stack": {
         "program": "mss-read-cross-page-by-index-in-stack",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3948,6 +4267,9 @@
     },
     "mss-read-cross-page-ptr-stack": {
         "program": "mss-read-cross-page-by-pointer-in-stack",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3961,6 +4283,10 @@
     },
     "mss-write-cross-page-index-stack": {
         "program": "mss-write-cross-page-by-index-in-stack",
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -3977,6 +4303,10 @@
     },
     "mss-write-cross-page-ptr-stack": {
         "program": "mss-write-cross-page-by-pointer-in-stack",
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4000,6 +4330,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4020,6 +4353,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4040,6 +4376,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4060,6 +4399,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4080,6 +4422,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4100,6 +4445,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4120,6 +4468,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4140,6 +4491,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4160,6 +4514,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4180,6 +4537,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4200,6 +4560,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4220,6 +4583,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4240,6 +4606,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4260,6 +4629,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4280,6 +4652,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4300,6 +4675,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4320,6 +4698,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4340,6 +4721,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4360,6 +4744,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4380,6 +4767,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4400,6 +4790,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4420,6 +4813,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4440,6 +4836,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4460,6 +4859,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4480,6 +4882,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4500,6 +4905,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4520,6 +4928,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4540,6 +4951,9 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4565,6 +4979,10 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4595,6 +5013,10 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4625,6 +5047,10 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4655,6 +5081,10 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4685,6 +5115,10 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4715,6 +5149,10 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4745,6 +5183,10 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4775,6 +5217,10 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4800,6 +5246,10 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4821,6 +5271,10 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4842,6 +5296,10 @@
                 "BUFFER_KIND": "1"
             }
         },
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4856,6 +5314,9 @@
     },
     "mss-write-spray-cross-frame": {
         "program": "mss-write-spray-cross-frame",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4869,6 +5330,9 @@
     },
     "mss-write-spray-cross-page-in-stack": {
         "program": "mss-write-spray-cross-page-in-stack",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4882,6 +5346,9 @@
     },
     "mss-write-spray-cross-page-in-heap": {
         "program": "mss-write-spray-cross-page-in-heap",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -4895,6 +5362,9 @@
     },
     "mss-read-scalar-cast-to-array-overflow-stack": {
         "program": "mss-read-scalar-cast-to-array-overflow",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -4913,6 +5383,9 @@
     },
     "mss-read-scalar-cast-to-array-overflow-heap": {
         "program": "mss-read-scalar-cast-to-array-overflow",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -4931,6 +5404,9 @@
     },
     "mss-read-scalar-cast-to-array-overflow-data": {
         "program": "mss-read-scalar-cast-to-array-overflow",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -4949,6 +5425,9 @@
     },
     "mss-read-scalar-cast-to-array-overflow-rodata": {
         "program": "mss-read-scalar-cast-to-array-overflow",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -4967,6 +5446,9 @@
     },
     "mss-read-scalar-cast-to-scalar-overflow-stack": {
         "program": "mss-read-scalar-cast-to-scalar-overflow",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -4985,6 +5467,9 @@
     },
     "mss-read-scalar-cast-to-scalar-overflow-heap": {
         "program": "mss-read-scalar-cast-to-scalar-overflow",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5003,6 +5488,9 @@
     },
     "mss-read-scalar-cast-to-scalar-overflow-data": {
         "program": "mss-read-scalar-cast-to-scalar-overflow",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5021,6 +5509,9 @@
     },
     "mss-read-scalar-cast-to-scalar-overflow-rodata": {
         "program": "mss-read-scalar-cast-to-scalar-overflow",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5047,6 +5538,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5065,6 +5559,9 @@
     },
     "mts-write-by-double-free-reallocate": {
         "program": "mts-double-free",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5092,6 +5589,9 @@
     },
     "mts-access-by-double-free-reallocate": {
         "program": "mts-double-free",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5123,6 +5623,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5138,6 +5641,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5148,6 +5654,10 @@
     },
     "mts-write-after-free-stack": {},
     "mts-write-before-reclaim-stack": {
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5158,6 +5668,9 @@
         }
     },
     "mts-write-after-reclaim-stack": {
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5179,6 +5692,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5202,6 +5718,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5235,6 +5754,9 @@
             3,
             1
         ],
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5259,6 +5781,10 @@
             3,
             1
         ],
+        "require-comment": [
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5273,6 +5799,9 @@
         }
     },
     "mts-write-after-reclaim-heap": {
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5283,6 +5812,9 @@
     },
     "acc-copy-stackra-to-heap-explicit-arith": {
         "program": "cfi-jump-func-ra-from-heap-memcpy-explicit-arith",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5318,6 +5850,9 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5337,10 +5872,13 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
-                    "cpi-func-pointer-assign"
+                    "acc-check-prog-ASLR"
                 ]
             ]
         },
@@ -5423,6 +5961,9 @@
                 "ibt-enabled"
             ]
         },
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5441,6 +5982,9 @@
         }
     },
     "acc-read-GOT": {
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5472,6 +6016,9 @@
     },
     "cpi-read-stack-vtable-pointer": {
         "program": "cpi-read-vtable-pointer",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5487,6 +6034,9 @@
     },
     "cpi-read-heap-vtable-pointer": {
         "program": "cpi-read-vtable-pointer",
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5502,6 +6052,9 @@
     },
     "cpi-read-data-vtable-pointer": {
         "program": "cpi-read-vtable-pointer",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5549,6 +6102,13 @@
     },
     "cpi-func-pointer-assign": {},
     "cpi-func-pointer-arithmetic": {
+        "require-comment": [
+            "utilization",
+            "relaxation",
+            "relaxation",
+            "relaxation",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5574,6 +6134,9 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5601,6 +6164,11 @@
         }
     },
     "cfi-call-mid-func": {
+        "require-comment": [
+            "relaxation",
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5634,6 +6202,10 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5646,6 +6218,9 @@
         }
     },
     "cfi-call-wrong-func": {
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5666,6 +6241,10 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5682,6 +6261,10 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5698,6 +6281,10 @@
                 "2"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5708,6 +6295,9 @@
         }
     },
     "cfi-call-fake-vtable-arg-num": {
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5722,6 +6312,9 @@
                 "4"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5736,6 +6329,9 @@
                 "4"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5746,6 +6342,14 @@
     },
     "cfi-call-fake-vtable": {
         "comment": "add chain type support",
+        "require-comment": [
+            "utilization",
+            "utilization",
+            "utilization",
+            "utilization",
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5774,6 +6378,9 @@
         }
     },
     "cfi-call-wrong-vtable-func-num": {
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5783,6 +6390,9 @@
         }
     },
     "cfi-call-wrong-vtable-arg-num": {
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5792,6 +6402,9 @@
         }
     },
     "cfi-call-wrong-vtable-arg-type": {
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5801,6 +6414,9 @@
         }
     },
     "cfi-call-wrong-vtable-arg-type-modified": {
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5810,6 +6426,9 @@
         }
     },
     "cfi-call-wrong-vtable-parent": {
+        "require-comment": [
+            "relaxation"
+        ],
         "program": "cfi-call-wrong-vtable-parent",
         "require": {
             "0": [
@@ -5821,6 +6440,9 @@
     },
     "cfi-call-wrong-vtable-sibling": {
         "program": "cfi-call-wrong-vtable-sibling",
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5832,6 +6454,14 @@
     "cfi-call-wrong-vtable-child": {
         "comment": "add chain type support",
         "program": "cfi-call-wrong-vtable-child",
+        "require-comment": [
+            "utilization",
+            "utilization",
+            "utilization",
+            "utilization",
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5866,6 +6496,10 @@
                 "0"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5878,6 +6512,9 @@
         }
     },
     "cfi-call-wrong-vtable": {
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5887,6 +6524,11 @@
         }
     },
     "cfi-call-wrong-vtable-released": {
+        "require-comment": [
+            "relaxation",
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -5904,6 +6546,9 @@
         }
     },
     "cfi-call-wrong-num-arg-func": {
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5913,6 +6558,9 @@
         }
     },
     "cfi-call-wrong-type-arg-int2double-func": {
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5927,6 +6575,9 @@
                 "2"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5941,6 +6592,9 @@
                 "2"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5953,6 +6607,9 @@
         "expect-results": {
             "290": "cheri capabilities enabled."
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5962,6 +6619,10 @@
         }
     },
     "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
+        "require-comment": [
+            "utilization",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5975,6 +6636,10 @@
         }
     },
     "cfi-call-wrong-type-arg-dp2fp-func-data": {
+        "require-comment": [
+            "utilization",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -5989,6 +6654,10 @@
         }
     },
     "cfi-call-wrong-type-arg-dp2fp-func-stack": {
+        "require-comment": [
+            "utilization",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6013,6 +6682,10 @@
         }
     },
     "cfi-call-wrong-type-arg-dp2fp-func-heap": {
+        "require-comment": [
+            "utilization",
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6038,6 +6711,9 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6073,6 +6749,9 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6108,6 +6787,9 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6144,6 +6826,9 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6180,6 +6865,10 @@
                 "1"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -6192,6 +6881,10 @@
         }
     },
     "cfi-jump-func-ra-from-heap-memcpy-explicit-arith": {
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -6213,6 +6906,10 @@
         }
     },
     "cfi-jump-func-ra-from-heap-memcpy-implicit-arith": {
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -6239,6 +6936,9 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6266,6 +6966,9 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6293,6 +6996,9 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6321,6 +7027,9 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6347,6 +7056,9 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6375,6 +7087,12 @@
     },
     "cfi-return-to-wrong-call-site-within-static-analysis": {
         "comment": "add chain type support",
+        "require-comment": [
+            "utilization",
+            "utilization",
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -6447,6 +7165,9 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6474,6 +7195,9 @@
         }
     },
     "cfi-return-to-func": {
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6501,6 +7225,9 @@
         }
     },
     "cfi-return-to-libc": {
+        "require-comment": [
+            "relaxation"
+        ],
         "require": {
             "0": [
                 [
@@ -6534,6 +7261,10 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "utilization",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
@@ -6574,10 +7305,17 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
                     "cfi-return-to-non-call-site"
+                ],
+                [
+                    "acc-get-ra-offset-v-p-g1"
                 ]
             ]
         },
@@ -6613,10 +7351,17 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
                     "cfi-return-to-non-call-site"
+                ],
+                [
+                    "acc-get-ra-offset-v-p-g1"
                 ]
             ]
         },
@@ -6652,10 +7397,17 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
                     "cfi-return-to-non-call-site"
+                ],
+                [
+                    "acc-get-ra-offset-v-p-g1"
                 ]
             ]
         },
@@ -6692,10 +7444,17 @@
                 "labelfunc"
             ]
         },
+        "require-comment": [
+            "relaxation",
+            "utilization"
+        ],
         "require": {
             "0": [
                 [
                     "cfi-return-to-non-call-site"
+                ],
+                [
+                    "acc-get-ra-offset-v-p-g1"
                 ]
             ]
         },
