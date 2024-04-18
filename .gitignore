@@ -16,7 +16,7 @@ doc/*.aux
 doc/*.toc
 *.dump
 results.json
-results.dat
+*.dat
 variables.json
 run-test
 *.log

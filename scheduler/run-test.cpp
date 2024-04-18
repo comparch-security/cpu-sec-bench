@@ -177,14 +177,25 @@ str_list_t& append_str_list(str_list_t &l, const char *str_const) {
 }
 
 void report_gen() {
-  std::ofstream report_file("results.dat");
 
   // insert sys infomation to the result file
   std::ifstream sys_info_file("test/sys_info.txt");
-  char buf[256];
-  while(!sys_info_file.eof()) {
-    sys_info_file.getline(buf, 256);
-    report_file << "# " << buf << std::endl;
+
+  std::string resfile_name = "results.dat";
+  std::string str_buf;
+  
+  std::getline(sys_info_file, str_buf);
+  size_t pos = str_buf.find("OVERVIEW:");
+
+  if (pos != std::string::npos) {
+      resfile_name = str_buf.substr(pos + sizeof("OVERVIEW:")-1) + ".dat"; // Extract the string after "CPU:"
+  }
+
+  std::ofstream report_file(resfile_name);
+  //read the rest lines of sys_info.txt
+  while(getline(sys_info_file,str_buf)) {
+    // change below statement to use string parameter
+    report_file << "# " << str_buf << std::endl;
   }
   sys_info_file.close();
 
