@@ -2565,7 +2565,10 @@
     "mss-write-by-stack-pointer": {
         "arguments": {
             "0": [
-                "-roffset"
+                "-roffset",
+                "0",
+                "0x1111111111111111ULL",
+                "0xffffffffffffffffULL"
             ]
         },
         "conf-macro": {
@@ -2575,7 +2578,12 @@
         },
         "require": {
             "0": []
-        }
+        },
+        "offset": [
+            0,
+            8,
+            1
+        ]
     },
     "mss-write-by-bare-array-index-overflow-stack": {
         "program": "mss-write-by-bare-array-index",
@@ -7123,6 +7131,13 @@
         },
         "default_args": {
             "0": [
+                "0",
+                "0",
+                "-rextend_offset"
+            ],
+            "1": [
+                "1",
+                "0",
                 "-rextend_offset"
             ]
         },

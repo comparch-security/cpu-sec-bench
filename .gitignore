@@ -24,3 +24,4 @@ run-test
 .vs/
 *.xml
 *.csv
+*.gdb_history
