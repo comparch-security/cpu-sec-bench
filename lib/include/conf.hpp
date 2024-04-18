@@ -36,6 +36,9 @@
 #define DEREF_(X) X
 #define DEREF(X) DEREF_(X)
 
+#define HEAPTR_TO_ARRAYREF_(X) X
+#define HEAPTR_TO_ARRAYREF(X) HEAPTR_TO_ARRAYREF_(X)
+
 // 117 is ascii code of "u"
 #define VAL_1U     117
 #define VAL_2U     VAL_1U,  VAL_1U
@@ -250,11 +253,16 @@ public:
     #undef MEMBEROP
     #undef DEREF_
     #undef DEREF
+    #undef HEAPTR_TO_ARRAYREF_
+    #undef HEAPTR_TO_ARRAYREF
 
     #define DEREF_(X) *X
     #define DEREF(X) DEREF_(X)
     #define MEMBEROP_(X,Y) X->Y
     #define MEMBEROP(X,Y) MEMBEROP_(X,Y)
+
+    #define HEAPTR_TO_ARRAYREF_(X) (char(&)[BUFFER_SIZE])*X
+    #define HEAPTR_TO_ARRAYREF(X) HEAPTR_TO_ARRAYREF_(X)
 
     #if BUFFER_KIND == BARE_ARRAY
 
