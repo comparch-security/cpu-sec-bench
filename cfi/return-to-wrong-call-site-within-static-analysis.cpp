@@ -20,8 +20,11 @@ void FORCE_NOINLINE helper(void *label, int sel) {
       WRITE_TRACE("RA address: 0x", ra_addr);
       WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
     #endif
-    if(sel) MOD_STACK_DAT(label, offset);
-    else *(buf+offset) = label;
+    if(sel){
+      MOD_STACK_DAT(label, offset);
+    }else{
+      *(buf+offset) = label;
+    }
     WRITE_TRACE("RA address: 0x", ra_addr);
     WRITE_TRACE("RA after modified: 0x", *(long long*)ra_addr);
   }

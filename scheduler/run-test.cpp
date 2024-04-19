@@ -63,12 +63,17 @@ std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
 typedef std::vector<str_llist_t> str_vllist_t;// this strcture is used for various arguments cases
-str_list_t make_config_macro;
+typedef std::map<std::string, std::string> str_map_t;
+//str_list_t make_config_macro;
+std::map<std::string, str_map_t>  prog_to_confmacro;
 bool requires_check(nlohmann::ordered_json tcase);
 int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, std::string& pn, str_list_t& vn,
-                str_list_t& dbf, std::set<int> &expect_results);
+                str_list_t& dbf, std::set<int> &expect_results, str_map_t &make_config_macro, 
+                str_map_t &last_make_config_macro, bool &need_rebuild, bool &need_build);
 void add_arguments(std::string arg, nlohmann::ordered_json tcase, str_llist_t &arg_list);
 char ** argv_conv(const std::string &cmd, const str_list_t &args);
+char ** argv_conv(const std::string &cmd, const str_map_t &args);
+char ** argv_conv(const std::string &cmd, const str_list_t &args1, const str_map_t &args2);
 int run_cmd(char* argv[], char** runv, long long& time_count);
 bool run_tests(std::list<std::string> cases);
 long long get_file_size(const std::string& filename);
@@ -178,14 +183,30 @@ str_list_t& append_str_list(str_list_t &l, const char *str_const) {
 }
 
 void report_gen() {
-  std::ofstream report_file("results.dat");
-
+  std::string invalid_chars = "<>:\"/\\|?*"; // Add any other characters that should be removed
   // insert sys infomation to the result file
   std::ifstream sys_info_file("test/sys_info.txt");
-  char buf[256];
-  while(!sys_info_file.eof()) {
-    sys_info_file.getline(buf, 256);
-    report_file << "# " << buf << std::endl;
+
+  std::string resfile_name = "results.dat";
+  std::string str_buf;
+  
+  std::getline(sys_info_file, str_buf);
+  size_t pos = str_buf.find("OVERVIEW:");
+
+  if (pos != std::string::npos) {
+      resfile_name = str_buf.substr(pos + sizeof("OVERVIEW:")-1);
+      for (char&c:resfile_name){
+        if (invalid_chars.find(c) != std::string::npos) c = '_';
+        if (c == '+') c = 'p';
+      }
+      resfile_name += ".dat"; // Extract the string after "CPU:"
+  }
+
+  std::ofstream report_file(resfile_name);
+  //read the rest lines of sys_info.txt
+  while(getline(sys_info_file,str_buf)) {
+    // change below statement to use string parameter
+    report_file << "# " << str_buf << std::endl;
   }
   sys_info_file.close();
 
@@ -269,7 +290,8 @@ bool requires_check(nlohmann::ordered_json tcase){
 }
 
 int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, std::string& pn, str_list_t& vn,
-                str_list_t &dbf, std::set<int> &expect_results) {
+                str_list_t &dbf, std::set<int> &expect_results, str_map_t & make_config_macro,
+                str_map_t &last_make_config_macro, bool &need_rebuild, bool &need_build) {
 
   // get the program name
   if(tcase.count("program"))
@@ -329,14 +351,39 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
     }
   }
 
-  make_config_macro.clear();
   if(tcase.count("conf-macro")){
-    std::map<std::string, std::string> conf_args;
+    //std::map<std::string, std::string> conf_args,last_conf_args;
     //Currently, only the case of a single conf macro is being considered
-    conf_args = tcase["conf-macro"][std::to_string(ind)].get<std::map<std::string,std::string>>();
-    for(auto ca:conf_args){
-      make_config_macro.push_back(ca.first + "=" + ca.second);
+    make_config_macro = tcase["conf-macro"][std::to_string(ind)].get<std::map<std::string,std::string>>();
+    if(ind != 0){
+      last_make_config_macro = tcase["conf-macro"][std::to_string(ind-1)].get<std::map<std::string,std::string>>();
+    }else{
+      if(prog_to_confmacro.count(pn)){
+        last_make_config_macro = prog_to_confmacro[pn];
+      }else{// This case means need_build = true,need_rebuild = false. need_build = no program || need_build
+        need_build = true;
+        last_make_config_macro = make_config_macro;
+      }
     }
+
+    prog_to_confmacro[pn] = make_config_macro;
+
+    if(make_config_macro.size() != last_make_config_macro.size()){
+      need_rebuild = true;
+    }else{
+      for(auto ca:make_config_macro){
+        if(ca.second != last_make_config_macro[ca.first]){
+          need_rebuild = true;
+          break;
+        }
+      }
+    }
+    if(need_rebuild == true) need_build = true;
+  }else{
+    if(!prog_to_confmacro.count(pn)){
+      need_build = true;
+    }// means default conf-macro(no "conf-macro" in the case, but use conf-macro) is forbidden, because it may lead false no-make
+    prog_to_confmacro[pn] = {};
   }
 
   return 0;
@@ -487,6 +534,29 @@ char ** argv_conv(const std::string &cmd, const str_list_t &args) {
   return gargv;
 }
 
+char ** argv_conv(const std::string &cmd, const str_map_t &args) {
+  int i = 0;
+  strcpy(arg_pool[i++], cmd.c_str());
+  for(const auto a:args) strcpy(arg_pool[i++],(a.first + "=" + a.second).c_str());
+  for(int j=0; j<i; j++) gargv[j]=arg_pool[j];
+  gargv[i] = NULL;
+  return gargv;
+}
+
+char ** argv_conv(const std::string &cmd, const str_list_t &args1, const str_map_t &args2) {
+  int i = 0;
+  strcpy(arg_pool[i++], cmd.c_str());
+  for(const auto a:args1) strcpy(arg_pool[i++],a.c_str());
+  for(const auto a:args2) strcpy(arg_pool[i++],(a.first + "=" + a.second).c_str());
+  for(int j=0; j<i; j++) gargv[j]=arg_pool[j];
+  gargv[i] = NULL;
+  for(int k = 0; k != i; k++){
+    std::cout << gargv[k] << " ";
+  }
+  std::cout << std::endl;
+  return gargv;
+}
+
 bool run_tests(std::list<std::string> cases) {
   //check current test dependency and avoid endless loop
   int current_test_checkdep_count = 0;
@@ -508,7 +578,6 @@ bool run_tests(std::list<std::string> cases) {
       exit(1);
     }
 
-    bool has_make = false;
     int test_cond = 0;
     auto tcase = config_db[cn];
   
@@ -521,37 +590,37 @@ bool run_tests(std::list<std::string> cases) {
       std::cerr << "\n========== start: " << cn << " =========" << std::endl;
       long long case_exec_time_sum = 0;
       for(int ind = 0; ind != alists.size(); ind++){
-        std::cout << "\"arguments\" ind is: " << ind << std::endl;
+        bool need_rebuild = false, need_build = false;
+        str_list_t make_option_list;
+        str_map_t make_config_macro, last_make_config_macro;
+        if(debug_run) std::cout << "\"arguments\" ind is: " << ind << std::endl;
         auto alist = alists[ind];
-        test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results);
+        test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results,make_config_macro, last_make_config_macro, need_rebuild, need_build);
+        long long curr_script_time = 0;
         if(!test_run || test_cond == 0) {
           std::cout << "\n------ " << cn << " ------" << std::endl;
           int make_result = 0;
-          if(0 == make_result && make_run && !has_make) {
+          if(make_run && need_build){
             long long one_make_time, curr_size;
-            if(!make_config_macro.empty()){
-              make_config_macro.push_front("test/" + prog);
-              make_config_macro.push_front("-B");
-              if(trace_run){
-                make_config_macro.push_back("TRACE_RUN=1");
-              }
-              std::cout << "make";
-              for(auto str:make_config_macro){
-                std::cout << " " << str;
-              }
-              std::cout << std::endl;
-              make_result = run_cmd(argv_conv("make", make_config_macro), NULL, one_make_time);
-            }else{
-              if(!trace_run){
-                std::cout << "make test/" << prog << std::endl;
-                make_result = run_cmd(argv_conv("make", str_list_t(1, "test/" + prog)), NULL, one_make_time);
-              }else{
-                std::cout << "make test/" << prog << "TRACE_RUN=1" << std::endl;
-                str_list_t no_make_config_macro = {"test/" + prog, "TRACE_RUN=1"};
-                make_result = run_cmd(argv_conv("make", no_make_config_macro), NULL, one_make_time); 
-              }
 
+            make_option_list.push_front("test/" + prog);
+            if(need_rebuild){
+              std::string cpp_directory_name = prog.substr(0, prog.find_first_of('-'));
+              std::string cpp_file_name = prog.substr(prog.find_first_of('-')+1);
+              std::string cpp_file_path = cpp_directory_name + '/' + cpp_file_name + ".cpp";
+              make_option_list.push_front(cpp_file_path);
+              make_option_list.push_front("-W");
             }
+
+            // -e means environment variable precedence over variables from makefiles,
+            // which used to choose compiler, compiler option in script/run_in_xxx.sh
+            make_option_list.push_front("-e");
+            if(trace_run){
+              make_config_macro["TRACE_RUN"]="1";
+            }
+
+              make_result = run_cmd(argv_conv("make", make_option_list, make_config_macro), NULL, one_make_time);
+
             total_make_time += one_make_time;
             result_db[cn]["make-time"] = one_make_time;
             if(make_result){
@@ -563,12 +632,22 @@ bool run_tests(std::list<std::string> cases) {
               #ifdef _MSC_VER
               curr_size = get_file_size("test/" + prog + ".exe");
               if(curr_size == -1) curr_size = get_file_size("test/" + prog);
+              if(!dbvar.empty()){
+                if(dbvar.size() != 2){
+                  std::cerr << "dbvar size is " << dbvar.size() << std::endl;
+                  std::cerr << "the parameter number is wrong (exactly is 2)" << std::endl;
+                }
+                  std::cout << "dump bin: " << "script\\msvc_get_addroffset_of_currfunc.bat" << "test/" << prog << ".exe " <<
+                        " " << dbvar.front() << " " << dbvar.back() << std::endl;
+                  make_result = run_cmd(argv_conv("script\\msvc_get_addroffset_of_currfunc.bat", str_list_t{
+                                  "test/" + prog +".exe", dbvar.front(), dbvar.back()}), NULL, curr_script_time);
+                  if(make_result)make_results.insert(make_result);
+              }
               #else
               curr_size = get_file_size("test/" + prog);
               #endif
             }
             result_db[cn]["file-size"] = curr_size;
-            has_make = true;
           }
           #ifdef _MSC_VER
           long long curr_script_time = 0;
@@ -593,6 +672,7 @@ bool run_tests(std::list<std::string> cases) {
               if(!extra_run_prefix.empty()) for(auto a:extra_run_prefix) std::cout << std::string(a) << " ";
               std::cout << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
               int one_run_result = run_cmd(argv_conv(cmd, arg), run_env, one_run_time);
+              std::cout << "after run result is: " << one_run_result << std::endl;
               #ifdef _MSC_VER
               one_run_time += curr_script_time;
               #endif
@@ -642,33 +722,11 @@ bool run_tests(std::list<std::string> cases) {
       }// one case diff arg/macro program(arg_list) loop
 FINISH_CURRENT_CASE:
       int test_result = 0;
-      bool first_expect_result = true;
-      int builderror_num = 0;
-      // check whether the results has a successful result or a expect result
-      // first check successfuly result, then check expect result.
-      // and choose the first result that meets the above rules
-      for(auto v:test_results){
-        if(v == 0){
-          test_result = 0;
-          std::cerr << "Run successfully: " << cn << std::endl;
-          break;
-        }else if(expect_results.count(v) && first_expect_result){ 
-          first_expect_result = false;
-          test_result = v;
-        }else if(v == FAILED_BUILD){
-          builderror_num++;
-        }
-      }
-      if(expect_results.count(test_result)){
-        std::cerr << "Run expected result: " << cn << " failed with expected exit value " << test_result << std::endl;
-      }
-      //check whether the results are all build error
-      //if not, choose the first run failed result
-      else if( test_result != 0){
-        if(builderror_num == test_results.size()){
-          test_result = FAILED_BUILD;
-          std::cerr << "Built all failed: " << cn << std::endl;
-        }else{
+      if(!make_results.empty()){ // not succcessfully build, select first failed make result
+        test_result = -1;
+        std::cerr << "Built all failed, the first try error code:: " << *make_results.cbegin() << std::endl;
+      }else{// successfully build
+        if(!test_results.count(0)){ // hasn't successfull result, check expected test result
           for(auto v:test_results){
             if(v != FAILED_BUILD){
               test_result = v;
@@ -678,6 +736,12 @@ FINISH_CURRENT_CASE:
           }
         }
       }
+      std::cout << "make results: ";
+      for(auto &a: make_results)
+        std::cerr << " " << a << std::endl;
+      std::cout << "test results: ";
+      for(auto &a: test_results)
+        std::cerr << " " << a << std::endl;
 
       current_test_checkdep_count = 0;
       result_db[cn]["result"] = test_result;

@@ -27,6 +27,7 @@ OPT_LEVEL       ?= O2
 #enable_aslr_protection         = yes
 #disable_aslr_protection        = yes
 #enable_cet_shadow_stack        = yes
+#enable_default_address_sanitizer = yes
 
 # common option in Linux
 #enable_got_protection          = yes
@@ -36,11 +37,14 @@ OPT_LEVEL       ?= O2
 #enable_control_flow_protection = yes
 #disable_control_flow_protection= yes
 #enable_stack_clash_protection  = yes
-#enable_address_sanitizer       = yes
+#enable_address_sanitizer_without_leaker       = yes
+#enable_undefined_sanitizer = yes
 
 # common option in Windows, msvc specific safety feature
 #enable_extra_stack_protection  = yes
 #enable_heap_integrity          = yes
+#enable_return_address_sanitizer    = yes
+#enable_fuzzer_address_sanitizer    = yes
 
 # specific hardware secrutiy features
 
@@ -154,10 +158,24 @@ ifeq ($(OSType),Windows_NT)
     CXXFLAGS += /RTCs
   endif
 
-  ifdef enable_address_sanitizer
-    CXXFLAGS += /fsanitize=address
-  endif
+	ifdef enable_default_address_sanitizer
+		CXXFLAGS += /fsanitize=address
+		OBJECT_CXXFLAGS += /fsanitize=address
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-asan
+	endif
 
+	ifdef enable_fuzzer_address_sanitizer
+		CXXFLAGS += /fsanitize=fuzzer
+		OBJECT_CXXFLAGS += /fsanitize=fuzzer
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-r-asan
+	endif
+
+	ifdef enable_return_address_sanitizer
+		CXXFLAGS += /fsanitize-address-use-after-return
+		OBJECT_CXXFLAGS += /fsanitize-address-use-after-return
+		RUN_PREFIX += ASAN_OPTIONS=detect_stack_use_after_return=1 
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-f-asan
+	endif
 else
 
   # platform
@@ -170,15 +188,15 @@ else
   test-path     := test
   log-path      := trace-log
 
-  #compiler
-  ifeq ($(OSType),Darwin)
-    CXX         := clang++
-  else
-    CXX         := g++
-  endif
-  ASM           := as
-  CLIBAPI       := posix
-  OBJDUMP       := objdump
+	#compiler
+	ifeq ($(OSType),Darwin)
+		CXX         ?= clang++
+	else
+		CXX         ?= g++
+	endif
+	ASM           := as
+	CLIBAPI       := posix
+	OBJDUMP       := objdump
 
   CXXFLAGS_BASE = ${CXXFLAGS} -I./lib -std=c++11 -Wall
   ifdef BUFFER_SIZE
@@ -229,16 +247,17 @@ else
     CXXFLAGS += -z execstack
   endif
 
-  ifdef disable_stack_nx_protection
-    CXXFLAGS += -z noexecstack
-  endif
-
-  ifdef enable_stack_protection
-    CXXFLAGS += -Wstack-protector -fstack-protector-all
-  ifeq ($(ARCH),x86_64)
-    CXXFLAGS += -mstack-protector-guard=guard
-  endif
-  endif
+	ifdef disable_stack_nx_protection
+		CXXFLAGS += -z noexecstack
+	endif
+	# -fstack-protector-all > -fstack-protector-strong
+	ifdef enable_stack_protection
+		CXXFLAGS += -Wstack-protector -fstack-protector-all
+	ifeq ($(ARCH),x86_64)
+		CXXFLAGS += -mstack-protector-guard=global
+	endif
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-stack_p
+	endif
 
   ifdef disable_stack_protection
     CXXFLAGS += -fno-stack-protector
@@ -276,9 +295,11 @@ else
   endif
   endif
 
-  ifdef enable_cet_shadow_stack
-    CXXFLAGS += -fcf-protection=return
-  endif
+	ifdef enable_cet_shadow_stack
+		CXXFLAGS += -Wl,--dynamic-linker=../glibc/build/lib/ld-linux-x86-64.so.2 -fcf-protection=full
+		OBJECT_CXXFLAGS += -Wl,--dynamic-linker=../glibc/build/lib/ld-linux-x86-64.so.2 -fcf-protection=full
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-cet_ss
+	endif
 
   ifdef disable_control_flow_protection
   ifeq ($(ARCH),x86_64)
@@ -290,16 +311,37 @@ else
     CXXFLAGS += -fstack-clash-protection
   endif
 
-  ifdef enable_address_sanitizer
-    CXXFLAGS += -fsanitize=address
-    RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
-    ifeq ($(CXX),$(filter $(CXX),clang++ c++))
-      LDFLAGS  += -static-libsan
-    else
-      LDFLAGS  += -static-libasan
-      CXXFLAGS += --param=asan-stack=1
-    endif
-  endif
+	ifdef enable_address_sanitizer_without_leaker
+		CXXFLAGS += -fsanitize=address
+		OBJECT_CXXFLAGS += -fsanitize=address
+		RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
+		# ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+		# 	LDFLAGS  += -static-libsan
+		# else
+		# 	LDFLAGS  += -static-libasan
+		# 	CXXFLAGS += --param=asan-stack=1
+		# endif
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-nl-asan
+	endif
+
+	ifdef enable_default_address_sanitizer
+		CXXFLAGS += -fsanitize=address
+		OBJECT_CXXFLAGS += -fsanitize=address
+		# ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+		# 	LDFLAGS  += -static-libsan
+		# else
+		# 	LDFLAGS  += -static-libasan
+		# 	CXXFLAGS += --param=asan-stack=1
+		# endif
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-asan
+	endif
+
+	ifdef enable_undefined_sanitizer
+		CXXFLAGS += -fsanitize=undefined
+		OBJECT_CXXFLAGS += -fsanitize=undefined
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-uasan
+	endif
+
 endif
 
 ifdef enable_riscv64_cheri
@@ -383,8 +425,11 @@ ifeq ($(OSType),Windows_NT)
 $(test-path)/sys_info.txt:
 	-mkdir $(test-path)
 	-mkdir $(log-path)
-	echo "CPU: & System : " > $(test-path)/sys_info.txt
-	systeminfo | findstr /C:"Windows" /C:"Intel" >> $(test-path)/sys_info.txt
+	echo "OVERVIEW:$(ARCH)-$(CXX)-$(SIMPLE_FLAGS)"> $(test-path)/sys_info.txt
+	echo "CPU: " >> $(test-path)/sys_info.txt
+	systeminfo | findstr /C:"Intel" >> $(test-path)/sys_info.txt
+	echo "System:" >> $(test-path)/sys_info.txt
+	systeminfo | findstr /C:"Windows" >> $(test-path)/sys_info.txt
 	echo "Compiler : " >> $(test-path)/sys_info.txt
 	echo "VSCMD_VER=" %VSCMD_VER% " UCRTVersion=" %UCRTVersion% " VCToolsVersion=" %VCToolsVersion% >> $(test-path)/sys_info.txt
 	Reg Query "HKLM\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\v10.0" >> $(test-path)/sys_info.txt
@@ -400,8 +445,10 @@ else
 $(test-path)/sys_info.txt:
 	-mkdir -p $(test-path)
 	-mkdir -p $(log-path)
-	echo "CPU: $(CPU_INFO)" > $(test-path)/sys_info.txt
-	echo "System : " >> $(test-path)/sys_info.txt
+	echo "OVERVIEW:$(ARCH)-$(CXX)-$(SIMPLE_FLAGS)"> $(test-path)/sys_info.txt
+	echo "CPU:" >> $(test-path)/sys_info.txt
+	echo "$(CPU_INFO)" >> $(test-path)/sys_info.txt
+	echo "System: " >> $(test-path)/sys_info.txt
 	uname -srp >> $(test-path)/sys_info.txt
 	echo "Compiler : " >> $(test-path)/sys_info.txt
 	$(CXX) --version >> $(test-path)/sys_info.txt
@@ -505,6 +552,8 @@ $(sec-tests-dump): %.dump:%
 
 prep: $(sec-tests-prep)
 
+res_and_rubbish:= results.json results.dat variables.json *.dat *.log
+
 ifeq ($(OSType),Windows_NT)
 
 # cmd can not identify "/", so use powershell remove-item
@@ -514,10 +563,16 @@ rubbish:= $(subst /,\,$(rubbish))
 clean:
 	-del /Q $(rubbish) $(test-path) $(log-path) *.tmp *.ilk *.pdb *.obj *.exe *.dump *.dll *.lib *.exp
 
+cleanall:
+	-del /Q $(res_and_rubbish) $(rubbish) $(test-path) $(log-path) *.tmp *.ilk *.pdb *.obj *.exe *.dump *.dll *.lib *.exp
+
 else
 
 clean:
 	-rm -rf $(rubbish) $(test-path) $(log-path) *.tmp > /dev/null 2>&1
+
+cleanall:
+	-rm -rf $(res_and_rubbish) $(rubbish) $(test-path) $(log-path) *.tmp > /dev/null 2>&1
 
 endif
 
