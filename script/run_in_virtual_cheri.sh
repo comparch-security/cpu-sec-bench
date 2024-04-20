@@ -1,8 +1,5 @@
-#! /bin/sh
-set +x
-# echo $PWD
+#!/bin/bash
 
-# keep log name same with result name
 rename_log() {
 	if log_name=$(ls -t *.dat); then
 		log_name=$(echo "${log_name}" | head -n 1)
@@ -13,23 +10,23 @@ rename_log() {
 	fi
 }
 
-cd ../
-i=1
-while [ "$i" -le 1 ]; do
+if [ $# -eq 0 ]; then
+    echo "run multiple cheri virtual envs, and copy cpu-sec-bench to them"
+
+
+elif [ $# -eq 1 ]; then
+
+while [ "$i" -le 11 ]; do
 	# Create a new directory name
 	new_dir="cpu-sec-bench-$i"
-	# Use cp to copy the current directory into the new directory
+
 	rm -rf "$new_dir"
 	cp -r "cpu-sec-bench" "$new_dir"
 	# Increment i by 1 in each loop
 	i=$((i + 1))
 done
-cd - || (
-	echo "cd - failed"
-	exit
-)
 
-prefix=Armv8.0-Lin-G
+prefix=CHERI-default 
 (
 	echo "${prefix}"
 
@@ -39,7 +36,9 @@ prefix=Armv8.0-Lin-G
 		exit
 	)
 	unset CXX
-	export CXX=g++
+	export CXX=clang++
+    export enable_riscv64_cheri_default="yes"
+
 	make cleanall >temp.log 2>&1
 	make -e >>temp.log 2>&1
 	./run-test exhausted-run >>temp.log 2>&1
@@ -49,25 +48,41 @@ prefix=Armv8.0-Lin-G
 	mv "${base_name}".dat "${prefix}"_"${base_name}".dat
 ) &
 
-ind=1
-prefix=Armv8.0-Lin-L
+prefix=CHERI-strong
 (
 	echo "${prefix}"
 
 	cd ..
-	cd cpu-sec-bench-"${ind}" || (
-		echo "no cpu-sec-bench-${ind}"
+	cd cpu-sec-bench || (
+		echo "no cpu-sec-bench"
 		exit
 	)
 	unset CXX
 	export CXX=clang++
+    export enable_riscv64_cheri_everywhere_unsafe="yes"
 
 	make cleanall >temp.log 2>&1
 	make -e >>temp.log 2>&1
 	./run-test exhausted-run >>temp.log 2>&1
 	base_name=$(rename_log)
+	echo "$base_name"
 	mv temp.log "${prefix}"_"${base_name}".log
 	mv "${base_name}".dat "${prefix}"_"${base_name}".dat
 ) &
 
 wait
+
+fi
+
+# Define variables
+USER="user"
+HOST="host"
+SOURCE_DIRECTORY="/path/to/source_directory"
+DESTINATION_DIRECTORY="/path/to/destination_directory"
+BASH_SCRIPT="bash_script.sh"
+
+# Copy directory to remote server
+scp -r $SOURCE_DIRECTORY $USER@$HOST:$DESTINATION_DIRECTORY
+
+# Execute bash script in the copied directory on the remote server
+ssh $USER@$HOST "bash $DESTINATION_DIRECTORY/$BASH_SCRIPT 1"

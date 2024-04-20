@@ -45,7 +45,6 @@ prefix=Armv8.6-Dar-L
 	make -e >>temp.log 2>&1
 	./run-test exhausted-run >>temp.log 2>&1
 	base_name=$(rename_log)
-	echo "$base_name"
 	mv temp.log "${prefix}"_"${base_name}".log
 	mv "${base_name}".dat "${prefix}"_"${base_name}".dat
 ) &

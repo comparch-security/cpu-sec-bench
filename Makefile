@@ -44,9 +44,12 @@ OPT_LEVEL       ?= O2
 
 # specific hardware secrutiy features
 
-#enable_riscv64_cheri           = yes
-#enable_aarch64_morello         = yes
 #enable_aarch64_tbi             = yes
+#enable_riscv64_cheri_default     = yes
+#enable_riscv64_cheri_everywhere_unsafe= yes
+#enable_aarch64_morello_default     = yes
+#enable_aarch64_morello_everywhere_unsafe= yes
+#enable_aarch64_mte             = yes
 #enable_aarch64_pa              = yes
 #enable_aarch64_bti             = yes
 #enable_aarch64_mte             = yes
@@ -315,17 +318,34 @@ else
   endif
 endif
 
-ifdef enable_riscv64_cheri
-  ARCH := cheri_riscv64
-  CXXFLAGS += -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=very-aggressive
-  SCHEDULER_CXXFLAGS += -mno-relax
-  OBJECT_CXXFLAGS += -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=very-aggressive
+ifdef enable_riscv64_cheri_default
+	ARCH :=cheri_riscv64
+	CXXFLAGS += -mno-relax -fuse-ld=lld -march=rv64gcxcheri -mabi=l64pc128d
+	SCHEDULER_CXXFLAGS += -mno-relax
+	OBJECT_CXXFLAGS += -mno-relax -march=rv64gcxcheri -mabi=l64pc128d
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-cheri
 endif
 
-ifdef enable_aarch64_morello
-  ARCH        := aarch64
-  CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=very-aggressive
-  OBJECT_CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=very-aggressive
+ifdef enable_riscv64_cheri_everywhere_unsafe
+	ARCH :=cheri_riscv64
+	CXXFLAGS += -mno-relax -fuse-ld=lld -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=everywhere-unsafe
+	SCHEDULER_CXXFLAGS += -mno-relax
+	OBJECT_CXXFLAGS += -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=everywhere-unsafe
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-cheri
+endif
+
+ifdef enable_aarch64_morello_default
+	ARCH        :=aarch64
+	CXXFLAGS += -march=morello -mabi=purecap
+	OBJECT_CXXFLAGS += -march=morello -mabi=purecap
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-morello
+endif
+
+ifdef enable_aarch64_morello_everywhere_unsafe
+	ARCH        :=aarch64
+	CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=everywhere-unsafe
+	OBJECT_CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=everywhere-unsafe
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-morello
 endif
 
 ifdef enable_aarch64_tbi
@@ -351,10 +371,8 @@ ifdef enable_aarch64_bti
 endif
 
 ifdef enable_arm64e
-	CXXFLAGS := -arch arm64e -ftrivial-auto-var-init-skip-non-ptr-array -fptrauth-calls -fptrauth-vtable-pointer-address-discrimination -fptrauth-function-pointer-type-discrimination -fptrauth-indirect-gotos -fptrauth-intrinsics -fptrauth-returns
--fptrauth-soft -fptrauth-vtable-pointer-type-discrimination
-	OBJECT_CXXFLAGS := -arch arm64e -ftrivial-auto-var-init-skip-non-ptr-array -fptrauth-calls -fptrauth-vtable-pointer-address-discrimination -fptrauth-function-pointer-type-discrimination -fptrauth-indirect-gotos -fptrauth-intrinsics -fptrauth-returns
--fptrauth-soft -fptrauth-vtable-pointer-type-discrimination
+	CXXFLAGS := $(CXXFLAGS) -arch arm64e -ftrivial-auto-var-init-skip-non-ptr-array -fptrauth-calls -fptrauth-indirect-gotos -fptrauth-intrinsics -fptrauth-returns -fptrauth-vtable-pointer-type-discrimination -fptrauth-vtable-pointer-address-discrimination
+	OBJECT_CXXFLAGS += -arch arm64e -ftrivial-auto-var-init-skip-non-ptr-array -fptrauth-calls  -fptrauth-indirect-gotos -fptrauth-intrinsics -fptrauth-returns -fptrauth-vtable-pointer-type-discrimination -fptrauth-vtable-pointer-address-discrimination
 	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-arm64e
 endif
 

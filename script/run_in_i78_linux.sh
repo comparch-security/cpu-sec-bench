@@ -15,9 +15,15 @@ rename_log() {
 
 cd ../
 i=1
-while [ "$i" -le 4 ]; do
+while [ "$i" -le 11 ]; do
 	# Create a new directory name
 	new_dir="cpu-sec-bench-$i"
+	# Check if the directory already exists
+	# if [ -d "$new_dir" ]; then
+	# 	echo "Directory $new_dir already exists, skipping..."
+	# 	i=$((i + 1))
+	# 	continue
+	# fi
 	# Use cp to copy the current directory into the new directory
 	rm -rf "$new_dir"
 	cp -r "cpu-sec-bench" "$new_dir"
@@ -29,7 +35,7 @@ cd - || (
 	exit
 )
 
-prefix=M1-LLVM-TBI
+prefix=G8-GCC-none
 (
 	echo "${prefix}"
 
@@ -39,21 +45,18 @@ prefix=M1-LLVM-TBI
 		exit
 	)
 	unset CXX
-	# which means apple llvm
-	export CXX=clang++
-
-	export enable_aarch64_tbi="yes"
-
+	export CXX=g++
 	make cleanall >temp.log 2>&1
 	make -e >>temp.log 2>&1
 	./run-test exhausted-run >>temp.log 2>&1
 	base_name=$(rename_log)
+	echo "$base_name"
 	mv temp.log "${prefix}"_"${base_name}".log
 	mv "${base_name}".dat "${prefix}"_"${base_name}".dat
 ) &
 
 ind=1
-prefix=M1-LLVM-PA
+prefix=G8-GCC-stack
 (
 	echo "${prefix}"
 
@@ -63,8 +66,8 @@ prefix=M1-LLVM-PA
 		exit
 	)
 	unset CXX
-	export CXX=clang++
-	export enable_aarch64_pa="yes"
+	export CXX=g++
+	export enable_stack_protection="yes"
 
 	make cleanall >temp.log 2>&1
 	make -e >>temp.log 2>&1
@@ -75,7 +78,7 @@ prefix=M1-LLVM-PA
 ) &
 
 ind=2
-prefix=M1-LLVM-BTI
+prefix=G8-GCC-vtv
 (
 	echo "${prefix}"
 
@@ -85,8 +88,8 @@ prefix=M1-LLVM-BTI
 		exit
 	)
 	unset CXX
-	export CXX=clang++
-	export enable_aarch64_bti="yes"
+	export CXX=g++
+	export enable_vtable_verify="yes"
 
 	make cleanall >temp.log 2>&1
 	make -e >>temp.log 2>&1
@@ -95,9 +98,8 @@ prefix=M1-LLVM-BTI
 	mv temp.log "${prefix}"_"${base_name}".log
 	mv "${base_name}".dat "${prefix}"_"${base_name}".dat
 ) &
-
 ind=3
-prefix=M1-LLVM-MTE
+prefix=G8-GCC-CET
 (
 	echo "${prefix}"
 
@@ -107,8 +109,8 @@ prefix=M1-LLVM-MTE
 		exit
 	)
 	unset CXX
-	export CXX=clang++
-	export enable_aarch64_mte="yes"
+	export CXX=g++
+	export enable_cet_shadow_stack="yes"
 
 	make cleanall >temp.log 2>&1
 	make -e >>temp.log 2>&1
@@ -117,9 +119,8 @@ prefix=M1-LLVM-MTE
 	mv temp.log "${prefix}"_"${base_name}".log
 	mv "${base_name}".dat "${prefix}"_"${base_name}".dat
 ) &
-
 ind=4
-prefix=M1-Apple-PA
+prefix=G8-GCC-full
 (
 	echo "${prefix}"
 
@@ -129,8 +130,32 @@ prefix=M1-Apple-PA
 		exit
 	)
 	unset CXX
-	export CXX=c++
-	export enable_arm64e="yes"
+	export CXX=g++
+	export enable_vtable_verify="yes"
+	export enable_stack_protection="yes"
+	export enable_cet_shadow_stack="yes"
+
+	make cleanall >temp.log 2>&1
+	make -e >>temp.log 2>&1
+	./run-test exhausted-run >>temp.log 2>&1
+	base_name=$(rename_log)
+	mv temp.log "${prefix}"_"${base_name}".log
+	mv "${base_name}".dat "${prefix}"_"${base_name}".dat
+) &
+ind=5
+prefix=G8-LLVM-full
+(
+	echo "${prefix}"
+	cd ..
+	cd cpu-sec-bench-"${ind}" || (
+		echo "no cpu-sec-bench-${ind}"
+		exit
+	)
+	unset CXX
+	export CXX=clang++
+	export enable_vtable_verify="yes"
+	export enable_stack_protection="yes"
+	export enable_cet_shadow_stack="yes"
 
 	make cleanall >temp.log 2>&1
 	make -e >>temp.log 2>&1
@@ -141,3 +166,6 @@ prefix=M1-Apple-PA
 ) &
 
 wait
+
+#-fsanitize-address-use-after-scope
+#-fsanitize=undefined has many suboptions
