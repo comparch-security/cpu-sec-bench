@@ -1,2 +1,2 @@
-CHERI-default,CXX=clang++,ARCH=cheri_riscv64,enable_riscv64_cheri_default="yes"
-CHERI-strong,CXX=clang++,ARCH=cheri_riscv64,enable_riscv64_cheri_everywhere_unsafe="yes"
+CHERI-default,CXX=clang++,ARCH=riscv64,enable_riscv64_cheri_default="yes"
+CHERI-strong,CXX=clang++,ARCH=riscv64,enable_riscv64_cheri_everywhere_unsafe="yes"
