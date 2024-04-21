@@ -1,0 +1,2 @@
+Armv8.0-Lin-G,CXX=g++
+Armv8.0-Lin-L,CXX=clang++

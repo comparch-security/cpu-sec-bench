@@ -1,0 +1,3 @@
+Armv8.6-Dar-L,CXX=c++
+M2-ASan-full,CXX=c++,enable_undefined_sanitizer="yes",enable_default_address_sanitizer="yes"
+M2-Apple-PA,CXX=c++,enable_arm64e="yes"

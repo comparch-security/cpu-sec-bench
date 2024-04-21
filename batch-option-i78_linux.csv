@@ -1,0 +1,6 @@
+G8-GCC-none,CXX=g++
+G8-GCC-stack,CXX=g++,enable_stack_protection="yes"
+G8-GCC-vtv,CXX=g++,enable_vtable_verify="yes"
+G8-GCC-CET,CXX=g++,enable_cet_shadow_stack="yes"
+G8-GCC-full,CXX=g++,enable_vtable_verify="yes",enable_stack_protection="yes",enable_cet_shadow_stack="yes"
+G8-LLVM-full,CXX=clang++,enable_vtable_verify="yes",enable_stack_protection="yes",enable_cet_shadow_stack="yes"

@@ -1,0 +1,8 @@
+F9-GCC-TBI,CXX=g++,enable_aarch64_tbi="yes"
+F9-GCC-PA,CXX=g++,enable_aarch64_pa="yes"
+F9-GCC-BTI,CXX=g++,enable_aarch64_bti="yes"
+F9-GCC-MTE,CXX=g++,enable_aarch64_mte="yes"
+F9-LLVM-TBI,CXX=clang++,enable_aarch64_tbi="yes"
+F9-LLVM-PA,CXX=clang++,enable_aarch64_pa="yes"
+F9-LLVM-BTI,CXX=clang++,enable_aarch64_bti="yes"
+F9-LLVM-MTE,CXX=clang++,enable_aarch64_mte="yes"

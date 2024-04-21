@@ -1,0 +1,2 @@
+Morello-default,CXX=clang++,ARCH=aarch64,enable_aarch64_morello_default="yes"
+Morello-strong,CXX=clang++,ARCH=aarch64,enable_aarch64_morello_everywhere_unsafe="yes"

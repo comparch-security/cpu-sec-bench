@@ -1,0 +1,5 @@
+M1-LLVM-TBI,CXX=clang++,enable_aarch64_tbi="yes"
+M1-LLVM-PA,CXX=clang++,enable_aarch64_pa="yes"
+M1-LLVM-BTI,CXX=clang++,enable_aarch64_bti="yes"
+M1-LLVM-MTE,CXX=clang++,enable_aarch64_mte="yes"
+M1-Apple-PA,CXX=c++,enable_arm64e="yes"
