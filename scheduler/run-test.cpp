@@ -632,7 +632,7 @@ bool run_tests(std::list<std::string> cases) {
               #ifdef _MSC_VER
               curr_size = get_file_size("test/" + prog + ".exe");
               if(curr_size == -1) curr_size = get_file_size("test/" + prog);
-              if(!dbvar.empty()){
+              if(!make_result && !dbvar.empty()){
                 if(dbvar.size() != 2){
                   std::cerr << "dbvar size is " << dbvar.size() << std::endl;
                   std::cerr << "the parameter number is wrong (exactly is 2)" << std::endl;
