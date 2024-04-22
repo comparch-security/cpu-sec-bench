@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #set -u
 #set -e
 #set -x
@@ -7,7 +7,7 @@
 byte_nums=$3
 
 reverse_word_order(){
-    local result=
+    result=
     for word in $@; do
         result="$word $result"
     done
@@ -15,13 +15,16 @@ reverse_word_order(){
 }
 
 reverse_str_order(){
-    local result=
+    result=
     for word in $@; do
-        local strlen=${#word}
-	local tmp=
-	    for (( i=$strlen-2; i >=0; i=$i-2)); do
-	        tmp=$tmp${word:$i:2}
-	    done
+        strlen=${#word}
+	tmp=
+        i=$((strlen-2))
+        while [ $i -ge 0 ]; do
+            tmp=$(echo "$word" | cut -c "$i-$((i+1))")
+            i=$((i-2))
+        done
+
             result="$result $tmp"
     done
     echo "$result"
@@ -29,20 +32,20 @@ reverse_str_order(){
 }
 
 get_dw_opcode(){
-    local result=
-    local count=0
+    result=
+    count=0
     for word in $@; do
         if [ $count -eq $byte_nums ]; then
             break;
         fi
         result="$result $word"
-        count=$[$count+1]
+        count=$((count + 1))
     done
     echo "$result"
 }
 
 delete_blank(){
-    local result=
+    result=
     for word in $@; do
         result="$result$word"
     done

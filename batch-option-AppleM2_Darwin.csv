@@ -1,3 +1,6 @@
 Armv8.6-Dar-L,CXX=c++
 M2-ASan-full,CXX=c++,enable_undefined_sanitizer="yes",enable_default_address_sanitizer="yes"
 M2-Apple-PA,CXX=c++,enable_arm64e="yes"
+Armv8.6-Dar-L_WITHOUT_OBJECTFLAGS,CXX=c++,without_extra_ojbect_safety_options="yes"="yes"
+M2-ASan-full_WITHOUT_OBJECTFLAGS,CXX=c++,enable_undefined_sanitizer="yes",enable_default_address_sanitizer="yes",without_extra_ojbect_safety_options="yes"="yes"
+M2-Apple-PA_WITHOUT_OBJECTFLAGS,CXX=c++,enable_arm64e="yes",without_extra_ojbect_safety_options="yes"="yes"

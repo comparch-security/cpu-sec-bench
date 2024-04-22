@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #set -u
 #set -e
 #set -x
@@ -7,7 +7,7 @@
 byte_nums=$3
 
 reverse_word_order(){
-    local result=
+    result=
     for word in $@; do
         result="$word $result"
     done
@@ -15,13 +15,13 @@ reverse_word_order(){
 }
 
 get_dw_opcode(){
-    local result=
-    local count=0
+    result=
+    count=0
     for word in $@; do
         if [ $count -lt $byte_nums ]; then
-            grp_len=$[${#word}/2]
+            grp_len=$(( ${#word} / 2 ))
             result="$result $word"
-            count=$[$count+$grp_len]
+            count=$(( count + grp_len ))
         else
             break;
         fi
@@ -30,7 +30,7 @@ get_dw_opcode(){
 }
 
 delete_blank(){
-    local result=
+    result=
     for word in $@; do
         result="$result$word"
     done

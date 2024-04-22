@@ -1,0 +1,4 @@
+RV-old-Lin-G,CXX=g++
+RV-old-Lin-L,CXX=clang++
+RV-old-Lin-G_WITHOUT_OBJECTFLAGS,CXX=g++,without_extra_ojbect_safety_options="yes"="yes"
+RV-old-Lin-L_WITHOUT_OBJECTFLAGS,CXX=clang++,without_extra_ojbect_safety_options="yes"="yes"

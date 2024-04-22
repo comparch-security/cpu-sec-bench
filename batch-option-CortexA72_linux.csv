@@ -1,2 +1,4 @@
 Armv8.0-Lin-G,CXX=g++
 Armv8.0-Lin-L,CXX=clang++
+Armv8.0-Lin-G_WITHOUT_OBJECTFLAGS,CXX=g++,without_extra_ojbect_safety_options="yes"="yes"
+Armv8.0-Lin-L_WITHOUT_OBJECTFLAGS,CXX=clang++,without_extra_ojbect_safety_options="yes"="yes"

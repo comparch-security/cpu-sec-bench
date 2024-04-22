@@ -1,2 +1,4 @@
 CHERI-default,CXX=clang++,ARCH=riscv64,enable_riscv64_cheri_default="yes"
 CHERI-strong,CXX=clang++,ARCH=riscv64,enable_riscv64_cheri_everywhere_unsafe="yes"
+CHERI-default_WITHOUT_OBJECTFLAGS,CXX=clang++,ARCH=riscv64,enable_riscv64_cheri_default="yes",without_extra_ojbect_safety_options="yes"="yes"
+CHERI-strong_WITHOUT_OBJECTFLAGS,CXX=clang++,ARCH=riscv64,enable_riscv64_cheri_everywhere_unsafe="yes",without_extra_ojbect_safety_options="yes"="yes"
