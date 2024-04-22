@@ -41,19 +41,10 @@ while IFS=, read -r prefix rest_columns; do
             run_test "$prefix" "$collect_dir"
         )&
     else
-        if [ "$one_run_ind" -ne 0 ]; then
-            new_dir="cpu-sec-bench-$one_run_ind"
-            cd ..
-            rm -rf "$new_dir"
-            cp -r cpu-sec-bench "$new_dir"
-            cd cpu-sec-bench-$one_run_ind || (
-                echo "$new_dir"
-                exit 1
-            )
-        fi
-
-        export_func "$rest_columns"
-        run_test "$prefix" "$collect_dir"
+        (
+            export_func "$rest_columns"
+            run_test "$prefix" "$collect_dir"
+        )
     fi
 
     one_run_ind=$((one_run_ind + 1))

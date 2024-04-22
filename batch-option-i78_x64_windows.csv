@@ -1,0 +1,8 @@
+G8-Win-none,
+G8-Win-heap,enable_heap_integrity="yes"
+G8-Win-cf,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes"
+G8-Win-full,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes",enable_heap_integrity="yes",enable_heap_integrity="yes"
+G8-Win-none_WITHOUT_OBJECTFLAGS,without_extra_ojbect_safety_options="yes"
+G8-Win-heap_WITHOUT_OBJECTFLAGS,enable_heap_integrity="yes",without_extra_ojbect_safety_options="yes"
+G8-Win-cf_WITHOUT_OBJECTFLAGS,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes",without_extra_ojbect_safety_options="yes"
+G8-Win-full_WITHOUT_OBJECTFLAGS,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes",enable_heap_integrity="yes",enable_heap_integrity="yes",without_extra_ojbect_safety_options="yes"

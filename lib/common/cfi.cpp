@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#define TRACE_EXTERN_RELATED_GLOBALVAR
 #define DLL_DEFINITION DllExport
 
 #include "include/cfi.hpp"
