@@ -41,6 +41,12 @@ OPT_LEVEL       ?= O2
 # common option in Windows, msvc specific safety feature
 #enable_extra_stack_protection  = yes
 #enable_heap_integrity          = yes
+<<<<<<< HEAD
+=======
+#enable_return_address_sanitizer    = yes
+#enable_fuzzer_address_sanitizer    = yes
+#enable_fuzzer_address_sanitizer_withou_object_flags = yes
+>>>>>>> b7a2e07 (partial full asan)
 
 # specific hardware secrutiy features
 
@@ -196,16 +202,22 @@ ifeq ($(OSType),Windows_NT)
 		ifndef without_extra_ojbect_safety_options
 			OBJECT_CXXFLAGS += /fsanitize=fuzzer
 		endif
-		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-r-asan
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-f-asan
 	endif
 
+	ifdef enable_fuzzer_address_sanitizer_withou_object_flags
+		CXXFLAGS += /fsanitize=fuzzer
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-f-no-asan
+	endif
+
+	// experimantal option, must be used with -fsanitize=address
 	ifdef enable_return_address_sanitizer
 		CXXFLAGS += /fsanitize-address-use-after-return
 		ifndef without_extra_ojbect_safety_options
 			OBJECT_CXXFLAGS += /fsanitize-address-use-after-return
 		endif
 		RUN_PREFIX += ASAN_OPTIONS=detect_stack_use_after_return=1 
-		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-f-asan
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-r-asan
 	endif
 else
 
@@ -334,9 +346,9 @@ else
   endif
 
 	ifdef enable_vtable_verify
-		CXXFLAGS += -fvtable-verify=std
+		CXXFLAGS += -Wl,--rpath=../gcc_build/lib64 -fvtable-verify=std
 		ifndef without_extra_ojbect_safety_options
-			OBJECT_CXXFLAGS += -fvtable-verify=std
+			OBJECT_CXXFLAGS += -Wl,--rpath=../gcc_build/lib64 -fvtable-verify=std
 		endif
 		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-vtable_v
 	endif
@@ -359,9 +371,9 @@ else
 	endif
 
 	ifdef enable_cet_shadow_stack
-		CXXFLAGS += -Wl,--rpath=/home/ciyan/glibc-2.39/install/lib -Wl,--dynamic-linker=../glibc/build/lib/ld-linux-x86-64.so.2 -fcf-protection=full
+		CXXFLAGS += -Wl,--rpath=../glibc/build/lib -Wl,--dynamic-linker=../glibc/build/lib/ld-linux-x86-64.so.2 -fcf-protection=full
 		ifndef without_extra_ojbect_safety_options
-			OBJECT_CXXFLAGS += -Wl,--rpath=/home/ciyan/glibc-2.39/install/lib -Wl,--dynamic-linker=../glibc/build/lib/ld-linux-x86-64.so.2 -fcf-protection=full
+			OBJECT_CXXFLAGS += -Wl,--rpath=../glibc/build/lib -Wl,--dynamic-linker=../glibc/build/lib/ld-linux-x86-64.so.2 -fcf-protection=full
 		endif
 		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-cet_ss
 	endif
