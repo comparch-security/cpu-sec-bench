@@ -1,0 +1,6 @@
+RV-UM-Lin-G,CXX=g++
+RV-UM-Lin-L,CXX=clang++
+RV-UM-gcc-full,CXX=g++,enable_stack_protection="yes",enable_stack_clash_protection="yes"
+RV-UM-llvm-full,CXX=g++,enable_stack_protection="yes",enable_stack_clash_protection="yes"
+RV-Asan-gcc-full,CXX=g++,enable_full_address_sanitizer="yes",enable_full_undefined_sanitizer="yes"
+RV-Asan-llvm-full,CXX=clang++,enable_full_address_sanitizer="yes",enable_full_undefined_sanitizer="yes"

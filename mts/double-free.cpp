@@ -1,5 +1,6 @@
 #include <set>
 #include <vector>
+#include <string>
 #include <cstdlib>
 #include <cstdint>
 #include "include/mss.hpp"
@@ -71,6 +72,23 @@ int write_check(std::set<uintptr_t>* addr_buffer){
 }
 
 int main(int argc, char** argv){
+
+    if(argc == 3){
+        char* x = (char*)malloc(10 * sizeof(char));
+        memset(x, std::stod(std::string(argv[2])), 10);
+        int res = x[argc];
+
+    for(int i = 0; i != 10; i++){
+        free(x+i);
+    }
+        
+    for(int i=0; i<RELOC_NUM; i++) {
+        char* buffer = (char*)malloc(10 * sizeof(char));
+        if(buffer == x) return res;
+        delete buffer;
+    }
+        return res;
+    }
 
     int ret = 0;
     // take user input as variables to avoid optimization.

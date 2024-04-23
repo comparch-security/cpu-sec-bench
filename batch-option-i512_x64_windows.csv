@@ -1,12 +1,5 @@
 x86-64-Win-M,
-MSVC-ASan-fuzzer,enable_fuzzer_address_sanitizer="yes"
 MSVC-ASan-address,enable_default_address_sanitizer="yes"
-MSVC-ASan-full,enable_default_address_sanitizer="yes",enable_fuzzer_address_sanitizer="yes"
+MSVC-ASan-full,enable_default_address_sanitizer="yes",enable_return_address_sanitizer="yes"
 G12-Win-cf,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes"
 G12-Win-full,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes",enable_heap_integrity="yes",enable_cet_shadow_stack="yes"
-x86-64-Win-M_WITHOUT_OBJECTFLAGS,without_extra_ojbect_safety_options="yes"
-MSVC-ASan-fuzzer_WITHOUT_OBJECTFLAGS,enable_fuzzer_address_sanitizer="yes",without_extra_ojbect_safety_options="yes"
-MSVC-ASan-address_WITHOUT_OBJECTFLAGS,enable_default_address_sanitizer="yes",without_extra_ojbect_safety_options="yes"
-MSVC-ASan-full_WITHOUT_OBJECTFLAGS,enable_default_address_sanitizer="yes",enable_fuzzer_address_sanitizer="yes",without_extra_ojbect_safety_options="yes"
-G12-Win-cf_WITHOUT_OBJECTFLAGS,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes",without_extra_ojbect_safety_options="yes"
-G12-Win-full_WITHOUT_OBJECTFLAGS,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes",enable_heap_integrity="yes",enable_cet_shadow_stack="yes",without_extra_ojbect_safety_options="yes"

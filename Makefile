@@ -36,17 +36,17 @@ OPT_LEVEL       ?= O2
 #enable_control_flow_protection = yes
 #disable_control_flow_protection= yes
 #enable_stack_clash_protection  = yes
-#enable_address_sanitizer       = yes
+#enable_address_sanitizer_without_leaker  = yes
+#enable_full_address_sanitizer = yes
+#enable_undefined_sanitizer = yes
+#enable_full_undefined_sanitizer =yes
 
 # common option in Windows, msvc specific safety feature
 #enable_extra_stack_protection  = yes
 #enable_heap_integrity          = yes
-<<<<<<< HEAD
-=======
 #enable_return_address_sanitizer    = yes
 #enable_fuzzer_address_sanitizer    = yes
 #enable_fuzzer_address_sanitizer_withou_object_flags = yes
->>>>>>> b7a2e07 (partial full asan)
 
 # specific hardware secrutiy features
 
@@ -55,6 +55,10 @@ OPT_LEVEL       ?= O2
 #enable_aarch64_mte             = yes
 #enable_aarch64_pa              = yes
 #enable_aarch64_bti             = yes
+#enable_aarch64_mte             = yes
+#enable_arm64e_pa                  = yes
+#enable_arm64e_bti                 = yes
+#enable_arm64e_mte                 = yes
 
 # define paths and objects
 ifeq ($(OSType),Windows_NT)
@@ -85,27 +89,27 @@ ifeq ($(OSType),Windows_NT)
 	ifneq ($(and $(BUFFER_VAL_UNDERFLOW),$(BUFFER_VAL_MID),$(BUFFER_VAL_OVERFLOW)),)
 		CXXFLAGS_BASE += /DBUFFER_VAL_UNDERFLOW=$(BUFFER_VAL_UNDERFLOW) /DBUFFER_VAL_MID=$(BUFFER_VAL_MID) /DBUFFER_VAL_OVERFLOW=$(BUFFER_VAL_OVERFLOW)
 	endif
-  ifdef TRACE_RUN
-    CXXFLAGS_BASE += /DTRACE_RUN=$(TRACE_RUN)
-  endif
-  SCHEDULER_CXXFLAGS  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
-  OBJECT_CXXFLAGS     := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
-  CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
-  ASMFLAGS      := /nologo /Zi /c
-  # If there is a whitespace between windows msvc's output option and output file,
-  # will raise error
-  OUTPUT_EXE_OPTION := /Fe
-  OUTPUT_LIB_OPTION := /c /Fo
-  OUTPUT_DYN_OPTION := /LD /Fe
-  MIDFILE_SUFFIX    := .obj
-  DLL_SUFFIX        := .dll
-  LDFLAGS           := /link /incremental:no /OPT:NOREF /OPT:NOICF
-  LIB_LDFLAGS       := /link
-  OBJDUMPFLAGS      := /DISASM
-  DYNCFI_OPTION     := libcfi.lib
-  func-opcode-gen   := .\script\get_x64_func_inst.bat
-  dynlibcfi := $(addsuffix $(DLL_SUFFIX), libcfi)
-  independent_assembly := lib/x86_64/visualcpp_indepassembly_func.obj
+	ifdef TRACE_RUN
+		CXXFLAGS_BASE += /DTRACE_RUN=$(TRACE_RUN)
+	endif
+	SCHEDULER_CXXFLAGS  := /O2 $(CXXFLAGS_BASE) /I. /DRUN_PREFIX="\"$(RUN_PREFIX)\""
+	OBJECT_CXXFLAGS     := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
+	CXXFLAGS      := /$(OPT_LEVEL) /Zi $(CXXFLAGS_BASE)
+	ASMFLAGS      := /nologo /Zi /c
+	# If there is a whitespace between windows msvc's output option and output file,
+	# will raise error
+	OUTPUT_EXE_OPTION := /Fe
+	OUTPUT_LIB_OPTION := /c /Fo
+	OUTPUT_DYN_OPTION := /LD /Fe
+	MIDFILE_SUFFIX    := .obj
+	DLL_SUFFIX        := .dll
+	LDFLAGS           += /link /incremental:no /OPT:NOREF /OPT:NOICF
+	LIB_LDFLAGS       := /link
+	OBJDUMPFLAGS      := /DISASM
+	DYNCFI_OPTION     := libcfi.lib
+	func-opcode-gen   := .\script\get_x64_func_inst.bat
+	dynlibcfi := $(addsuffix $(DLL_SUFFIX), libcfi)
+	independent_assembly := lib/x86_64/visualcpp_indepassembly_func.obj
 
 	# define compiling flags
 	ifdef enable_stack_nx_protection
@@ -210,7 +214,7 @@ ifeq ($(OSType),Windows_NT)
 		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-f-no-asan
 	endif
 
-	// experimantal option, must be used with -fsanitize=address
+	# experimantal option, must be used with -fsanitize=address
 	ifdef enable_return_address_sanitizer
 		CXXFLAGS += /fsanitize-address-use-after-return
 		ifndef without_extra_ojbect_safety_options
@@ -254,30 +258,31 @@ else
 	ifneq ($(and $(BUFFER_VAL_UNDERFLOW),$(BUFFER_VAL_MID),$(BUFFER_VAL_OVERFLOW)),)
 		CXXFLAGS_BASE += -DBUFFER_VAL_UNDERFLOW=$(BUFFER_VAL_UNDERFLOW) -DBUFFER_VAL_MID=$(BUFFER_VAL_MID) -DBUFFER_VAL_OVERFLOW=$(BUFFER_VAL_OVERFLOW)
 	endif
-  ifdef TRACE_RUN
-    CXXFLAGS_BASE += -DTRACE_RUN=$(TRACE_RUN)
-  endif
-  SCHEDULER_CXXFLAGS  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
-  OBJECT_CXXFLAGS     := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
-  CXXFLAGS      := $(CXXFLAGS_BASE)
-  ASMFLAGS      :=
-  OUTPUT_EXE_OPTION := -o 
-  OUTPUT_LIB_OPTION := -c -o 
-  OUTPUT_DYN_OPTION := -shared -fPIC -o 
-  MIDFILE_SUFFIX    := .o
-  DLL_SUFFIX        := .so
-  LDFLAGS           :=
-  LIB_LDFLAGS       :=
-  OBJDUMPFLAGS      := -D -l -S
-  DYNCFI_OPTION     := -Llib/common/ -Wl,-rpath,lib/common/ -lcfi
-  func-opcode-gen   := ./script/get_x64_func_inst.sh
-  ifeq ($(ARCH), aarch64)
-    func-opcode-gen := ./script/get_aarch64_func_inst.sh
-  else ifeq ($(ARCH), riscv64)
-    func-opcode-gen := ./script/get_riscv64_func_inst.sh
-  endif
-  dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
-  independent_assembly := 
+	ifdef TRACE_RUN
+		CXXFLAGS_BASE += -DTRACE_RUN=$(TRACE_RUN)
+	endif
+	SCHEDULER_CXXFLAGS  := -O2 $(CXXFLAGS_BASE) -I. -DRUN_PREFIX="\"$(RUN_PREFIX)\""
+	OBJECT_CXXFLAGS     := -$(OPT_LEVEL) $(CXXFLAGS_BASE)
+	CXXFLAGS      := $(CXXFLAGS_BASE)
+	ASMFLAGS      :=
+	OUTPUT_EXE_OPTION := -o 
+	OUTPUT_LIB_OPTION := -c -o 
+	OUTPUT_DYN_OPTION := -shared -fPIC -o 
+	MIDFILE_SUFFIX    := .o
+	DLL_SUFFIX        := .so
+	LDFLAGS           +=
+	LIB_LDFLAGS       :=
+	OBJDUMPFLAGS      := -D -l -S
+	DYNCFI_OPTION     := -Llib/common/ -Wl,-rpath,lib/common/ -lcfi
+	func-opcode-gen   := ./script/get_x64_func_inst.sh
+	ifeq ($(ARCH), aarch64)
+		func-opcode-gen := ./script/get_aarch64_func_inst.sh
+	endif
+	ifeq ($(ARCH), riscv64)
+		func-opcode-gen := ./script/get_riscv64_func_inst.sh
+	endif
+	dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
+	independent_assembly :=
 
   ifeq ($(CXX),$(filter $(CXX),clang++ c++))
     ifneq ($(OSType),Darwin)
@@ -424,6 +429,19 @@ else
 		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-asan
 	endif
 
+	ifdef enable_full_address_sanitizer
+		CXXFLAGS += -fsanitize=address -fsanitize-address-use-after-scope -fno-common -fsanitize=pointer-compare -fsanitize=pointer-subtract
+		ifndef without_extra_ojbect_safety_options
+			OBJECT_CXXFLAGS += -fsanitize=address -fsanitize-address-use-after-scope -fno-common -fsanitize=pointer-compare -fsanitize=pointer-subtract
+		endif
+		ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+			CXXFLAGS += -fsanitize-address-use-after-return=always
+			OBJECT_CXXFLAGS += -fsanitize-address-use-after-return=always
+		endif
+		RUN_PREFIX += ASAN_OPTIONS=detect_stack_use_after_return=1:detect_invalid_pointer_pairs=2
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-asan
+	endif
+
 	ifdef enable_undefined_sanitizer
 		CXXFLAGS += -fsanitize=undefined
 		ifndef without_extra_ojbect_safety_options
@@ -432,17 +450,17 @@ else
 		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-uasan
 	endif
 
-  ifdef enable_address_sanitizer
-    CXXFLAGS += -fsanitize=address
-    RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
-    ifeq ($(CXX),$(filter $(CXX),clang++ c++))
-      LDFLAGS  += -static-libsan
-    else
-      LDFLAGS  += -static-libasan
-      CXXFLAGS += --param=asan-stack=1
-    endif
-  endif
-endif
+	ifdef enable_full_undefined_sanitizer
+		CXXFLAGS += -fsanitize=undefined -fsanitize=signed-integer-overflow 
+		ifndef without_extra_ojbect_safety_options
+			OBJECT_CXXFLAGS += -fsanitize=undefined -fsanitize=signed-integer-overflow 
+		endif
+		ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+			CXXFLAGS += -fsanitize=local-bounds -fsanitize=unsigned-integer-overflow
+			OBJECT_CXXFLAGS += -fsanitize=local-bounds -fsanitize=unsigned-integer-overflow
+		endif
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-uasan
+	endif
 
 ifdef enable_riscv64_cheri_default
 	ARCH :=cheri_riscv64
@@ -507,6 +525,12 @@ ifdef enable_aarch64_pa
 endif
 
 ifdef enable_aarch64_bti
+	ifeq ($(APPLE),M2)
+		LDFLAGS += -L/opt/homebrew/Cellar/llvm/17.0.6_1/lib/c++ -Wl,-rpath,/opt/homebrew/Cellar/llvm/17.0.6_1/lib/c++
+	endif
+	ifeq ($(APPLE),M1)
+		LDFLAGS += -L/opt/homebrew/Cellar/llvm@15/15.0.7/lib/c++ -Wl,-rpath,/opt/homebrew/Cellar/llvm@15/15.0.7/lib/c++
+	endif
 	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a -mbranch-protection=bti
 	ifndef without_extra_ojbect_safety_options
 		OBJECT_CXXFLAGS += -march=armv8.5-a -mbranch-protection=bti
@@ -514,12 +538,39 @@ ifdef enable_aarch64_bti
 	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-bti
 endif
 
-ifdef enable_arm64e
-	CXXFLAGS := $(CXXFLAGS) -arch arm64e -ftrivial-auto-var-init-skip-non-ptr-array -fptrauth-calls -fptrauth-indirect-gotos -fptrauth-intrinsics -fptrauth-returns -fptrauth-vtable-pointer-type-discrimination -fptrauth-vtable-pointer-address-discrimination
-	ifndef without_extra_ojbect_safety_options
-		OBJECT_CXXFLAGS += -arch arm64e -ftrivial-auto-var-init-skip-non-ptr-array -fptrauth-calls  -fptrauth-indirect-gotos -fptrauth-intrinsics -fptrauth-returns -fptrauth-vtable-pointer-type-discrimination -fptrauth-vtable-pointer-address-discrimination
+ifdef enable_arm64e_pa
+	ifneq (arm64e,$(filter arm64e,$(CXXFLAGS)))
+		ARCH_FLAGS := -arch arm64e
 	endif
-	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-arm64e
+	CXXFLAGS := $(CXXFLAGS) $(ARCH_FLAGS) -ftrivial-auto-var-init-skip-non-ptr-array -fptrauth-calls -fptrauth-indirect-gotos -fptrauth-intrinsics -fptrauth-returns -fptrauth-vtable-pointer-type-discrimination -fptrauth-vtable-pointer-address-discrimination
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += $(ARCH_FLAGS) -ftrivial-auto-var-init-skip-non-ptr-array -fptrauth-calls  -fptrauth-indirect-gotos -fptrauth-intrinsics -fptrauth-returns -fptrauth-vtable-pointer-type-discrimination -fptrauth-vtable-pointer-address-discrimination
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-arm64epa
+endif
+
+ifdef enable_arm64e_bti
+	ifneq (arm64e,$(filter arm64e,$(CXXFLAGS)))
+		ARCH_FLAGS := -arch arm64e
+	endif
+	CXXFLAGS := $(CXXFLAGS) $(ARCH_FLAGS) -fbranch-target-identification
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += $(ARCH_FLAGS) -fbranch-target-identification
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-arm64ebti
+endif
+
+ifdef enable_arm64e_mte
+	ifneq (arm64e,$(filter arm64e,$(CXXFLAGS)))
+		ARCH_FLAGS := -arch arm64e
+	endif
+	CXXFLAGS := $(CXXFLAGS) $(ARCH_FLAGS) -march=armv8a+memtag -fsanitize=memtag
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += $(ARCH_FLAGS) -march=armv8a+memtag -fsanitize=memtag
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-arm64emte
+endif
+
 endif
 
 # define cases
