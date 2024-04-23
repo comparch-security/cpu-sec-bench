@@ -380,7 +380,7 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
     }
     if(need_rebuild == true) need_build = true;
   }else{
-    if(!prog_to_confmacro.count(pn)){
+    if(!prog_to_confmacro.count(pn) || (result_db.count(cn) || result_db[cn]["result"] != 0) ){
       need_build = true;
     }// means default conf-macro(no "conf-macro" in the case, but use conf-macro) is forbidden, because it may lead false no-make
     prog_to_confmacro[pn] = {};
