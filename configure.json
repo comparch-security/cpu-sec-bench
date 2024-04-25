@@ -5532,6 +5532,10 @@
         "arguments": {
             "0": [
                 "0",
+                "0"
+            ],
+            "1": [
+                "0",
                 "0",
                 "-rsize",
                 "7",
@@ -6242,14 +6246,12 @@
             ]
         },
         "require-comment": [
-            "relaxation",
-            "utilization"
+            "relaxation"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-fake-vtable",
-                    "cfi-call-instruction-in-stack"
+                    "cfi-call-fake-vtable"
                 ]
             ]
         }
@@ -6262,14 +6264,12 @@
             ]
         },
         "require-comment": [
-            "relaxation",
-            "utilization"
+            "relaxation"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-fake-vtable",
-                    "cfi-call-instruction-in-heap"
+                    "cfi-call-fake-vtable"
                 ]
             ]
         }
@@ -6282,14 +6282,12 @@
             ]
         },
         "require-comment": [
-            "relaxation",
-            "utilization"
+            "relaxation"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-fake-vtable",
-                    "cfi-call-instruction-in-data"
+                    "cfi-call-fake-vtable"
                 ]
             ]
         }
@@ -6497,14 +6495,10 @@
             ]
         },
         "require-comment": [
-            "relaxation",
             "utilization"
         ],
         "require": {
             "0": [
-                [
-                    "cfi-call-wrong-vtable"
-                ],
                 [
                     "cpi-func-pointer-arithmetic"
                 ]
@@ -6547,24 +6541,28 @@
     },
     "cfi-call-wrong-num-arg-func": {
         "require-comment": [
-            "relaxation"
+            "relaxation",
+            "utilization"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-wrong-vtable-arg-num"
+                    "cfi-call-wrong-vtable-arg-num",
+                    "cfi-call-wrong-func"
                 ]
             ]
         }
     },
     "cfi-call-wrong-type-arg-int2double-func": {
         "require-comment": [
-            "relaxation"
+            "relaxation",
+            "utilization"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-wrong-vtable-arg-type"
+                    "cfi-call-wrong-vtable-arg-type",
+                    "cfi-call-wrong-func"
                 ]
             ]
         }
@@ -6576,12 +6574,14 @@
             ]
         },
         "require-comment": [
-            "relaxation"
+            "relaxation",
+            "utilization"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-wrong-vtable-arg-type"
+                    "cfi-call-wrong-vtable-arg-type",
+                    "cfi-call-wrong-func"
                 ]
             ]
         }
@@ -6593,12 +6593,14 @@
             ]
         },
         "require-comment": [
-            "relaxation"
+            "relaxation",
+            "utilization"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-wrong-vtable-arg-type"
+                    "cfi-call-wrong-vtable-arg-type",
+                    "cfi-call-wrong-func"
                 ]
             ]
         }
@@ -6608,25 +6610,25 @@
             "290": "cheri capabilities enabled."
         },
         "require-comment": [
-            "relaxation"
+            "relaxation",
+            "utilization"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-wrong-vtable-arg-type"
+                    "cfi-call-wrong-vtable-arg-type",
+                    "cfi-call-wrong-func"
                 ]
             ]
         }
     },
     "cfi-call-wrong-type-arg-dp2fp-func-rodata": {
         "require-comment": [
-            "utilization",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-instruction-in-rodata",
                     "cfi-call-wrong-type-arg-fp2dp-func"
                 ]
             ]
@@ -6637,13 +6639,11 @@
     },
     "cfi-call-wrong-type-arg-dp2fp-func-data": {
         "require-comment": [
-            "utilization",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-instruction-in-data",
                     "cfi-call-wrong-type-arg-fp2dp-func"
                 ]
             ]
@@ -6655,13 +6655,11 @@
     },
     "cfi-call-wrong-type-arg-dp2fp-func-stack": {
         "require-comment": [
-            "utilization",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-instruction-in-stack",
                     "cfi-call-wrong-type-arg-fp2dp-func"
                 ]
             ]
@@ -6683,13 +6681,11 @@
     },
     "cfi-call-wrong-type-arg-dp2fp-func-heap": {
         "require-comment": [
-            "utilization",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-instruction-in-heap",
                     "cfi-call-wrong-type-arg-fp2dp-func"
                 ]
             ]
@@ -6705,10 +6701,6 @@
             "0": [
                 "main",
                 "labelfunc"
-            ],
-            "1": [
-                "main",
-                "labelfunc"
             ]
         },
         "require-comment": [
@@ -6717,17 +6709,12 @@
         "require": {
             "0": [
                 [
-                    "cfi-call-mid-func"
+                    "cfi-jump-instruction-in-rodata"
                 ]
-            ],
-            "1": []
+            ]
         },
         "arguments": {
             "0": [
-                "1",
-                "0"
-            ],
-            "1": [
                 "1",
                 "0"
             ]
@@ -6743,29 +6730,24 @@
             "0": [
                 "main",
                 "labelfunc"
-            ],
-            "1": [
-                "main",
-                "labelfunc"
             ]
         },
         "require-comment": [
+            "relaxation",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-mid-func"
+                    "cfi-jump-instruction-in-data"
+                ],
+                [
+                    "cfi-call-fake-vtable-with-func-data"
                 ]
-            ],
-            "1": []
+            ]
         },
         "arguments": {
             "0": [
-                "1",
-                "1"
-            ],
-            "1": [
                 "1",
                 "1"
             ]
@@ -6781,29 +6763,24 @@
             "0": [
                 "main",
                 "labelfunc"
-            ],
-            "1": [
-                "main",
-                "labelfunc"
             ]
         },
         "require-comment": [
+            "relaxation",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-mid-func"
+                    "cfi-jump-instruction-in-stack"
+                ],
+                [
+                    "cfi-call-fake-vtable-with-func-stack"
                 ]
-            ],
-            "1": []
+            ]
         },
         "arguments": {
             "0": [
-                "1",
-                "2"
-            ],
-            "1": [
                 "1",
                 "2"
             ]
@@ -6820,29 +6797,24 @@
             "0": [
                 "main",
                 "labelfunc"
-            ],
-            "1": [
-                "main",
-                "labelfunc"
             ]
         },
         "require-comment": [
+            "relaxation",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-call-mid-func"
+                    "cfi-jump-instruction-in-heap"
+                ],
+                [
+                    "cfi-call-fake-vtable-with-func-heap"
                 ]
-            ],
-            "1": []
+            ]
         },
         "arguments": {
             "0": [
-                "1",
-                "3"
-            ],
-            "1": [
                 "1",
                 "3"
             ]
@@ -6937,12 +6909,16 @@
             ]
         },
         "require-comment": [
+            "relaxation",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
                     "cfi-jump-mid-func"
+                ],
+                [
+                    "cfi-call-wrong-type-arg-dp2fp-func-rodata"
                 ]
             ]
         },
@@ -6967,12 +6943,16 @@
             ]
         },
         "require-comment": [
+            "relaxation",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
                     "cfi-jump-mid-func"
+                ],
+                [
+                    "cfi-call-wrong-type-arg-dp2fp-func-data"
                 ]
             ]
         },
@@ -6997,12 +6977,16 @@
             ]
         },
         "require-comment": [
+            "relaxation",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
                     "cfi-jump-mid-func"
+                ],
+                [
+                    "cfi-call-wrong-type-arg-dp2fp-func-stack"
                 ]
             ]
         },
@@ -7028,12 +7012,16 @@
             ]
         },
         "require-comment": [
+            "relaxation",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
                     "cfi-jump-mid-func"
+                ],
+                [
+                    "cfi-call-wrong-type-arg-dp2fp-func-heap"
                 ]
             ]
         },
@@ -7068,7 +7056,7 @@
         },
         "arguments": {
             "0": [
-                "-vstack-offset-v-p-g1"
+                "-rsize"
             ]
         },
         "default_args": {
@@ -7109,6 +7097,9 @@
                 ]
             ]
         },
+        "todo": [
+            "need fix arguments -vstack-offset-v-p-gq,update in related chain cases"
+        ],
         "arguments": {
             "0": [
                 "0",
@@ -7117,7 +7108,7 @@
             ],
             "1": [
                 "1",
-                "-vstack-offset-v-p-g1",
+                "0",
                 "-roffset"
             ]
         },
@@ -7175,9 +7166,13 @@
                 ]
             ]
         },
+        "todo": [
+            "need fix arguments -vstack-offset-v-p-gq,update in related chain cases"
+        ],
         "arguments": {
             "0": [
-                "-vstack-offset-v-p-g1"
+                "0",
+                "-rsize"
             ]
         },
         "default_args": {
@@ -7307,7 +7302,8 @@
         },
         "require-comment": [
             "relaxation",
-            "utilization"
+            "utilization",
+            "relaxation"
         ],
         "require": {
             "0": [
@@ -7316,6 +7312,9 @@
                 ],
                 [
                     "acc-get-ra-offset-v-p-g1"
+                ],
+                [
+                    "cfi-jump-instruction-in-rodata"
                 ]
             ]
         },
@@ -7353,7 +7352,8 @@
         },
         "require-comment": [
             "relaxation",
-            "utilization"
+            "utilization",
+            "relaxation"
         ],
         "require": {
             "0": [
@@ -7362,6 +7362,9 @@
                 ],
                 [
                     "acc-get-ra-offset-v-p-g1"
+                ],
+                [
+                    "cfi-jump-instruction-in-data"
                 ]
             ]
         },
@@ -7399,7 +7402,8 @@
         },
         "require-comment": [
             "relaxation",
-            "utilization"
+            "utilization",
+            "relaxation"
         ],
         "require": {
             "0": [
@@ -7408,6 +7412,9 @@
                 ],
                 [
                     "acc-get-ra-offset-v-p-g1"
+                ],
+                [
+                    "cfi-jump-instruction-in-stack"
                 ]
             ]
         },
@@ -7446,7 +7453,8 @@
         },
         "require-comment": [
             "relaxation",
-            "utilization"
+            "utilization",
+            "relaxation"
         ],
         "require": {
             "0": [
@@ -7455,6 +7463,9 @@
                 ],
                 [
                     "acc-get-ra-offset-v-p-g1"
+                ],
+                [
+                    "cfi-jump-instruction-in-heap"
                 ]
             ]
         },

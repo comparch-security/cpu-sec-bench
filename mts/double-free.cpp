@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstdint>
 #include "include/mss.hpp"
+#include <cstring>
 
 /*As implemented by ptmalloc,
  *small size chunk was organized in fast bins

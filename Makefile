@@ -36,7 +36,11 @@ OPT_LEVEL       ?= O2
 #enable_control_flow_protection = yes
 #disable_control_flow_protection= yes
 #enable_stack_clash_protection  = yes
-#enable_address_sanitizer       = yes
+#enable_address_sanitizer_without_leaker  = yes
+#enable_full_address_sanitizer = yes
+#enable_undefined_sanitizer = yes
+#enable_full_undefined_sanitizer =yes
+#enable_safe_stack=yes
 
 # common option in Windows, msvc specific safety feature
 #enable_extra_stack_protection  = yes
@@ -286,20 +290,85 @@ else
   endif
   endif
 
-  ifdef enable_stack_clash_protection
-    CXXFLAGS += -fstack-clash-protection
-  endif
+	ifdef enable_address_sanitizer_without_leaker
+		CXXFLAGS += -fsanitize=address -fno-sanitize-recover=all
+		ifndef without_extra_ojbect_safety_options
+			OBJECT_CXXFLAGS += -fsanitize=address -fno-sanitize-recover=all
+		endif
+		RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
+		# ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+		# 	LDFLAGS  += -static-libsan
+		# else
+		# 	LDFLAGS  += -static-libasan
+		# 	CXXFLAGS += --param=asan-stack=1
+		# endif
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-nl-asan
+	endif
 
-  ifdef enable_address_sanitizer
-    CXXFLAGS += -fsanitize=address
-    RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
-    ifeq ($(CXX),$(filter $(CXX),clang++ c++))
-      LDFLAGS  += -static-libsan
-    else
-      LDFLAGS  += -static-libasan
-      CXXFLAGS += --param=asan-stack=1
-    endif
-  endif
+	ifdef enable_default_address_sanitizer
+		CXXFLAGS += -fsanitize=address -fno-sanitize-recover=all
+		ifndef without_extra_ojbect_safety_options
+			OBJECT_CXXFLAGS += -fsanitize=address -fno-sanitize-recover=all
+		endif
+		# ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+		# 	LDFLAGS  += -static-libsan
+		# else
+		# 	LDFLAGS  += -static-libasan
+		# 	CXXFLAGS += --param=asan-stack=1
+		# endif
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-asan
+	endif
+
+	ifdef enable_full_address_sanitizer
+		CXXFLAGS += -fsanitize=address -fsanitize-address-use-after-scope -fno-common -fsanitize=pointer-compare -fsanitize=pointer-subtract -fno-sanitize-recover=all
+		ifndef without_extra_ojbect_safety_options
+			OBJECT_CXXFLAGS += -fsanitize=address -fsanitize-address-use-after-scope -fno-common -fsanitize=pointer-compare -fsanitize=pointer-subtract -fno-sanitize-recover=all
+		endif
+		ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+			CXXFLAGS += -fsanitize-address-use-after-return=always
+			OBJECT_CXXFLAGS += -fsanitize-address-use-after-return=always
+		endif
+		RUN_PREFIX += ASAN_OPTIONS=detect_stack_use_after_return=1:detect_invalid_pointer_pairs=2
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-asan
+	endif
+
+	ifdef enable_undefined_sanitizer
+		CXXFLAGS += -fsanitize=undefined -fno-sanitize-recover=all
+		ifndef without_extra_ojbect_safety_options
+			OBJECT_CXXFLAGS += -fsanitize=undefined -fno-sanitize-recover=all
+		endif
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-uasan
+	endif
+
+	ifdef enable_full_undefined_sanitizer
+		CXXFLAGS += -fsanitize=undefined -fsanitize=signed-integer-overflow -fno-sanitize-recover=all
+		ifndef without_extra_ojbect_safety_options
+			OBJECT_CXXFLAGS += -fsanitize=undefined -fsanitize=signed-integer-overflow -fno-sanitize-recover=all
+		endif
+		ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+			CXXFLAGS += -fsanitize=local-bounds -fsanitize=unsigned-integer-overflow
+			OBJECT_CXXFLAGS += -fsanitize=local-bounds -fsanitize=unsigned-integer-overflow
+		endif
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-uasan
+	endif
+
+	ifdef enable_safe_stack
+		CXXFLAGS += -fsanitize=safe-stack -fno-sanitize-recover=all
+		ifndef without_extra_ojbect_safety_options
+			OBJECT_CXXFLAGS += -fsanitize=safe-stack -fno-sanitize-recover=all
+		endif
+		SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-safestack
+	endif
+endif
+
+ifdef enable_riscv64_cheri_default
+	ARCH :=cheri_riscv64
+	CXXFLAGS += -mno-relax -fuse-ld=lld -march=rv64gcxcheri -mabi=l64pc128d
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += -mno-relax -march=rv64gcxcheri -mabi=l64pc128d
+	endif
+	SCHEDULER_CXXFLAGS += -mno-relax
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-referenceonly
 endif
 
 ifdef enable_riscv64_cheri

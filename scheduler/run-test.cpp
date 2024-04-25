@@ -36,7 +36,7 @@ char * gargv[33];
 
 // global configure parameters
 bool cond_run      = false;
-bool debug_run     = false;
+int  debug_run     = 0;
 bool make_run      = true;
 bool test_run      = true;
 bool report_run    = false;
@@ -58,6 +58,7 @@ void add_extra_run_prefix(char **);
 #ifdef RUN_PREFIX
   static char run_prefix[] = RUN_PREFIX;
 #endif
+#define MAKE_ERROR 119
 std::list<char *> extra_run_prefix;
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
@@ -85,23 +86,27 @@ int main(int argc, char* argv[], char* envp[]) {
       std::cout << "Run Script for the Security Test Benchmark." << std::endl;
       std::cout << std::endl;
       std::cout << "Possible parameters:" << std::endl;
-      std::cout << "  help          Show this help information." << std::endl;
-      std::cout << "  continue      Continue a previous test by reading the results.json file first." << std::endl;
-      std::cout << "  debug         Stop testing on the first unexpected exit status." << std::endl;
-      std::cout << "  make-only     Make the test cases without running them." << std::endl;
-      std::cout << "  no-make       Due to make the test cases as they are made aleady." << std::endl;
-      std::cout << "  fast-run      Only run the test case that their requirement runs successfully, and then generate a report." << std::endl;
-      std::cout << "  exhausted-run Run all tests until the total test case is exhausted, and then generate a report." << std::endl;
-      std::cout << "  print-trace   Print the trace log of the attacked target." << std::endl;
+      std::cout << "  help                Show this help information." << std::endl;
+      std::cout << "  continue            Continue a previous test by reading the results.json file first." << std::endl;
+      std::cout << "  debug-verbose       Print verbose debug info, and stop testing on the first unexpected exit status." << std::endl;
+      std::cout << "  nd-fast-run         run in fast mode without debug info." << std::endl;
+      std::cout << "  nd-exhausted-run    run in exhausted mode without debug info." << std::endl;
+      std::cout << "  make-only           Make the test cases without running them." << std::endl;
+      std::cout << "  no-make             Due to make the test cases as they are made aleady." << std::endl;
+      std::cout << "  fast-run            Only run the test case that their requirement runs successfully, and then generate a report." << std::endl;
+      std::cout << "  exhausted-run       Run all tests until the total test case is exhausted, and then generate a report." << std::endl;
+      std::cout << "  print-trace         Print the trace log of the attacked target." << std::endl;
       return 0;
     }
 
     else if(param == "continue")  cond_run   = true;
-    else if(param == "debug")     debug_run  = true;
+    else if(param == "debug-verbose")     {debug_run  = 2; exhausted_run    = true; report_run = true;}
+    else if(param == "nd-fast-run")       {debug_run  = 0; report_run = true;}
+    else if(param == "nd-exhausted-run")       {debug_run  = 0; exhausted_run    = true; report_run = true;}
     else if(param == "make-only") test_run   = false;
     else if(param == "no-make")   make_run   = false;
-    else if(param == "fast-run")  report_run = true;
-    else if(param == "exhausted-run")   { exhausted_run    = true; report_run = true;}
+    else if(param == "fast-run")  {debug_run  = 1; report_run = true;}
+    else if(param == "exhausted-run")   { debug_run  = 1; exhausted_run    = true; report_run = true;}
     else if(param == "print-trace") {trace_run = true; }
     else {std::cout << "The scheduler has no "<< param << " option" << std::endl; exit(1);}
   }
@@ -153,15 +158,15 @@ bool read_json(json &db, const std::string& fn, bool notice) {
   }
 }
 
-bool dump_json(json &db, const std::string& fn, bool notice) {
+bool dump_json(json &db, const std::string& fn, int notice) {
   std::ofstream db_file(fn);
   if(!db_file.fail()) {
-    if(notice) std::cout << "dump json " << fn << std::endl;
+    if(notice >= 1) std::cout << "dump json " << fn << std::endl;
     db_file << db.dump(4);
     db_file.close();
     return true;
   } else {
-    std::cerr << "Fail to dump json file `" << fn << "'" << std::endl;
+    if(notice >= 1) std::cerr << "Fail to dump json file `" << fn << "'" << std::endl;
     return false;
   }
 }
@@ -182,10 +187,33 @@ void report_gen() {
 
   // insert sys infomation to the result file
   std::ifstream sys_info_file("test/sys_info.txt");
-  char buf[256];
-  while(!sys_info_file.eof()) {
-    sys_info_file.getline(buf, 256);
-    report_file << "# " << buf << std::endl;
+
+  std::string resfile_name = "results.dat";
+  std::string str_buf;
+  
+  std::getline(sys_info_file, str_buf);
+  size_t pos = str_buf.find("OVERVIEW:");
+
+  if (pos != std::string::npos) {
+      resfile_name = str_buf.substr(pos + sizeof("OVERVIEW:")-1);
+      for (char&c:resfile_name){
+        if (invalid_chars.find(c) != std::string::npos) c = '_';
+        if (c == '+') c = 'p';
+      }
+  }
+  if(exhausted_run == true){
+    resfile_name = resfile_name + "-exhausted";
+  }else{
+    resfile_name = resfile_name + "-fast";
+  }
+
+  resfile_name += ".dat"; // Extract the string after "CPU:"
+
+  std::ofstream report_file(resfile_name);
+  //read the rest lines of sys_info.txt
+  while(getline(sys_info_file,str_buf)) {
+    // change below statement to use string parameter
+    report_file << "# " << str_buf << std::endl;
   }
   sys_info_file.close();
 
@@ -226,14 +254,14 @@ void arg_parser(nlohmann::ordered_json tcase, str_vllist_t& arg_lists){
     }
   }
   int ind = 0;
-  if(debug_run)std::cout << "----case kind is: " << case_kind << "----"<< std::endl;
+  if(debug_run >= 2)std::cout << "----case kind is: " << case_kind << "----"<< std::endl;
   if(tcase[case_kind].empty()){
-    if(debug_run)std::cout << "argument is empty" << std::endl;
+    if(debug_run >= 2)std::cout << "argument is empty" << std::endl;
     arg_lists.emplace_back(str_llist_t());
     arg_lists[0].emplace_back(str_list_t());
   }else{
     for(auto curr_case = tcase[case_kind].begin(); curr_case != tcase[case_kind].end(); curr_case++){
-      if(debug_run)std::cout << "curr case is: " << (*curr_case) << std::endl;
+      if(debug_run >=2)std::cout << "curr case is: " << (*curr_case) << std::endl;
       arg_lists.emplace_back(str_llist_t());
       arg_lists[ind].emplace_back(str_list_t());
       auto arguments = (*curr_case).get<str_list_t>();
@@ -258,7 +286,7 @@ bool requires_check(nlohmann::ordered_json tcase){
       for(auto and_conds : require_list) {
         for(auto or_cond : and_conds) {
           if(!result_db.count(or_cond)) {
-            std::cout << "has untested require tests: " << or_cond << std::endl;
+            if(debug_run >= 1) std::cout << "has untested require tests: " << or_cond << std::endl;
             return false;
           }
         }
@@ -281,19 +309,19 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
 
   if(tcase.count("require")  && !exhausted_run && !tcase["require"][std::to_string(ind)].empty()) {
 
-    if(debug_run)std::cout << "reuire case ind is: " << ind << std::endl;
+    if(debug_run >=2)std::cout << "reuire case ind is: " << ind << std::endl;
     auto require_list = tcase["require"][std::to_string(ind)].get<str_llist_t>();
 
     for(auto and_conds : require_list) {
       bool has_passed_case = false;
       for(auto or_cond : and_conds) {
-        if(debug_run)std::cout << "or_cond is: " << or_cond << std::endl;
-        if(debug_run)std::cout << "result_db[or_cond] is: " << result_db[or_cond] << std::endl;
+        if(debug_run >= 3)std::cout << "or_cond is: " << or_cond << std::endl;
+        if(debug_run >= 3)std::cout << "result_db[or_cond] is: " << result_db[or_cond] << std::endl;
         if(result_db[or_cond]["result"] == 0) {
           has_passed_case = true;
         }else{
-          if(config_db.count(or_cond) && config_db[or_cond].count("expect-results")) {
-            for(auto r: config_db[or_cond]["expect-results"].get<std::map<std::string, json> >()) {
+          if(config_db.count(or_cond) && config_db[or_cond].count("retry-results")) {
+            for(auto r: config_db[or_cond]["retry-results"].get<std::map<std::string, json> >()) {
               if(result_db[or_cond]["result"] ==  std::stoi(r.first)){
                 has_passed_case = true;
               }
@@ -304,7 +332,7 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
       if(!has_passed_case) return 1024;
     }
 
-    if(debug_run)std::cout << "\nrun " << cn << " with requirements case " << ind << std::endl;
+    if(debug_run >= 2)std::cout << "\nrun " << cn << " with requirements case " << ind << std::endl;
   }
 
   // check whether the case store a global variable
@@ -337,7 +365,30 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
     for(auto ca:conf_args){
       make_config_macro.push_back(ca.first + "=" + ca.second);
     }
+
+    prog_to_confmacro[pn] = make_config_macro;
+
+    if(make_config_macro.size() != last_make_config_macro.size()){
+      need_rebuild = true;
+    }else{
+      for(auto ca:make_config_macro){
+        if(ca.second != last_make_config_macro[ca.first]){
+          need_rebuild = true;
+          break;
+        }
+      }
+    }
+    if(need_rebuild == true) need_build = true;
+  }else{
+    prog_to_confmacro[pn] = {};
   }
+
+  //To do: add make_result bind with prog_to_confmacro, need a struct to store make_result and conf-macro(if has)
+  if(prog_to_confmacro[pn].empty() || 
+      (result_db.count(cn) && 
+      (result_db[cn]["result"] == MAKE_ERROR || result_db[cn]["result"] == 1024))){
+    need_build = true;
+  }// means default conf-macro(no "conf-macro" in the case, but use conf-macro) is forbidden, because it may lead false no-make
 
   return 0;
 }
@@ -429,19 +480,23 @@ int run_cmd(char* argv[], char** runv, long long& time_count) {
 int run_cmd(char *argv[], char **runv, long long& time_count) {
   pid_t pid;
   if(runv == NULL) runv = org_env;
-  if(debug_run){
+  if(debug_run >= 1){
     std::cout << "environment:";
     int envi = 0;
-    while(runv[envi] != NULL) std::cout << std::string(runv[envi++]) << std::endl;
+    while(runv[envi] != NULL){
+      std::string env_item = std::string(runv[envi++]);
+      if(env_item.find("enable") != std::string::npos ||
+         env_item.find("disable") != std::string::npos ||
+         env_item.find("CXX") != std::string::npos    ||
+         env_item.find("CC=") != std::string::npos     ||
+         env_item.find("LD") != std::string::npos)
+        std::cout << env_item << ", ";
+    }
     std::cout << std::endl;
   }
 
-  /*
-  int argi = 0;
-  while(argv[argi] != NULL) std::cout << std::string(argv[argi++]) << std::endl;
-  */
   auto start = std::chrono::high_resolution_clock::now();
-  int rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, runv);
+  int rv = posix_spawnp(&pid, argv[0], NULL, NULL, const_cast<char *const*>(argv), runv);
 
   if(rv) {
     if(rv == ENOSYS) {
@@ -463,10 +518,15 @@ int run_cmd(char *argv[], char **runv, long long& time_count) {
 
   auto stop = std::chrono::high_resolution_clock::now();
   time_count = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
-  std::cout << "The time consumed by current process is " << time_count << " microseconds" << std::endl;
+  if(debug_run >= 1){
+    std::cout << "The time consumed by ";
+    for(int i = 0; argv[i] != NULL; i++)
+      std::cout << argv[i] << " ";
+    std::cout << time_count << " microseconds" << std::endl;
+  }
 
   if(WIFSIGNALED(status)) {
-    std::cout << argv[0] << " terminated with signal " << WTERMSIG(status) << std::endl;
+    if(debug_run >= 1) std::cout << argv[0] << " terminated with signal " << WTERMSIG(status) << std::endl;
     return 256+WTERMSIG(status);
   }
 
@@ -481,9 +541,34 @@ int run_cmd(char *argv[], char **runv, long long& time_count) {
 char ** argv_conv(const std::string &cmd, const str_list_t &args) {
   int i = 0;
   strcpy(arg_pool[i++], cmd.c_str());
-  for(const auto a:args) strcpy(arg_pool[i++],a.c_str());
+  for(const auto &a:args) strcpy(arg_pool[i++],a.c_str());
   for(int j=0; j<i; j++) gargv[j]=arg_pool[j];
   gargv[i] = NULL;
+  return gargv;
+}
+
+char ** argv_conv(const std::string &cmd, const str_map_t &args) {
+  int i = 0;
+  strcpy(arg_pool[i++], cmd.c_str());
+  for(const auto &a:args) strcpy(arg_pool[i++],(a.first + "=" + a.second).c_str());
+  for(int j=0; j<i; j++) gargv[j]=arg_pool[j];
+  gargv[i] = NULL;
+  return gargv;
+}
+
+char ** argv_conv(const std::string &cmd, const str_list_t &args1, const str_map_t &args2) {
+  int i = 0;
+  strcpy(arg_pool[i++], cmd.c_str());
+  for(const auto &a:args1) strcpy(arg_pool[i++],a.c_str());
+  for(const auto &a:args2) strcpy(arg_pool[i++],(a.first + "=" + a.second).c_str());
+  for(int j=0; j<i; j++) gargv[j]=arg_pool[j];
+  gargv[i] = NULL;
+  if(debug_run >= 1){
+    for(int k = 0; k != i; k++){
+      std::cout << gargv[k] << " ";
+    }
+    std::cout << std::endl;
+  }
   return gargv;
 }
 
@@ -491,7 +576,7 @@ bool run_tests(std::list<std::string> cases) {
   //check current test dependency and avoid endless loop
   int current_test_checkdep_count = 0;
   size_t total_cases = cases.size();
-  std::cout << "The num of all cases is: " << total_cases << std::endl;
+  if(debug_run >= 1) std::cout << "The num of all cases is: " << total_cases << std::endl;
   std::string prog, cmd;
   str_vllist_t alists;
   str_list_t gvar;
@@ -502,7 +587,7 @@ bool run_tests(std::list<std::string> cases) {
     cases.pop_front();
 
     // check whether the case exist
-    if(!config_db.count(cn)) {
+    if(debug_run >= 1 && !config_db.count(cn)) {
       std::cerr << "Fail to parse test case " << cn << std::endl;
       std::cerr << "Test abnormality: " << cn << " does not exist in the configure.json file." << std::endl;
       exit(1);
@@ -515,17 +600,23 @@ bool run_tests(std::list<std::string> cases) {
     std::set<int> expect_results, test_results;
     arg_parser(tcase,alists);
 
-    if(debug_run)std::cout << "alists.size() is: " << alists.size() << std:: endl;
+    if(debug_run >= 2)std::cout << "alists.size() is: " << alists.size() << std:: endl;
 
     if (requires_check(tcase) == true){
-      std::cerr << "\n========== start: " << cn << " =========" << std::endl;
+      if(debug_run >= 1) std::cerr << "\n========== start: " << cn << " =========" << std::endl;
       long long case_exec_time_sum = 0;
       for(int ind = 0; ind != alists.size(); ind++){
-        std::cout << "\"arguments\" ind is: " << ind << std::endl;
+        bool need_rebuild = false, need_build = false;
+        str_list_t make_option_list;
+        str_map_t make_config_macro, last_make_config_macro;
+        if(debug_run >= 1) std::cout << "\"arguments\" ind is: " << ind << std::endl;
         auto alist = alists[ind];
-        test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results);
+        test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results,make_config_macro, last_make_config_macro, need_rebuild, need_build);
+        #ifdef _MSC_VER
+        long long curr_script_time = 0;
+        #endif
         if(!test_run || test_cond == 0) {
-          std::cout << "\n------ " << cn << " ------" << std::endl;
+          if(debug_run >= 1)std::cout << "\n------ " << cn << " ------" << std::endl;
           int make_result = 0;
           if(0 == make_result && make_run && !has_make) {
             long long one_make_time, curr_size;
@@ -555,14 +646,25 @@ bool run_tests(std::list<std::string> cases) {
             total_make_time += one_make_time;
             result_db[cn]["make-time"] = one_make_time;
             if(make_result){
-              std::cout << "fail to make " << prog << " with error status " << make_result << std::endl;
-              test_results.insert(FAILED_BUILD);
+              if(debug_run >= 1) std::cout << "fail to make " << prog << " with error status " << make_result << std::endl;
+              make_results.insert(make_result);
               curr_size = 0;
               continue;
             }else{
               #ifdef _MSC_VER
               curr_size = get_file_size("test/" + prog + ".exe");
               if(curr_size == -1) curr_size = get_file_size("test/" + prog);
+              if(!make_result && !dbvar.empty()){
+                if(dbvar.size() != 2){
+                  if(debug_run >= 1) std::cerr << "dbvar size is " << dbvar.size() << std::endl;
+                  if(debug_run >= 1) std::cerr << "the parameter number is wrong (exactly is 2)" << std::endl;
+                }
+                  if(debug_run >= 1) std::cout << "dump bin: " << "script\\msvc_get_addroffset_of_currfunc.bat" << "test/" << prog << ".exe " <<
+                        " " << dbvar.front() << " " << dbvar.back() << std::endl;
+                  make_result = run_cmd(argv_conv("script\\msvc_get_addroffset_of_currfunc.bat", str_list_t{
+                                  "test/" + prog +".exe", dbvar.front(), dbvar.back()}), NULL, curr_script_time);
+                  if(make_result)make_results.insert(make_result);
+              }
               #else
               curr_size = get_file_size("test/" + prog);
               #endif
@@ -589,10 +691,11 @@ bool run_tests(std::list<std::string> cases) {
             for(auto arg:alist) {
               long long one_run_time;
               cmd = "test/" + prog;
-              std::cout << "\n";
-              if(!extra_run_prefix.empty()) for(auto a:extra_run_prefix) std::cout << std::string(a) << " ";
-              std::cout << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
+              if(debug_run >= 1) std::cout << "\n";
+              //if(!extra_run_prefix.empty()) for(auto a:extra_run_prefix) std::cout << std::string(a) << " ";
+              if(debug_run >= 1) std::cout << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
               int one_run_result = run_cmd(argv_conv(cmd, arg), run_env, one_run_time);
+              if(debug_run >= 1) std::cout << "after run result is: " << one_run_result << std::endl;
               #ifdef _MSC_VER
               one_run_time += curr_script_time;
               #endif
@@ -601,7 +704,7 @@ bool run_tests(std::list<std::string> cases) {
 
               // record run-time parameter
               if(gvar.size() == 1 && one_run_result >= 32 && one_run_result < 64) { // successfully find a run-time parameter
-                std::cerr << "set runtime variable " << gvar.front() << " to " << one_run_result - 32 << std::endl;
+                if(debug_run >= 1) std::cerr << "set runtime variable " << gvar.front() << " to " << one_run_result - 32 << std::endl;
                 var_db[gvar.front()] = one_run_result-32; dump_json(var_db, "variables.json", debug_run);
                 one_run_result = 0;
               }
@@ -612,7 +715,7 @@ bool run_tests(std::list<std::string> cases) {
                   for(auto i =  gvar.begin(); i != gvar.end(); i++){
                     int value;tmpf >> value;
                     var_db[*i] = value; dump_json(var_db, "variables.json", debug_run);
-                    std::cerr << "set runtime variable " << *i << " to " << value << " by reading " << temp_file_name(cmd, arg) << std::endl;
+                    if(debug_run >= 1) std::cerr << "set runtime variable " << *i << " to " << value << " by reading " << temp_file_name(cmd, arg) << std::endl;
                   }
                   if(one_run_result==64)
                     one_run_result = 0;
@@ -628,47 +731,27 @@ bool run_tests(std::list<std::string> cases) {
               if(one_run_result == 0){
                 goto FINISH_CURRENT_CASE;
               }else if(!expect_results.count(one_run_result)) {
-                std::cerr << "Try test failed: " << cn;
-                std::cerr << " failed with unexpected exit value " << one_run_result << std::endl;
+                if(debug_run >= 1) std::cerr << "Try test failed: " << cn;
+                if(debug_run >= 1) std::cerr << " failed with unexpected exit value " << one_run_result << std::endl;
               }
             } // one program repeated("r" option) loop
           }
         }else if(test_run && test_cond == 1024) {
-          std::cerr << "\n------ " << cn << " ------" << std::endl;
-          std::cerr << "Required case failed: " << cn << ", so curr case failed with unexpected exit value " << test_cond << std::endl;
+          if(debug_run >= 1) std::cerr << "\n------ " << cn << " ------" << std::endl;
+          if(debug_run >= 1) std::cerr << "Required case failed: " << cn << ", so curr case failed with unexpected exit value " << test_cond << std::endl;
+          // This is used for case_parser to check the current case's pre try result
+          result_db[cn]["result"] = 1024;
           test_results.insert(1024);
         }
 
       }// one case diff arg/macro program(arg_list) loop
 FINISH_CURRENT_CASE:
       int test_result = 0;
-      bool first_expect_result = true;
-      int builderror_num = 0;
-      // check whether the results has a successful result or a expect result
-      // first check successfuly result, then check expect result.
-      // and choose the first result that meets the above rules
-      for(auto v:test_results){
-        if(v == 0){
-          test_result = 0;
-          std::cerr << "Run successfully: " << cn << std::endl;
-          break;
-        }else if(expect_results.count(v) && first_expect_result){ 
-          first_expect_result = false;
-          test_result = v;
-        }else if(v == FAILED_BUILD){
-          builderror_num++;
-        }
-      }
-      if(expect_results.count(test_result)){
-        std::cerr << "Run expected result: " << cn << " failed with expected exit value " << test_result << std::endl;
-      }
-      //check whether the results are all build error
-      //if not, choose the first run failed result
-      else if( test_result != 0){
-        if(builderror_num == test_results.size()){
-          test_result = FAILED_BUILD;
-          std::cerr << "Built all failed: " << cn << std::endl;
-        }else{
+      if(!make_results.empty()){ // not succcessfully build, select first failed make result
+        test_result = MAKE_ERROR;
+        if(debug_run >= 1) std::cerr << "Built all failed, the first try error code:: " << *make_results.cbegin() << std::endl;
+      }else{// successfully build
+        if(!test_results.count(0)){ // hasn't successfull result, check expected test result
           for(auto v:test_results){
             if(v != FAILED_BUILD){
               test_result = v;
@@ -676,26 +759,41 @@ FINISH_CURRENT_CASE:
               break;
             }
           }
+          if(!expect_results.count(test_result)){// hasn't expected result, select first failed test result
+            test_result = *test_results.cbegin();
+            if(debug_run >= 1) std::cerr << "Run abnormality: " << cn << " failed with unexpected exit value " << test_result << std::endl;
+          }else{
+            if(debug_run >= 1) std::cerr << "Run expected result: " << cn << " failed with expected exit value " << test_result << std::endl;
+          }
         }
+      }
+      if(debug_run >= 1){
+        std::cout << "make results: ";
+        for(auto &a: make_results)
+          std::cerr << " " << a;
+        std::cout << "test results: ";
+        for(auto &a: test_results)
+            std::cerr << " " << a;
+        std::cout << std::endl;
       }
 
       current_test_checkdep_count = 0;
       result_db[cn]["result"] = test_result;
       result_db[cn]["run-time"] = case_exec_time_sum;
       dump_json(result_db, "results.json", debug_run);
-      std::cerr << "\n========== end: " << cn << " =========" << std::endl;
+      if(debug_run >= 1) std::cerr << "\n========== end: " << cn << " =========" << std::endl;
     }else{ // dependencies have not test yet
       if(current_test_checkdep_count < total_cases){
         current_test_checkdep_count++;
-        std::cerr << "push the curr case, and go to check the next argument's corresponding requirement" << std::endl;
+        if(debug_run >= 1) std::cerr << "push curr case" << cn << ", and go to check the next argument's corresponding requirement" << std::endl;
         cases.push_back(cn);
       }else{
-            std::cerr << "Parse abnormality: impossible to resolve the dependencies(may exists rings) for the following test cases:" << std::endl;
-            std::cerr << "**************************************" << std::endl;
+            if(debug_run >= 1) std::cerr << "Parse abnormality: impossible to resolve the dependencies(may exists rings) for the following test cases:" << std::endl;
+            if(debug_run >= 1) std::cerr << "**************************************" << std::endl;
             while(!cases.empty()){
               auto tcase = cases.front();
               cases.pop_front();
-              std::cerr << tcase << std::endl;
+              if(debug_run >= 1) std::cerr << tcase << std::endl;
             }
             exit(1);
       }
@@ -722,7 +820,7 @@ void add_extra_run_prefix(char **envp) {
   for(int i=0; i<envi; i++) run_env_vect[i] = envp[i];
 
 #ifdef RUN_PREFIX
-  std::cout << "Need to add extra evironment variables" << std::endl;
+  if(debug_run >= 2) std::cout << "Need to add extra evironment variables" << std::endl;
 
   // assuming directly adding the environ array would not overflow
   char *pch = strtok(run_prefix, " ");
@@ -730,7 +828,7 @@ void add_extra_run_prefix(char **envp) {
     if(run_env_vect.size() == envi) run_env_vect.resize(envi+8);
     run_env_vect[envi++] = pch;
     extra_run_prefix.push_back(pch);
-    std::cout << "add " << std::string(pch) << " to env" << std::endl;
+    if(debug_run >= 2) std::cout << "add " << std::string(pch) << " to env" << std::endl;
     pch = strtok(NULL, " ");
   }
   if(run_env_vect.size() == envi) run_env_vect.resize(envi+8);
