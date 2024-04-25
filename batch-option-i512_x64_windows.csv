@@ -1,5 +1,10 @@
-x86-64-Win-M,
-MSVC-ASan-address,enable_default_address_sanitizer="yes"
-MSVC-ASan-full,enable_default_address_sanitizer="yes",enable_return_address_sanitizer="yes"
-G12-Win-cf,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes"
-G12-Win-full,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes",enable_heap_integrity="yes",enable_cet_shadow_stack="yes"
+x86-64-Win-M,exhausted-run
+MSVC-ASan-address,exhausted-run,enable_default_address_sanitizer="yes"
+MSVC-ASan-full,exhausted-run,enable_default_address_sanitizer="yes",enable_return_address_sanitizer="yes"
+G12-Win-cf,exhausted-run,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes"
+G12-Win-full,exhausted-run,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes",enable_heap_integrity="yes",enable_cet_shadow_stack="yes"
+x86-64-Win-M,fast-run
+MSVC-ASan-address,fast-run,enable_default_address_sanitizer="yes"
+MSVC-ASan-full,fast-run,enable_default_address_sanitizer="yes",enable_return_address_sanitizer="yes"
+G12-Win-cf,fast-run,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes"
+G12-Win-full,fast-run,OPT_LEVEL='Od',enable_control_flow_protection="yes",enable_extra_stack_protection="yes",enable_heap_integrity="yes",enable_cet_shadow_stack="yes"

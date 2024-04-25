@@ -21,7 +21,7 @@ mkdir -p "$collect_dir"
 
 one_run_ind=0
 # Read the CSV file
-while IFS=, read -r prefix rest_columns; do
+while IFS=, read -r prefix mode rest_columns; do
     # copy test bench directory and enter work directory
     
     if [ "$run_method" -eq 0 ]; then
@@ -38,12 +38,12 @@ while IFS=, read -r prefix rest_columns; do
             fi
 
             export_func "$rest_columns"
-            run_test "$prefix" "$collect_dir"
+            run_test "$prefix" "$mode" "$collect_dir"
         )&
     else
         (
             export_func "$rest_columns"
-            run_test "$prefix" "$collect_dir"
+            run_test "$prefix" "$mode" "$collect_dir"
         )
     fi
 

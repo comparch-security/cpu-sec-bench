@@ -15,14 +15,14 @@ rename_log() {
 run_test(){
 	make cleanall >temp.log 2>&1
 	make -e >>temp.log 2>&1
-	./run-test exhausted-run >>temp.log 2>&1
+	./run-test "$2" >>temp.log 2>&1
 	base_name=$(rename_log)
 	final_name="$1"_"${base_name}"
 	echo "$final_name"
 	mv temp.log "$final_name".log
 	mv "${base_name}".dat "$final_name".dat
 
-	collect_results ../"$2"
+	collect_results ../"$3"
 }
 
 collect_results() {

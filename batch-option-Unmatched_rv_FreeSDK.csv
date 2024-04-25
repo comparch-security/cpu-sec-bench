@@ -1,4 +1,8 @@
-RV-UM-Lin-G,CXX=g++
-RV-UM-Lin-L,CXX=clang++
-RV-UM-gcc-full,CXX=g++,enable_stack_protection="yes",enable_stack_clash_protection="yes"
-RV-UM-llvm-full,CXX=g++,enable_stack_protection="yes",enable_stack_clash_protection="yes"
+RV-UM-Lin-G,exhausted-run,CXX=g++
+RV-UM-Lin-L,exhausted-run,CXX=clang++
+RV-UM-gcc-full,exhausted-run,CXX=g++,enable_stack_protection="yes",enable_stack_clash_protection="yes",enable_fortify_source="yes"
+RV-UM-llvm-full,exhausted-run,CXX=g++,enable_stack_protection="yes",enable_stack_clash_protection="yes",enable_fortify_source="yes"
+RV-UM-Lin-G,fast-run,CXX=g++
+RV-UM-Lin-L,fast-run,CXX=clang++
+RV-UM-gcc-full,fast-run,CXX=g++,enable_stack_protection="yes",enable_stack_clash_protection="yes",enable_fortify_source="yes"
+RV-UM-llvm-full,fast-run,CXX=g++,enable_stack_protection="yes",enable_stack_clash_protection="yes",enable_fortify_source="yes"

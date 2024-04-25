@@ -1,4 +1,4 @@
-Morello-default,CXX=clang++,ARCH=aarch64,enable_aarch64_morello_default="yes"
-Morello-strong,CXX=clang++,ARCH=aarch64,enable_aarch64_morello_everywhere_unsafe="yes"
-Morello-default_WITHOUT_OBJECTFLAGS,CXX=clang++,ARCH=aarch64,enable_aarch64_morello_default="yes",without_extra_ojbect_safety_options="yes"
-Morello-strong_WITHOUT_OBJECTFLAGS,CXX=clang++,ARCH=aarch64,enable_aarch64_morello_everywhere_unsafe="yes",without_extra_ojbect_safety_options="yes"
+Morello-default,fast-run,CXX=clang++,ARCH=aarch64,enable_aarch64_morello_default="yes"
+Morello-strong,fast-run,CXX=clang++,ARCH=aarch64,enable_aarch64_morello_everywhere_unsafe="yes"
+Morello-default,exhausted-run,CXX=clang++,ARCH=aarch64,enable_aarch64_morello_default="yes"
+Morello-strong,exhausted-run,CXX=clang++,ARCH=aarch64,enable_aarch64_morello_everywhere_unsafe="yes"
