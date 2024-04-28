@@ -1,6 +1,7 @@
 function run_test {
     param (
         [string]$prefix,
+        [string]$runmode,
         [string]$result_dir
     )
     Write-Output "current dir: $PWD"
@@ -10,7 +11,7 @@ function run_test {
     & make -e >> temp.log 2>&1
     
     # Run the test
-    & .\run-test.exe exhausted-run >> temp.log 2>&1
+    & .\run-test.exe ${runmode} >> temp.log 2>&1
     $base_name = rename_log
     $final_name = "${prefix}_$base_name"
     Write-Output $final_name
