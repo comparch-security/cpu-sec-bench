@@ -14,6 +14,7 @@ else
 endif
 
 # set variables
+STATIC          ?= yes
 OPT_LEVEL       ?= O2
 
 # extra security features (comment them out if not needed)
@@ -246,8 +247,13 @@ else
   CLIBAPI       := posix
   OBJDUMP       := objdump
 
-  CXXFLAGS_BASE = ${CXXFLAGS} -I./lib -std=c++11 -Wall
-  ifdef BUFFER_SIZE
+	ifeq ($(STATIC),yes)
+		CXXFLAGS_BASE = ${CXXFLAGS} -I./lib -std=c++11 -Wall --static
+	else
+		CXXFLAGS_BASE = ${CXXFLAGS} -I./lib -std=c++11 -Wall
+	endif
+	
+	ifdef BUFFER_SIZE
 		CXXFLAGS_BASE += -DBUFFER_SIZE=$(BUFFER_SIZE)
   endif
 	ifdef BUFFER_KIND
@@ -268,13 +274,24 @@ else
 	ASMFLAGS      :=
 	OUTPUT_EXE_OPTION := -o 
 	OUTPUT_LIB_OPTION := -c -o 
+	MIDFILE_SUFFIX    := .o
+	ifeq ($(STATIC),yes)
+		OUTPUT_DYN_OPTION :=$(OUTPUT_LIB_OPTION)
+		DLL_SUFFIX        :=$(MIDFILE_SUFFIX)
+	else
+	OUTPUT_DYN_OPTION := -shared -fPIC -o 
 	OUTPUT_DYN_OPTION := -shared -fPIC -o 
 	MIDFILE_SUFFIX    := .o
-	DLL_SUFFIX        := .so
+		OUTPUT_DYN_OPTION := -shared -fPIC -o 
+	MIDFILE_SUFFIX    := .o
+		DLL_SUFFIX        := .so
 	LDFLAGS           +=
 	LIB_LDFLAGS       :=
 	OBJDUMPFLAGS      := -D -l -S
-	DYNCFI_OPTION     := -Llib/common/ -Wl,-rpath,lib/common/ -lcfi
+	ifeq ($(STATIC),yes)
+		DYNCFI_OPTION     := ./lib/common/libcfi.o
+	else
+		DYNCFI_OPTION     := -Llib/common/ -Wl,-rpath,lib/common/ -lcfi
 	func-opcode-gen   := ./script/get_x64_func_inst.sh
 	ifeq ($(ARCH), aarch64)
 		func-opcode-gen := ./script/get_aarch64_func_inst.sh
