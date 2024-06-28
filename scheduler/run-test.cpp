@@ -31,7 +31,7 @@ using std::right;
 using std::setw;
 using json = nlohmann::basic_json<nlohmann::ordered_map>;
 static json config_db, result_db, var_db;
-char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
+char arg_pool[32][128];   // the maximal is 32 64-byte long arguments
 char * gargv[33];
 
 // global configure parameters
@@ -97,11 +97,13 @@ int main(int argc, char* argv[], char* envp[]) {
     }
 
     else if(param == "continue")  cond_run   = true;
-    else if(param == "debug")     debug_run  = true;
-    else if(param == "make-only") test_run   = false;
-    else if(param == "no-make")   make_run   = false;
-    else if(param == "fast-run")  report_run = true;
-    else if(param == "exhausted-run")   { exhausted_run    = true; report_run = true;}
+    else if(param == "debug-verbose")     {debug_run  = 2; exhausted_run    = true; report_run = true;}
+    else if(param == "nd-fast-run")       {debug_run  = 0; report_run = true;}
+    else if(param == "nd-exhausted-run")       {debug_run  = 0; exhausted_run    = true; report_run = true;}
+    else if(param == "make-only") { debug_run = 1; test_run   = false; exhausted_run    = true; report_run = true;}
+    else if(param == "no-make")   {make_run   = false; debug_run  = 1; exhausted_run    = true; report_run = true;}
+    else if(param == "fast-run")  {debug_run  = 1; report_run = true;}
+    else if(param == "exhausted-run")   { debug_run  = 1; exhausted_run    = true; report_run = true;}
     else if(param == "print-trace") {trace_run = true; }
     else {std::cout << "The scheduler has no "<< param << " option" << std::endl; exit(1);}
   }
@@ -487,6 +489,36 @@ char ** argv_conv(const std::string &cmd, const str_list_t &args) {
   return gargv;
 }
 
+char ** argv_conv(const std::string &cmd, const str_map_t &args) {
+  int i = 0;
+  strcpy(arg_pool[i++], cmd.c_str());
+  for(const auto &a:args) strcpy(arg_pool[i++],(a.first + "=" + a.second).c_str());
+  for(int j=0; j<i; j++) gargv[j]=arg_pool[j];
+  gargv[i] = NULL;
+  return gargv;
+}
+
+char ** argv_conv(const std::string &cmd, const str_list_t &args1, const str_map_t &args2) {
+  int i = 0;
+  strcpy(arg_pool[i++], cmd.c_str());
+  for(const auto &a:args1) strcpy(arg_pool[i++],a.c_str());
+  std::cout << "args2:" << std::endl;
+  for(const auto &a:args2){
+    std::cout << a.first << " " << a.second << std::endl; 
+    strcpy(arg_pool[i++],(a.first + "=" + a.second).c_str());
+  }
+  for(int j=0; j<i; j++) gargv[j]=arg_pool[j];
+  gargv[i] = NULL;
+  if(debug_run >= 1){
+    std::cout << "argv_conv gargv:" << std::endl;
+    for(int k = 0; k != i; k++){
+      std::cout << "i:" << k << " " << gargv[k] << " ";
+    }
+    std::cout << std::endl;
+  }
+  return gargv;
+}
+
 bool run_tests(std::list<std::string> cases) {
   //check current test dependency and avoid endless loop
   int current_test_checkdep_count = 0;
@@ -523,11 +555,14 @@ bool run_tests(std::list<std::string> cases) {
       for(int ind = 0; ind != alists.size(); ind++){
         std::cout << "\"arguments\" ind is: " << ind << std::endl;
         auto alist = alists[ind];
-        test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results);
-        if(!test_run || test_cond == 0) {
-          std::cout << "\n------ " << cn << " ------" << std::endl;
-          int make_result = 0;
-          if(0 == make_result && make_run && !has_make) {
+        test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results,make_config_macro, last_make_config_macro, need_rebuild, need_build);
+        #ifdef _MSC_VER
+        long long curr_script_time = 0;
+        #endif
+        if( test_run == false || test_cond == 0) {
+          if(debug_run >= 1)std::cout << "\n------ " << cn << " ------" << std::endl;
+          int make_result = -2;
+          if(make_run || need_build){
             long long one_make_time, curr_size;
             if(!make_config_macro.empty()){
               make_config_macro.push_front("test/" + prog);
@@ -552,20 +587,45 @@ bool run_tests(std::list<std::string> cases) {
               }
 
             }
+
+            // -e means environment variable precedence over variables from makefiles,
+            // which used to choose compiler, compiler option in script/run_in_xxx.sh
+            make_option_list.push_front("-e");
+            if(trace_run){
+              make_config_macro["TRACE_RUN"]="1";
+            }
+
+            // set case name as executable file name
+            if(debug_run >= 1) std::cout << "set case name as executable file name: " << cn << std::endl;
+            if(make_run) make_config_macro["CURR_CASE_NAME"]=cn;
+            make_result = run_cmd(argv_conv("make", make_option_list, make_config_macro), NULL, one_make_time);
+
             total_make_time += one_make_time;
             result_db[cn]["make-time"] = one_make_time;
             if(make_result){
-              std::cout << "fail to make " << prog << " with error status " << make_result << std::endl;
-              test_results.insert(FAILED_BUILD);
+              if(debug_run >= 1) std::cout << "fail to make " << prog << ":" << cn << " with error status " << make_result << std::endl;
+              make_results.insert(make_result);
               curr_size = 0;
               continue;
             }else{
               #ifdef _MSC_VER
-              curr_size = get_file_size("test/" + prog + ".exe");
-              if(curr_size == -1) curr_size = get_file_size("test/" + prog);
+              curr_size = get_file_size("test/" + cn + ".exe");
+              if(curr_size == -1) curr_size = get_file_size("test/" + cn);
+              if(!make_result && !dbvar.empty()){
+                if(dbvar.size() != 2){
+                  if(debug_run >= 1) std::cerr << "dbvar size is " << dbvar.size() << std::endl;
+                  if(debug_run >= 1) std::cerr << "the parameter number is wrong (exactly is 2)" << std::endl;
+                }
+                  if(debug_run >= 1) std::cout << "dump bin: " << "script\\msvc_get_addroffset_of_currfunc.bat" << "test/" << cn << ".exe " <<
+                        " " << dbvar.front() << " " << dbvar.back() << std::endl;
+                  make_result = run_cmd(argv_conv("script\\msvc_get_addroffset_of_currfunc.bat", str_list_t{
+                                  "test/" + cn +".exe", dbvar.front(), dbvar.back()}), NULL, curr_script_time);
+                  if(make_result)make_results.insert(make_result);
+              }
               #else
-              curr_size = get_file_size("test/" + prog);
+              curr_size = get_file_size("test/" + cn);
               #endif
+              if(test_run == false) break;
             }
             result_db[cn]["file-size"] = curr_size;
             has_make = true;
@@ -584,14 +644,14 @@ bool run_tests(std::list<std::string> cases) {
           }
           #endif
 
-          if(0 == make_result && test_run) { // run the test case
+          if( make_run == false || make_result == 0) { // run the test case
           
             for(auto arg:alist) {
               long long one_run_time;
-              cmd = "test/" + prog;
-              std::cout << "\n";
-              if(!extra_run_prefix.empty()) for(auto a:extra_run_prefix) std::cout << std::string(a) << " ";
-              std::cout << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
+              cmd = "test/" + cn;
+              if(debug_run >= 1) std::cout << "\n";
+              //if(!extra_run_prefix.empty()) for(auto a:extra_run_prefix) std::cout << std::string(a) << " ";
+              if(debug_run >= 1) std::cout << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;
               int one_run_result = run_cmd(argv_conv(cmd, arg), run_env, one_run_time);
               #ifdef _MSC_VER
               one_run_time += curr_script_time;
@@ -633,42 +693,25 @@ bool run_tests(std::list<std::string> cases) {
               }
             } // one program repeated("r" option) loop
           }
-        }else if(test_run && test_cond == 1024) {
-          std::cerr << "\n------ " << cn << " ------" << std::endl;
-          std::cerr << "Required case failed: " << cn << ", so curr case failed with unexpected exit value " << test_cond << std::endl;
+        }else if(test_cond == 1024) {
+          if(debug_run >= 1) std::cerr << "\n------ " << cn << " ------" << std::endl;
+          if(debug_run >= 1) std::cerr << "Required case failed: " << cn << ", so curr case failed with unexpected exit value " << test_cond << std::endl;
+          // This is used for case_parser to check the current case's pre try result
+          result_db[cn]["result"] = 1024;
           test_results.insert(1024);
         }
 
       }// one case diff arg/macro program(arg_list) loop
 FINISH_CURRENT_CASE:
       int test_result = 0;
-      bool first_expect_result = true;
-      int builderror_num = 0;
-      // check whether the results has a successful result or a expect result
-      // first check successfuly result, then check expect result.
-      // and choose the first result that meets the above rules
-      for(auto v:test_results){
-        if(v == 0){
+      if(!make_results.empty()){ // not succcessfully build, select first failed make result
+        test_result = MAKE_ERROR;
+        if(debug_run >= 1) std::cerr << "Built all failed, the first try error code:: " << *make_results.cbegin() << std::endl;
+      }else{// successfully build
+        if(test_run == false){
           test_result = 0;
-          std::cerr << "Run successfully: " << cn << std::endl;
-          break;
-        }else if(expect_results.count(v) && first_expect_result){ 
-          first_expect_result = false;
-          test_result = v;
-        }else if(v == FAILED_BUILD){
-          builderror_num++;
         }
-      }
-      if(expect_results.count(test_result)){
-        std::cerr << "Run expected result: " << cn << " failed with expected exit value " << test_result << std::endl;
-      }
-      //check whether the results are all build error
-      //if not, choose the first run failed result
-      else if( test_result != 0){
-        if(builderror_num == test_results.size()){
-          test_result = FAILED_BUILD;
-          std::cerr << "Built all failed: " << cn << std::endl;
-        }else{
+        if(!test_results.count(0)){ // hasn't successfull result, check expected test result
           for(auto v:test_results){
             if(v != FAILED_BUILD){
               test_result = v;
