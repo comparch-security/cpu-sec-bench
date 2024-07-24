@@ -7,6 +7,7 @@
 
 // detect ISA
 #if defined(__x86_64) || defined(_M_X64)
+  #define PTR_MASK 0xFFFFFFFFFFFFFFFF
   #define CSB_X86_64
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
@@ -21,6 +22,7 @@
 #endif
 
 #if defined(__ARM_ARCH) && __ARM_ARCH >= 8 && defined(__aarch64__)
+  #define PTR_MASK 0xFFFFFFFFFFFF
   #define CSB_ARMV8_64
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
@@ -28,6 +30,7 @@
 #endif
 
 #if defined(__riscv) && __riscv_xlen == 64 && !defined(__CHERI__ )
+  #define PTR_MASK 0xFFFFFFFFFFFFFFFF
   #define CSB_RV64GC
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
@@ -35,6 +38,7 @@
 #endif
 
 #if defined(__riscv) && __CHERI_CAPABILITY_WIDTH__ == 128 && _riscv_arch == cheri  && defined(__CHERI__ )
+  #define PTR_MASK 0xFFFFFFFFFFFFFFFF
   #define CSB_RV64GC
   typedef unsigned long long arch_uint_t;
   typedef long long arch_int_t;
