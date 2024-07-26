@@ -8,6 +8,12 @@
     "subq %2, %0;"                           \
     : "+r"(dis) : "r" (pa), "r"(pb)          ) 
 
+#define GET_DISTANCE_IMM(dis, pa, pb)        \
+  asm volatile(                              \
+    "movq %1, %0;"                           \
+    "subq %2, %0;"                           \
+    : "+r"(dis) : "r" (pa), "r"(pb)          ) 
+
 // stack related
 #define READ_STACK_DAT(dat, offset)          \
   asm volatile(                              \

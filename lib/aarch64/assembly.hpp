@@ -9,6 +9,11 @@
     "sub %0, %1, %2;"                        \
     : "+r"(dis) : "r" (pa_tmp), "r"(pb_tmp)  )
 
+#define GET_DISTANCE_IMM(dis, pa, pb)        \
+  asm volatile(                              \
+    "sub %0, %1, %2;"                        \
+    : "=r"(dis) : "r" (pa), "r"(pb)          )
+
 // stack related
 // mac M1 llvm -O2 will optimize ldr instruction out
 // it's best to use READ_STACK_DAT_IMM

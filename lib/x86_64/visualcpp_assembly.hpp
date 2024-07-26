@@ -18,6 +18,9 @@ FORCE_NOINLINE void func_to_modify_caller_parameter(int target_register);
 #define GET_DISTANCE(dis, pa, pb)            \
   dis = pa - pb
 
+#define GET_DISTANCE_IMM(dis, pa, pb)        \
+  dis = pa - pb
+
 // stack related
 #define READ_STACK_DAT(dat, offset) READ_STACK_DAT_IMM(dat, offset)
 

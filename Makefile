@@ -49,6 +49,12 @@ OPT_LEVEL       ?= O2
 #enable_aarch64_mte             = yes
 #enable_aarch64_pa              = yes
 #enable_aarch64_bti             = yes
+#enable_aarch64_mte_heap = yes
+#enable_aarch64_mte_stack =yes
+#enable_aarch64_mte_global =yes
+#enable_arm64e_pa                  = yes
+#enable_arm64e_bti                 = yes
+#enable_arm64e_mte                 = yes
 
 # define paths and objects
 ifeq ($(OSType),Windows_NT)
@@ -335,14 +341,84 @@ ifdef enable_aarch64_mte
   OBJECT_CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=hwaddress
 endif
 
+ifdef enable_aarch64_mte_heap
+	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag -fsanitize=memtag-heap -fno-sanitize-recover=all
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=memtag-heap -fno-sanitize-recover=all
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-mte
+endif
+
+ifdef enable_aarch64_mte_stack
+	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag -fsanitize=memtag-stack -fno-sanitize-recover=all
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=memtag-stack -fno-sanitize-recover=all
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-mte
+endif
+
+ifdef enable_aarch64_mte_default
+	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag+pauth -fsanitize=memtag -fno-sanitize-recover=all
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += -march=armv8.5-a+memtag+pauth -fsanitize=memtag -fno-sanitize-recover=all
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-mte
+endif
+
 ifdef enable_aarch64_pa
-  CXXFLAGS := $(CXXFLAGS) -march=armv8.3-a+pauth -mbranch-protection=pac-ret
-  OBJECT_CXXFLAGS += -march=armv8.3-a+pauth -mbranch-protection=pac-ret
+	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag+pauth -mbranch-protection=pac-ret
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += -march=armv8.5-a+memtag+pauth -mbranch-protection=pac-ret
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-pa
 endif
 
 ifdef enable_aarch64_bti
-  CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a -mbranch-protection=bti
-  OBJECT_CXXFLAGS += -march=armv8.5-a -mbranch-protection=bti
+	ifeq ($(APPLE),M2)
+		LDFLAGS += -L/opt/homebrew/Cellar/llvm/17.0.6_1/lib/c++ -Wl,-rpath,/opt/homebrew/Cellar/llvm/17.0.6_1/lib/c++
+	endif
+	ifeq ($(APPLE),M1)
+		LDFLAGS += -L/opt/homebrew/Cellar/llvm@15/15.0.7/lib/c++ -Wl,-rpath,/opt/homebrew/Cellar/llvm@15/15.0.7/lib/c++
+	endif
+	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag+pauth -mbranch-protection=bti
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += -march=armv8.5-a+memtag+pauth -mbranch-protection=bti
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-bti
+endif
+
+ifdef enable_arm64e_pa
+	ifneq (arm64e,$(filter arm64e,$(CXXFLAGS)))
+		ARCH_FLAGS := -arch arm64e
+	endif
+	CXXFLAGS := $(CXXFLAGS) $(ARCH_FLAGS) -ftrivial-auto-var-init-skip-non-ptr-array -fptrauth-calls -fptrauth-indirect-gotos -fptrauth-intrinsics -fptrauth-returns -fptrauth-vtable-pointer-type-discrimination -fptrauth-vtable-pointer-address-discrimination
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += $(ARCH_FLAGS) -ftrivial-auto-var-init-skip-non-ptr-array -fptrauth-calls  -fptrauth-indirect-gotos -fptrauth-intrinsics -fptrauth-returns -fptrauth-vtable-pointer-type-discrimination -fptrauth-vtable-pointer-address-discrimination
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-arm64epa
+endif
+
+ifdef enable_arm64e_bti
+	ifneq (arm64e,$(filter arm64e,$(CXXFLAGS)))
+		ARCH_FLAGS := -arch arm64e
+	endif
+	CXXFLAGS := $(CXXFLAGS) $(ARCH_FLAGS) -fbranch-target-identification
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += $(ARCH_FLAGS) -fbranch-target-identification
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-arm64ebti
+endif
+
+ifdef enable_arm64e_mte
+	ifneq (arm64e,$(filter arm64e,$(CXXFLAGS)))
+		ARCH_FLAGS := -arch arm64e
+	endif
+	# remove -fsanitize=memtag, for signal 4(illegal instruction) in apple M1/2/3(not supported MTE).
+	CXXFLAGS := $(CXXFLAGS) $(ARCH_FLAGS) -march=armv8a+memtag -fno-sanitize-recover=all
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += $(ARCH_FLAGS) -march=armv8a+memtag -fno-sanitize-recover=all
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-arm64emte
 endif
 
 # define cases

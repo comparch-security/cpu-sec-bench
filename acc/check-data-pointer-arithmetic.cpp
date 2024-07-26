@@ -11,7 +11,7 @@ int main(){
 
     long long src = (long long)STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND));
     long long dst = (long long)STR2UL(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)) ,overflow);
-    GET_DISTANCE(assem_dist, dst, src);
+    GET_DISTANCE_IMM(assem_dist, dst, src);
 
     if(dst == src + assem_dist){
         UNINIT_BUFFER;
