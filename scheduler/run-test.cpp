@@ -4,6 +4,7 @@
 #include <process.h>
 #else
 // POSIX APIs (linux variant)
+#include <unistd.h>
 #include <spawn.h>
 #include <sys/wait.h>
 #endif
@@ -58,6 +59,8 @@ void add_extra_run_prefix(char **);
 #ifdef RUN_PREFIX
   static char run_prefix[] = RUN_PREFIX;
 #endif
+#define TIMEOUT_TIME 60
+#define MAKE_ERROR 119
 std::list<char *> extra_run_prefix;
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
@@ -438,10 +441,12 @@ int run_cmd(char *argv[], char **runv, long long& time_count) {
     std::cout << std::endl;
   }
 
-  /*
-  int argi = 0;
-  while(argv[argi] != NULL) std::cout << std::string(argv[argi++]) << std::endl;
-  */
+  pid_t timeout_pid = fork();
+  if (timeout_pid == 0) {
+      sleep(TIMEOUT_TIME);
+      _exit(0);
+  }
+
   auto start = std::chrono::high_resolution_clock::now();
   int rv = posix_spawnp(&pid, argv[0], NULL, NULL, argv, runv);
 
@@ -454,14 +459,24 @@ int run_cmd(char *argv[], char **runv, long long& time_count) {
     }
   }
 
-  int s, status;
+  int s, t, status,time_status;
   do {
-     s = waitpid(pid, &status, WUNTRACED | WCONTINUED);
-     if(s == -1) {
+     s = waitpid(pid, &status, WNOHANG | WUNTRACED | WCONTINUED);
+     t = waitpid(timeout_pid, &time_status, WNOHANG );
+     if(s == -1 || t == -1) {
        std::cerr << "waitpid() is NOT supported in this system!" << std::endl;
        exit(1);
      }
-  } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+     if(s > 0){
+      kill(timeout_pid, SIGKILL);
+      break;
+     }
+     if(t > 0){
+      kill(pid, SIGKILL);
+      std::cerr << "terminated by time out" << std::endl;
+      return 1;
+     }
+  } while (1);
 
   auto stop = std::chrono::high_resolution_clock::now();
   time_count = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
@@ -475,7 +490,7 @@ int run_cmd(char *argv[], char **runv, long long& time_count) {
   if(WIFEXITED(status))
     return WEXITSTATUS(status);
 
-  return -2;  // should not run here!
+  return 2;  // should not run here!
 }
 
 #endif
