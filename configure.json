@@ -6196,6 +6196,10 @@
         }
     },
     "cfi-call-wrong-func-within-static-analysis": {
+<<<<<<< HEAD
+=======
+        "todo": "add read-code-address replace of read-func",
+>>>>>>> 2d50f16 (Feat: Add extern assembly mechan for riscv/arm/x64/cheri)
         "comment": "add chain type support",
         "arguments": {
             "0": [
@@ -6209,9 +6213,13 @@
         "require": {
             "0": [
                 [
+<<<<<<< HEAD
                     "acc-read-func"
                 ],
                 [
+=======
+                    "acc-read-func",
+>>>>>>> 2d50f16 (Feat: Add extern assembly mechan for riscv/arm/x64/cheri)
                     "cpi-func-pointer-assign"
                 ]
             ]
@@ -6503,9 +6511,7 @@
         "require": {
             "0": [
                 [
-                    "cfi-call-wrong-vtable"
-                ],
-                [
+                    "cfi-call-wrong-vtable",
                     "cpi-func-pointer-arithmetic"
                 ]
             ]
@@ -6532,9 +6538,7 @@
         "require": {
             "0": [
                 [
-                    "cfi-call-wrong-vtable"
-                ],
-                [
+                    "cfi-call-wrong-vtable",
                     "mts-access-after-free-org-heap",
                     "mts-write-after-free-stack"
                 ]
@@ -7049,6 +7053,32 @@
             "290": "cheri capabilities enabled."
         }
     },
+    "cfi-return-by-asmfunc-to-non-call-site": {
+        "get-code-offset": {
+            "0": [
+                "main",
+                "labelfunc"
+            ]
+        },
+        "arguments": {
+            "0": [
+                "-rsize"
+            ]
+        },
+        "default_args": {
+            "0": [
+                "-rsize"
+            ]
+        },
+        "size": [
+            0,
+            16,
+            1
+        ],
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
     "cfi-return-to-non-call-site": {
         "get-code-offset": {
             "0": [
@@ -7057,12 +7087,16 @@
             ]
         },
         "require-comment": [
+            "relaxation",
             "relaxation"
         ],
         "require": {
             "0": [
                 [
                     "cfi-return-to-wrong-call-site"
+                ],
+                [
+                    "cfi-return-by-asmfunc-to-non-call-site"
                 ]
             ]
         },
@@ -7194,6 +7228,28 @@
             "290": "cheri capabilities enabled."
         }
     },
+    "cfi-return-to-asm-func": {
+        "arguments": {
+            "0": [
+                "-vstack-offset-v-p-g1",
+                "2"
+            ]
+        },
+        "default_args": {
+            "0": [
+                "-rsize",
+                "2"
+            ]
+        },
+        "size": [
+            0,
+            16,
+            1
+        ],
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
     "cfi-return-to-func": {
         "require-comment": [
             "relaxation"
@@ -7201,7 +7257,7 @@
         "require": {
             "0": [
                 [
-                    "cfi-return-to-wrong-call-site"
+                    "cfi-return-to-asm-func"
                 ]
             ]
         },

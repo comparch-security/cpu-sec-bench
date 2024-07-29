@@ -237,7 +237,8 @@ else
 		func-opcode-gen := ./script/get_riscv64_func_inst.sh
 	endif
 	dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
-	independent_assembly :=
+	independent_assembly := $(addprefix lib/$(ARCH)/, indepassembly.o)
+	
 
   ifeq ($(CXX),$(filter $(CXX),clang++ c++))
     ifneq ($(OSType),Darwin)
@@ -330,19 +331,55 @@ ifdef enable_riscv64_cheri
   OBJECT_CXXFLAGS += -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=very-aggressive
 endif
 
-ifdef enable_aarch64_morello
-  ARCH        := aarch64
-  CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=very-aggressive
-  OBJECT_CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=very-aggressive
+ifdef enable_riscv64_cheri_everywhere_unsafe
+	ARCH :=cheri_riscv64
+	CXXFLAGS += -mno-relax -fuse-ld=lld -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=everywhere-unsafe
+	SCHEDULER_CXXFLAGS += -mno-relax
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=everywhere-unsafe
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-everywhereunsafe
+endif
+
+ifdef enable_aarch64_morello_default
+	ARCH        :=aarch64
+	CXXFLAGS += -march=morello -mabi=purecap
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += -march=morello -mabi=purecap
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-morello
+endif
+
+ifdef enable_aarch64_morello_everywhere_unsafe
+	ARCH        :=aarch64
+	CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=everywhere-unsafe
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=everywhere-unsafe
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-morello
+endif
+
+ifdef enable_aarch64_tbi
+	CXXFLAGS := $(CXXFLAGS) -fsanitize=hwaddress -fno-sanitize-recover=all
+	LIB_LDFLAGS := -fsanitize=hwaddress -fno-sanitize-recover=all
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += -fsanitize=hwaddress -fno-sanitize-recover=all
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-tbi
 endif
 
 ifdef enable_aarch64_mte
-  CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag -fsanitize=hwaddress
-  OBJECT_CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=hwaddress
+	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag -fsanitize=memtag -fno-sanitize-recover=all
+	LIB_LDFLAGS := -march=armv8.5-a+memtag -fsanitize=memtag -fno-sanitize-recover=all
+	ifndef without_extra_ojbect_safety_options
+		OBJECT_CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=memtag -fno-sanitize-recover=all
+	endif
+	SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-mte
 endif
 
 ifdef enable_aarch64_mte_heap
 	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag -fsanitize=memtag-heap -fno-sanitize-recover=all
+	LIB_LDFLAGS := -march=armv8.5-a+memtag -fsanitize=memtag-heap -fno-sanitize-recover=all
 	ifndef without_extra_ojbect_safety_options
 		OBJECT_CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=memtag-heap -fno-sanitize-recover=all
 	endif
@@ -351,6 +388,7 @@ endif
 
 ifdef enable_aarch64_mte_stack
 	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag -fsanitize=memtag-stack -fno-sanitize-recover=all
+	LIB_LDFLAGS := -march=armv8.5-a+memtag -fsanitize=memtag-stack -fno-sanitize-recover=all
 	ifndef without_extra_ojbect_safety_options
 		OBJECT_CXXFLAGS += -march=armv8.5-a+memtag -fsanitize=memtag-stack -fno-sanitize-recover=all
 	endif
@@ -359,6 +397,7 @@ endif
 
 ifdef enable_aarch64_mte_default
 	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag+pauth -fsanitize=memtag -fno-sanitize-recover=all
+	LIB_LDFLAGS := -march=armv8.5-a+memtag+pauth -fsanitize=memtag -fno-sanitize-recover=all
 	ifndef without_extra_ojbect_safety_options
 		OBJECT_CXXFLAGS += -march=armv8.5-a+memtag+pauth -fsanitize=memtag -fno-sanitize-recover=all
 	endif
@@ -367,6 +406,7 @@ endif
 
 ifdef enable_aarch64_pa
 	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag+pauth -mbranch-protection=pac-ret
+	LIB_LDFLAGS := -march=armv8.5-a+memtag+pauth -mbranch-protection=pac-ret
 	ifndef without_extra_ojbect_safety_options
 		OBJECT_CXXFLAGS += -march=armv8.5-a+memtag+pauth -mbranch-protection=pac-ret
 	endif
@@ -381,6 +421,7 @@ ifdef enable_aarch64_bti
 		LDFLAGS += -L/opt/homebrew/Cellar/llvm@15/15.0.7/lib/c++ -Wl,-rpath,/opt/homebrew/Cellar/llvm@15/15.0.7/lib/c++
 	endif
 	CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a+memtag+pauth -mbranch-protection=bti
+	LIB_LDFLAGS := -march=armv8.5-a+memtag+pauth -mbranch-protection=bti
 	ifndef without_extra_ojbect_safety_options
 		OBJECT_CXXFLAGS += -march=armv8.5-a+memtag+pauth -mbranch-protection=bti
 	endif
