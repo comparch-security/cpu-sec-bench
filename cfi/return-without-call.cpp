@@ -9,7 +9,7 @@ FORCE_NOINLINE void helper(arch_int_t fsize) {
   GET_LABEL_ADDRESS(exit_label,TARGET_LABEL);
   if(2 == gvar()) { GOTO_SAVED_LABEL(exit_label);}   // impossible to happen
   #ifdef TRACE_RUN
-    GET_RA_ADDR(ra_addr);
+    GET_SP_BASE(ra_addr);
     WRITE_TRACE("RA address: 0x", ra_addr);
     WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
   #endif

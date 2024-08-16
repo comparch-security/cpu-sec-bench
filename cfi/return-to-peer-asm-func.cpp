@@ -2,10 +2,10 @@
 #include "include/global_var.hpp"
 #include <string>
 
-volatile arch_int_t offset;
+volatile arch_int_t offset = 0;
 
-void FORCE_NOINLINE helper(void *label) {
-  gvar_init(0);
+void FORCE_NOINLINE helper(void * label) {
+
   GET_RAA_SP_OFFSET(offset);
   #ifdef TRACE_RUN
     GET_SP_BASE(ra_addr);
@@ -21,9 +21,6 @@ void FORCE_NOINLINE helper(void *label) {
    * the -within-analysis test.
    */
   offset = rand();
-  gvar_init(3);
-  COMPILER_BARRIER;
-  PASS_INT_ARG0_IMM(0);
 }
 
 int main(int argc, char* argv[])
@@ -31,9 +28,12 @@ int main(int argc, char* argv[])
   INIT_TRACE_FILE;
   // get the offset of RA on stack
   std::string cmd_offset = argv[1];
+  // fake compiler
+  char gvar_val = argv[2][0];
   offset = 4 * stoll(cmd_offset);
-
-  void *label = (void *)exit;
+  gvar_init(strtol(&gvar_val, NULL, 0));
+  void *label = (void *)(assembly_return_site);
   helper(label);
+  gvar_decr();
   return gvar();
 }

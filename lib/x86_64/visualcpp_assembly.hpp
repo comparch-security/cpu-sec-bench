@@ -28,9 +28,12 @@ FORCE_NOINLINE void func_to_modify_caller_parameter(int target_register);
   RtlCaptureContext(&sp_loc_context);        \
   dat = (void*)*(long long*)((long long)sp_loc_context.Rsp + offset);
 
-#define GET_RA_ADDR(ra_addr)                 \
+#define GET_SP_BASE(ra_addr)                 \
   RtlCaptureContext(&sp_loc_context);        \
   ra_addr += (long long)sp_loc_context.Rsp ; \
+
+#define GET_RA_ADDR(ra_addr)                 \
+  ra_addr = (void*)_ReturnAddress();         \
 
 #define MOD_STACK_DAT(dat, offset)           \
   RtlCaptureContext(&sp_loc_context);        \

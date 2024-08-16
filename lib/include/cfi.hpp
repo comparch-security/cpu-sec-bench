@@ -4,6 +4,7 @@
 #define CFI_HPP_INCLUDED
 
 #include "include/assembly.hpp"
+#include "include/global_var.hpp"
 
 // define a type of function
 typedef void (*pfunc_t)();
@@ -22,11 +23,36 @@ DLL_DEFINITION extern pvtable_t create_fake_vtable_on_heap(unsigned int nfunc);
 DLL_DEFINITION extern void free_fake_vtable_on_heap(pvtable_t addr);
 
 
- class DLL_DEFINITION Base
+class DLL_DEFINITION Base
 {
 public:
   virtual void virtual_func();
   virtual ~Base() {}
+};
+
+class DLL_DEFINITION Base_1v
+{
+public:
+  virtual void virtual_func(void*);
+  virtual ~Base_1v() {}
+};
+
+class DLL_DEFINITION Ret_From_Helper : public Base_1v
+{
+public:
+  Ret_From_Helper(){}
+  Ret_From_Helper(const Ret_From_Helper&) = default; 
+  virtual void virtual_func(void*);
+  virtual ~Ret_From_Helper() {}
+};
+
+class DLL_DEFINITION  Ret_To_Helper : public Base
+{
+public:
+  Ret_To_Helper(){}
+  Ret_To_Helper(const Ret_To_Helper&) = default; 
+  virtual void virtual_func();
+  virtual ~Ret_To_Helper() {}
 };
 
 class DLL_DEFINITION  Helper : public Base

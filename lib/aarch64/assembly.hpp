@@ -39,17 +39,24 @@ extern "C" void assembly_return_site();
  * is used instead.
  */
 
-#define GET_RA_ADDR(ra_addr)                 \
+#define GET_SP_BASE(ra_addr)                 \
   asm volatile(                              \
     "add %0, sp, %0;"                        \
     : "+r"(ra_addr)                          \
   )
 
+#define GET_RA_ADDR(ra_addr)                 \
+  asm volatile(                              \
+    "mov %0, x30;"                           \
+    : "=r"(ra_addr)                          )
+
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \
-    "add  %0, sp, %0;"                       \
-    : "+r"(offset));                         \
-  *((void **)offset) = (void *)dat           \
+    "add  %[off], sp, %[off];"               \
+    "str %[data], [%[off]];"                 \
+    : [off] "+r"(offset)                     \
+    : [data] "r"(dat)                        \
+    : "memory"                               )
 
 #define SET_MEM(ptr, var)                    \
   asm volatile(                              \

@@ -1,15 +1,27 @@
 #include <cstdlib>
-#include "include/global_var.hpp"
+#include <cstring>
+#include "include/cfi.hpp"
 #include <string>
 
-volatile arch_int_t offset;
+volatile arch_int_t offset = 0;
 
-void FORCE_NOINLINE helper(void *label) {
-  gvar_init(3);
-  COMPILER_BARRIER;
+class target_obj {
+    int id;
+public:
+    target_obj(int id): id(0) {}
+    void fake_ret() {
+        WRITE_TRACE("Successful Jumped", "");
+        exit(gvar());
+    }
+};
+
+typedef void (target_obj::*MemberFuncPtr)(void);
+
+void FORCE_NOINLINE helper(void* label) {
+  gvar_init(0);
   GET_RAA_SP_OFFSET(offset);
   #ifdef TRACE_RUN
-    GET_RA_ADDR(ra_addr);
+    GET_SP_BASE(ra_addr);
     WRITE_TRACE("RA address: 0x", ra_addr);
     WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
   #endif
@@ -22,28 +34,19 @@ void FORCE_NOINLINE helper(void *label) {
    * the -within-analysis test.
    */
   offset = rand();
-  gvar_init(0);
-}
-
-void FORCE_NOINLINE helper2() {
-  gvar_init(4);
 }
 
 int main(int argc, char* argv[])
 {
   INIT_TRACE_FILE;
+
   // get the offset of RA on stack
   std::string cmd_offset = argv[1];
   offset = 4 * stoll(cmd_offset);
-  void *ret_label = (void*)&main;
-  GET_LABEL_ADDRESS(ret_label,TARGET_LABEL);
-  if(offset == -1) { GOTO_SAVED_LABEL(ret_label);}   // impossible to happen
-
-  // call a function but illegally return
-  helper(ret_label);
-  helper2();// failed if runs here
-  COMPILER_BARRIER;
-  // the elligal return site
-TARGET_LABEL(argc)
-  exit(gvar());
+  target_obj fake_obj(0);
+  MemberFuncPtr label = &target_obj::fake_ret;
+  void* ptr = NULL;
+  memcpy(&ptr, &label, sizeof(void*));
+  helper(ptr);
+  return 1;
 }

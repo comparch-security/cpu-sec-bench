@@ -31,13 +31,18 @@ extern "C" void assembly_return_site();
     "movq " #offset "(%%rsp), %0;"           \
     : "=r"(dat)                              )
 
-#define GET_RA_ADDR(ra_addr)                 \
+#define GET_SP_BASE(ra_addr)                 \
   asm volatile(                              \
     "movq %0, %%rcx;"                        \
     "addq %%rsp, %%rcx;"                     \
     "movq %%rcx, %0;"                        \
     : "+r"(ra_addr)                          \
                                              )
+
+#define GET_RA_ADDR(ra_addr)                 \
+  asm volatile(                              \
+    "movq 8(%%rbp), %0;"                     \
+    : "=r"(ra_addr)                          )
 
 #define MOD_STACK_DAT(dat, offset)           \
   asm volatile(                              \

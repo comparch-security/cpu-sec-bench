@@ -9,7 +9,7 @@ void FORCE_NOINLINE helper(void *label) {
   COMPILER_BARRIER;
   GET_RAA_SP_OFFSET(offset);
   #ifdef TRACE_RUN
-    GET_RA_ADDR(ra_addr);
+    GET_SP_BASE(ra_addr);
     WRITE_TRACE("RA address: 0x", ra_addr);
     WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
   #endif

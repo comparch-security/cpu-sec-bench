@@ -28,11 +28,16 @@ extern "C" void assembly_return_site();
       "clc %0, (ca0);"                         \
       : "=C"(dat) : :"ca0"                     )
 
-  #define GET_RA_ADDR(ra_addr)                 \
+  #define GET_SP_BASE(ra_addr)                 \
     asm volatile(                              \
       "add %0, sp, %0;"                        \
       : "+r"(ra_addr)                          \
                                                )
+
+#define GET_RA_ADDR(ra_addr)                 \
+  asm volatile(                              \
+    "cincoffset %0, cra, %0;"                \
+    : "=r"(ra_addr)                          )
 
   #define MOD_STACK_DAT(dat, offset)           \
     asm volatile(                              \

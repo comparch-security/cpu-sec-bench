@@ -4,11 +4,16 @@
 
 volatile arch_int_t offset = 0;
 
-void FORCE_NOINLINE helper(void * label) {
+int FORCE_NOINLINE fake_ret() {
+  WRITE_TRACE("Successful Jumped", "");
+  exit(gvar());
+}
 
+void FORCE_NOINLINE helper(void * label) {
+  gvar_init(0);
   GET_RAA_SP_OFFSET(offset);
   #ifdef TRACE_RUN
-    GET_RA_ADDR(ra_addr);
+    GET_SP_BASE(ra_addr);
     WRITE_TRACE("RA address: 0x", ra_addr);
     WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
   #endif
@@ -28,12 +33,9 @@ int main(int argc, char* argv[])
   INIT_TRACE_FILE;
   // get the offset of RA on stack
   std::string cmd_offset = argv[1];
-  // fake compiler
-  char gvar_val = argv[2][0];
   offset = 4 * stoll(cmd_offset);
-  gvar_init(strtol(&gvar_val, NULL, 0));
-  void *label = (void *)(assembly_return_site);
+  void *label = (void *)(fake_ret);
+
   helper(label);
-  gvar_decr();
-  return gvar();
+  return 1;
 }
