@@ -356,9 +356,9 @@ public:
     #define UNINIT_BUFFER {}
     #if BUFFER_KIND == BARE_ARRAY
 
-    char rodata_bare_array_underflow[] = {BUFFER_VAL_UNDERFLOW,0};
-    char rodata_bare_array[]       = {BUFFER_VAL_MID,0};
-    char rodata_bare_array_overflow[]  = {BUFFER_VAL_OVERFLOW,0};
+    const char rodata_bare_array_underflow[] = {BUFFER_VAL_UNDERFLOW,0};
+    const char rodata_bare_array[]       = {BUFFER_VAL_MID,0};
+    const char rodata_bare_array_overflow[]  = {BUFFER_VAL_OVERFLOW,0};
 
     #elif BUFFER_KIND == ENCLOSING_ARRAY
 
