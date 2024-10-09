@@ -226,11 +226,11 @@ else
 
   # define compiling flags
   ifdef enable_stack_nx_protection
-    CXXFLAGS += -z execstack
+    CXXFLAGS += -z noexecstack
   endif
 
   ifdef disable_stack_nx_protection
-    CXXFLAGS += -z noexecstack
+    CXXFLAGS += -z execstack
   endif
 
   ifdef enable_stack_protection
