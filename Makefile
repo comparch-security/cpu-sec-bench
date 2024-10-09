@@ -225,12 +225,12 @@ else
   endif
 
   # define compiling flags
-  ifdef disable_stack_nx_protection
-    CXXFLAGS += -z execstack
+  ifdef enable_stack_nx_protection
+    CXXFLAGS += -z noexecstack
   endif
 
   ifdef disable_stack_nx_protection
-    CXXFLAGS += -z noexecstack
+    CXXFLAGS += -z execstack
   endif
 
   ifdef enable_stack_protection
@@ -497,7 +497,7 @@ $(cfi-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(dynlibcfi) $(independent_a
 $(cfi-cpps-prep): %.prep:%
 	$(CXX) -E $(CXXFLAGS) $< > $@
 
-rubbish += results.json results.json results.dat variables.json
+rubbish += results.json results.dat variables.json
 
 dump: $(sec-tests-dump)
 $(sec-tests-dump): %.dump:%
