@@ -73,8 +73,6 @@ int run_cmd(char* argv[], char** runv, long long& time_count);
 bool run_tests(std::list<std::string> cases);
 long long get_file_size(const std::string& filename);
 
-#define FAILED_BUILD -1
-
 int main(int argc, char* argv[], char* envp[]) {
   // parse argument
   for(int i=1; i<argc; i++) {
@@ -512,7 +510,7 @@ bool run_tests(std::list<std::string> cases) {
     int test_cond = 0;
     auto tcase = config_db[cn];
   
-    std::set<int> expect_results, test_results;
+    std::set<int> expect_results, make_results, test_results;
     arg_parser(tcase,alists);
 
     if(debug_run)std::cout << "alists.size() is: " << alists.size() << std:: endl;
@@ -556,7 +554,7 @@ bool run_tests(std::list<std::string> cases) {
             result_db[cn]["make-time"] = one_make_time;
             if(make_result){
               std::cout << "fail to make " << prog << " with error status " << make_result << std::endl;
-              test_results.insert(FAILED_BUILD);
+              make_results.insert(make_result);
               curr_size = 0;
               continue;
             }else{
@@ -642,41 +640,23 @@ bool run_tests(std::list<std::string> cases) {
       }// one case diff arg/macro program(arg_list) loop
 FINISH_CURRENT_CASE:
       int test_result = 0;
-      bool first_expect_result = true;
-      int builderror_num = 0;
-      // check whether the results has a successful result or a expect result
-      // first check successfuly result, then check expect result.
-      // and choose the first result that meets the above rules
-      for(auto v:test_results){
-        if(v == 0){
-          test_result = 0;
-          std::cerr << "Run successfully: " << cn << std::endl;
-          break;
-        }else if(expect_results.count(v) && first_expect_result){ 
-          first_expect_result = false;
-          test_result = v;
-        }else if(v == FAILED_BUILD){
-          builderror_num++;
-        }
-      }
-      if(expect_results.count(test_result)){
-        std::cerr << "Run expected result: " << cn << " failed with expected exit value " << test_result << std::endl;
-      }
-      //check whether the results are all build error
-      //if not, choose the first run failed result
-      else if( test_result != 0){
-        if(builderror_num == test_results.size()){
-          test_result = FAILED_BUILD;
-          std::cerr << "Built all failed: " << cn << std::endl;
-        }else{
-          for(auto v:test_results){
-            if(v != FAILED_BUILD){
-              test_result = v;
-              std::cerr << "Run abnormality: " << cn << " failed with unexpected exit value " << test_result << std::endl;
-              break;
-            }
+      if (!make_results.empty()) {  // not successfully built, report the first failed make result
+        test_result = *make_results.cbegin();
+        std::cerr << "Built failed, the first try error code::" << test_result << std::endl;
+      } else if (!test_results.count(0)) {  // successfully built, but has no successrul result
+        for (auto res:test_results) {       // check if failed with expected result, if yes, report the first expected results
+          if (expect_results.count(res)) {
+            test_result = res;
+            std::cerr << "Run expected result: " << cn << " failed with expected exit value " << test_result << std::endl;
+            break;
           }
         }
+        if (!test_result) { // no expected results  found, report the first one
+          test_result = *test_results.cbegin();
+          std::cerr << "Run abnormaly: " << cn << " failed with unexpected exit value " << test_result << std::endl;
+        }
+      } else {  // successfully built, and has successrul result
+        std::cerr << "Run successfully: " << cn << std::endl;
       }
 
       current_test_checkdep_count = 0;
