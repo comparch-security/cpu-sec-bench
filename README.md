@@ -34,7 +34,7 @@ See [LICENSE](LICENSE.md) for more details.
 
 * Extra functions provided by the `run-test` helper
 
-~~~text
+~~~bash
 Usage: ./run-test [OPTION]
 Run Script for the Security Test Benchmark.
 
@@ -47,6 +47,7 @@ Possible parameters:
   fast-run      Only run the test case that their requirement runs successfully, and then generate a report.
   exhausted-run Run all tests until the total test case is exhausted, and then generate a report.
   print-trace   Print the trace log of the attacked target.
+~~~
 
 * Extra targets provided by the `Makefile` script
 
