@@ -2575,7 +2575,12 @@
         },
         "require": {
             "0": []
-        }
+        },
+        "offset": [
+            0,
+            2,
+            1
+        ]
     },
     "mss-write-by-bare-array-index-overflow-stack": {
         "program": "mss-write-by-bare-array-index",
