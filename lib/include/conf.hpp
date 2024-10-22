@@ -35,6 +35,7 @@
 #define ARROW(X,Y) ARROW_(X,Y)
 #define DEREF_(X) X
 #define DEREF(X) DEREF_(X)
+#define ARRAYREF(X) X
 
 // 117 is ascii code of "u"
 #define VAL_1U     117
@@ -250,11 +251,13 @@ public:
     #undef MEMBEROP
     #undef DEREF_
     #undef DEREF
+    #undef ARRAYREF
 
     #define DEREF_(X) *X
     #define DEREF(X) DEREF_(X)
     #define MEMBEROP_(X,Y) X->Y
     #define MEMBEROP(X,Y) MEMBEROP_(X,Y)
+    #define ARRAYREF(X) (char(&)[BUFFER_SIZE])*X
 
     #if BUFFER_KIND == BARE_ARRAY
 
