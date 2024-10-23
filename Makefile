@@ -236,7 +236,7 @@ else
   ifdef enable_stack_protection
     CXXFLAGS += -Wstack-protector -fstack-protector-all
   ifeq ($(ARCH),x86_64)
-    CXXFLAGS += -mstack-protector-guard=guard
+    CXXFLAGS += -mstack-protector-guard=global
   endif
   endif
 
