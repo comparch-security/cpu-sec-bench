@@ -535,7 +535,7 @@ bool run_tests(std::list<std::string> cases) {
       bool need_build = true;
       last_make_config_macro.clear();
       for(int ind = 0; ind != alists.size(); ind++){
-        std::cout << "\"arguments\" ind is: " << ind << std::endl;
+        std::cout << "\n\"arguments\" ind is: " << ind << std::endl;
         auto alist = alists[ind];
         test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results, make_config_macro, last_make_config_macro, need_build);
         if(!test_run || test_cond == 0) {
@@ -662,6 +662,7 @@ bool run_tests(std::list<std::string> cases) {
 
       }// one case diff arg/macro program(arg_list) loop
 FINISH_CURRENT_CASE:
+      std::cout << "\n------ " << cn << " ------" << std::endl;
       int test_result = 0;
       if (!make_results.empty()) {  // not successfully built, report the first failed make result
         test_result = *make_results.cbegin();
