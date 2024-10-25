@@ -63,10 +63,12 @@ std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
 typedef std::list<str_list_t>  str_llist_t;
 typedef std::vector<str_llist_t> str_vllist_t;// this strcture is used for various arguments cases
-str_list_t make_config_macro;
+typedef std::map<std::string, std::string> str_map_t;
+
 bool requires_check(nlohmann::ordered_json tcase);
 int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, std::string& pn, str_list_t& vn,
-                str_list_t& dbf, std::set<int> &expect_results);
+                str_list_t& dbf, std::set<int> &expect_results, str_map_t& make_config_macro, 
+                str_map_t& last_make_config_macro, bool& need_build);
 void add_arguments(std::string arg, nlohmann::ordered_json tcase, str_llist_t &arg_list);
 char ** argv_conv(const std::string &cmd, const str_list_t &args);
 int run_cmd(char* argv[], char** runv, long long& time_count);
@@ -267,7 +269,8 @@ bool requires_check(nlohmann::ordered_json tcase){
 }
 
 int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, std::string& pn, str_list_t& vn,
-                str_list_t &dbf, std::set<int> &expect_results) {
+                str_list_t &dbf, std::set<int> &expect_results, str_map_t& make_config_macro, 
+                str_map_t& last_make_config_macro, bool& need_build) {
 
   // get the program name
   if(tcase.count("program"))
@@ -327,14 +330,23 @@ int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, st
     }
   }
 
-  make_config_macro.clear();
-  if(tcase.count("conf-macro")){
-    std::map<std::string, std::string> conf_args;
-    //Currently, only the case of a single conf macro is being considered
-    conf_args = tcase["conf-macro"][std::to_string(ind)].get<std::map<std::string,std::string>>();
-    for(auto ca:conf_args){
-      make_config_macro.push_back(ca.first + "=" + ca.second);
+  if(tcase.count("conf-macro")) {
+    make_config_macro = tcase["conf-macro"][std::to_string(ind)].get<str_map_t>();
+
+    if(make_config_macro.size() != last_make_config_macro.size())  {
+      need_build = true;
+    } else {
+      for(auto ca:make_config_macro) {
+        if(ca.second != last_make_config_macro[ca.first]) {
+          need_build = true;
+          break;
+        }
+      }
     }
+  } else {
+    make_config_macro.clear();
+    if(!last_make_config_macro.empty()) 
+      need_build = true;
   }
 
   return 0;
@@ -518,27 +530,35 @@ bool run_tests(std::list<std::string> cases) {
     if (requires_check(tcase) == true){
       std::cerr << "\n========== start: " << cn << " =========" << std::endl;
       long long case_exec_time_sum = 0;
+      str_map_t make_config_macro, last_make_config_macro;
+      str_list_t make_options;
+      bool need_build = true;
+      last_make_config_macro.clear();
       for(int ind = 0; ind != alists.size(); ind++){
-        std::cout << "\"arguments\" ind is: " << ind << std::endl;
+        std::cout << "\n\"arguments\" ind is: " << ind << std::endl;
         auto alist = alists[ind];
-        test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results);
+        test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results, make_config_macro, last_make_config_macro, need_build);
         if(!test_run || test_cond == 0) {
           std::cout << "\n------ " << cn << " ------" << std::endl;
           int make_result = 0;
-          if(0 == make_result && make_run && !has_make) {
+          if(make_run && need_build) {
             long long one_make_time, curr_size;
-            if(!make_config_macro.empty()){
-              make_config_macro.push_front("test/" + prog);
-              make_config_macro.push_front("-B");
+            make_options.clear();
+            if(!make_config_macro.empty()) {
+              for (auto conf:make_config_macro) {
+                make_options.push_back(conf.first + "=" + conf.second);
+              }
+              make_options.push_front("test/" + prog);
+              make_options.push_front("-B");
               if(trace_run){
-                make_config_macro.push_back("TRACE_RUN=1");
+                make_options.push_back("TRACE_RUN=1");
               }
               std::cout << "make";
-              for(auto str:make_config_macro){
+              for(auto str:make_options){
                 std::cout << " " << str;
               }
               std::cout << std::endl;
-              make_result = run_cmd(argv_conv("make", make_config_macro), NULL, one_make_time);
+              make_result = run_cmd(argv_conv("make", make_options), NULL, one_make_time);
             }else{
               if(!trace_run){
                 std::cout << "make test/" << prog << std::endl;
@@ -564,6 +584,9 @@ bool run_tests(std::list<std::string> cases) {
               #else
               curr_size = get_file_size("test/" + prog);
               #endif
+
+              need_build = false;
+              last_make_config_macro = make_config_macro; // record the config macro of last succeeded make
             }
             result_db[cn]["file-size"] = curr_size;
             has_make = true;
@@ -639,6 +662,7 @@ bool run_tests(std::list<std::string> cases) {
 
       }// one case diff arg/macro program(arg_list) loop
 FINISH_CURRENT_CASE:
+      std::cout << "\n------ " << cn << " ------" << std::endl;
       int test_result = 0;
       if (!make_results.empty()) {  // not successfully built, report the first failed make result
         test_result = *make_results.cbegin();
