@@ -20,34 +20,34 @@ OPT_LEVEL       ?= O2
 
 # common option in Windows and Linux
 
-#enable_stack_nx_protection     = yes
-#disable_stack_nx_protection    = yes
-#enable_stack_protection        = yes
-#disable_stack_protection       = yes
-#enable_aslr_protection         = yes
-#disable_aslr_protection        = yes
-#enable_cet_shadow_stack        = yes
-#enable_default_address_sanitizer       = yes
+#enable_stack_nx_protection       = yes
+#disable_stack_nx_protection      = yes
+#enable_stack_protection          = yes
+#disable_stack_protection         = yes
+#enable_aslr_protection           = yes
+#disable_aslr_protection          = yes
+#enable_cet_shadow_stack          = yes
+#enable_default_address_sanitizer = yes
 
 # common option in Linux
-#enable_got_protection          = yes
-#disable_got_protection         = yes
-#enable_vtable_verify           = yes
-#disable_vtable_verify          = yes
-#enable_control_flow_protection = yes
-#disable_control_flow_protection= yes
-#enable_stack_clash_protection  = yes
-#enable_address_sanitizer_without_leaker       = yes
-#enable_undefined_sanitizer     = yes
-#enable_full_address_sanitizer  = yes
-#enable_full_undefined_sanitizer =yes
+#enable_got_protection                    = yes
+#disable_got_protection                   = yes
+#enable_vtable_verify                     = yes
+#disable_vtable_verify                    = yes
+#enable_control_flow_protection           = yes
+#disable_control_flow_protection          = yes
+#enable_stack_clash_protection            = yes
+#enable_address_sanitizer_without_leaker  = yes
+#enable_undefined_sanitizer               = yes
+#enable_full_address_sanitizer            = yes
+#enable_full_undefined_sanitizer          = yes
 
 # common option in Windows, msvc specific safety feature
-#enable_extra_stack_protection  = yes
-#enable_heap_integrity          = yes
-#enable_return_address_sanitizer    = yes
-#enable_fuzzer_address_sanitizer    = yes
-#enable_fuzzer_address_sanitizer_withou_object_flags = yes
+#enable_extra_stack_protection                        = yes
+#enable_heap_integrity                                = yes
+#enable_return_address_sanitizer                      = yes
+#enable_fuzzer_address_sanitizer                      = yes
+#enable_fuzzer_address_sanitizer_withou_object_flags  = yes
 
 # specific hardware secrutiy features
 
