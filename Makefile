@@ -20,27 +20,34 @@ OPT_LEVEL       ?= O2
 
 # common option in Windows and Linux
 
-#enable_stack_nx_protection     = yes
-#disable_stack_nx_protection    = yes
-#enable_stack_protection        = yes
-#disable_stack_protection       = yes
-#enable_aslr_protection         = yes
-#disable_aslr_protection        = yes
-#enable_cet_shadow_stack        = yes
+#enable_stack_nx_protection       = yes
+#disable_stack_nx_protection      = yes
+#enable_stack_protection          = yes
+#disable_stack_protection         = yes
+#enable_aslr_protection           = yes
+#disable_aslr_protection          = yes
+#enable_cet_shadow_stack          = yes
+#enable_default_address_sanitizer = yes
 
 # common option in Linux
-#enable_got_protection          = yes
-#disable_got_protection         = yes
-#enable_vtable_verify           = yes
-#disable_vtable_verify          = yes
-#enable_control_flow_protection = yes
-#disable_control_flow_protection= yes
-#enable_stack_clash_protection  = yes
-#enable_address_sanitizer       = yes
+#enable_got_protection                    = yes
+#disable_got_protection                   = yes
+#enable_vtable_verify                     = yes
+#disable_vtable_verify                    = yes
+#enable_control_flow_protection           = yes
+#disable_control_flow_protection          = yes
+#enable_stack_clash_protection            = yes
+#enable_address_sanitizer_without_leaker  = yes
+#enable_undefined_sanitizer               = yes
+#enable_full_address_sanitizer            = yes
+#enable_full_undefined_sanitizer          = yes
 
 # common option in Windows, msvc specific safety feature
-#enable_extra_stack_protection  = yes
-#enable_heap_integrity          = yes
+#enable_extra_stack_protection                        = yes
+#enable_heap_integrity                                = yes
+#enable_return_address_sanitizer                      = yes
+#enable_fuzzer_address_sanitizer                      = yes
+#enable_fuzzer_address_sanitizer_withou_object_flags  = yes
 
 # specific hardware secrutiy features
 
@@ -154,10 +161,24 @@ ifeq ($(OSType),Windows_NT)
     CXXFLAGS += /RTCs
   endif
 
-  ifdef enable_address_sanitizer
+  ifdef enable_default_address_sanitizer
     CXXFLAGS += /fsanitize=address
   endif
 
+  ifdef enable_fuzzer_address_sanitizer
+    CXXFLAGS += /fsanitize=fuzzer
+    OBJECT_CXXFLAGS += /fsanitize=fuzzer
+  endif
+
+  ifdef enable_return_address_sanitizer
+    CXXFLAGS += /fsanitize-address-use-after-return
+    OBJECT_CXXFLAGS += /fsanitize-address-use-after-return
+    RUN_PREFIX += ASAN_OPTIONS=detect_stack_use_after_return=1 
+  endif
+
+  ifdef enable_fuzzer_address_sanitizer_withou_object_flags
+    CXXFLAGS += /fsanitize=fuzzer
+  endif
 else
 
   # platform
@@ -290,15 +311,44 @@ else
     CXXFLAGS += -fstack-clash-protection
   endif
 
-  ifdef enable_address_sanitizer
-    CXXFLAGS += -fsanitize=address
+  ifdef enable_default_address_sanitizer
+    CXXFLAGS += -fsanitize=address -fno-sanitize-recover=all
+    OBJECT_CXXFLAGS += -fsanitize=address -fno-sanitize-recover=all
+  endif
+
+  ifdef enable_address_sanitizer_without_leaker
+    CXXFLAGS += -fsanitize=address -fno-sanitize-recover=all
+    OBJECT_CXXFLAGS += -fsanitize=address -fno-sanitize-recover=all
     RUN_PREFIX += ASAN_OPTIONS=detect_leaks=0
+  endif
+
+  ifdef enable_undefined_sanitizer
+    CXXFLAGS += -fsanitize=undefined -fno-sanitize-recover=all
+    OBJECT_CXXFLAGS += -fsanitize=undefined -fno-sanitize-recover=all
+    SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-uasan
+  endif
+
+  ifdef enable_full_address_sanitizer
+    CXXFLAGS += -fsanitize=address -fsanitize-address-use-after-scope -fno-common -fsanitize=pointer-compare -fsanitize=pointer-subtract -fno-sanitize-recover=all
+    OBJECT_CXXFLAGS += -fsanitize=address -fsanitize-address-use-after-scope -fno-common -fsanitize=pointer-compare -fsanitize=pointer-subtract -fno-sanitize-recover=all
     ifeq ($(CXX),$(filter $(CXX),clang++ c++))
-      LDFLAGS  += -static-libsan
-    else
-      LDFLAGS  += -static-libasan
-      CXXFLAGS += --param=asan-stack=1
+      CXXFLAGS += -fsanitize-address-use-after-return=always
+      OBJECT_CXXFLAGS += -fsanitize-address-use-after-return=always
     endif
+    RUN_PREFIX += ASAN_OPTIONS=detect_stack_use_after_return=1:detect_invalid_pointer_pairs=2
+    SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-fullasan
+  endif
+
+  ifdef enable_full_undefined_sanitizer
+    CXXFLAGS += -fsanitize=undefined -fsanitize=signed-integer-overflow -fno-sanitize-recover=all
+    ifndef without_extra_ojbect_safety_options
+      OBJECT_CXXFLAGS += -fsanitize=undefined -fsanitize=signed-integer-overflow -fno-sanitize-recover=all
+    endif
+    ifeq ($(CXX),$(filter $(CXX),clang++ c++))
+      CXXFLAGS += -fsanitize=local-bounds -fsanitize=unsigned-integer-overflow
+      OBJECT_CXXFLAGS += -fsanitize=local-bounds -fsanitize=unsigned-integer-overflow
+    endif
+    SIMPLE_FLAGS :=$(SIMPLE_FLAGS)-fulluasan
   endif
 endif
 
