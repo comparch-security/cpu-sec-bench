@@ -7054,7 +7054,7 @@
             "290": "cheri capabilities enabled."
         }
     },
-    "cfi-return-to-non-call-site": {
+    "cfi-return-to-parent-non-call-site": {
         "get-code-offset": {
             "0": [
                 "main",
@@ -7067,7 +7067,7 @@
         "require": {
             "0": [
                 [
-                    "cfi-return-to-wrong-call-site"
+                    "cfi-return-to-parent-wrong-call-site"
                 ]
             ]
         },
@@ -7090,7 +7090,7 @@
             "290": "cheri capabilities enabled."
         }
     },
-    "cfi-return-to-wrong-call-site-within-static-analysis": {
+    "cfi-return-to-parent-same-call-site": {
         "comment": "add chain type support",
         "require-comment": [
             "utilization",
@@ -7128,6 +7128,8 @@
         },
         "default_args": {
             "0": [
+                "0",
+                "0",
                 "-rextend_offset"
             ]
         },
@@ -7163,7 +7165,7 @@
             "251": "When Arm Asan Enabled, the clang compiler pushes two more registers(one for shadow memory, another for alignment)"
         }
     },
-    "cfi-return-to-wrong-call-site": {
+    "cfi-return-to-parent-wrong-call-site": {
         "get-code-offset": {
             "0": [
                 "main",
@@ -7176,7 +7178,7 @@
         "require": {
             "0": [
                 [
-                    "cfi-return-to-wrong-call-site-within-static-analysis"
+                    "cfi-return-to-parent-same-call-site"
                 ]
             ]
         },
@@ -7199,14 +7201,14 @@
             "290": "cheri capabilities enabled."
         }
     },
-    "cfi-return-to-func": {
+    "cfi-return-to-peer-func": {
         "require-comment": [
             "relaxation"
         ],
         "require": {
             "0": [
                 [
-                    "cfi-return-to-wrong-call-site"
+                    "cfi-return-to-parent-wrong-call-site"
                 ]
             ]
         },
