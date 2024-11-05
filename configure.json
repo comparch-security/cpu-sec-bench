@@ -7227,6 +7227,28 @@
             "290": "cheri capabilities enabled."
         }
     },
+    "cfi-return-to-peer-asmfunc": {
+        "arguments": {
+            "0": [
+                "-vstack-offset-v-p-g1",
+                "2"
+            ]
+        },
+        "default_args": {
+            "0": [
+                "-rsize",
+                "2"
+            ]
+        },
+        "size": [
+            0,
+            16,
+            1
+        ],
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
     "cfi-return-to-peer-func": {
         "require-comment": [
             "relaxation"
@@ -7234,7 +7256,7 @@
         "require": {
             "0": [
                 [
-                    "cfi-return-to-parent-wrong-call-site"
+                    "cfi-return-to-peer-asmfunc"
                 ]
             ]
         },
