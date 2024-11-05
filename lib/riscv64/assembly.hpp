@@ -1,6 +1,7 @@
 // assembly helper functions
 // riscv64
 
+extern "C" void assembly_helper(void* target_address);
 
 // get the distance between two pointers
 #define GET_DISTANCE(dis, pa, pb)            \
