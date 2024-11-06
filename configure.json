@@ -7327,6 +7327,42 @@
             "251": "When Arm Asan Enabled, the clang compiler pushes two more registers(one for shadow memory, another for alignment)"
         }
     },
+    "cfi-return-to-parent-wrong-call-site-fakefunc": {
+        "require-comment": [
+            "relaxation"
+        ],
+        "require": {
+            "0": [
+                [
+                    "cfi-return-to-parent-same-call-site"
+                ]
+            ]
+        },
+        "todo": [
+            "need fix arguments -vstack-offset-v-p-gq,update in related chain cases"
+        ],
+        "arguments": {
+            "0": [
+                "0",
+                "-rsize",
+                "-2"
+            ]
+        },
+        "default_args": {
+            "0": [
+                "-rsize",
+                "-2"
+            ]
+        },
+        "size": [
+            0,
+            16,
+            1
+        ],
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
     "cfi-return-to-parent-wrong-call-site": {
         "get-code-offset": {
             "0": [
