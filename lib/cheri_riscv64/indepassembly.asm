@@ -1,5 +1,6 @@
 .section .text
 .globl assembly_helper
+.globl assembly_return_site
 .globl exit
 .type exit, @function
 
@@ -16,4 +17,16 @@ assembly_helper:
   # restore return address
   ld ra, 8(sp)
   addi sp, sp, 16
+  ret
+
+assembly_return_site:
+  # Save the stack info
+  push %rbp
+  movq %rsp, %rbp
+  # Set exit code
+  xor %rdi, %rdi
+  call exit
+  # Restore stack info
+  movq %rbp, %rsp
+  pop %rbp
   ret
