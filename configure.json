@@ -7191,6 +7191,178 @@
             "251": "When Arm Asan Enabled, the clang compiler pushes two more registers(one for shadow memory, another for alignment)"
         }
     },
+    "cfi-return-to-parent-same-call-site-diffargs": {
+        "comment": "add chain type support",
+        "require-comment": [
+            "utilization",
+            "utilization",
+            "utilization",
+            "utilization"
+        ],
+        "require": {
+            "0": [
+                [
+                    "mss-write-by-enclosing-array-pointer-large-count-stack-overflow"
+                ]
+            ],
+            "1": [
+                [
+                    "acc-get-ra-offset-v-p-g1",
+                    "acc-get-ra-offset-v-p-g0"
+                ],
+                [
+                    "mss-write-by-stack-pointer"
+                ]
+            ]
+        },
+        "todo": [
+            "need fix arguments -vstack-offset-v-p-gq,update in related chain cases"
+        ],
+        "arguments": {
+            "0": [
+                "0",
+                "0",
+                "-roffset",
+                "2",
+                "1"
+            ],
+            "1": [
+                "1",
+                "0",
+                "-roffset",
+                "2",
+                "1"
+            ],
+            "2": [
+                "0",
+                "0",
+                "-roffset",
+                "2",
+                "0"
+            ],
+            "3": [
+                "1",
+                "0",
+                "-roffset",
+                "2",
+                "0"
+            ]
+        },
+        "default_args": {
+            "0": [
+                "0",
+                "0",
+                "-rextend_offset",
+                "2",
+                "1"
+            ],
+            "1": [
+                "1",
+                "0",
+                "-rextend_offset",
+                "2",
+                "1"
+            ],
+            "2": [
+                "0",
+                "0",
+                "-rextend_offset",
+                "2",
+                "0"
+            ],
+            "3": [
+                "1",
+                "0",
+                "-rextend_offset",
+                "2",
+                "0"
+            ]
+        },
+        "offset": [
+            0,
+            8,
+            1
+        ],
+        "extend_offset": [
+            0,
+            16,
+            1
+        ],
+        "set-var": {
+            "0": [
+                "stack-offset-v-p-g1"
+            ],
+            "1": [
+                "stack-offset-v-p-g1"
+            ],
+            "2": [
+                "stack-offset-v-p-g1"
+            ],
+            "3": [
+                "stack-offset-v-p-g1"
+            ]
+        },
+        "get-code-offset": {
+            "0": [
+                "main",
+                "labelfunc"
+            ],
+            "1": [
+                "main",
+                "labelfunc"
+            ],
+            "2": [
+                "main",
+                "labelfunc"
+            ],
+            "3": [
+                "main",
+                "labelfunc"
+            ]
+        },
+        "expect-results": {
+            "290": "cheri capabilities enabled.",
+            "1": "failed to change RA on stack at all, normal return.",
+            "267": "RA is partially written leading to a segment error due to wrong RA.",
+            "251": "When Arm Asan Enabled, the clang compiler pushes two more registers(one for shadow memory, another for alignment)"
+        }
+    },
+    "cfi-return-to-parent-wrong-call-site-fakefunc": {
+        "require-comment": [
+            "relaxation"
+        ],
+        "require": {
+            "0": [
+                [
+                    "cfi-return-to-parent-same-call-site"
+                ]
+            ]
+        },
+        "todo": [
+            "need fix arguments -vstack-offset-v-p-gq,update in related chain cases"
+        ],
+        "arguments": {
+            "0": [
+                "0",
+                "-rsize",
+                "-2"
+            ]
+        },
+        "default_args": {
+            "0": [
+                "-rsize",
+                "-2"
+            ]
+        },
+        "size": [
+            0,
+            16,
+            1
+        ],
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
     "cfi-return-to-parent-wrong-call-site": {
         "get-code-offset": {
             "0": [
