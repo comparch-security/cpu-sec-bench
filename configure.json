@@ -7116,6 +7116,32 @@
             "290": "cheri capabilities enabled."
         }
     },
+    "cfi-return-to-parent-non-call-site-by-vfunc":{
+        "get-code-offset": {
+            "0": [
+                "main",
+                "labelfunc"
+            ]
+        },
+        "arguments": {
+            "0": [
+                "-rsize"
+            ]
+        },
+        "default_args": {
+            "0": [
+                "-rsize"
+            ]
+        },
+        "size": [
+            0,
+            16,
+            1
+        ],
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
     "cfi-return-to-parent-same-call-site": {
         "comment": "add chain type support",
         "require-comment": [
