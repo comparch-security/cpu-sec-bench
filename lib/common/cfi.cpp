@@ -22,6 +22,29 @@ void Helper3::virtual_func(double arg) {
   lvar = arg;
 }
 
+void Base_1v::virtual_func(void*) {
+  exit(1);
+}
+
+volatile arch_int_t cfi_offset;
+
+void Ret_From_Helper::virtual_func(void *label) {
+  COMPILER_BARRIER;
+  GET_RAA_SP_OFFSET(cfi_offset);
+  #ifdef TRACE_RUN
+    GET_SP_BASE(ra_addr);
+    WRITE_TRACE("RA address: 0x", ra_addr);
+    WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
+  #endif
+  MOD_STACK_DAT(label, cfi_offset);
+  /* HiFive Unmatched, GCC 11.2.0
+   * Make sure cfi_offset is modified as otherwise
+   * the stack is not expanded similarily with
+   * the return-to-parent-same-call-site test.
+   */
+  cfi_offset = rand();
+}
+
 int BaseM::virtual_funcM0() {
   return 1;
 }
