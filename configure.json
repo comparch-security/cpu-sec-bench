@@ -7477,6 +7477,66 @@
             "290": "cheri capabilities enabled."
         }
     },
+    "cfi-return-to-peer-mfunc": {
+        "require-comment": [
+            "relaxation"
+        ],
+        "require": {
+            "0": [
+                [
+                    "cfi-return-to-peer-asm-func"
+                ]
+            ]
+        },
+        "arguments": {
+            "0": [
+                "-vstack-offset-v-p-g1"
+            ]
+        },
+        "default_args": {
+            "0": [
+                "-rsize"
+            ]
+        },
+        "size": [
+            0,
+            16,
+            1
+        ],
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
+    "cfi-return-to-peer-vfunc": {
+        "require-comment": [
+            "relaxation"
+        ],
+        "require": {
+            "0": [
+                [
+                    "cfi-return-to-peer-asm-func"
+                ]
+            ]
+        },
+        "arguments": {
+            "0": [
+                "-vstack-offset-v-p-g1"
+            ]
+        },
+        "default_args": {
+            "0": [
+                "-rsize"
+            ]
+        },
+        "size": [
+            0,
+            16,
+            1
+        ],
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
+    },
     "cfi-return-to-libc": {
         "require-comment": [
             "relaxation"

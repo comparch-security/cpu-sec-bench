@@ -22,6 +22,13 @@ void Helper3::virtual_func(double arg) {
   lvar = arg;
 }
 
+void Ret_To_Helper::virtual_func() {
+  #ifdef TRACE_RUN
+    WRITE_TRACE("Successful Jumped", "");
+  #endif
+  exit(0);
+}
+
 void Base_1v::virtual_func(void*) {
   exit(1);
 }

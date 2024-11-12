@@ -56,6 +56,15 @@ public:
   virtual ~Helper3() {}
 };
 
+class DLL_DEFINITION  Ret_To_Helper : public Base
+{
+public:
+  Ret_To_Helper(){}
+  Ret_To_Helper(const Ret_To_Helper&) = default; 
+  virtual void virtual_func();
+  virtual ~Ret_To_Helper() {}
+};
+
 class DLL_DEFINITION Base_1v
 {
 public:
