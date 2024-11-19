@@ -1,3 +1,5 @@
+EXTERN exit:PROC
+
 .code _text
 
 option casemap:none
@@ -20,7 +22,7 @@ push_fake_ret ENDP
 
 assembly_helper PROC PUBLIC
                 ; Save address
-                mov     rax,rdi;
+                mov     rax,rcx;
                 ; Pop the return address from the stack
                 pop     rbx;
                 ; Save the fake return address to the stack
@@ -33,8 +35,8 @@ assembly_return_site PROC PUBLIC
                 push    rbp;
                 mov     rbp,rsp;
                 ; Set exit code
-                xor     rdi,rdi;
-                call exit
+                mov     rcx,0;
+                call    exit;
                 ; Restore stack info
                 mov     rsp,rbp;
                 pop     rbp;
