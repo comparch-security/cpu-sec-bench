@@ -25,7 +25,7 @@ void FORCE_NOINLINE helper(void *label) {
   offset = rand();
 }
 
-void* FORCE_NOINLINE helper2(int val) {
+FORCE_NOINLINE void* helper2(int val) {
   void* curr_return_addr = NULL;
   READ_STACK_DAT(curr_return_addr, offset);
   if(fake_init_val > 0) gvar_init(fake_init_val); //impossible to happen
