@@ -21,6 +21,7 @@ typedef pfunc_t *pvtable_t;
 DLL_DEFINITION extern pvtable_t create_fake_vtable_on_heap(unsigned int nfunc);
 DLL_DEFINITION extern void free_fake_vtable_on_heap(pvtable_t addr);
 
+volatile arch_int_t cfi_offset;
 
 class DLL_DEFINITION Base
 {
