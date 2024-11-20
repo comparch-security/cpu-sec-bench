@@ -33,7 +33,10 @@ void Base_1v::virtual_func(void*) {
   exit(1);
 }
 
-volatile arch_int_t cfi_offset;
+#if defined(COMPILER_MSVC)
+  CONTEXT sp_loc_context;
+  // Used in Windows for GET_RAA_OFFSET and MOD_STACK_DAT
+#endif 
 
 void Ret_From_Helper::virtual_func(void *label) {
   COMPILER_BARRIER;

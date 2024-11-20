@@ -8,6 +8,8 @@
 #define X64_MSVC_ASSEMBLY_HPP_INCLUDED
 
 extern "C" void push_fake_ret(void*,  arch_int_t);
+extern "C" void assembly_helper(void* target_address);
+extern "C" void assembly_return_site();
 
 union x{void(*func_ptr)(); long long func_num;};
 GLOBAR_VAR_PRE x jum_target;
