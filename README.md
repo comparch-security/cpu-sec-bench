@@ -85,11 +85,23 @@ For the obvious reasons, some functions are unavailable but we are working on th
 - **lib**: the architecture-specific support library.
 - **mss**: test cases related to memory spatial safety.
 - **mts**: test cases related to memory temporal safety.
+- **doc**: documentation of the test suite.
+- **plans**: archived implementation plans.
 - **script**: helper scripts of the test suite.
 - LICENSE.md: license declaration.
 - Makefile: auto make script.
 - README.md: this readme file.
 - configure.json: the configuration parameters recorded in JSON.
+
+### Documentation
+
+Detailed documentation lives in the [doc](doc/content.html) directory:
+
+- [Test catalog](doc/test-catalog.html) — every test case in the suite, by category.
+- [Architecture](doc/architecture.html) — the scheduler, the configuration format and the
+  result codes.
+- [Porting](doc/porting.html) — the support library layout and how to add a new
+  instruction set or operating system.
 
 ### Test results
 
@@ -100,6 +112,8 @@ The meaning of the result integer:
 * [1-15]: A predefined error number is returned.
 * [16-31]: An expected exception is catched and a predefined error number is then returned.
 * [32-63]: A run-time parameter (`n-32`) is found and returned by the test case.
+* [64-65]: A run-time parameter is written to a temporary file: `64` means the test case then
+  passes, `65` means it fails with error `2`.
 * [256-511]: An exception is raised but uncatched with the signal number as `n-256`.
 * 1024: Test case directly failed due to failure in prerequisite cases.
 * -1: configuration error which needs to be fixed.

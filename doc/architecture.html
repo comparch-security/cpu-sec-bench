@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="last-modified" content="2026-09-30">
+    <title>Architecture | Security Test Benchmark</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <a href="content.html">Docs Home</a>
+    </nav>
+    <main>
+        <h1>Architecture</h1>
+
+        <p>
+            The benchmark is deliberately split in two: a set of portable test cases, and a
+            shared support library that holds everything platform-specific. This page describes
+            how a test case is written, how the scheduler turns the configuration registry into
+            a sequence of builds and runs, and how a run's exit status is interpreted.
+        </p>
+
+        <h2>Two-part design</h2>
+
+        <p>
+            Every test case is a short C++ program that creates one vulnerable situation at run
+            time and reports whether the attack succeeded. Most of the code is portable, but an
+            attack that a compiler can see through would be optimized away, so where that risk
+            exists the case calls a macro whose body is embedded assembly. Those macro bodies
+            are the platform-specific part of the suite and live in the support library, never
+            in the test case.
+        </p>
+
+        <pre><code>lib/include/assembly.hpp      selects the implementation by ISA
+  __x86_64 / _M_X64  ->  lib/x86_64/assembly.hpp   (or visualcpp_assembly.hpp under MSVC)
+  __aarch64__        ->  lib/aarch64/assembly.hpp
+  __riscv           ->  lib/riscv64/assembly.hpp
+lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
+
+        <p>
+            A test case therefore contains no assembly, no signal handling and no ABI
+            knowledge: it calls something like <code>MOD_STACK_DAT(label, offset)</code> and the
+            library decides what that means on this platform. See
+            <a href="porting.html">Porting</a> for the full layout and for what a new port must
+            supply.
+        </p>
+
+        <h2>The scheduler</h2>
+
+        <p>
+            <code>scheduler/run-test.cpp</code> is the only thing the default Makefile target
+            builds. It compiles test cases on demand, runs them, and records what happened.
+        </p>
+
+        <ol>
+            <li>
+                <strong>Read the registry.</strong> <code>configure.json</code> is parsed into
+                the configuration database. With <code>continue</code>, <code>results.json</code>
+                is read first so already-recorded cases can be skipped.
+            </li>
+            <li>
+                <strong>Compute the pending list.</strong> Every record not yet present in the
+                results database is a candidate.
+            </li>
+            <li>
+                <strong>Expand the arguments.</strong> A record's <code>arguments</code> (or
+                <code>default_args</code> under <code>exhausted-run</code>) list is expanded. An
+                entry beginning with <code>-r</code>, <code>-l</code> or <code>-v</code> names a
+                property rather than being passed literally: <code>-r</code> takes a range, so
+                <code>"arguments": ["-roffset"]</code> with <code>"offset": [0, 8, 1]</code>
+                launches the program eight times, once per value; <code>-l</code> takes a value
+                list; <code>-v</code> substitutes a runtime variable discovered earlier in the
+                run.
+            </li>
+            <li>
+                <strong>Gate on prerequisites.</strong> The <code>require</code> property is a
+                list of lists. Each inner list is a disjunction &mdash; any one of its cases
+                passing satisfies it &mdash; and the outer list is a conjunction of those
+                groups. A case whose prerequisite group is unsatisfied is recorded as
+                <code>1024</code> and not run. A prerequisite counts as passing when it exited
+                <code>0</code> or with a code the prerequisite's own
+                <code>expect-results</code> declares as acceptable.
+            </li>
+            <li>
+                <strong>Build on demand.</strong> The case is built as
+                <code>make -B test/&lt;program&gt; MACRO=value &hellip;</code>, with the macro
+                assignments taken from the record's <code>conf-macro</code> map. The scheduler
+                rebuilds only when that map differs from the last successful build, so several
+                records that share a macro set share one binary.
+            </li>
+            <li>
+                <strong>Run and interpret.</strong> <code>test/&lt;program&gt;</code> is spawned
+                with the expanded arguments and its exit status classified as below. A status in
+                the runtime-parameter range is consumed rather than recorded as an outcome.
+            </li>
+            <li>
+                <strong>Record.</strong> The outcome is written into <code>results.json</code>,
+                which is rewritten after every case, so an interrupted run leaves usable partial
+                state. With a reporting option, <code>results.dat</code> is then written,
+                prefixed by the contents of <code>test/sys_info.txt</code> (CPU, system, compiler
+                versions and the flags that were in force).
+            </li>
+        </ol>
+
+        <h2>Result codes</h2>
+
+        <p>
+            Exit status is the interface between a test case and the scheduler, so the contract
+            is fixed and each range has exactly one meaning. The table is derived from
+            <code>scheduler/run-test.cpp</code>, which is authoritative; the same contract is
+            summarised for users in <a href="../README.md">README.md</a>.
+        </p>
+
+        <table>
+            <tr>
+                <th>Code</th>
+                <th>Meaning</th>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>The test passed &mdash; the vulnerability was successfully exploited, so the
+                    platform does not provide the corresponding defense.</td>
+            </tr>
+            <tr>
+                <td>1-15</td>
+                <td>A predefined error: the test reached a known failure point.</td>
+            </tr>
+            <tr>
+                <td>16-31</td>
+                <td>An expected exception was caught and a predefined error number returned. This
+                    is how a defense that manifests as an exception &mdash; DEP, for example
+                    &mdash; is recorded as an expected outcome rather than an anomaly.</td>
+            </tr>
+            <tr>
+                <td>32-63</td>
+                <td>A runtime parameter was discovered: the value is the code minus 32. The
+                    scheduler stores it in <code>variables.json</code> and treats the case as
+                    successful, so later cases can consume the value through a
+                    <code>-v</code> argument.</td>
+            </tr>
+            <tr>
+                <td>64-65</td>
+                <td>The same discovery, but the parameter was written to a temp file instead of
+                    encoded in the status. <code>64</code> is then treated as success and
+                    <code>65</code> as code <code>2</code>.</td>
+            </tr>
+            <tr>
+                <td>256-511</td>
+                <td>The process was terminated by a signal; the signal number is the code minus
+                    256. This is what the scheduler records for a crash the test case did not
+                    catch.</td>
+            </tr>
+            <tr>
+                <td>1024</td>
+                <td>A prerequisite case failed, so this case was not run.</td>
+            </tr>
+            <tr>
+                <td>-1</td>
+                <td>A configuration or flow error raised by the test program itself &mdash;
+                    typically no argument branch matched.</td>
+            </tr>
+            <tr>
+                <td>other</td>
+                <td>Something is wrong and needs investigation.</td>
+            </tr>
+        </table>
+
+        <p>
+            The scheduler prints and highlights only unexpected codes, so a clean run is quiet
+            and anything needing attention stands out.
+        </p>
+
+        <h2>Runtime parameters</h2>
+
+        <p>
+            Some values cannot be known at build time. The canonical example is the offset of the
+            return address from the stack pointer: it depends on the ABI, on whether a frame
+            pointer is used, and on whether instrumentation such as a stack canary changed the
+            frame. Every return-oriented test needs it.
+        </p>
+
+        <p>
+            The suite obtains it by measurement rather than assumption. A calibrating case is
+            launched once per candidate offset in the range declared by its <code>offset</code>
+            property; the run that manages to hijack the return address exits with 32 plus that
+            offset, and the scheduler stores the value under the name the record gives in
+            <code>set-var</code>. Those names are per-region rather than global:
+            <code>acc-get-ra-offset-v-p-g0</code> and <code>-g1</code> calibrate
+            <code>stack-offset-v-p-g0</code> and <code>stack-offset-v-p-g1</code>, and
+            <code>cfi-return-to-parent-same-call-site</code> calibrates the latter as well. A
+            dependent record such as <code>cfi-return-to-parent-wrong-call-site</code> then
+            receives it through a <code>-vstack-offset-v-p-g1</code> argument, and the
+            <code>require</code> graph guarantees its calibration case runs first.
+        </p>
+
+        <h2>Configuration registry</h2>
+
+        <p>
+            <code>configure.json</code> is the authoritative description of the suite: one record
+            per testable configuration. Record keys are <code>&lt;category&gt;-&lt;name&gt;</code>,
+            and a record is a program plus the macros and arguments that specialise it.
+        </p>
+
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td><code>program</code></td>
+                <td>The source basename to build. When absent, the record key itself is the
+                    program name &mdash; which is why a record whose name is not its program's
+                    name must state this field.</td>
+            </tr>
+            <tr>
+                <td><code>conf-macro</code></td>
+                <td>Compile-time macro assignments, keyed by argument-list index. A change here
+                    is what forces a rebuild.</td>
+            </tr>
+            <tr>
+                <td><code>arguments</code></td>
+                <td>Runtime arguments, with <code>-r</code> / <code>-l</code> / <code>-v</code>
+                    expansion.</td>
+            </tr>
+            <tr>
+                <td><code>default_args</code></td>
+                <td>Alternative argument list used by <code>exhausted-run</code>, for running
+                    every case without the prerequisite pruning that normally narrows the set.</td>
+            </tr>
+            <tr>
+                <td><code>require</code></td>
+                <td>The prerequisite graph: list of lists, inner OR, outer AND.</td>
+            </tr>
+            <tr>
+                <td><code>require-comment</code></td>
+                <td>Classifies each prerequisite edge as either <em>utilization</em> or
+                    <em>relaxation</em> &mdash; the only two tokens the suite uses &mdash; so the
+                    relation graph can be rendered by type.</td>
+            </tr>
+            <tr>
+                <td><code>expect-results</code></td>
+                <td>Non-zero exit codes that are acceptable outcomes, each mapped to its meaning.
+                    A case exiting with one of these codes did not demonstrate the exploit &mdash;
+                    only exit <code>0</code> does &mdash; so the run is recorded with that code's
+                    meaning rather than flagged as an unexpected result.</td>
+            </tr>
+            <tr>
+                <td><code>set-var</code></td>
+                <td>Names the runtime variable this case calibrates, so the scheduler stores a
+                    discovered parameter under it.</td>
+            </tr>
+            <tr>
+                <td><code>get-code-offset</code></td>
+                <td>Names the function and target symbol whose code offset is extracted from the
+                    built binary by a script before running.</td>
+            </tr>
+            <tr>
+                <td><code>size</code></td>
+                <td>Range for the allocation-size arguments a case sweeps.</td>
+            </tr>
+            <tr>
+                <td><code>offset</code></td>
+                <td>Range for the stack-offset sweep used to calibrate return-address tests.</td>
+            </tr>
+            <tr>
+                <td><code>extend_offset</code></td>
+                <td>Widens an offset sweep beyond the default range.</td>
+            </tr>
+            <tr>
+                <td><code>reference</code></td>
+                <td>The source paper or technique a case is derived from.</td>
+            </tr>
+            <tr>
+                <td><code>comment</code></td>
+                <td>Free-text note on the record's intent.</td>
+            </tr>
+            <tr>
+                <td><code>todo</code></td>
+                <td>Known gaps or planned extensions for this record.</td>
+            </tr>
+            <tr>
+                <td><code>multitry</code></td>
+                <td>Marks a case that is expected to be retried rather than judged on a single
+                    attempt.</td>
+            </tr>
+        </table>
+
+        <h2>Build configuration</h2>
+
+        <p>
+            Security features are selected by Make variables rather than by editing the Makefile,
+            so a single checkout can be measured under many configurations. The available
+            switches are listed as a commented menu near the top of the Makefile, and each is
+            passed on the command line:
+        </p>
+
+        <pre><code>make enable_stack_protection=yes
+make disable_aslr_protection=yes enable_control_flow_protection=yes</code></pre>
+
+        <p>
+            The Makefile chooses <code>ARCH</code> from the host (<code>arm64</code> is mapped to
+            <code>aarch64</code>; <code>enable_riscv64_cheri</code> forces
+            <code>cheri_riscv64</code>) and <code>CLIBAPI</code> from the platform
+            (<code>posix</code>, or <code>visualcpp</code> under MSVC). Selected flags are
+            recorded into <code>test/sys_info.txt</code> and therefore appear at the head of
+            every <code>results.dat</code>, so a result file is self-describing.
+        </p>
+
+        <h2>Relations between cases</h2>
+
+        <p>
+            Cases are not independent. Two kinds of relation are recorded in
+            <code>require-comment</code>, named by the same tokens <code>configure.json</code>
+            uses:
+        </p>
+
+        <ul>
+            <li><strong>utilization</strong> &mdash; A can only be exploited if B can be. An
+                out-of-bounds read past an array inside an object utilizes the intra-object
+                redzone check and the data-pointer-arithmetic check, which is why
+                <code>mss-read-by-enclosing-array-index-overflow-*</code> records require
+                <code>acc-check-intra-obj-*-redzone</code> and
+                <code>acc-check-data-pointer-arithmetic-*</code>.</li>
+            <li><strong>relaxation</strong> &mdash; A is the more evasive variant of B. Returning
+                to a plausible call site is harder to detect than returning anywhere, so the
+                latter is the relaxed form.</li>
+        </ul>
+
+        <p>
+            In every kind, if the prerequisite is defeated by a defence then the dependent case
+            is almost certainly defeated too, so it does not need to be tested. That is what makes
+            the run prunable: following the graph from the cases with no prerequisites gives the
+            coverage actually reached, and <code>script/gen_relationship.py</code> renders the
+            whole graph from this registry.
+        </p>
+    </main>
+    <footer>
+        <p>Last updated: 2026-09-30</p>
+    </footer>
+</body>
+</html>

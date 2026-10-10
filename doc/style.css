@@ -1,0 +1,68 @@
+/* Security Test Benchmark — documentation stylesheet */
+
+/* Typography */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Code blocks */
+code, pre {
+    font-family: 'Consolas', 'Monaco', monospace;
+    background: #f4f4f4;
+    padding: 0.2em 0.4em;
+}
+
+pre {
+    padding: 1em;
+    overflow-x: auto;
+}
+
+/* Links */
+a {
+    color: #0066cc;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    text-align: left;
+    vertical-align: top;
+}
+th {
+    background: #f4f4f4;
+}
+
+/* Test-case catalog: keep long record lists readable. The class names are
+   reserved for case names only — see doc/test-catalog.html. */
+.rec, .prog {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.85em;
+    white-space: nowrap;
+}
+
+/* Navigation */
+nav {
+    margin-bottom: 2rem;
+}
+
+/* Footer */
+footer {
+    margin-top: 2rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+    font-size: 0.9em;
+    color: #666;
+}

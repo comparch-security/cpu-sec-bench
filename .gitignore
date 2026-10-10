@@ -1,3 +1,6 @@
+/tmp/
+/.codegraph/
+/trace-log/
 test/*
 *.exe
 *~
@@ -10,10 +13,6 @@ test/*
 *.lib
 *.so
 *.tmp
-doc/*.log
-doc/*.out
-doc/*.aux
-doc/*.toc
 *.dump
 results.json
 results.dat

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="last-modified" content="2026-09-30">
+    <title>Porting | Security Test Benchmark</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <a href="content.html">Docs Home</a>
+    </nav>
+    <main>
+        <h1>Porting</h1>
+
+        <p>
+            Test cases are written to be portable, so supporting a new instruction set or
+            operating system means adding to the support library rather than touching the cases.
+            This page describes the library layout, how a platform is selected at build time, and
+            what a new port has to supply.
+        </p>
+
+        <h2>Support library layout</h2>
+
+        <table>
+            <tr>
+                <th>Directory</th>
+                <th>Role</th>
+            </tr>
+            <tr>
+                <td><code>lib/include/</code></td>
+                <td>Portable headers that test cases include. <code>assembly.hpp</code> is the
+                    dispatch point: it inspects the compiler's predefined macros and includes the
+                    right per-ISA header. Also <code>conf.hpp</code> (buffer and region
+                    configuration), <code>mss.hpp</code>, <code>cfi.hpp</code>,
+                    <code>signal.hpp</code>, <code>global_var.hpp</code>,
+                    <code>builtin.hpp</code>, <code>temp_file.hpp</code>.</td>
+            </tr>
+            <tr>
+                <td><code>lib/common/</code></td>
+                <td>Portable implementations shared by every platform:
+                    <code>global_var.cpp</code>, <code>temp_file.cpp</code>,
+                    <code>mss.cpp</code>, and <code>cfi.cpp</code> (built into
+                    <code>libcfi</code>, linked by the <code>cpi</code> and <code>cfi</code>
+                    cases).</td>
+            </tr>
+            <tr>
+                <td><code>lib/x86_64/</code></td>
+                <td>x86-64 support: <code>assembly.hpp</code>, <code>assembly.cpp</code>,
+                    <code>indepassembly.asm</code>, plus <code>visualcpp_assembly.hpp</code> and
+                    <code>visualcpp_indepassembly_func.asm</code> for MSVC.</td>
+            </tr>
+            <tr>
+                <td><code>lib/aarch64/</code></td>
+                <td>AArch64 support (also used for Morello builds under
+                    <code>enable_aarch64_morello</code>).</td>
+            </tr>
+            <tr>
+                <td><code>lib/riscv64/</code></td>
+                <td>RISC-V 64 support.</td>
+            </tr>
+            <tr>
+                <td><code>lib/cheri_riscv64/</code></td>
+                <td>CHERI RISC-V support, selected by <code>enable_riscv64_cheri</code>, which
+                    also forces <code>ARCH</code> to this value.</td>
+            </tr>
+            <tr>
+                <td><code>lib/posix/</code></td>
+                <td>The POSIX/ELF OS layer: signal handling (<code>signal.cpp</code>,
+                    <code>signal.hpp</code>) and <code>gcc_builtin.hpp</code>.</td>
+            </tr>
+            <tr>
+                <td><code>lib/visualcpp/</code></td>
+                <td>The Windows MSVC OS layer: <code>signal.cpp</code>,
+                    <code>signal.hpp</code>, <code>msvc_builtin.hpp</code>.</td>
+            </tr>
+        </table>
+
+        <h2>How a platform is selected</h2>
+
+        <p>
+            Two independent axes are chosen at build time. <code>ARCH</code> selects the
+            instruction set and therefore <code>lib/&lt;arch&gt;/</code>; <code>CLIBAPI</code>
+            selects the OS/ABI layer and therefore <code>lib/&lt;clibapi&gt;/</code>. Test cases
+            include only portable headers and never reference either directly.
+        </p>
+
+        <pre><code>lib/include/assembly.hpp
+  #if defined(__x86_64) || defined(_M_X64)   -> CSB_X86_64, lib/x86_64/assembly.hpp
+  #if defined(__aarch64__)                   -> lib/aarch64/assembly.hpp
+  #if defined(__riscv)                       -> lib/riscv64/assembly.hpp
+
+Makefile
+  ARCH    ?= x86_64                    (on Windows)
+  ARCH    ?= $(shell arch)             (elsewhere; arm64 is mapped to aarch64)
+  CLIBAPI := visualcpp | posix         (chosen from the detected platform)</code></pre>
+
+        <p>
+            The Makefile's <code>ARCH</code> values are <code>x86_64</code> (the default),
+            <code>aarch64</code> (from an <code>arm64</code> host, or forced by
+            <code>enable_aarch64_morello</code>), <code>riscv64</code> (from a
+            <code>riscv64</code> host), and <code>cheri_riscv64</code> (forced by
+            <code>enable_riscv64_cheri</code>).
+        </p>
+
+        <p>
+            Hardware feature switches in the same style as the generic security flags add the
+            required architecture options, for example <code>-march=armv8.5-a+memtag</code> for
+            <code>enable_aarch64_mte</code>, <code>-march=armv8.3-a+pauth</code> for
+            <code>enable_aarch64_pa</code>, <code>-march=armv8.5-a -mbranch-protection=bti</code>
+            for <code>enable_aarch64_bti</code>, <code>-march=morello -mabi=purecap</code> for
+            <code>enable_aarch64_morello</code>, and
+            <code>-march=rv64gcxcheri -mabi=l64pc128d</code> for
+            <code>enable_riscv64_cheri</code>.
+        </p>
+
+        <h2>What a test case links against</h2>
+
+        <p>
+            Every case links the portable objects, the architecture's assembly object, the OS
+            layer's signal object, and the architecture's independent-assembly object:
+        </p>
+
+        <pre><code>lib/common/global_var.o  lib/common/temp_file.o
+lib/&lt;ARCH&gt;/assembly.o    lib/&lt;CLIBAPI&gt;/signal.o    lib/&lt;ARCH&gt;/indepassembly.o</code></pre>
+
+        <p>
+            On top of that, the <code>mss</code> and <code>mts</code> categories also link
+            <code>lib/common/mss.o</code>, and the <code>cpi</code> and <code>cfi</code>
+            categories link <code>libcfi</code> (built from <code>lib/common/cfi.cpp</code>) —
+            which is why those categories test pointer and control-flow integrity through a
+            separate helper rather than inline. The <code>indepassembly</code> object is
+            assembled from <code>lib/&lt;ARCH&gt;/indepassembly.asm</code>, with the MSVC variant
+            <code>lib/x86_64/visualcpp_indepassembly_func.asm</code> used on Windows.
+        </p>
+
+        <h2>Supported platforms</h2>
+
+        <table>
+            <tr>
+                <th>ISA</th>
+                <th>Operating system</th>
+                <th><code>ARCH</code></th>
+                <th><code>CLIBAPI</code></th>
+            </tr>
+            <tr><td>x86-64</td><td>Linux</td><td><code>x86_64</code></td><td><code>posix</code></td></tr>
+            <tr><td>x86-64</td><td>Windows (MSVC)</td><td><code>x86_64</code></td><td><code>visualcpp</code></td></tr>
+            <tr><td>AArch64</td><td>Linux</td><td><code>aarch64</code></td><td><code>posix</code></td></tr>
+            <tr><td>AArch64</td><td>macOS</td><td><code>aarch64</code></td><td><code>posix</code></td></tr>
+            <tr><td>AArch64 (Morello)</td><td>CheriBSD</td><td><code>aarch64</code></td><td><code>posix</code></td></tr>
+            <tr><td>RISC-V 64</td><td>Linux</td><td><code>riscv64</code></td><td><code>posix</code></td></tr>
+            <tr><td>RISC-V 64 (CHERI)</td><td>CheriBSD</td><td><code>cheri_riscv64</code></td><td><code>posix</code></td></tr>
+        </table>
+
+        <h2>Adding an instruction set</h2>
+
+        <ol>
+            <li>
+                <strong>Create <code>lib/&lt;arch&gt;/</code></strong> containing
+                <code>assembly.hpp</code>, <code>assembly.cpp</code> and
+                <code>indepassembly.asm</code>. The headers define the macro bodies the test
+                cases call &mdash; the ones that modify a return address, read a code page,
+                relocate a pointer &mdash; as embedded assembly, and the <code>.cpp</code> holds
+                whatever the inline forms cannot express.
+            </li>
+            <li>
+                <strong>Add the dispatch branch</strong> to <code>lib/include/assembly.hpp</code>,
+                keyed on the macros the target compiler predefines, so the new header is selected
+                on that ISA.
+            </li>
+            <li>
+                <strong>Check the Makefile's <code>ARCH</code> detection</strong> maps the host to
+                the new value. Where the port is selected by a hardware feature rather than by
+                the host alone, follow the <code>enable_riscv64_cheri</code> and
+                <code>enable_aarch64_morello</code> pattern, which set <code>ARCH</code> from the
+                flag.
+            </li>
+            <li>
+                <strong>Provide an opcode-extraction script</strong> if the generated
+                <code>acc-read-func.gen</code> case is to work, named
+                <code>script/get_&lt;arch&gt;_func_inst.sh</code> and wired through the
+                Makefile's <code>func-opcode-gen</code>. Existing examples are the
+                <code>x64</code>, <code>aarch64</code> and <code>riscv64</code> scripts.
+            </li>
+            <li>
+                <strong>Run the suite</strong> with <code>./run-test exhausted-run</code> so every
+                case is attempted regardless of prerequisites, and compare the result
+                distribution against an existing port to find cases whose embedded assembly was
+                not correctly translated.
+            </li>
+        </ol>
+
+        <h2>Adding an operating system</h2>
+
+        <ol>
+            <li>
+                <strong>Create <code>lib/&lt;clibapi&gt;/</code></strong> supplying
+                <code>signal.hpp</code>, <code>signal.cpp</code> and a builtin header, following
+                <code>lib/posix/</code> or <code>lib/visualcpp/</code>. The signal layer is what
+                lets a case catch an expected fault and report it as a defined result code
+                instead of an unexplained crash.
+            </li>
+            <li>
+                <strong>Set <code>CLIBAPI</code></strong> for the platform in the Makefile, and
+                make sure the toolchain selection (<code>CXX</code>, <code>ASM</code>,
+                <code>OBJDUMP</code>, the object and executable naming, the linker flags) matches
+                it.
+            </li>
+            <li>
+                <strong>Confirm the ISA dispatch still applies</strong>, since
+                <code>lib/include/assembly.hpp</code> resolves the OS layer for some ISAs &mdash;
+                on x86-64 the MSVC build selects <code>visualcpp_assembly.hpp</code> instead of
+                the generic header.
+            </li>
+        </ol>
+
+        <p>
+            The result codes a port must produce are defined in
+            <a href="architecture.html">Architecture</a>; a new platform is correctly ported when
+            its cases return those codes with the same meanings.
+        </p>
+    </main>
+    <footer>
+        <p>Last updated: 2026-09-30</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="last-modified" content="2026-09-30">
+    <title>Documentation | Security Test Benchmark</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <a href="content.html">Docs Home</a>
+    </nav>
+    <main>
+        <h1>Security Test Benchmark — Documentation</h1>
+
+        <p>
+            This benchmark evaluates the security features a processor hardware platform
+            actually provides. Each test case is a short, deliberately malformed C++ program
+            that attempts one specific vulnerability; if the attack succeeds, the platform
+            lacks the corresponding defense, and the case reports that by exiting <code>0</code>.
+            The suite runs across several instruction sets and operating systems on top of a
+            shared per-platform support library.
+        </p>
+
+        <p>
+            For installation and first-run instructions see <a href="../README.md">README.md</a>.
+            For the design rationale behind the test cases see
+            <a href="../INTERNAL.md">INTERNAL.md</a> — note that its counts and case names
+            predate the current suite and have drifted from <code>configure.json</code>.
+        </p>
+
+        <h2>Contents</h2>
+        <ul>
+            <li><a href="architecture.html">Architecture</a> — how the scheduler, the
+                configuration registry and the result codes fit together</li>
+            <li><a href="test-catalog.html">Test Catalog</a> — every test case in the suite,
+                grouped by category, with its configuration records</li>
+            <li><a href="porting.html">Porting</a> — the support-library layout and how to add
+                a new instruction set or operating system</li>
+        </ul>
+
+        <h2>Current suite</h2>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Directory</th>
+                <th>Programs</th>
+                <th>Records</th>
+            </tr>
+            <tr>
+                <td>Memory spatial safety</td>
+                <td><code>mss/</code></td>
+                <td>30</td>
+                <td>141</td>
+            </tr>
+            <tr>
+                <td>Memory temporal safety</td>
+                <td><code>mts/</code></td>
+                <td>14</td>
+                <td>16</td>
+            </tr>
+            <tr>
+                <td>Access control</td>
+                <td><code>acc/</code></td>
+                <td>10</td>
+                <td>20</td>
+            </tr>
+            <tr>
+                <td>Pointer integrity</td>
+                <td><code>cpi/</code></td>
+                <td>5</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>Control-flow integrity</td>
+                <td><code>cfi/</code></td>
+                <td>44</td>
+                <td>59</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <th></th>
+                <th>103</th>
+                <th>246</th>
+            </tr>
+        </table>
+
+        <p>
+            A <em>program</em> is one <code>.cpp</code> source file testing one vulnerability.
+            A <em>record</em> is one entry in <code>configure.json</code>: a program combined
+            with a particular set of compile-time macros and runtime arguments. One program
+            therefore yields several records where it is exercised in different memory regions
+            or both overflow directions.
+        </p>
+    </main>
+    <footer>
+        <p>Last updated: 2026-09-30</p>
+    </footer>
+</body>
+</html>
