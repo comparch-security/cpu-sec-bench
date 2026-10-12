@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <cstring>
+#include <cstdint>
 #include "include/cfi.hpp"
 #include "include/global_var.hpp"
 #include <string>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="last-modified" content="2026-09-30">
+    <meta name="last-modified" content="2026-10-12">
     <title>Porting | Security Test Benchmark</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -135,6 +135,30 @@ lib/&lt;ARCH&gt;/assembly.o    lib/&lt;CLIBAPI&gt;/signal.o    lib/&lt;ARCH&gt;/
             <code>lib/x86_64/visualcpp_indepassembly_func.asm</code> used on Windows.
         </p>
 
+        <p>
+            A port whose <code>indepassembly.asm</code> is not translated yet can omit the object
+            with the <code>disable_independent_assembly</code> build switch. There are three
+            routes, and the second is the one a scheduler-driven run needs &mdash; the scheduler
+            launches its own <code>make</code> for each case, and a variable assignment in
+            <code>MAKEFLAGS</code> reaches those child makes with command-line strength:
+        </p>
+
+        <pre><code>make disable_independent_assembly=yes
+MAKEFLAGS='disable_independent_assembly=yes' ./run-test exhausted-run</code></pre>
+
+        <p>
+            The third route is the flag menu's <code>#disable_independent_assembly = yes</code>
+            line, uncommented like any other flag (see
+            <a href="architecture.html">Architecture</a>). With the object omitted, the two
+            programs that call its symbols &mdash; <code>cfi-return-to-peer-asmfunc</code> and
+            <code>cfi-return-to-parent-non-call-site-by-asmfunc</code> &mdash; fail to link: the
+            scheduler records them as <code>1025</code> (not run) and the rest of the suite builds
+            and runs normally. The switch is a bring-up interim, not a supported final
+            configuration: once the port is otherwise complete, give those two records a
+            <code>skip</code> list naming the architecture instead, so the gap is declared rather
+            than left to fail the build.
+        </p>
+
         <h2>Supported platforms</h2>
 
         <table>
@@ -162,7 +186,11 @@ lib/&lt;ARCH&gt;/assembly.o    lib/&lt;CLIBAPI&gt;/signal.o    lib/&lt;ARCH&gt;/
                 <code>indepassembly.asm</code>. The headers define the macro bodies the test
                 cases call &mdash; the ones that modify a return address, read a code page,
                 relocate a pointer &mdash; as embedded assembly, and the <code>.cpp</code> holds
-                whatever the inline forms cannot express.
+                whatever the inline forms cannot express. The port can come up before the
+                <code>.asm</code> is complete: build with
+                <code>disable_independent_assembly</code> and the rest of the suite measures the
+                new ISA while that assembly is translated (see &ldquo;What a test case links
+                against&rdquo; above).
             </li>
             <li>
                 <strong>Add the dispatch branch</strong> to <code>lib/include/assembly.hpp</code>,
@@ -222,7 +250,7 @@ lib/&lt;ARCH&gt;/assembly.o    lib/&lt;CLIBAPI&gt;/signal.o    lib/&lt;ARCH&gt;/
         </p>
     </main>
     <footer>
-        <p>Last updated: 2026-09-30</p>
+        <p>Last updated: 2026-10-12</p>
     </footer>
 </body>
 </html>

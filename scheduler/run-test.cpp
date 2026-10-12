@@ -42,6 +42,8 @@ bool test_run      = true;
 bool report_run    = false;
 bool exhausted_run = false;
 bool trace_run     = false;
+// the scheduler-owned result meaning the case was not run (skipped for this platform, or could not be built)
+static const int not_run_code = 1025;
 
 // json related functions
 bool file_exist(const std::string& fn);
@@ -58,6 +60,9 @@ void add_extra_run_prefix(char **);
 #ifdef RUN_PREFIX
   static char run_prefix[] = RUN_PREFIX;
 #endif
+#ifndef CSB_TARGET_ARCH
+  #define CSB_TARGET_ARCH ""
+#endif
 std::list<char *> extra_run_prefix;
 std::list<std::string> collect_case_list();
 typedef std::list<std::string> str_list_t;
@@ -66,6 +71,7 @@ typedef std::vector<str_llist_t> str_vllist_t;// this strcture is used for vario
 typedef std::map<std::string, std::string> str_map_t;
 
 bool requires_check(nlohmann::ordered_json tcase);
+bool case_skipped(nlohmann::ordered_json tcase, std::string& reason);
 int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, std::string& pn, str_list_t& vn,
                 str_list_t& dbf, std::set<int> &expect_results, str_map_t& make_config_macro, 
                 str_map_t& last_make_config_macro, bool& need_build);
@@ -183,11 +189,17 @@ void report_gen() {
   // insert sys infomation to the result file
   std::ifstream sys_info_file("test/sys_info.txt");
   char buf[256];
-  while(!sys_info_file.eof()) {
-    sys_info_file.getline(buf, 256);
-    report_file << "# " << buf << std::endl;
+  if(!sys_info_file.good()) {
+    report_file << "# test/sys_info.txt missing or unreadable: no system information recorded" << std::endl;
+    std::cerr << "Warning: test/sys_info.txt missing or unreadable: no system information recorded" << std::endl;
+  } else {
+    while(!sys_info_file.eof()) {
+      sys_info_file.getline(buf, 256);
+      if(sys_info_file.fail() && !sys_info_file.eof()) break; // long line or mid-read failure
+      report_file << "# " << buf << std::endl;
+    }
+    sys_info_file.close();
   }
-  sys_info_file.close();
 
   // record test result
   for(auto record: result_db.get<std::map<std::string, json> >()){
@@ -196,6 +208,17 @@ void report_gen() {
     report_file << " make time: " << record.second["make-time"] << " run-time: " << record.second["run-time"] << " microseconds";
     report_file << "file_size:" << record.second["file-size"] << " bytes" << std::endl;
   }
+
+  // record not-run counts (skipped vs failed to build)
+  int skipped_count = 0, build_failed_count = 0;
+  for(auto record: result_db.get<std::map<std::string, json> >()){
+    if((int)record.second["result"] == not_run_code) {
+      if(record.second.count("make-status")) build_failed_count++;
+      else skipped_count++;
+    }
+  }
+  report_file << "# not run (skipped for this platform): " << skipped_count << std::endl;
+  report_file << "# not run (failed to build): " << build_failed_count << std::endl;
 
   // record test time
   report_file << "Compilation time: " << total_make_time << " microseconds" << std::endl;
@@ -266,6 +289,21 @@ bool requires_check(nlohmann::ordered_json tcase){
     }
   }
   return true;
+}
+
+bool case_skipped(nlohmann::ordered_json tcase, std::string& reason){
+  // a record is skipped when its skip list names the arch this scheduler was built for
+  reason.clear();
+  if(!tcase.count("skip")) return false;
+  if(CSB_TARGET_ARCH[0] == '\0') return false; // a hand-built scheduler has no arch: every skip list is inert
+  for(auto arch: tcase["skip"]) {
+    if(arch.get<std::string>() == CSB_TARGET_ARCH) {
+      if(tcase.count("skip-reason"))
+        reason = tcase["skip-reason"].get<std::string>();
+      return true;
+    }
+  }
+  return false;
 }
 
 int case_parser(const std::string& cn, nlohmann::ordered_json tcase, int ind, std::string& pn, str_list_t& vn,
@@ -521,7 +559,20 @@ bool run_tests(std::list<std::string> cases) {
     bool has_make = false;
     int test_cond = 0;
     auto tcase = config_db[cn];
-  
+
+    std::string skip_reason;
+    if(case_skipped(tcase, skip_reason)) {
+      std::cerr << "Skipped case: " << cn << " is not runnable on " << CSB_TARGET_ARCH;
+      if(!skip_reason.empty()) std::cerr << ": " << skip_reason;
+      std::cerr << std::endl;
+      result_db[cn]["result"] = not_run_code;
+      result_db[cn]["make-time"] = 0;
+      result_db[cn]["run-time"] = 0;
+      result_db[cn]["file-size"] = 0;
+      dump_json(result_db, "results.json", debug_run);
+      continue;
+    }
+
     std::set<int> expect_results, make_results, test_results;
     arg_parser(tcase,alists);
 
@@ -664,9 +715,11 @@ bool run_tests(std::list<std::string> cases) {
 FINISH_CURRENT_CASE:
       std::cout << "\n------ " << cn << " ------" << std::endl;
       int test_result = 0;
-      if (!make_results.empty()) {  // not successfully built, report the first failed make result
-        test_result = *make_results.cbegin();
-        std::cerr << "Built failed, the first try error code::" << test_result << std::endl;
+      if (!make_results.empty()) {  // not successfully built
+        test_result = not_run_code;
+        result_db[cn]["make-status"] = *make_results.cbegin();
+        if(!result_db[cn].count("file-size")) result_db[cn]["file-size"] = 0;
+        std::cerr << "Built failed, the first try error code::" << *make_results.cbegin() << std::endl;
       } else if (!test_results.count(0)) {  // successfully built, but has no successrul result
         for (auto res:test_results) {       // check if failed with expected result, if yes, report the first expected results
           if (expect_results.count(res)) {
@@ -675,7 +728,7 @@ FINISH_CURRENT_CASE:
             break;
           }
         }
-        if (!test_result) { // no expected results  found, report the first one
+        if (!test_result && !test_results.empty()) { // no expected results  found, report the first one
           test_result = *test_results.cbegin();
           std::cerr << "Run abnormaly: " << cn << " failed with unexpected exit value " << test_result << std::endl;
         }

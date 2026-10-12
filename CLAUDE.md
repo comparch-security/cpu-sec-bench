@@ -18,7 +18,9 @@ several instruction sets and operating systems on top of a shared per-platform s
   under `acc/`, `cfi/`, `cpi/`, `mss/` or `mts/` **and** a record in `configure.json`.
 - **The exit-code contract is fixed.** Never reuse a code for a new meaning, and never invent
   one. The full contract is in [doc/architecture.html](doc/architecture.html); it is the
-  interface every test case and the scheduler agree on.
+  interface every test case and the scheduler agree on. `1025` is scheduler-owned — *not run*:
+  skipped for this platform, or could not be built — and must never appear in a record's
+  `expect-results`.
 - **Platform-specific behaviour belongs in `lib/`, never in a test case.** Test cases stay
   ISA- and OS-portable; the only platform-specific thing a test case contains is a macro call.
   Anything needing embedded assembly, OS signal handling, or ABI knowledge goes into the
@@ -71,6 +73,11 @@ make
 make enable_stack_protection=yes
 make disable_aslr_protection=yes enable_control_flow_protection=yes
 
+# Bring up a port whose independent-assembly object is not ready yet. Covers the
+# case builds the scheduler launches itself; a scheduler-driven run needs it in
+# the environment instead — see doc/porting.html.
+make disable_independent_assembly=yes
+
 # Run the whole suite, then write results.dat
 ./run-test exhausted-run
 
@@ -105,19 +112,27 @@ implementation by ISA: `__x86_64`/`_M_X64` → `lib/x86_64/`, `__aarch64__` → 
 **Scheduler.** `scheduler/run-test.cpp` reads `configure.json`, computes the pending case list
 (records not already present in `results.json`), and for each record:
 
-1. Expands the record's `arguments`. A leading `-r`/`-l`/`-v` names a property holding a
+1. Skips records whose `skip` list names the architecture the scheduler was built for
+   (`CSB_TARGET_ARCH`, which the Makefile passes from `ARCH`): the record is recorded as
+   `1025` — not run — and neither built nor run. The check precedes argument expansion and
+   prerequisite gating.
+2. Expands the record's `arguments`. A leading `-r`/`-l`/`-v` names a property holding a
    range, a list, or a runtime variable — `-roffset` with `"offset": [0,8,1]` launches the
    program eight times, once per value.
-2. Gates on `require`, which is a list of lists: the inner list is OR (any one passing
+3. Gates on `require`, which is a list of lists: the inner list is OR (any one passing
    prerequisite satisfies it) and the outer list is AND (all groups must be satisfied). A
    record with an unsatisfied group ends as `1024`.
-3. Builds on demand: `make -B test/<program> <MACRO>=<value> …`, driven by the record's
+4. Builds on demand: `make -B test/<program> <MACRO>=<value> …`, driven by the record's
    `conf-macro` map. The scheduler rebuilds only when that macro map changes from the last
-   successful build, so macro variants share a binary where possible.
-4. Runs `test/<program>` with the expanded arguments and interprets the exit status.
-5. Records the outcome into `results.json` (rewritten after every case) and, for `set-var`
+   successful build, so macro variants share a binary where possible. A build that fails is
+   recorded as `1025` too, with make's own exit status kept in the record's `make-status`
+   field and printed in the log.
+5. Runs `test/<program>` with the expanded arguments and interprets the exit status.
+6. Records the outcome into `results.json` (rewritten after every case) and, for `set-var`
    cases, discovered runtime parameters into `variables.json`.
-6. With a report option, writes `results.dat`, prefixed by `test/sys_info.txt`.
+7. With a report option, writes `results.dat`, prefixed by `test/sys_info.txt` — or by a
+   placeholder line when that file is missing — and followed by the two not-run count lines
+   (`# not run (skipped for this platform): N`, `# not run (failed to build): M`).
 
 **Runtime parameters.** Some values can only be discovered at run time — the stack offset of
 the return address being the canonical one, since it depends on ABI, frame-pointer use and
@@ -130,9 +145,10 @@ consumes as `-vstack-offset-v-p-g1`.
 
 **`configure.json` record fields.** `program` (source basename, defaulting to the record key),
 `conf-macro` (per-variant macro values), `arguments` / `default_args`, `require` /
-`require-comment`, `expect-results` (known non-zero codes and their meanings), `set-var`,
-`get-code-offset`, `size`, `offset`, `extend_offset`, `reference`, `comment`, `todo`,
-`multitry`.
+`require-comment`, `skip` / `skip-reason` (platforms the record is not runnable on, matched
+against the scheduler's arch; the shipped registry declares none), `expect-results` (known
+non-zero codes and their meanings), `set-var`, `get-code-offset`, `size`, `offset`,
+`extend_offset`, `reference`, `comment`, `todo`, `multitry`.
 
 **Helper scripts.** `script/gen_relationship.py` renders the prerequisite graph from
 `configure.json` (needs `igraph`, `matplotlib`, `networkx`) — it splits `cfi` into `cfi-b`
@@ -184,6 +200,18 @@ configuration, requiring elevation.
 ## Subagents
 
 No project-specific overrides. The base agent permissions are sufficient.
+
+**Lane boundary — what "test files" means here.** This repo has no `src/` tree: the
+benchmark's product *is* its test-case sources, so the base doctrine's "the coder never
+touches tests" does not map directly onto it. In this repository:
+
+- **Coder work — the product:** the test-case sources under `acc/`, `cfi/`, `cpi/`, `mss/`
+  and `mts/` together with their `configure.json` records, plus `lib/`, `scheduler/`,
+  `script/` and the `Makefile`. A source-level fix to a test case — a missing `#include`, a
+  wrong macro use — is coder work, not a test-file edit.
+- **Tester work — verification:** the temporary scripts under `./tmp/verification/`, the
+  acceptance and regression runs, and the session reports.
+- **Planner work — documentation:** `doc/`, `README.md` and this file.
 
 Two notes on this repository's layout:
 

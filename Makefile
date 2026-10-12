@@ -57,6 +57,10 @@ OPT_LEVEL       ?= O2
 #enable_aarch64_pa              = yes
 #enable_aarch64_bti             = yes
 
+# build plumbing
+
+#disable_independent_assembly      = yes
+
 # define paths and objects
 ifeq ($(OSType),Windows_NT)
 
@@ -239,6 +243,14 @@ else
   dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
   independent_assembly := $(addprefix lib/$(ARCH)/, indepassembly.o)
 
+  # A port whose independent-assembly object cannot be built yet may omit it.
+  # The two programs that call the object's symbols (cfi-return-to-peer-asmfunc,
+  # cfi-return-to-parent-non-call-site-by-asmfunc) then fail to link.
+  ifdef disable_independent_assembly
+    independent_assembly :=
+    rubbish += $(addprefix lib/$(ARCH)/, indepassembly.o)
+  endif
+
   ifeq ($(CXX),$(filter $(CXX),clang++ c++))
     ifneq ($(OSType),Darwin)
       CXXFLAGS += -fuse-ld=lld
@@ -379,6 +391,8 @@ ifdef enable_aarch64_bti
   CXXFLAGS := $(CXXFLAGS) -march=armv8.5-a -mbranch-protection=bti
   OBJECT_CXXFLAGS += -march=armv8.5-a -mbranch-protection=bti
 endif
+
+SCHEDULER_CXXFLAGS += -DCSB_TARGET_ARCH="\"$(ARCH)\""
 
 # define cases
 mss-path  = mss

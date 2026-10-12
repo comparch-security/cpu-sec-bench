@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="last-modified" content="2026-09-30">
+    <meta name="last-modified" content="2026-10-12">
     <title>Architecture | Security Test Benchmark</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -61,7 +61,11 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
             </li>
             <li>
                 <strong>Compute the pending list.</strong> Every record not yet present in the
-                results database is a candidate.
+                results database is a candidate. A record whose <code>skip</code> list names the
+                architecture the scheduler was built for is recorded as <code>1025</code> &mdash;
+                not run &mdash; and never built or run. This check precedes argument expansion and
+                prerequisite gating, so a skipped record is recorded even under
+                <code>make-only</code> and is never requeued by an unsatisfied prerequisite.
             </li>
             <li>
                 <strong>Expand the arguments.</strong> A record's <code>arguments</code> (or
@@ -87,7 +91,10 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
                 <code>make -B test/&lt;program&gt; MACRO=value &hellip;</code>, with the macro
                 assignments taken from the record's <code>conf-macro</code> map. The scheduler
                 rebuilds only when that map differs from the last successful build, so several
-                records that share a macro set share one binary.
+                records that share a macro set share one binary. A build that fails is recorded as
+                <code>1025</code> as well &mdash; the case was not run &mdash; with make's own exit
+                status kept in the record's <code>make-status</code> field and printed in the log,
+                so a raw build status is never mistaken for a test outcome.
             </li>
             <li>
                 <strong>Run and interpret.</strong> <code>test/&lt;program&gt;</code> is spawned
@@ -99,7 +106,14 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
                 which is rewritten after every case, so an interrupted run leaves usable partial
                 state. With a reporting option, <code>results.dat</code> is then written,
                 prefixed by the contents of <code>test/sys_info.txt</code> (CPU, system, compiler
-                versions and the flags that were in force).
+                versions and the flags that were in force) &mdash; or by a placeholder line when
+                that file is missing or unreadable, and with a bounded copy loop that also
+                terminates on a line longer than its buffer or a mid-read failure. Two summary
+                lines then count the records that were not run:
+                <code># not run (skipped for this platform): N</code> and
+                <code># not run (failed to build): M</code>. A platform
+                that cannot run or build part of the suite therefore shows the gap explicitly
+                rather than losing that coverage silently.
             </li>
         </ol>
 
@@ -154,6 +168,14 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
             <tr>
                 <td>1024</td>
                 <td>A prerequisite case failed, so this case was not run.</td>
+            </tr>
+            <tr>
+                <td>1025</td>
+                <td>The case was not run: it is skipped on this platform (the record's
+                    <code>skip</code> list names the architecture the scheduler was built for), or
+                    it could not be built. For a build failure, make's raw exit status is kept in
+                    the record's <code>make-status</code> field rather than shown as the result.
+                    This code is scheduler-owned and never a test case's own outcome.</td>
             </tr>
             <tr>
                 <td>-1</td>
@@ -237,6 +259,19 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
                 <td>Classifies each prerequisite edge as either <em>utilization</em> or
                     <em>relaxation</em> &mdash; the only two tokens the suite uses &mdash; so the
                     relation graph can be rendered by type.</td>
+            </tr>
+            <tr>
+                <td><code>skip</code></td>
+                <td>Platforms the record is not runnable on: an array of <code>ARCH</code> values.
+                    When it names the architecture the scheduler was built for, the record is
+                    recorded as <code>1025</code> and neither built nor run. The shipped registry
+                    declares none &mdash; the field exists so a port in progress can state what it
+                    cannot run yet instead of leaving unexplained build failures.</td>
+            </tr>
+            <tr>
+                <td><code>skip-reason</code></td>
+                <td>Free-text reason printed with the skip notice, so a skipped record explains
+                    itself in the run log.</td>
             </tr>
             <tr>
                 <td><code>expect-results</code></td>
@@ -336,7 +371,7 @@ make disable_aslr_protection=yes enable_control_flow_protection=yes</code></pre>
         </p>
     </main>
     <footer>
-        <p>Last updated: 2026-09-30</p>
+        <p>Last updated: 2026-10-12</p>
     </footer>
 </body>
 </html>

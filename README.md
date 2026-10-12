@@ -116,6 +116,7 @@ The meaning of the result integer:
   passes, `65` means it fails with error `2`.
 * [256-511]: An exception is raised but uncatched with the signal number as `n-256`.
 * 1024: Test case directly failed due to failure in prerequisite cases.
+* 1025: The case was not run: it is skipped on this platform, or it could not be built.
 * -1: configuration error which needs to be fixed.
 * other: Something is wrong and need investigation.
 
