@@ -98,6 +98,13 @@ make prep                 # preprocessed C++ sources (macros resolved)
 make clean                # remove all generated artifacts
 ```
 
+**Harness permissions.** `./.claude/settings.json` carries a permissions allowlist for the
+pinned toolchain and test-runner commands — `./run-test`, `sh`/`bash` on
+`./tmp/verification/*`, every `make` form, the riscv64/aarch64 cross binutils,
+`objdump`/`nm`/`readelf`, the CHERI/Morello toolchain paths, and `python3`. It exists so
+unattended coder and tester rounds can build, run and inspect without an interactive
+approval prompt; it was added deliberately on 2026-10-14 and is not stray configuration.
+
 ## Architecture
 
 **Two-part design.** Portable test cases plus a shared per-platform support library. Each

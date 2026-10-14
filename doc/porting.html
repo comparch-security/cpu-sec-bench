@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="last-modified" content="2026-10-12">
+    <meta name="last-modified" content="2026-10-14">
     <title>Porting | Security Test Benchmark</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -54,7 +54,10 @@
             <tr>
                 <td><code>lib/aarch64/</code></td>
                 <td>AArch64 support (also used for Morello builds under
-                    <code>enable_aarch64_morello</code>).</td>
+                    <code>enable_aarch64_morello</code>). Morello assembles the variant
+                    <code>indepassembly_morello.asm</code> in place of
+                    <code>indepassembly.asm</code>, because the plain AArch64 bodies are
+                    rejected under <code>-mabi=purecap</code>.</td>
             </tr>
             <tr>
                 <td><code>lib/riscv64/</code></td>
@@ -109,10 +112,21 @@ Makefile
             required architecture options, for example <code>-march=armv8.5-a+memtag</code> for
             <code>enable_aarch64_mte</code>, <code>-march=armv8.3-a+pauth</code> for
             <code>enable_aarch64_pa</code>, <code>-march=armv8.5-a -mbranch-protection=bti</code>
-            for <code>enable_aarch64_bti</code>, <code>-march=morello -mabi=purecap</code> for
+            for <code>enable_aarch64_bti</code>,
+            <code>--target=aarch64-unknown-freebsd -march=morello -mabi=purecap</code> for
             <code>enable_aarch64_morello</code>, and
             <code>-march=rv64gcxcheri -mabi=l64pc128d</code> for
             <code>enable_riscv64_cheri</code>.
+        </p>
+
+        <p>
+            These switches configure flags only; they do not select a compiler. The default
+            toolchain (<code>g++</code> / <code>as</code>) rejects the Morello and CHERI options,
+            so a build using them must also be pointed at toolchains that understand them
+            &mdash; pass <code>CXX=</code> and <code>ASM=</code> on the <code>make</code> line,
+            as every non-host lane does. The <code>--target</code> triple is part of that
+            requirement: without it the Morello clang defaults to the host triple and rejects
+            <code>-mabi=purecap</code> outright.
         </p>
 
         <h2>What a test case links against</h2>
@@ -132,7 +146,10 @@ lib/&lt;ARCH&gt;/assembly.o    lib/&lt;CLIBAPI&gt;/signal.o    lib/&lt;ARCH&gt;/
             which is why those categories test pointer and control-flow integrity through a
             separate helper rather than inline. The <code>indepassembly</code> object is
             assembled from <code>lib/&lt;ARCH&gt;/indepassembly.asm</code>, with the MSVC variant
-            <code>lib/x86_64/visualcpp_indepassembly_func.asm</code> used on Windows.
+            <code>lib/x86_64/visualcpp_indepassembly_func.asm</code> used on Windows. Under
+            <code>enable_aarch64_morello</code> the Morello variant
+            <code>lib/aarch64/indepassembly_morello.asm</code> is selected instead, so the link
+            line above carries <code>indepassembly_morello.o</code> for that configuration.
         </p>
 
         <p>
@@ -250,7 +267,7 @@ MAKEFLAGS='disable_independent_assembly=yes' ./run-test exhausted-run</code></pr
         </p>
     </main>
     <footer>
-        <p>Last updated: 2026-10-12</p>
+        <p>Last updated: 2026-10-14</p>
     </footer>
 </body>
 </html>

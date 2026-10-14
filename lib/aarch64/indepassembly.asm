@@ -14,12 +14,12 @@ assembly_helper:
 
 assembly_return_site:
   # Save the stack info
-  push %rbp
-  movq %rsp, %rbp
+  sub sp, sp, #0x10
+  stp x29, x30, [sp]
   # Set exit code
-  xor %rdi, %rdi
-  call exit
+  mov x0, #0
+  bl exit
   # Restore stack info
-  movq %rbp, %rsp
-  pop %rbp
+  ldp x29, x30, [sp]
+  add sp, sp, #0x10
   ret

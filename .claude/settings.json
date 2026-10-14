@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./run-test)",
+      "Bash(./run-test *)",
+      "Bash(sh tmp/verification/*)",
+      "Bash(sh ./tmp/verification/*)",
+      "Bash(bash tmp/verification/*)",
+      "Bash(bash ./tmp/verification/*)",
+      "Bash(make)",
+      "Bash(make *)",
+      "Bash(riscv64-linux-gnu-*)",
+      "Bash(riscv64-unknown-linux-gnu-*)",
+      "Bash(aarch64-linux-gnu-*)",
+      "Bash(objdump*)",
+      "Bash(nm*)",
+      "Bash(readelf*)",
+      "Bash(llvm-objdump*)",
+      "Bash(../build/cheri/output/*)",
+      "Bash(python3 *)",
+      "Bash(python *)"
+    ]
+  }
+}

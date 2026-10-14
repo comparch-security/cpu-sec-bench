@@ -21,12 +21,14 @@ assembly_helper:
 
 assembly_return_site:
   # Save the stack info
-  push %rbp
-  movq %rsp, %rbp
+  addi sp, sp, -16
+  sd ra, 8(sp)
+  sd s0, 0(sp)
   # Set exit code
-  xor %rdi, %rdi
+  li a0, 0
   call exit
   # Restore stack info
-  movq %rbp, %rsp
-  pop %rbp
+  ld s0, 0(sp)
+  ld ra, 8(sp)
+  addi sp, sp, 16
   ret

@@ -241,7 +241,15 @@ else
     func-opcode-gen := ./script/get_riscv64_func_inst.sh
   endif
   dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
-  independent_assembly := $(addprefix lib/$(ARCH)/, indepassembly.o)
+
+  # The Morello purecap configuration rejects the plain aarch64 bodies, so it
+  # gets its own variant object (selected before the disable knob, which still
+  # overrides below).
+  ifdef enable_aarch64_morello
+    independent_assembly := lib/aarch64/indepassembly_morello.o
+  else
+    independent_assembly := $(addprefix lib/$(ARCH)/, indepassembly.o)
+  endif
 
   # A port whose independent-assembly object cannot be built yet may omit it.
   # The two programs that call the object's symbols (cfi-return-to-peer-asmfunc,
@@ -373,8 +381,11 @@ endif
 
 ifdef enable_aarch64_morello
   ARCH        := aarch64
-  CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=very-aggressive
-  OBJECT_CXXFLAGS += -march=morello -mabi=purecap -cheri-bounds=very-aggressive
+  # The Morello clang defaults to the host triple and then rejects -mabi=,
+  # so --target is mandatory on every path (C++, object C++, and assembly).
+  CXXFLAGS += --target=aarch64-unknown-freebsd -march=morello -mabi=purecap -cheri-bounds=very-aggressive
+  OBJECT_CXXFLAGS += --target=aarch64-unknown-freebsd -march=morello -mabi=purecap -cheri-bounds=very-aggressive
+  ASMFLAGS += --target=aarch64-unknown-freebsd -march=morello -mabi=purecap
 endif
 
 ifdef enable_aarch64_mte
