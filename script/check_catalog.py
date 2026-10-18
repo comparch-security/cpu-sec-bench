@@ -13,15 +13,31 @@ from the catalog fails, and so does a record removed from configure.json but
 left behind in the catalog (the phantom-row case a one-directional check
 silently passes).
 
+Contract for a name cell: any element carrying class="rec" or class="prog",
+whatever the tag, must hold exactly one bare name as its text. An element
+left open at end of file fails the guard -- its text is not silently
+dropped. The class names are reserved for names only: no other element in
+doc/ uses them, so a count can never be read as a record name.
+
 Substring matching is deliberately NOT used: 22 record names are proper
 substrings of other record names (cfi-call-fake-vtable is a prefix of
 cfi-call-fake-vtable-arg-num) and 154 program names are substrings of record
 names, so a page that dropped a row could still textually "contain" its name
 inside a sibling's.
 
-The class names are reserved for names only. No other element in doc/ uses
-them -- in particular doc/content.html's summary table carries plain cells,
-so a count can never be read as a record name.
+Count figures. Every published count derives from the registry and is
+asserted against it:
+
+  * CLAUDE.md -- the phrase "<records> records over <programs> programs";
+  * doc/content.html -- the per-category table rows and the Total row;
+  * doc/test-catalog.html -- the five "<programs> programs, <records>
+    records" sentences under the per-category headings.
+
+A category is the directory prefix of the record's `program` field (the
+record key when the field is absent). Keying on the record key instead
+would misgroup acc-copy-stackra-to-heap-{explicit,implicit}-arith, whose
+programs are cfi-jump-func-ra-from-heap-memcpy-* and which the catalog
+lists under cfi.
 
 Usage (runs from any working directory):
     python3 script/check_catalog.py [path-to-catalog-page]
@@ -29,19 +45,25 @@ Usage (runs from any working directory):
 The page defaults to <repo>/doc/test-catalog.html; the repo root is
 resolved from this script's own location, not the current directory.
 
-Exit 0 on pass, 1 on failure, 2 on internal error. Stdlib only. Idempotent.
+Exit 0 on pass, 1 on failure, 2 on internal error (an unreadable or
+malformed input fails as one stderr line, never a traceback). Stdlib only.
+Idempotent.
 """
 
 import json
 import os
+import re
 import sys
 from html.parser import HTMLParser
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG = os.path.join(REPO_ROOT, "configure.json")
 DEFAULT_CATALOG = os.path.join(REPO_ROOT, "doc", "test-catalog.html")
+CONTENT = os.path.join(REPO_ROOT, "doc", "content.html")
+PROJECT_GUIDE = os.path.join(REPO_ROOT, "CLAUDE.md")
 
 BUCKETS = ("rec", "prog")
+CATEGORIES = ("acc", "cfi", "cpi", "mss", "mts")
 
 
 class CellCollector(HTMLParser):
@@ -81,31 +103,106 @@ class CellCollector(HTMLParser):
         if self._stack:
             self._stack[-1][2].append(data)
 
+    def unclosed(self):
+        """Tracked elements still open at end of input, as (tag, bucket, text)."""
+        return [(tag, bucket, "".join(buf).strip()[:80])
+                for tag, bucket, buf in self._stack]
+
 
 def fail(msg):
     print(msg, file=sys.stderr)
     sys.exit(1)
 
 
-def main():
-    catalog = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_CATALOG
+def report_figure(problems, where, want, found):
+    """Compare a registry-derived (records, programs) figure with the page's."""
+    if want == found:
+        return
+    shown = ("nothing" if found is None
+             else "%d programs, %d records" % (found[1], found[0]))
+    problems.append("%s: registry-derived figure is %d programs, %d records; page has %s"
+                    % (where, want[1], want[0], shown))
 
-    for path in (CONFIG, catalog):
+
+def load_registry():
+    """Load configure.json and derive the per-category counts."""
+    with open(CONFIG, encoding="utf-8") as fh:
+        config = json.load(fh)
+    if not isinstance(config, dict):
+        raise TypeError("configure.json: top level is not a JSON object")
+
+    records = dict.fromkeys(CATEGORIES, 0)
+    programs = {c: set() for c in CATEGORIES}
+    for key, value in config.items():
+        if not isinstance(value, dict):
+            raise TypeError("configure.json: record %r is not a JSON object" % key)
+        program = value.get("program", key)
+        if not isinstance(program, str):
+            raise TypeError("configure.json: record %r has a non-string program field" % key)
+        category = program.split("-", 1)[0]
+        if category not in programs:
+            raise TypeError("configure.json: record %r names program %r outside the known categories"
+                            % (key, program))
+        records[category] += 1
+        programs[category].add(program)
+    return config, records, programs
+
+
+def check_counts(catalog, catalog_text, content_text, guide_text, records, programs, problems):
+    """Assert the published count figures against the registry-derived ones."""
+    total_records = sum(records.values())
+    total_programs = len(set().union(*programs.values()))
+
+    phrase = "%d records over %d programs" % (total_records, total_programs)
+    if phrase not in guide_text:
+        problems.append("%s: expected the phrase %r (registry-derived totals), not found"
+                        % (PROJECT_GUIDE, phrase))
+
+    # doc/content.html: the summary table's per-category rows and Total row.
+    rows = {cat: (int(recs), int(progs)) for cat, progs, recs in re.findall(
+        r'<td><code>(acc|cfi|cpi|mss|mts)/</code></td>\s*<td>(\d+)</td>\s*<td>(\d+)</td>',
+        content_text)}
+    for cat in CATEGORIES:
+        report_figure(problems, "%s, table row %s/" % (CONTENT, cat),
+                      (records[cat], len(programs[cat])), rows.get(cat))
+    total_row = re.search(r'<th>Total</th>\s*<th></th>\s*<th>(\d+)</th>\s*<th>(\d+)</th>',
+                          content_text)
+    report_figure(problems, "%s, Total row" % CONTENT,
+                  (total_records, total_programs),
+                  (int(total_row.group(2)), int(total_row.group(1))) if total_row else None)
+
+    # doc/test-catalog.html: the per-category "N programs, M records" sentences.
+    sentences = {cat: (int(recs), int(progs)) for cat, progs, recs in re.findall(
+        r'<h2>[^<>]*\(<code>(acc|cfi|cpi|mss|mts)/</code>\)</h2>\s*<p>(\d+) programs, (\d+) records',
+        catalog_text)}
+    for cat in CATEGORIES:
+        report_figure(problems, "%s, section %s/" % (catalog, cat),
+                      (records[cat], len(programs[cat])), sentences.get(cat))
+
+
+def check(catalog):
+    for path in (CONFIG, catalog, CONTENT, PROJECT_GUIDE):
         if not os.path.isfile(path):
             print("internal error: %s not found" % path, file=sys.stderr)
             sys.exit(2)
 
-    with open(CONFIG, encoding="utf-8") as fh:
-        config = json.load(fh)
+    config, records, programs = load_registry()
 
     parser = CellCollector()
     with open(catalog, encoding="utf-8") as fh:
-        parser.feed(fh.read())
+        catalog_text = fh.read()
+    parser.feed(catalog_text)
+    parser.close()
+
+    with open(CONTENT, encoding="utf-8") as fh:
+        content_text = fh.read()
+    with open(PROJECT_GUIDE, encoding="utf-8") as fh:
+        guide_text = fh.read()
 
     # run-test.cpp case_parser(): the program is the explicit 'program' field,
     # otherwise the record key itself.
     want_recs = set(config)
-    want_progs = {v.get("program", k) for k, v in config.items()}
+    want_progs = set().union(*programs.values())
     got_recs = set(parser.buckets["rec"])
     got_progs = set(parser.buckets["prog"])
 
@@ -113,6 +210,17 @@ def main():
     if parser.malformed:
         problems.append("%d cell(s) do not hold exactly one bare name, e.g. %r"
                         % (len(parser.malformed), parser.malformed[0]))
+    unclosed = parser.unclosed()
+    if unclosed:
+        tag, bucket, text = unclosed[0]
+        problems.append("%d classed element(s) left open at end of %s, e.g. <%s class=\"%s\"> holding %r"
+                        % (len(unclosed), catalog, tag, bucket, text))
+    for label, cells, distinct in (("record", parser.buckets["rec"], got_recs),
+                                   ("program", parser.buckets["prog"], got_progs)):
+        if len(cells) != len(distinct):
+            dupes = sorted(n for n in distinct if cells.count(n) > 1)
+            problems.append("%s cells: %d classed cell(s) but only %d distinct name(s); duplicated: %s"
+                            % (label, len(cells), len(distinct), ", ".join(dupes)))
     for label, want, got in (("record", want_recs, got_recs),
                              ("program", want_progs, got_progs)):
         missing = sorted(want - got)
@@ -124,6 +232,9 @@ def main():
             problems.append("%s set: %d extra name(s): %s"
                             % (label, len(extra), ", ".join(extra)))
 
+    check_counts(catalog, catalog_text, content_text, guide_text,
+                 records, programs, problems)
+
     if problems:
         print("FAIL: catalog/config disagreement —", file=sys.stderr)
         for p in problems:
@@ -133,7 +244,19 @@ def main():
     print("catalog set-equality OK: %d/%d records and %d/%d programs match "
           "configure.json in both directions (no missing, no extra)"
           % (len(got_recs), len(want_recs), len(got_progs), len(want_progs)))
+    print("count figures OK: %s; totals %d records / %d programs"
+          % (", ".join("%s %d/%d" % (c, records[c], len(programs[c])) for c in CATEGORIES),
+             sum(records.values()), len(want_progs)))
     return 0
+
+
+def main():
+    catalog = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_CATALOG
+    try:
+        return check(catalog)
+    except Exception as exc:
+        print("internal error: %s: %s" % (type(exc).__name__, exc), file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

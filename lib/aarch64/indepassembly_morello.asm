@@ -13,6 +13,7 @@ assembly_helper:
   # Restore the stack info
   ldp c29, c30, [csp], #32
   ret
+.size assembly_helper, .-assembly_helper
 
 assembly_return_site:
   # Save the stack info
@@ -23,3 +24,4 @@ assembly_return_site:
   # Restore stack info
   ldp c29, c30, [csp], #32
   ret
+.size assembly_return_site, .-assembly_return_site

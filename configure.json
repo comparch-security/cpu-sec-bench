@@ -2576,6 +2576,9 @@
         "require": {
             "0": []
         },
+        "expect-results": {
+            "1": "attack not observed (the out-of-bounds write did not land in the target buffer)"
+        },
         "offset": [
             0,
             2,
@@ -5834,7 +5837,8 @@
             ]
         },
         "expect-results": {
-            "-1": "arithmetic on a pointer to the function pointer is prohibited on Clang 12."
+            "-1": "arithmetic on a pointer to the function pointer is prohibited on Clang 12.",
+            "290": "cheri capabilities enabled."
         }
     },
     "acc-copy-stackra-to-heap-implicit-arith": {
@@ -5845,6 +5849,9 @@
                 "0",
                 "1"
             ]
+        },
+        "expect-results": {
+            "290": "cheri capabilities enabled."
         }
     },
     "acc-check-prog-ASLR": {
@@ -6017,7 +6024,10 @@
             0,
             2,
             1
-        ]
+        ],
+        "expect-results": {
+            "290": "cheri capabilities enabled."
+        }
     },
     "cpi-read-stack-vtable-pointer": {
         "program": "cpi-read-vtable-pointer",
@@ -6165,7 +6175,8 @@
             1
         ],
         "expect-results": {
-            "16": "relocation tables under read-only protection."
+            "16": "relocation tables under read-only protection.",
+            "290": "cheri capabilities enabled."
         }
     },
     "cfi-call-mid-func": {
@@ -6907,7 +6918,8 @@
             ]
         },
         "expect-results": {
-            "-1": "arithmetic on a pointer to the function pointer is prohibited on Clang 12."
+            "-1": "arithmetic on a pointer to the function pointer is prohibited on Clang 12.",
+            "290": "cheri capabilities enabled."
         }
     },
     "cfi-jump-func-ra-from-heap-memcpy-implicit-arith": {
@@ -6931,6 +6943,9 @@
                 "0",
                 "2"
             ]
+        },
+        "expect-results": {
+            "290": "cheri capabilities enabled."
         }
     },
     "cfi-jump-instruction-in-rodata": {

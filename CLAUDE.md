@@ -31,12 +31,6 @@ several instruction sets and operating systems on top of a shared per-platform s
 - **Never commit the three machine-local directories** — `tmp/` (plans, reports,
   verification), `.codegraph/` (code index) and `trace-log/` (per-case run traces). All are
   gitignored.
-- **Do not rely on `./run-test continue` to resume a run.** It is meant to load `results.json`
-  and skip already-recorded cases, but the scheduler loads `variables.json` into the wrong
-  database and discards the results, so the suite re-runs from the start — and once a
-  `variables.json` exists, it can abort instead. Recorded as the deferred issue
-  `run-test-continue-variables`; not yet fixed.
-
 ## Structure
 
 ```
@@ -86,7 +80,7 @@ make disable_independent_assembly=yes
 
 # Other scheduler options
 ./run-test help           # option list
-./run-test continue       # resume a previous run — currently unreliable, see Rules
+./run-test continue       # resume a previous run
 ./run-test debug          # stop and print detail on the first unexpected exit status
 ./run-test make-only      # build cases without running them
 ./run-test no-make        # assume cases are already built
@@ -161,7 +155,10 @@ non-zero codes and their meanings), `set-var`, `get-code-offset`, `size`, `offse
 `configure.json` (needs `igraph`, `matplotlib`, `networkx`) — it splits `cfi` into `cfi-b`
 (backward: `return-*`) and `cfi-f` (forward). `script/gen_sum.py` totals pass counts per
 category from a `results.dat`. `script/check_catalog.py` asserts that
-`doc/test-catalog.html` and `configure.json` list exactly the same records and programs.
+`doc/test-catalog.html` and `configure.json` list exactly the same records and programs,
+that the published count figures (per-category and totals, derived from each record's
+`program` field) match the registry, and that no classed cell is left unclosed or
+duplicated; unreadable or malformed inputs exit 2, never a traceback.
 `script/get_x64_func_inst.sh`, `get_aarch64_func_inst.sh` and `get_riscv64_func_inst.sh`
 extract function opcodes from a built binary, with `script/get_x64_func_inst.bat` as the
 Windows counterpart; the Makefile uses the x64 one to produce the generated
@@ -186,7 +183,9 @@ configuration, requiring elevation.
   **(keep in sync with `configure.json`)** The page is an index of names: every record in
   `configure.json` must appear on it, and nothing that is not one of its records or programs
   may. `script/check_catalog.py` asserts that two-way equality over the page's
-  `class="rec"` / `class="prog"` cells, and fails on additions **and** removals.
+  `class="rec"` / `class="prog"` cells, and fails on additions **and** removals — it also
+  asserts the page's count figures against registry-derived values, fails on unclosed or
+  duplicate classed cells, and exits 2 on unreadable or malformed inputs.
 - [doc/porting.html](doc/porting.html) — adding an ISA or an OS. **(keep in sync with the
   `lib/` layout and the Makefile's `ARCH` / `CLIBAPI` selection)**
 

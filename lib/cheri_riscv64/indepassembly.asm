@@ -18,6 +18,7 @@ assembly_helper:
   ld ra, 8(sp)
   addi sp, sp, 16
   ret
+.size assembly_helper, .-assembly_helper
 
 assembly_return_site:
   # Save the stack info
@@ -32,3 +33,4 @@ assembly_return_site:
   ld ra, 8(sp)
   addi sp, sp, 16
   ret
+.size assembly_return_site, .-assembly_return_site

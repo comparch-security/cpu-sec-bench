@@ -12,6 +12,7 @@ assembly_helper:
   # Save the fake return address to the stack
   pushq %rax
   ret
+.size assembly_helper, .-assembly_helper
 
 assembly_return_site:
   # Save the stack info
@@ -24,3 +25,4 @@ assembly_return_site:
   movq %rbp, %rsp
   pop %rbp
   ret
+.size assembly_return_site, .-assembly_return_site

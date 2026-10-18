@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="last-modified" content="2026-10-12">
+    <meta name="last-modified" content="2026-10-18">
     <title>Architecture | Security Test Benchmark</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -57,7 +57,10 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
             <li>
                 <strong>Read the registry.</strong> <code>configure.json</code> is parsed into
                 the configuration database. With <code>continue</code>, <code>results.json</code>
-                is read first so already-recorded cases can be skipped.
+                is read first so already-recorded cases can be skipped, and
+                <code>variables.json</code> is loaded into the variable database that
+                <code>-v</code> arguments read from. A malformed or truncated JSON file
+                exits <code>1</code> with a message instead of aborting.
             </li>
             <li>
                 <strong>Compute the pending list.</strong> Every record not yet present in the
@@ -371,7 +374,7 @@ make disable_aslr_protection=yes enable_control_flow_protection=yes</code></pre>
         </p>
     </main>
     <footer>
-        <p>Last updated: 2026-10-12</p>
+        <p>Last updated: 2026-10-18</p>
     </footer>
 </body>
 </html>

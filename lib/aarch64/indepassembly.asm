@@ -11,6 +11,7 @@ assembly_helper:
   ldp x29,x30,[sp]
   add sp,sp,#0x10
   ret
+.size assembly_helper, .-assembly_helper
 
 assembly_return_site:
   # Save the stack info
@@ -23,3 +24,4 @@ assembly_return_site:
   ldp x29, x30, [sp]
   add sp, sp, #0x10
   ret
+.size assembly_return_site, .-assembly_return_site

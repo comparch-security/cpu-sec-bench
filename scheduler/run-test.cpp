@@ -118,7 +118,7 @@ int main(int argc, char* argv[], char* envp[]) {
   // potentially read the results.json
   if(cond_run) {
     if(file_exist("results.json") && !read_json(result_db, "results.json", false)) return 1;
-    if(file_exist("variables.json") && !read_json(result_db, "variables.json", false)) return 1;
+    if(file_exist("variables.json") && !read_json(var_db, "variables.json", false)) return 1;
   }
 
   org_env = envp;
@@ -150,7 +150,13 @@ bool read_json(json &db, const std::string& fn, bool notice) {
   std::ifstream db_file(fn);
   if(db_file.good()) {
     if(notice) std::cout << "read json file " << fn << std::endl;
-    db_file >> db;
+    try {
+      db_file >> db;
+    } catch (const nlohmann::json::exception& e) {
+      std::cerr << "Fail to parse json file `" << fn << "': " << e.what() << std::endl;
+      db_file.close();
+      return false;
+    }
     db_file.close();
     return true;
   } else {
@@ -398,7 +404,7 @@ void add_arguments(std::string arg, nlohmann::ordered_json tcase, str_llist_t &a
           if(tcase.count(range_name)) {
             auto range_value = tcase[range_name].get<std::vector<int> >();
             auto arg_list_size_org = arg_list.size();
-            for(int i=0; i<arg_list_size_org; i++) {
+            for(size_t i=0; i<arg_list_size_org; i++) {
               auto ale = arg_list.front();
               arg_list.pop_front();
               for(int r=range_value[0]; r<range_value[1]; r+=range_value[2]) {
@@ -414,7 +420,7 @@ void add_arguments(std::string arg, nlohmann::ordered_json tcase, str_llist_t &a
           if(tcase.count(list_name)) {
             auto list_value = tcase[list_name].get<std::vector<int> >();
             auto arg_list_size_org = arg_list.size();
-            for(int i=0; i<arg_list_size_org; i++) {
+            for(size_t i=0; i<arg_list_size_org; i++) {
               auto ale = arg_list.front();
               arg_list.pop_front();
               for(auto v: list_value) {
@@ -529,7 +535,7 @@ int run_cmd(char *argv[], char **runv, long long& time_count) {
 char ** argv_conv(const std::string &cmd, const str_list_t &args) {
   int i = 0;
   strcpy(arg_pool[i++], cmd.c_str());
-  for(const auto a:args) strcpy(arg_pool[i++],a.c_str());
+  for(const auto& a:args) strcpy(arg_pool[i++],a.c_str());
   for(int j=0; j<i; j++) gargv[j]=arg_pool[j];
   gargv[i] = NULL;
   return gargv;
@@ -556,7 +562,6 @@ bool run_tests(std::list<std::string> cases) {
       exit(1);
     }
 
-    bool has_make = false;
     int test_cond = 0;
     auto tcase = config_db[cn];
 
@@ -585,7 +590,7 @@ bool run_tests(std::list<std::string> cases) {
       str_list_t make_options;
       bool need_build = true;
       last_make_config_macro.clear();
-      for(int ind = 0; ind != alists.size(); ind++){
+      for(int ind = 0; ind != (int)alists.size(); ind++){
         std::cout << "\n\"arguments\" ind is: " << ind << std::endl;
         auto alist = alists[ind];
         test_cond = case_parser(cn, tcase, ind, prog, gvar, dbvar, expect_results, make_config_macro, last_make_config_macro, need_build);
@@ -640,7 +645,6 @@ bool run_tests(std::list<std::string> cases) {
               last_make_config_macro = make_config_macro; // record the config macro of last succeeded make
             }
             result_db[cn]["file-size"] = curr_size;
-            has_make = true;
           }
           #ifdef _MSC_VER
           long long curr_script_time = 0;
@@ -742,7 +746,7 @@ FINISH_CURRENT_CASE:
       dump_json(result_db, "results.json", debug_run);
       std::cerr << "\n========== end: " << cn << " =========" << std::endl;
     }else{ // dependencies have not test yet
-      if(current_test_checkdep_count < total_cases){
+      if((size_t)current_test_checkdep_count < total_cases){
         current_test_checkdep_count++;
         std::cerr << "push the curr case, and go to check the next argument's corresponding requirement" << std::endl;
         cases.push_back(cn);
@@ -784,13 +788,13 @@ void add_extra_run_prefix(char **envp) {
   // assuming directly adding the environ array would not overflow
   char *pch = strtok(run_prefix, " ");
   while(pch != NULL) {
-    if(run_env_vect.size() == envi) run_env_vect.resize(envi+8);
+    if(run_env_vect.size() == (size_t)envi) run_env_vect.resize(envi+8);
     run_env_vect[envi++] = pch;
     extra_run_prefix.push_back(pch);
     std::cout << "add " << std::string(pch) << " to env" << std::endl;
     pch = strtok(NULL, " ");
   }
-  if(run_env_vect.size() == envi) run_env_vect.resize(envi+8);
+  if(run_env_vect.size() == (size_t)envi) run_env_vect.resize(envi+8);
   run_env_vect[envi] = NULL;
 #endif
 
