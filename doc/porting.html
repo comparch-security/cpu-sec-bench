@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="last-modified" content="2026-10-14">
+    <meta name="last-modified" content="2026-10-18">
     <title>Porting | Security Test Benchmark</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -115,8 +115,8 @@ Makefile
             for <code>enable_aarch64_bti</code>,
             <code>--target=aarch64-unknown-freebsd -march=morello -mabi=purecap</code> for
             <code>enable_aarch64_morello</code>, and
-            <code>-march=rv64gcxcheri -mabi=l64pc128d</code> for
-            <code>enable_riscv64_cheri</code>.
+            <code>--target=riscv64-unknown-freebsd -march=rv64gcxcheri -mabi=l64pc128d</code>
+            for <code>enable_riscv64_cheri</code>.
         </p>
 
         <p>
@@ -124,9 +124,15 @@ Makefile
             toolchain (<code>g++</code> / <code>as</code>) rejects the Morello and CHERI options,
             so a build using them must also be pointed at toolchains that understand them
             &mdash; pass <code>CXX=</code> and <code>ASM=</code> on the <code>make</code> line,
-            as every non-host lane does. The <code>--target</code> triple is part of that
-            requirement: without it the Morello clang defaults to the host triple and rejects
-            <code>-mabi=purecap</code> outright.
+            as every non-host lane does. Both CHERI switch blocks carry their
+            <code>--target</code> triple themselves (the Morello clang and the CTSRD clang
+            otherwise default to the host triple and reject <code>-mabi=</code> outright), so a
+            purecap build additionally needs the compiler's purecap sysroot, passed through
+            <code>CXX=</code> (for example
+            <code>--sysroot=&lt;sdk&gt;/sysroot-riscv64-purecap</code>); the riscv64 CHERI build
+            also passes <code>ARCH=cheri_riscv64</code> on the <code>make</code> line, because the
+            independent-assembly object is selected from <code>ARCH</code> before the switch
+            forces it.
         </p>
 
         <h2>What a test case links against</h2>
@@ -267,7 +273,7 @@ MAKEFLAGS='disable_independent_assembly=yes' ./run-test exhausted-run</code></pr
         </p>
     </main>
     <footer>
-        <p>Last updated: 2026-10-14</p>
+        <p>Last updated: 2026-10-18</p>
     </footer>
 </body>
 </html>

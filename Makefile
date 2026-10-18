@@ -374,9 +374,12 @@ endif
 
 ifdef enable_riscv64_cheri
   ARCH := cheri_riscv64
-  CXXFLAGS += -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=very-aggressive
+  # The CTSRD clang defaults to the host triple and then rejects -mabi=,
+  # so --target is mandatory on every path (C++, object C++, and assembly).
+  CXXFLAGS += --target=riscv64-unknown-freebsd -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=very-aggressive
   SCHEDULER_CXXFLAGS += -mno-relax
-  OBJECT_CXXFLAGS += -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=very-aggressive
+  OBJECT_CXXFLAGS += --target=riscv64-unknown-freebsd -mno-relax -march=rv64gcxcheri -mabi=l64pc128d -cheri-bounds=very-aggressive
+  ASMFLAGS += --target=riscv64-unknown-freebsd -march=rv64gcxcheri -mabi=l64pc128d
 endif
 
 ifdef enable_aarch64_morello
