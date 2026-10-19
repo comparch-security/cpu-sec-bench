@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="last-modified" content="2026-10-18">
+    <meta name="last-modified" content="2026-10-19">
     <title>Porting | Security Test Benchmark</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -231,8 +231,15 @@ MAKEFLAGS='disable_independent_assembly=yes' ./run-test exhausted-run</code></pr
                 <strong>Provide an opcode-extraction script</strong> if the generated
                 <code>acc-read-func.gen</code> case is to work, named
                 <code>script/get_&lt;arch&gt;_func_inst.sh</code> and wired through the
-                Makefile's <code>func-opcode-gen</code>. Existing examples are the
-                <code>x64</code>, <code>aarch64</code> and <code>riscv64</code> scripts.
+                Makefile's <code>func-opcode-gen</code>. It extracts, from the built binary,
+                the eight code bytes that case compares against, disassembling with the
+                platform's <code>OBJDUMP</code> (below), and it fails loudly when that tool
+                cannot decode the binary rather than emitting a wrong word. Existing examples
+                are the <code>x64</code>, <code>aarch64</code>, <code>riscv64</code> and
+                <code>cheri_riscv64</code> scripts &mdash; the last requires a CHERI-capable
+                objdump (the CTSRD SDK's <code>riscv64cheri-objdump</code>, a wrapper over
+                <code>llvm-objdump</code>), because a plain riscv64 objdump decodes
+                <code>xcheri</code> binaries only partially and exits non-zero.
             </li>
             <li>
                 <strong>Run the suite</strong> with <code>./run-test exhausted-run</code> so every
@@ -256,7 +263,11 @@ MAKEFLAGS='disable_independent_assembly=yes' ./run-test exhausted-run</code></pr
                 <strong>Set <code>CLIBAPI</code></strong> for the platform in the Makefile, and
                 make sure the toolchain selection (<code>CXX</code>, <code>ASM</code>,
                 <code>OBJDUMP</code>, the object and executable naming, the linker flags) matches
-                it.
+                it. <code>OBJDUMP</code> must disassemble the binaries this platform produces:
+                besides the <code>dump</code> target and <code>sys_info.txt</code>, it drives
+                the opcode extraction described above, so a tool that cannot decode those
+                binaries fails the corpus build instead of quietly producing a wrong
+                extraction.
             </li>
             <li>
                 <strong>Confirm the ISA dispatch still applies</strong>, since
@@ -273,7 +284,7 @@ MAKEFLAGS='disable_independent_assembly=yes' ./run-test exhausted-run</code></pr
         </p>
     </main>
     <footer>
-        <p>Last updated: 2026-10-18</p>
+        <p>Last updated: 2026-10-19</p>
     </footer>
 </body>
 </html>

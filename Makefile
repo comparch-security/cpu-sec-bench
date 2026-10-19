@@ -234,11 +234,24 @@ else
   LIB_LDFLAGS       :=
   OBJDUMPFLAGS      := -D -l -S
   DYNCFI_OPTION     := -Llib/common/ -Wl,-rpath,lib/common/ -lcfi
+  # enable_riscv64_cheri forces ARCH to cheri_riscv64 further down this file,
+  # after this selection has already been made; fold the flag in so the
+  # extractor follows the ARCH the build actually uses
+  # (defer-issue-cheri-riscv64-opcode-extraction-deploy-abort).
+  func-opcode-arch := $(if $(enable_riscv64_cheri),cheri_riscv64,$(ARCH))
   func-opcode-gen   := ./script/get_x64_func_inst.sh
-  ifeq ($(ARCH), aarch64)
+  ifeq ($(func-opcode-arch), aarch64)
     func-opcode-gen := ./script/get_aarch64_func_inst.sh
-  else ifeq ($(ARCH), riscv64)
+  else ifeq ($(func-opcode-arch), riscv64)
     func-opcode-gen := ./script/get_riscv64_func_inst.sh
+  else ifeq ($(func-opcode-arch), cheri_riscv64)
+    # CHERI binaries carry the xcheri ISA extension and CHERI relocations, which
+    # a plain riscv64 objdump cannot decode; the extraction therefore needs a
+    # CHERI-capable objdump (the CTSRD SDK's llvm-objdump) and the script fails
+    # loudly when its tool cannot read the binary.  Without this branch the x64
+    # extractor ran against an xcheri binary and aborted the corpus build
+    # (defer-issue-cheri-riscv64-opcode-extraction-deploy-abort).
+    func-opcode-gen := ./script/get_cheri_riscv64_func_inst.sh
   endif
   dynlibcfi := $(addsuffix $(DLL_SUFFIX), lib/common/libcfi)
 
@@ -540,11 +553,15 @@ $(acc-obj): $(test-path)/acc-%$(MIDFILE_SUFFIX):$(acc-path)/%.cpp
 $(acc-tests): %:%$(MIDFILE_SUFFIX) $(extra_objects) $(independent_assembly)
 	$(CXX) $(CXXFLAGS) $< $(extra_objects) $(independent_assembly) $(OUTPUT_EXE_OPTION)$@ $(LDFLAGS)
 
+# The extraction runs the platform's objdump, passed in through the published
+# OBJDUMP knob (the env lanes set it on the command line): a bare `objdump` used
+# to be resolved through PATH and picked the x86_64 objdump on the aarch64 lanes
+# (defer-issue-aarch64-func-opcode-extraction-host-objdump).
 $(test-path)/acc-read-func-func-opcode.tmp: $(func-opcode-gen) $(test-path)/acc-read-func
 ifeq ($(OSType),Windows_NT)
-	$< $(test-path)\acc-read-func.exe helper 8 $(test-path)\acc-read-func-func-opcode.tmp
+	set "OBJDUMP=$(OBJDUMP)" && $< $(test-path)\acc-read-func.exe helper 8 $(test-path)\acc-read-func-func-opcode.tmp
 else
-	$^ helper 8 $@
+	OBJDUMP="$(OBJDUMP)" $^ helper 8 $@
 endif
 
 $(test-path)/acc-read-func.gen: %.gen:% $(test-path)/acc-read-func-func-opcode.tmp

@@ -159,9 +159,11 @@ category from a `results.dat`. `script/check_catalog.py` asserts that
 that the published count figures (per-category and totals, derived from each record's
 `program` field) match the registry, and that no classed cell is left unclosed or
 duplicated; unreadable or malformed inputs exit 2, never a traceback.
-`script/get_x64_func_inst.sh`, `get_aarch64_func_inst.sh` and `get_riscv64_func_inst.sh`
-extract function opcodes from a built binary, with `script/get_x64_func_inst.bat` as the
-Windows counterpart; the Makefile uses the x64 one to produce the generated
+`script/get_x64_func_inst.sh`, `get_aarch64_func_inst.sh`, `get_riscv64_func_inst.sh` and
+`get_cheri_riscv64_func_inst.sh` extract function opcodes from a built binary — each honoring
+the platform's `OBJDUMP` knob, asserting the extracted word's exact width, and failing loudly
+when its tool cannot decode the binary — with `script/get_x64_func_inst.bat` as the Windows
+counterpart; the Makefile selects the one matching `ARCH` to produce the generated
 `acc-read-func.gen` target.
 `script/gen_prog_list.py` is Windows-only and generates a Windows Exploit Protection XML
 configuration, requiring elevation.

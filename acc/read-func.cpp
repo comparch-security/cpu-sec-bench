@@ -30,10 +30,18 @@ int FORCE_NOINLINE helper() {
 }
 
 int main(int argc, char* argv[]) {
+  // 2: no side file at all.  Checked before argv[1] is dereferenced: with no
+  // argument that pointer is NULL, not a path.
+  if (argc < 2)
+    return 2;
 
   std::ifstream itmpf(argv[1]);
   if(itmpf.good()){
-    itmpf >> std::hex >> code_num;
+    // 1: the side file holds no usable opcode word.  Checking the parse keeps
+    // helper() out of a bogus comparison; on CHERI it also keeps the
+    // capability fault (290) from masking a failed extraction as the defense.
+    if( !(itmpf >> std::hex >> code_num) )
+      return 1;
     return helper();
   }
   return 2;

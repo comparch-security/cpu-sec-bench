@@ -6,7 +6,12 @@ IF EXIST %4 del %4
 
 set byte_nums=%3
 
-dumpbin.exe /DISASM %1 > file.dump
+rem The extraction honors the bench's published OBJDUMP knob, mirroring the
+rem ${OBJDUMP:-objdump} default in the POSIX extractors.
+IF NOT DEFINED OBJDUMP set "OBJDUMP=dumpbin.exe"
+echo get_x64_func_inst.bat: using objdump "%OBJDUMP%"
+
+"%OBJDUMP%" /DISASM %1 > file.dump
 
 rem grep func dump from file.dump
 rem /k means only search no replace, 0 means not add after context
