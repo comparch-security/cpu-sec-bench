@@ -6,10 +6,12 @@
 // POSIX APIs (linux variant)
 #include <spawn.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #endif
 
 // standard cpp library
 #include <cstdlib>
+#include <cstdio>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -31,7 +33,7 @@ using std::right;
 using std::setw;
 using json = nlohmann::basic_json<nlohmann::ordered_map>;
 static json config_db, result_db, var_db;
-char arg_pool[32][64];   // the maximal is 32 64-byte long arguments
+char arg_pool[32][256];  // the maximal is 32 256-byte long arguments
 char * gargv[33];
 
 // global configure parameters
@@ -42,6 +44,7 @@ bool test_run      = true;
 bool report_run    = false;
 bool exhausted_run = false;
 bool trace_run     = false;
+bool corpus_run    = false;
 // the scheduler-owned result meaning the case was not run (skipped for this platform, or could not be built)
 static const int not_run_code = 1025;
 
@@ -96,6 +99,7 @@ int main(int argc, char* argv[], char* envp[]) {
       std::cout << "  debug         Stop testing on the first unexpected exit status." << std::endl;
       std::cout << "  make-only     Make the test cases without running them." << std::endl;
       std::cout << "  no-make       Due to make the test cases as they are made aleady." << std::endl;
+      std::cout << "  corpus        Build-elsewhere mode: snapshot every build as test/<program>__<key> (with make) and run those prebuilt files (without make)." << std::endl;
       std::cout << "  fast-run      Only run the test case that their requirement runs successfully, and then generate a report." << std::endl;
       std::cout << "  exhausted-run Run all tests until the total test case is exhausted, and then generate a report." << std::endl;
       std::cout << "  print-trace   Print the trace log of the attacked target." << std::endl;
@@ -106,6 +110,7 @@ int main(int argc, char* argv[], char* envp[]) {
     else if(param == "debug")     debug_run  = true;
     else if(param == "make-only") test_run   = false;
     else if(param == "no-make")   make_run   = false;
+    else if(param == "corpus")    corpus_run = true;
     else if(param == "fast-run")  report_run = true;
     else if(param == "exhausted-run")   { exhausted_run    = true; report_run = true;}
     else if(param == "print-trace") {trace_run = true; }
@@ -541,6 +546,61 @@ char ** argv_conv(const std::string &cmd, const str_list_t &args) {
   return gargv;
 }
 
+// Corpus mode ("build elsewhere, run here"): the make phase snapshots every
+// freshly built test program as test/<program>__<key> and the run phase
+// executes that snapshot.  <key> is a deterministic FNV-1a-32 (the standard
+// 32-bit offset basis and prime below, printed as %08x) over the record's
+// macro map rendered as `KEY=VALUE` pairs with the keys sorted (a std::map
+// iterates in sorted order), `,`-joined; an empty map therefore keys to
+// `811c9dc5`.  doc/architecture.html carries the same contract.
+std::string corpus_key(const str_map_t& macro_map) {
+  std::string canonical;
+  for(auto ca:macro_map) {
+    if(!canonical.empty()) canonical += ",";
+    canonical += ca.first + "=" + ca.second;
+  }
+  unsigned int hash = 0x811c9dc5u;  // FNV-1a 32-bit offset basis
+  for(size_t i=0; i<canonical.size(); i++) {
+    hash ^= (unsigned char)canonical[i];
+    hash *= 0x01000193u;            // FNV-1a 32-bit prime
+  }
+  char key[9];
+  snprintf(key, sizeof(key), "%08x", hash);
+  return std::string(key);
+}
+
+std::string corpus_bin_path(const std::string& prog, const str_map_t& macro_map) {
+  std::string path = "test/" + prog + "__" + corpus_key(macro_map);
+#ifdef _MSC_VER
+  path += ".exe";
+#endif
+  return path;
+}
+
+void corpus_snapshot(const std::string& src, const std::string& dst) {
+  std::ifstream in_file(src, std::ios::binary);
+  if(!in_file.good()) {
+    std::cerr << "corpus snapshot failed: cannot read " << src << std::endl;
+    exit(1);
+  }
+  std::ofstream out_file(dst, std::ios::binary | std::ios::trunc);
+  out_file << in_file.rdbuf();
+  bool copied = out_file.good();
+  in_file.close();
+  out_file.close();
+  if(!copied) {
+    std::cerr << "corpus snapshot failed: " << src << " -> " << dst << std::endl;
+    exit(1);
+  }
+#ifndef _MSC_VER
+  // a fresh copy loses the executable bit the run phase needs
+  if(chmod(dst.c_str(), 0755)) {
+    std::cerr << "corpus snapshot chmod failed: " << dst << std::endl;
+    exit(1);
+  }
+#endif
+}
+
 bool run_tests(std::list<std::string> cases) {
   //check current test dependency and avoid endless loop
   int current_test_checkdep_count = 0;
@@ -600,7 +660,9 @@ bool run_tests(std::list<std::string> cases) {
           if(make_run && need_build) {
             long long one_make_time, curr_size;
             make_options.clear();
-            if(!make_config_macro.empty()) {
+            // corpus mode always takes the -B branch (even for empty macro
+            // maps) so the snapshot below is of a fresh build of this unit
+            if(!make_config_macro.empty() || corpus_run) {
               for (auto conf:make_config_macro) {
                 make_options.push_back(conf.first + "=" + conf.second);
               }
@@ -634,12 +696,23 @@ bool run_tests(std::list<std::string> cases) {
               curr_size = 0;
               continue;
             }else{
-              #ifdef _MSC_VER
-              curr_size = get_file_size("test/" + prog + ".exe");
-              if(curr_size == -1) curr_size = get_file_size("test/" + prog);
-              #else
-              curr_size = get_file_size("test/" + prog);
-              #endif
+              if(corpus_run) {
+                std::string corpus_src = "test/" + prog;
+                std::string corpus_dst = corpus_bin_path(prog, make_config_macro);
+                #ifdef _MSC_VER
+                corpus_src += ".exe";
+                #endif
+                std::cout << "corpus: " << corpus_src << " -> " << corpus_dst << std::endl;
+                corpus_snapshot(corpus_src, corpus_dst);
+                curr_size = get_file_size(corpus_dst); // the file the run phase will execute
+              }else{
+                #ifdef _MSC_VER
+                curr_size = get_file_size("test/" + prog + ".exe");
+                if(curr_size == -1) curr_size = get_file_size("test/" + prog);
+                #else
+                curr_size = get_file_size("test/" + prog);
+                #endif
+              }
 
               need_build = false;
               last_make_config_macro = make_config_macro; // record the config macro of last succeeded make
@@ -661,10 +734,17 @@ bool run_tests(std::list<std::string> cases) {
           #endif
 
           if(0 == make_result && test_run) { // run the test case
-          
+            cmd = "test/" + prog;
+            if(corpus_run) {
+              cmd = corpus_bin_path(prog, make_config_macro);
+              if(!file_exist(cmd)) { // fail fast: no bogus result may be recorded
+                std::cerr << "corpus file missing: " << cmd << std::endl;
+                exit(1);
+              }
+            }
+
             for(auto arg:alist) {
               long long one_run_time;
-              cmd = "test/" + prog;
               std::cout << "\n";
               if(!extra_run_prefix.empty()) for(auto a:extra_run_prefix) std::cout << std::string(a) << " ";
               std::cout << cmd; for(auto a:arg) std::cout << " " << a; std::cout << std::endl;

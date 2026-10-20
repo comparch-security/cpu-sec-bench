@@ -1,6 +1,8 @@
 /tmp/
 /.codegraph/
 /trace-log/
+/platform/riscv64-nemu-linux/out/
+__pycache__/
 test/*
 *.exe
 *~

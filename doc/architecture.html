@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="last-modified" content="2026-10-18">
+    <meta name="last-modified" content="2026-10-20">
     <title>Architecture | Security Test Benchmark</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -97,12 +97,17 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
                 records that share a macro set share one binary. A build that fails is recorded as
                 <code>1025</code> as well &mdash; the case was not run &mdash; with make's own exit
                 status kept in the record's <code>make-status</code> field and printed in the log,
-                so a raw build status is never mistaken for a test outcome.
+                so a raw build status is never mistaken for a test outcome. In corpus mode the
+                <code>-B</code> branch is always taken and each fresh build is snapshotted &mdash;
+                see <em>Corpus mode</em> below.
             </li>
             <li>
                 <strong>Run and interpret.</strong> <code>test/&lt;program&gt;</code> is spawned
                 with the expanded arguments and its exit status classified as below. A status in
-                the runtime-parameter range is consumed rather than recorded as an outcome.
+                the runtime-parameter range is consumed rather than recorded as an outcome. In
+                corpus mode the spawned path is the snapshot
+                <code>test/&lt;program&gt;__&lt;key&gt;</code>, and a missing snapshot ends the
+                run rather than the case.
             </li>
             <li>
                 <strong>Record.</strong> The outcome is written into <code>results.json</code>,
@@ -119,6 +124,69 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
                 rather than losing that coverage silently.
             </li>
         </ol>
+
+        <h2>Corpus mode: build elsewhere, run here</h2>
+
+        <p>
+            A venue may have no compiler. The motivating case is a booted guest under an
+            instruction-set simulator: it carries the benchmark's binaries and its scheduler, but
+            nothing that could build them. The <code>corpus</code> option splits the two phases
+            across machines &mdash; the suite is compiled on a build host, one binary per
+            <code>(program, macro-map)</code> build unit, and that set is what the run host
+            executes.
+        </p>
+
+        <pre><code># build host: build and snapshot every unit
+./run-test corpus make-only exhausted-run
+# run host: execute the snapshots, never build
+./run-test no-make corpus exhausted-run</code></pre>
+
+        <p>
+            In the build phase <code>corpus</code> forces the <code>-B</code> branch even for an
+            empty macro map, so every unit is rebuilt, and after each successful build it copies
+            <code>test/&lt;program&gt;</code> to <code>test/&lt;program&gt;__&lt;key&gt;</code>
+            &mdash; the file the run phase will execute. <code>&lt;key&gt;</code> is a
+            deterministic 8-hex-digit FNV-1a-32 (offset basis <code>0x811c9dc5</code>, prime
+            <code>0x01000193</code>) over the record's macro map rendered as
+            <code>KEY=VALUE</code> pairs with the keys sorted and the pairs comma-joined. The map
+            is ordered, so that string is canonical and the key depends on nothing else &mdash;
+            not on build order, not on a counter &mdash; which is what lets a name identify its
+            build unit on any machine. An empty macro map therefore keys to
+            <code>811c9dc5</code>, the hash of the empty string.
+        </p>
+
+        <p>
+            That rendering assumes no macro value contains a <code>,</code> followed by
+            <code>KEY=</code>. A value that did &mdash; and macro values may legitimately contain
+            commas &mdash; would render exactly like a map with one more pair, so two different
+            build units of one program would share a key and the later snapshot would silently
+            replace the earlier one. No value in the shipped registry comes close, and the
+            manifest script's per-program collision check would catch a hash collision but not
+            this aliasing; the assumption is part of the contract, so a record that needed such a
+            value would have to have the rendering escaped first.
+        </p>
+
+        <p>
+            In the run phase <code>corpus</code> replaces <code>test/&lt;program&gt;</code> in the
+            run command with the keyed path, and a missing corpus file is fatal: the scheduler
+            writes <code>corpus file missing: &lt;path&gt;</code> to stderr and exits
+            <code>1</code> instead of recording a result for a case that never ran. Nothing else
+            changes, so a corpus run records the same result values a normal run of the same
+            records would; the record shape differs only in the fields a build writes
+            (<code>make-time</code>, <code>file-size</code>), which a <code>no-make</code> corpus
+            run has no occasion to set. Without <code>corpus</code>, both phases behave as they
+            always have.
+        </p>
+
+        <p>
+            The snapshot is also what keeps variant records honest across the split. The
+            in-place <code>test/&lt;program&gt;</code> is overwritten whenever the macro map
+            changes, and 17 programs in the shipped registry carry several variants, so a plain
+            <code>make-only</code> followed by <code>no-make</code> would run whichever variant
+            happened to be built last. The supported split is
+            <code>run-test corpus make-only</code> at build time and
+            <code>run-test no-make corpus</code> at run time.
+        </p>
 
         <h2>Result codes</h2>
 
@@ -374,7 +442,7 @@ make disable_aslr_protection=yes enable_control_flow_protection=yes</code></pre>
         </p>
     </main>
     <footer>
-        <p>Last updated: 2026-10-18</p>
+        <p>Last updated: 2026-10-20</p>
     </footer>
 </body>
 </html>

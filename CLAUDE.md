@@ -48,6 +48,9 @@ configure.json                 Authoritative test registry — 246 records over 
 Makefile                       Build rules; test cases are compiled on demand by the scheduler
 INTERNAL.md                    Internals narrative — rationale only, see Documentation
 doc/                           Project documentation (HTML)
+platform/                      Venue scripts — running the suite off a native host
+                               (riscv64-nemu-linux: host-built corpus + riscv64 scheduler in a
+                               booted Linux guest under XiangShan NEMU; see its own README)
 plans/                         Archived implementation plans (see Subagents)
 image/relationship.png         Relation-graph figure referenced by INTERNAL.md
 test/  trace-log/              Generated build and run output (gitignored)
@@ -87,6 +90,13 @@ make disable_independent_assembly=yes
 ./run-test print-trace    # print the trace log of the attacked target
 
 # Supporting targets
+# Split the build and run phases across two machines (see platform/riscv64-nemu-linux):
+# the build host snapshots every build unit as test/<program>__<key>; the run host
+# executes those snapshots and never builds. Note the forced `-B` and the variant
+# handling that make a plain make-only/no-make pair the wrong split.
+./run-test corpus make-only exhausted-run      # build host
+./run-test no-make corpus exhausted-run        # run host
+
 make dump                 # objdump disassembly for every built test case
 make prep                 # preprocessed C++ sources (macros resolved)
 make clean                # remove all generated artifacts
@@ -134,6 +144,14 @@ implementation by ISA: `__x86_64`/`_M_X64` → `lib/x86_64/`, `__aarch64__` → 
 7. With a report option, writes `results.dat`, prefixed by `test/sys_info.txt` — or by a
    placeholder line when that file is missing — and followed by the two not-run count lines
    (`# not run (skipped for this platform): N`, `# not run (failed to build): M`).
+
+**Corpus mode (`corpus`).** A venue with no compiler — the NEMU guest platform is one — needs the
+two phases split across machines. With `corpus`, the build phase forces `-B` for every record and
+snapshots each fresh build as `test/<program>__<key>`, where `<key>` is FNV-1a-32 over the
+record's macro map rendered as sorted, comma-joined `K=V` pairs (empty map → `811c9dc5`); the run
+phase executes that keyed path and, if it is missing, names it on stderr and exits 1 rather than
+recording a result. Without `corpus`, both phases behave exactly as before.
+`doc/architecture.html` carries the same contract.
 
 **Runtime parameters.** Some values can only be discovered at run time — the stack offset of
 the return address being the canonical one, since it depends on ABI, frame-pointer use and
@@ -190,6 +208,9 @@ configuration, requiring elevation.
   duplicate classed cells, and exits 2 on unreadable or malformed inputs.
 - [doc/porting.html](doc/porting.html) — adding an ISA or an OS. **(keep in sync with the
   `lib/` layout and the Makefile's `ARCH` / `CLIBAPI` selection)**
+- [platform/riscv64-nemu-linux/README.md](platform/riscv64-nemu-linux/README.md) — running the
+  suite in a booted Linux guest under NEMU: the pinned image recipe, the three commands, the
+  output layout, and that venue's own caveats.
 
 ## Update and Commit
 

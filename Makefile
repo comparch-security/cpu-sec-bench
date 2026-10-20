@@ -196,14 +196,18 @@ else
   log-path      := trace-log
 
   #compiler
+  # `?=` so a cross build can steer the toolchain through the environment:
+  # the scheduler spawns its child `make` invocations without extra arguments,
+  # so only the environment (or a command-line override, which still wins)
+  # can reach them -- e.g. the corpus build for the riscv64 NEMU guest.
   ifeq ($(OSType),Darwin)
-    CXX         := clang++
+    CXX         ?= clang++
   else
-    CXX         := g++
+    CXX         ?= g++
   endif
-  ASM           := as
+  ASM           ?= as
   CLIBAPI       := posix
-  OBJDUMP       := objdump
+  OBJDUMP       ?= objdump
 
   CXXFLAGS_BASE = ${CXXFLAGS} -I./lib -std=c++11 -Wall
   ifdef BUFFER_SIZE
