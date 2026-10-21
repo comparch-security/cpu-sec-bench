@@ -25,3 +25,4 @@ run-test
 .vs/
 *.xml
 *.csv
+!batch-option/*.csv
