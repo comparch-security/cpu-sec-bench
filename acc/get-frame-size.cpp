@@ -23,9 +23,10 @@ int main(int argc, char* argv[])
   helper_v_v();
 
   if(gvar() > 0){
-    write_to_temp_file((int)gvar()/4 , argc, argv);
+    if(!write_to_temp_file((int)gvar()/4 , argc, argv))
+      return 2; // precondition failed: the measured frame size could not be recorded
     return 64;
   }else{
-    return 1;
+    return 2; // precondition failed: the frame size was not measured
   }
 }

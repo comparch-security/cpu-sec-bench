@@ -21,16 +21,17 @@
         #define SEGV_MAPERR 1
         #define SEGV_ACCERR 2
         #define BUS_ADRALN  3
-        #define SEGV_ACCESS 0xc0000005
 
         inline ULONG msvc_code_conv(const int si_code, const int si_signo) {
           switch (si_signo) {
           case SIGSEGV:
             switch (si_code) {
+            case 0:            return EXCEPTION_ACCESS_VIOLATION; // wildcard: any SIGSEGV class fault
             case SEGV_MAPERR: return EXCEPTION_IN_PAGE_ERROR;
             case SEGV_ACCERR: return EXCEPTION_ACCESS_VIOLATION;
             default:          break;
             }
+            break;
           case SIGILL: return EXCEPTION_ILLEGAL_INSTRUCTION;
           case SIGFPE: return EXCEPTION_FLT_INVALID_OPERATION;
           case SIGBUS: return EXCEPTION_DATATYPE_MISALIGNMENT;

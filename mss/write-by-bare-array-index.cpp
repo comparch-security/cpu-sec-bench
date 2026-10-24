@@ -10,7 +10,7 @@ int main(int argc, char** argv){
 
   int flow_type  = argv[1][0] - '0';
 
-  int rv = -1;
+  int rv = 1; // no branch ran: an out-of-range flow_type is not demonstrated
 
   if(flow_type == 0){
     update_by_index(ARRAYREF(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND))), 0, 2*BUFFER_SIZE,  1, 'c');
@@ -33,7 +33,11 @@ int main(int argc, char** argv){
       rv = check(STR2UL(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)) ,underflow),      BUFFER_SIZE,  1, 'c');
     }
   }else if(flow_type >= 4){
-    int othersrc_dist = argv[2][0] - '0';
+    // a literal -v token means the redzone calibration variable was never recorded
+    char *end = NULL;
+    long othersrc_dist_num = strtol(argv[2], &end, 10);
+    if(end == argv[2] || *end != '\0') return 1;
+    int othersrc_dist = (int)othersrc_dist_num;
     if(flow_type == 4){
       update_by_index(ARRAYREF(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND))), othersrc_dist, BUFFER_SIZE,  1, 'c');
       rv = check(STR2UL(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)) ,overflow),      BUFFER_SIZE,  1, 'c');

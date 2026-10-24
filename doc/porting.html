@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="last-modified" content="2026-10-19">
+    <meta name="last-modified" content="2026-10-24">
     <title>Porting | Security Test Benchmark</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -35,7 +35,11 @@
                     right per-ISA header. Also <code>conf.hpp</code> (buffer and region
                     configuration), <code>mss.hpp</code>, <code>cfi.hpp</code>,
                     <code>signal.hpp</code>, <code>global_var.hpp</code>,
-                    <code>builtin.hpp</code>, <code>temp_file.hpp</code>.</td>
+                    <code>builtin.hpp</code>, <code>temp_file.hpp</code>, and
+                    <code>result.hpp</code> — the <code>RT_CODE_*</code> family, the
+                    result-code vocabulary every port shares. A port's platform
+                    <code>signal.hpp</code> includes it and defines no constant of its
+                    own.</td>
             </tr>
             <tr>
                 <td><code>lib/common/</code></td>
@@ -89,7 +93,8 @@
             include only portable headers and never reference either directly.
         </p>
 
-        <pre><code>lib/include/assembly.hpp
+        <pre><code>lib/include/assembly.hpp      the ISA dispatch point
+lib/include/result.hpp        the RT_CODE_* result-code vocabulary, shared by every port
   #if defined(__x86_64) || defined(_M_X64)   -> CSB_X86_64, lib/x86_64/assembly.hpp
   #if defined(__aarch64__)                   -> lib/aarch64/assembly.hpp
   #if defined(__riscv)                       -> lib/riscv64/assembly.hpp
@@ -257,7 +262,10 @@ MAKEFLAGS='disable_independent_assembly=yes' ./run-test exhausted-run</code></pr
                 <code>signal.hpp</code>, <code>signal.cpp</code> and a builtin header, following
                 <code>lib/posix/</code> or <code>lib/visualcpp/</code>. The signal layer is what
                 lets a case catch an expected fault and report it as a defined result code
-                instead of an unexplained crash.
+                instead of an unexplained crash. The port's <code>signal.hpp</code> includes
+                <code>lib/include/result.hpp</code> for the <code>RT_CODE_*</code> constants and
+                defines no result-code constant of its own: the vocabulary has exactly one home,
+                so a port cannot drift from it.
             </li>
             <li>
                 <strong>Set <code>CLIBAPI</code></strong> for the platform in the Makefile, and
@@ -278,13 +286,15 @@ MAKEFLAGS='disable_independent_assembly=yes' ./run-test exhausted-run</code></pr
         </ol>
 
         <p>
-            The result codes a port must produce are defined in
+            The named result codes a port must produce are owned by
+            <code>lib/include/result.hpp</code> and documented in
             <a href="architecture.html">Architecture</a>; a new platform is correctly ported when
-            its cases return those codes with the same meanings.
+            its cases return those codes with the same meanings and its platform
+            <code>signal.hpp</code> adds no constant of its own.
         </p>
     </main>
     <footer>
-        <p>Last updated: 2026-10-19</p>
+        <p>Last updated: 2026-10-24</p>
     </footer>
 </body>
 </html>

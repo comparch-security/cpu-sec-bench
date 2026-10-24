@@ -14,5 +14,5 @@ int main() {
     delete buffer;
   }
 
-  return 1;
+  return 2; // precondition failed: failed to get a reallocated block after a number of trials
 }

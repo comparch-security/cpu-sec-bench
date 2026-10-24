@@ -31,6 +31,7 @@ int main(int argc, char* argv[])
 
   for(auto m:obj_map) delete[] m.first;
 
-  write_to_temp_file(min_dist, argc, argv);
+  if(!write_to_temp_file(min_dist, argc, argv))
+    return 2; // precondition failed: the measured distance could not be recorded
   return 64;
 }

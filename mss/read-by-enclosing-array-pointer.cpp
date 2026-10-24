@@ -1,12 +1,13 @@
 #include "include/mss.hpp"
 #include "include/conf.hpp"
 #include "include/assembly.hpp"
+#include <cstdlib>
 
 int main(int argc, char* argv[])
 {
   INIT_BUFFER;
   int flow_type  = argv[1][0] - '0';
-  int rv = -1;
+  int rv = 1; // no branch ran: an out-of-range flow_type is not demonstrated
 
   if(flow_type == 0){
     rv = read_by_pointer(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),data),  BUFFER_SIZE, BUFFER_SIZE-1, 1, 'o');
@@ -25,7 +26,11 @@ int main(int argc, char* argv[])
       rv = read_by_pointer(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),data), assem_dist, BUFFER_SIZE-1, 1, 'u');
     }
   }else if(flow_type >= 4){
-    int othersrc_dist = argv[2][0] - '0';
+    // a literal -v token means the redzone calibration variable was never recorded
+    char *end = NULL;
+    long othersrc_dist_num = strtol(argv[2], &end, 10);
+    if(end == argv[2] || *end != '\0') return 1;
+    int othersrc_dist = (int)othersrc_dist_num;
     if(flow_type == 4){
       rv = read_by_pointer(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),data), othersrc_dist, BUFFER_SIZE-1, 1, 'o');
     }else if(flow_type == 5){

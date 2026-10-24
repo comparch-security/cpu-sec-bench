@@ -51,8 +51,10 @@ int main() {
     gvar_init(1);
     Helper *orig = new Helper();
     if(modifyIAT("kernel32.dll", "create_fake_vtable_on_heap", newfunc)) return 2;
-    create_fake_vtable_on_heap(8);
-    return gvar();
+    create_fake_vtable_on_heap(8); // dispatches through the replaced IAT entry into newfunc()
+    // newfunc() decrements the state above; 0 is the proof that the hijacked
+    // dispatch ran, anything else means the IAT entry was not replaced
+    return gvar() == 0 ? RT_CODE_SUCCESS : 1;
 }
 
 
@@ -64,7 +66,11 @@ int FORCE_NOINLINE helper() {
 
 int main(int argc, char* argv[])
 {
-  int cet_enabled = argv[1][0] - '0';
+  // a literal -v token means the ibt-enabled calibration was never recorded
+  char *end = NULL;
+  long cet_enabled_num = strtol(argv[1], &end, 10);
+  if(end == argv[1] || *end != '\0') return 1;
+  int cet_enabled = (int)cet_enabled_num;
   void *rand_label = (void*)&main;
   GET_LABEL_ADDRESS(rand_label,TARGET_LABEL);
   // In LLVM, goto is not allow to jump over declaration of local variables.
@@ -75,6 +81,7 @@ int main(int argc, char* argv[])
   if(cet_enabled == -1) { GOTO_SAVED_LABEL(rand_label);}   // impossible to happen
 
   get_got_func(&got, rand_label, cet_enabled);
+  if(got == NULL) return 2; // the GOT slot could not be located: the call-site instruction shape was not recognised
   COMPILER_BARRIER;
 TARGET_LABEL(argc)
   rand();
@@ -84,8 +91,11 @@ TARGET_LABEL(argc)
   replace_got_func((void **)helper, got);
   end_catch_exception();
 
+  // the second dispatch through the just-overwritten GOT slot must reach
+  // helper(), whose answer (2) cancels the state initialised above; the
+  // arithmetic is only the probe, the verdict is the comparison
   gvar_init(gvar() - rand());
-  return gvar();
+  return gvar() == 0 ? RT_CODE_SUCCESS : 1;
 }
 
 #endif

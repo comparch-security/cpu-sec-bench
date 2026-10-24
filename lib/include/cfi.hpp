@@ -57,6 +57,11 @@ public:
   virtual ~Helper3() {}
 };
 
+// Set when Helper3::virtual_func() runs, taken (read and cleared) by the caller, so that
+// a case reached through a wrong-typed call can report the attack's success as a status
+// constant instead of whatever data the mistyped argument left behind.
+DLL_DEFINITION extern int take_helper3_called();
+
 class DLL_DEFINITION  Ret_To_Helper : public Base
 {
 public:

@@ -22,6 +22,9 @@ void get_got_func(void **gotp, void *label, int cet) {
   // assembly:
   //   894:   f9dff0ef                jal     ra,830 <rand@plt>
   instr = *(int *)pc;
+  // require "jal ra, <offset>": an unrecognised instruction shape reports a
+  // failure to the caller instead of dereferencing a pointer we never verified
+  if((instr & 0x7f) != 0x6f || ((instr >> 7) & 0x1f) != 1) { *gotp = NULL; return; }
   // get the imm20
   offset += ((instr >> 31) & 0x1)   << 20;
   offset += ((instr >> 21) & 0x3ff) << 1;
@@ -40,10 +43,13 @@ void get_got_func(void **gotp, void *label, int cet) {
   //   c64:   428e3e03                ld      t3,1064(t3) # 3088 <rand@GLIBC_2.27>
   //   c68:   000e0367                jalr    t1,t3
   instr = *(int *)pc;
+  if((instr & 0x7f) != 0x17) { *gotp = NULL; return; } // auipc
   offset = instr & 0xfffff000;
   if(offset & 0x80000000) offset |= 0xffffffff00000000llu; // sign extension
   instr = *(int *)(pc+4);
   pc += offset;
+  // the load may be a plain 64-bit ld or, on the capability build, a clc
+  if((instr & 0x707f) != 0x3003 && (instr & 0x707f) != 0x1003) { *gotp = NULL; return; }
   offset = (instr & 0xfff00000) >> 20;
   if(offset & 0x800) offset |= 0xfffffffffffff000llu; // sign extension
   pc += offset;

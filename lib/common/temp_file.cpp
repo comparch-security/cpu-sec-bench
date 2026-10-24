@@ -10,7 +10,7 @@ std::string temp_file_name(const std::string& cmd, const std::list<std::string>&
   return fn;
 }
 
-void write_to_temp_file(int var, int argc, char **argv) {
+bool write_to_temp_file(int var, int argc, char **argv) {
   std::string fn;
   for(int i=0; i<argc; i++) {
     fn += std::string(argv[i]);
@@ -21,6 +21,7 @@ void write_to_temp_file(int var, int argc, char **argv) {
   std::ofstream f(fn,std::ofstream::app);
   f << var << "\n";
   f.close();
+  return f.good();
 }
 
 #if defined(COMPILER_MSVC)

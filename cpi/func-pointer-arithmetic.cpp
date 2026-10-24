@@ -1,4 +1,5 @@
 #include "include/assembly.hpp"
+#include "include/result.hpp"
 #include <cstdint>
 
 static volatile int grv = 1;
@@ -19,5 +20,5 @@ int main() {
   intptr_t fp = reinterpret_cast<intptr_t>(&call_helper);
   intptr_t diff = reinterpret_cast<intptr_t>(&helper) - fp;
   call_helper(fp, diff);
-  return grv;
+  return grv == 0 ? RT_CODE_SUCCESS : 1; // 0: helper was reached through the computed pointer
 }

@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "include/global_var.hpp"
+#include "include/result.hpp"
 #include <string>
 
 volatile arch_int_t offset;
@@ -27,8 +28,11 @@ int main(int argc, char* argv[])
 {
   INIT_TRACE_FILE;
   // get the offset of RA on stack
-  std::string cmd_offset = argv[1];
-  offset = 4 * stoll(cmd_offset);
+  // a literal -v token means the calibration variable was never recorded
+  char *end = NULL;
+  long offset_num = strtol(argv[1], &end, 10);
+  if(end == argv[1] || *end != '\0') return 1;
+  offset = 4 * offset_num;
   void *label = (void*)&main;
   GET_LABEL_ADDRESS(label, TARGET_LABEL);
   if(offset == -1) { GOTO_SAVED_LABEL(label);}   // impossible to happen
@@ -40,5 +44,6 @@ int main(int argc, char* argv[])
 
   // the elligal return site
 TARGET_LABEL(argc)
-  exit(gvar());
+  if(0 == gvar()) exit(RT_CODE_SUCCESS);   // the hijacked RA reached this label
+  exit(1);                                  // the RA was not hijacked
 }

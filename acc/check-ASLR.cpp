@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     fp = static_cast<uintptr_t>(get_region_base("stack"));
     break;
   default:
-    return -1; // should never run to here
+    return 2; // precondition failed: unknown region flag
   }
 
   if(count_flag == 1){

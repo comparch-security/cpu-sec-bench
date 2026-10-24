@@ -17,10 +17,15 @@ several instruction sets and operating systems on top of a shared per-platform s
   record whose program has no source fails at build time. Adding a case means adding a file
   under `acc/`, `cfi/`, `cpi/`, `mss/` or `mts/` **and** a record in `configure.json`.
 - **The exit-code contract is fixed.** Never reuse a code for a new meaning, and never invent
-  one. The full contract is in [doc/architecture.html](doc/architecture.html); it is the
-  interface every test case and the scheduler agree on. `1025` is scheduler-owned — *not run*:
-  skipped for this platform, or could not be built — and must never appear in a record's
-  `expect-results`.
+  one. The full contract is in [doc/architecture.html](doc/architecture.html) and the named
+  constants are in `lib/include/result.hpp`; it is the interface every test case and the
+  scheduler agree on. Amending it is a deliberate act: the ranges and the named exceptions
+  change only together with both published tables (the 2026-10-23 revision — the
+  caught-exception band's lower bound moved to 15, and 19/20/21 and the exceptions 99/251 were
+  minted — is the precedent). `1025` is scheduler-owned — *not run*: skipped for this platform,
+  or could not be built — and must never appear in a record's `expect-results`; `255` is
+  likewise never declared, being POSIX's rendering of a negative or out-of-range status rather
+  than a code.
 - **Platform-specific behaviour belongs in `lib/`, never in a test case.** Test cases stay
   ISA- and OS-portable; the only platform-specific thing a test case contains is a macro call.
   Anything needing embedded assembly, OS signal handling, or ABI knowledge goes into the
@@ -36,7 +41,8 @@ several instruction sets and operating systems on top of a shared per-platform s
 ```
 acc/  cfi/  cpi/  mss/  mts/   Test-case sources — one vulnerability per file
 lib/
-  include/                     Portable headers; include/assembly.hpp dispatches per ISA
+  include/                     Portable headers; assembly.hpp dispatches per ISA,
+                               result.hpp owns the result-code (RT_CODE_*) vocabulary
   common/                      Portable implementations (cfi, mss, global_var, temp_file)
   x86_64/ aarch64/ riscv64/    Per-ISA support (assembly.hpp/.cpp, indepassembly.asm)
   cheri_riscv64/               CHERI RISC-V variant (selected by enable_riscv64_cheri)
@@ -44,7 +50,9 @@ lib/
   visualcpp/                   Windows MSVC layer (signal.cpp, msvc_builtin.hpp)
 scheduler/                     run-test.cpp — the test scheduler; json.hpp is vendored nlohmann
 script/                        Helper scripts (see Architecture)
-configure.json                 Authoritative test registry — 246 records over 103 programs
+configure.json                 Authoritative test registry — one record per runnable
+                               variant; the catalogue page and script/check_catalog.py
+                               derive the current totals
 Makefile                       Build rules; test cases are compiled on demand by the scheduler
 INTERNAL.md                    Internals narrative — rationale only, see Documentation
 doc/                           Project documentation (HTML)
@@ -174,9 +182,11 @@ non-zero codes and their meanings), `set-var`, `get-code-offset`, `size`, `offse
 (backward: `return-*`) and `cfi-f` (forward). `script/gen_sum.py` totals pass counts per
 category from a `results.dat`. `script/check_catalog.py` asserts that
 `doc/test-catalog.html` and `configure.json` list exactly the same records and programs,
-that the published count figures (per-category and totals, derived from each record's
-`program` field) match the registry, and that no classed cell is left unclosed or
-duplicated; unreadable or malformed inputs exit 2, never a traceback.
+that the page's per-category count sentences (derived from each record's `program` field)
+match the registry, and that no classed cell is left unclosed or duplicated; unreadable or
+malformed inputs exit 2, never a traceback. It asserts nothing about `CLAUDE.md` or
+`doc/content.html`: neither publishes a count — the guide names this script as the
+on-demand measure instead — so there is nothing there to keep in sync.
 `script/get_x64_func_inst.sh`, `get_aarch64_func_inst.sh`, `get_riscv64_func_inst.sh` and
 `get_cheri_riscv64_func_inst.sh` extract function opcodes from a built binary — each honoring
 the platform's `OBJDUMP` knob, asserting the extracted word's exact width, and failing loudly
@@ -192,8 +202,8 @@ configuration, requiring elevation.
 - [INTERNAL.md](INTERNAL.md) — rationale and design narrative. **Treat as prose only: it has
   drifted from the code.** It states 221 test cases, and it names cases by their pre-rename
   forms (`read-cross-page-index`, `spray-cross-object-stack`) where `configure.json` now
-  carries the `mss-` prefix (`mss-read-cross-page-index-stack`, …); the authoritative count is
-  246 records over 103 programs. Not every name in it is stale — `mts-double-free`, for one,
+  carries the `mss-` prefix (`mss-read-cross-page-index-stack`, …); the authoritative record set is
+  `configure.json` itself (`script/check_catalog.py` derives the current totals). Not every name in it is stale — `mts-double-free`, for one,
   is still current — so check any name against `configure.json` rather than assuming.
 - [doc/content.html](doc/content.html) — entry point for the documentation tree.
 - [doc/architecture.html](doc/architecture.html) — how the bench works, in full detail.

@@ -17,15 +17,15 @@ int main()
   INIT_TRACE_FILE;
   unsigned char *m = new unsigned char [16];
   assign_fake_machine_code(m);
-  int rv = m[0];
   printf("dummy print: m = %p\n", m);
   begin_catch_exception(m, SEGV_ACCERR);
-  begin_catch_exception(m+4, 0, 0, SIGILL);
-  begin_catch_exception(m+4, 0, 0, SIGFPE);
-  rv = helper((func_type)(m));
+  begin_catch_exception(m+4, 0, RT_CODE_SUCCESS, SIGILL);
+  begin_catch_exception(m+4, 0, RT_CODE_SUCCESS, SIGFPE);
+  helper((func_type)(m));
   end_catch_exception();
   end_catch_exception();
   end_catch_exception();
-  delete m;
-  exit(rv);
+  delete [] m;
+  // returning from the injected code without a caught fault proves it executed
+  exit(RT_CODE_SUCCESS);
 }

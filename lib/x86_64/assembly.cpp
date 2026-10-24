@@ -5,18 +5,27 @@
 
 void get_got_func(void **gotp, void *label, int cet) {
   char *pc = (char *)label;
-  if(cet) pc += 4; //bypass endbr64
+
+  // the call site may carry an endbr64 prefix when CET is enabled
+  if((unsigned char)pc[0] == 0xf3 && (unsigned char)pc[1] == 0x0f &&
+     (unsigned char)pc[2] == 0x1e && (unsigned char)pc[3] == 0xfa) pc += 4;
+
+  // require the "e8 rel32" call: an unrecognised instruction shape reports a
+  // failure to the caller instead of dereferencing a pointer we never verified
+  if((unsigned char)pc[0] != 0xe8) { *gotp = NULL; return; }
   int offset = *(int *)(pc+1);
   pc += 5 + offset; // point to 1st instruction in plt
 
-  if(cet) {
-    pc += 4; // bypass endbr64
-    offset = *(int *)(pc+3);
-    pc += 7 + offset;
-  } else {
-    offset = *(int *)(pc+2);
-    pc += 6 + offset;
+  // the stub's "ff 25 rel32" jump may carry an endbr64 or a bnd prefix
+  for(;;) {
+    if((unsigned char)pc[0] == 0xf3 && (unsigned char)pc[1] == 0x0f &&
+       (unsigned char)pc[2] == 0x1e && (unsigned char)pc[3] == 0xfa) { pc += 4; continue; }
+    if((unsigned char)pc[0] == 0xf2) { pc += 1; continue; }
+    break;
   }
+  if((unsigned char)pc[0] != 0xff || (unsigned char)pc[1] != 0x25) { *gotp = NULL; return; }
+  offset = *(int *)(pc+2);
+  pc += 6 + offset;
 
   *gotp = pc;
 

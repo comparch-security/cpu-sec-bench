@@ -37,8 +37,13 @@ FORCE_NOINLINE void func_to_modify_caller_parameter(int target_register);
   void** ptr = (void**)offset;               \
   *ptr = dat
 
+// the compiler barrier is MSVC's "memory" clobber: without it the compiler may
+// keep its stale register copy of the pointee
 #define SET_MEM(ptr, var)                    \
-  __movsq((unsigned long long*)ptr, (const unsigned long long*)(&var),1)
+  do {                                       \
+    __movsq((unsigned long long*)ptr, (const unsigned long long*)(&var),1); \
+    _ReadWriteBarrier();                     \
+  } while(0)
 
 // jump to a pointer
 #define JMP_DAT(ptr)                         \

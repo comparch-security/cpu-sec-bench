@@ -87,9 +87,12 @@ int main(int argc, char* argv[])
   // get the offset of RA on stack
 
   int offset_sel = std::stol(argv[1]);
-  std::string cmd_var_offset = argv[2];
   std::string cmd_range_offset = argv[3];
-  arch_int_t var_offset = stoll(cmd_var_offset);
+  // a literal -v token means the calibration variable was never recorded
+  char *end = NULL;
+  long var_offset_num = strtol(argv[2], &end, 10);
+  if(end == argv[2] || *end != '\0') return 1;
+  arch_int_t var_offset = var_offset_num;
   arch_int_t range_offset = stoll(cmd_range_offset);
   fake_val = argv[4][0] - '0';
   int ra_sel = argv[5][0] - '0';
@@ -108,8 +111,12 @@ int main(int argc, char* argv[])
   // the illegal return site
 TARGET_LABEL(argc)
   // if hijack the return address, then retrun 0
-  if(gvar() == 2) return 32+saved_offset/4;
+  if(gvar() == 2) {
+    // 32+value is the runtime-parameter channel; the value is the case's own
+    // measurement, delivered as-is (251 = 32+219 is the declared ASan form)
+    return 32+saved_offset/4;
+  }
   COMPILER_BARRIER;
   helper(fake_label,offset_sel);
-  return gvar();
+  return 1; // normal return: the RA was not changed
 }

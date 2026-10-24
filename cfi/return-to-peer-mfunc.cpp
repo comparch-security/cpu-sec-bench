@@ -2,6 +2,7 @@
 #include <cstring>
 #include "include/cfi.hpp"
 #include "include/global_var.hpp"
+#include "include/result.hpp"
 #include <string>
 
 volatile arch_int_t offset = 0;
@@ -12,7 +13,7 @@ public:
     target_obj(int id): id(0) {}
     void fake_ret() {
         WRITE_TRACE("Successful Jumped", "");
-        exit(gvar());
+        exit(RT_CODE_SUCCESS); // the hijacked RA reached the peer member function
     }
 };
 
@@ -42,8 +43,11 @@ int main(int argc, char* argv[])
   INIT_TRACE_FILE;
 
   // get the offset of RA on stack
-  std::string cmd_offset = argv[1];
-  offset = 4 * stoll(cmd_offset);
+  // a literal -v token means the calibration variable was never recorded
+  char *end = NULL;
+  long offset_num = strtol(argv[1], &end, 10);
+  if(end == argv[1] || *end != '\0') return 1;
+  offset = 4 * offset_num;
   target_obj fake_obj(0);
   MemberFuncPtr label = &target_obj::fake_ret;
   void* ptr = NULL;

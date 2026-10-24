@@ -12,7 +12,8 @@ FORCE_NOINLINE int check_every_aligned(char const* const* ptr) {
   for(int i = 0; i < 16; i+=2){
     long long aligned_len = 0x1LL << (i >> 1);
     GET_DISTANCE(abs_dist, (long long)ptr[i+1], (long long)ptr[i]);
-    write_to_temp_file(abs_dist, g_argc, g_argv);
+    if(!write_to_temp_file(abs_dist, g_argc, g_argv))
+      return 2; // precondition failed: the measured distance could not be recorded
     abs_dist = llabs(abs_dist);
     if(aligned_len == abs_dist){
       return 64;

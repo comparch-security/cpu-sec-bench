@@ -27,13 +27,15 @@ int main(int argc, char* argv[])
 {
   INIT_TRACE_FILE;
   // get the offset of RA on stack
-  std::string cmd_offset = argv[1];
-  // fake compiler
-  char gvar_val = argv[2][0];
-  offset = 4 * stoll(cmd_offset);
-  gvar_init(strtol(&gvar_val, NULL, 0));
+  // a literal -v token means the calibration variable was never recorded
+  char *end = NULL;
+  long offset_num = strtol(argv[1], &end, 10);
+  if(end == argv[1] || *end != '\0') return 1;
+  // fake compiler: the peer assembly return site is reached with a fixed state value
+  offset = 4 * offset_num;
+  gvar_init(2);
   void *label = (void *)(assembly_return_site);
   helper(label);
   gvar_decr();
-  return gvar();
+  return 1; // the RA was not hijacked to the peer assembly return site
 }

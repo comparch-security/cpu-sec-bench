@@ -6,7 +6,7 @@ struct exception_record_t{
   enum {PTR,PTRPTR} tok;
   union {
     // faulty memory location: SIGILL, SIGFPE, SIGSEGV, SIGBUS, and SIGTRAP
-    const PVOID si_ExceptionAddress;
+    PVOID si_ExceptionAddress;
     const PVOID *si_IndExceptionAddress;
   };
   DWORD si_ExceptionCode;
@@ -19,11 +19,15 @@ struct exception_record_t{
   exception_record_t (const PVOID *si_IndExceptionAddress, DWORD si_ExceptionCode, ULONG* si_ExceptionInformation, int rv_code):
   tok(PTRPTR), si_ExceptionAddress(si_ExceptionAddress), si_ExceptionCode(si_ExceptionCode), si_ExceptionInformation(si_ExceptionInformation),
   rv_code(rv_code){};
-  exception_record_t operator=(const exception_record_t & e){
-    if(e.tok == PTR)
-      return exception_record_t(e.si_ExceptionAddress,e.si_ExceptionCode,e.si_ExceptionInformation,e.rv_code);
-    else
-      return exception_record_t(e.si_IndExceptionAddress,e.si_ExceptionCode,e.si_ExceptionInformation,e.rv_code);
+  // member-wise assignment: returning a fresh temporary left every stored registration
+  // zeroed, so the handler could never match the record the caller registered
+  exception_record_t& operator=(const exception_record_t & e){
+    tok = e.tok;
+    si_ExceptionAddress = e.si_ExceptionAddress;
+    si_ExceptionCode = e.si_ExceptionCode;
+    si_ExceptionInformation = e.si_ExceptionInformation;
+    rv_code = e.rv_code;
+    return *this;
   }
 };
 
@@ -80,7 +84,15 @@ void begin_catch_exception_msvc(const PVOID expected_faulty_addr, ULONG* si_code
         }
         installed_handler = AddVectoredExceptionHandler(0,ExceptionHandler);
     }
+    if(svp + 1 >= (int)sigact_stack.size()){
+        fprintf(stderr, "begin_catch_exception(): the registration pool is full\n");
+        exit(RT_CODE_LIBFAIL);
+    }
     sigact_stack[++svp] = {expected_faulty_addr, si_signo, si_code, rv_code};
+    if(sigact_stack[svp].rv_code != rv_code || sigact_stack[svp].si_ExceptionCode != si_signo){
+        fprintf(stderr, "begin_catch_exception(): the registration was not stored\n");
+        exit(RT_CODE_LIBFAIL);
+    }
 }
 
 void begin_catch_exception_msvc(const PVOID* expected_faulty_addr, ULONG* si_code,
@@ -91,19 +103,31 @@ void begin_catch_exception_msvc(const PVOID* expected_faulty_addr, ULONG* si_cod
         }
         installed_handler = AddVectoredExceptionHandler(0,ExceptionHandler);
     }
+    if(svp + 1 >= (int)sigact_stack.size()){
+        fprintf(stderr, "begin_catch_exception(): the registration pool is full\n");
+        exit(RT_CODE_LIBFAIL);
+    }
     sigact_stack[++svp] = {expected_faulty_addr, si_signo, si_code, rv_code};
+    if(sigact_stack[svp].rv_code != rv_code || sigact_stack[svp].si_ExceptionCode != si_signo){
+        fprintf(stderr, "begin_catch_exception(): the registration was not stored\n");
+        exit(RT_CODE_LIBFAIL);
+    }
 }
 
 void end_catch_exception() {
+  if(svp < 0) {
+    fprintf(stderr, "end_catch_exception(): no live registration\n");
+    exit(RT_CODE_LIBFAIL);
+  }
   --svp;
   if(svp < 0) {
     if(SetUnhandledExceptionFilter(NULL) == NULL){
       perror("SetUnhandledExceptionFilter() fails to set TopLevelUnhandledExceptionFilter previously!");
-      exit(-1);
+      exit(RT_CODE_LIBFAIL);
     }
     if(!RemoveVectoredExceptionHandler(installed_handler)){
       perror("end_catch_nx_exception() fails to reset Vectored Exception!");
-      exit(-1);
+      exit(RT_CODE_LIBFAIL);
     }
   }
 }

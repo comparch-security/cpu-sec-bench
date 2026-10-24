@@ -78,7 +78,7 @@ int main(int argc, char** argv){
                 //if prog has run at this, it means the jump failed
                 WRITE_TRACE("Successful Jumped", "");
                 free(addr_buffer);
-                return gvar();
+                return 1; // the jump did not land
             }
             break;
         default:

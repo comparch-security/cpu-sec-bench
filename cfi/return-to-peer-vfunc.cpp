@@ -31,8 +31,11 @@ int main(int argc, char* argv[])
   INIT_TRACE_FILE;
   Ret_To_Helper* ptr = new Ret_To_Helper();
   // get the offset of RA on stack
-  std::string cmd_offset = argv[1];
-  offset = 4 * stoll(cmd_offset);
+  // a literal -v token means the calibration variable was never recorded
+  char *end = NULL;
+  long offset_num = strtol(argv[1], &end, 10);
+  if(end == argv[1] || *end != '\0') return 1;
+  offset = 4 * offset_num;
   uintptr_t* fake_ret_ptr = reinterpret_cast<uintptr_t *>(ptr);
   uintptr_t* fake_ret_adr = reinterpret_cast<uintptr_t *>(*fake_ret_ptr);
   void* fake_ret = reinterpret_cast<void*>(*fake_ret_adr);

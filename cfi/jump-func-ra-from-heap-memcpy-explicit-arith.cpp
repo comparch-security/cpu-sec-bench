@@ -80,7 +80,7 @@ int main(int argc, char** argv){
                 WRITE_TRACE("Successful Jumped", "");
                 //if prog has run at this, it means the jump failed
             }
-            return gvar();
+            return 1; // the jump did not land
             break;
         default:
             break;

@@ -18,6 +18,14 @@ void get_got_func(void **gotp, void *label, int cet) {
   // bl: 100101, imm26
   // pc = pc + imm26 * 4
 
+  // tolerate a landing pad (bti) or a nop before the call
+  while((unsigned)*(int *)pc == 0xd503245fu || (unsigned)*(int *)pc == 0xd503249fu ||
+        (unsigned)*(int *)pc == 0xd50324dfu || (unsigned)*(int *)pc == 0xd503201fu) pc += 4;
+
+  // require the "bl" call: an unrecognised instruction shape reports a failure
+  // to the caller instead of dereferencing a pointer we never verified
+  if((*(int *)pc & 0xfc000000) != 0x94000000) { *gotp = NULL; return; }
+
   offset = (*(int *)pc) & 0x03ffffff; // get the imm26
   if(offset & 0x3000000) offset |= 0xfffffffffc000000llu; // sign extended to 64
   offset *= 4;
@@ -39,6 +47,8 @@ void get_got_func(void **gotp, void *label, int cet) {
   //  pc = pc + ext(imm12 * 4)
   int instr_adrp = *(int *)pc;
   int instr_ldr  = *(int *)(pc+4);
+  if((instr_adrp & 0x9f000000) != 0x90000000) { *gotp = NULL; return; } // adrp
+  if((instr_ldr  & 0xffc00000) != 0xf9400000) { *gotp = NULL; return; } // ldr (64-bit)
 
   offset = (arch_int_t)pc;
   offset &= 0xfffffffffffff000;
@@ -82,6 +92,15 @@ void get_got_func(void **gotp, void *label, int cet) {
   //
   // bl: 100101, imm26
   // pc = pc + imm26 * 4
+
+  // tolerate a landing pad (bti) or a nop before the call
+  while((unsigned)*(int *)pc == 0xd503245fu || (unsigned)*(int *)pc == 0xd503249fu ||
+        (unsigned)*(int *)pc == 0xd50324dfu || (unsigned)*(int *)pc == 0xd503201fu) pc += 4;
+
+  // require the "bl" call: an unrecognised instruction shape reports a failure
+  // to the caller instead of dereferencing a pointer we never verified
+  if((*(int *)pc & 0xfc000000) != 0x94000000) { *gotp = NULL; return; }
+
   offset = (*(int *)pc) & 0x03ffffff; // get the imm26
   if(offset & 0x3000000) offset |= 0xfffffffffc000000llu; // sign extended to 64
   offset *= 4;
@@ -98,7 +117,11 @@ void get_got_func(void **gotp, void *label, int cet) {
   //
   //  ldr: 01011000, imm19, rd5
   //  pc = pc + imm19 * 4
-  pc += 4;
+
+  // tolerate a landing pad (bti) or a nop before the literal load
+  while((unsigned)*(int *)pc == 0xd503201fu) pc += 4;
+  if((*(int *)pc & 0xff000000) != 0x58000000) { *gotp = NULL; return; } // ldr (literal)
+  if((*(int *)(pc+4) & 0xfffffc1f) != 0xd61f0000) { *gotp = NULL; return; } // br
   offset = (*(int *)pc >> 5) & 0x07ffff; // get the imm19
   if(offset & 0x40000) offset |= 0xfffffffffff80000llu; // sign extended to 64
   offset *= 4;

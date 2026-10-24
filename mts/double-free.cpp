@@ -81,8 +81,8 @@ int main(int argc, char** argv){
     int tccache_size = atoi(argv[4]);
     int flag_option  = atoi(argv[5]);
     if(tccache_size < 7){
-        // tccache size is too small to overflow free chunk to fastbin chunk 
-        return -2;
+        // tccache size is too small to overflow free chunk to fastbin chunk
+        return 2; // precondition failed: no tcache large enough to stage the attack
     }
 
     //traverse the chunk_size array to try different size of free chunk 

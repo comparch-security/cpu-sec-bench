@@ -30,10 +30,13 @@ int main(int argc, char* argv[])
 {
   INIT_TRACE_FILE;
   // get the offset of RA on stack
-  std::string cmd_offset = argv[1];
-  offset = 4 * stoll(cmd_offset);
+  // a literal -v token means the calibration variable was never recorded
+  char *end = NULL;
+  long offset_num = strtol(argv[1], &end, 10);
+  if(end == argv[1] || *end != '\0') return 1;
+  offset = 4 * offset_num;
 
   void *label = (void *)exit;
   helper(label);
-  return gvar();
+  return 1; // the modified RA did not reach exit()
 }

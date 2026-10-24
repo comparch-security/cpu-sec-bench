@@ -127,17 +127,46 @@ Detailed documentation lives in the [doc](doc/content.html) directory:
 The results of individual test cases are recorded in a generated file `results.json`.
 The meaning of the result integer:
 
-* 0: the test case passed and supposedly a vulnerability is expoited.
-* [1-15]: A predefined error number is returned.
-* [16-31]: An expected exception is catched and a predefined error number is then returned.
-* [32-63]: A run-time parameter (`n-32`) is found and returned by the test case.
-* [64-65]: A run-time parameter is written to a temporary file: `64` means the test case then
-  passes, `65` means it fails with error `2`.
-* [256-511]: An exception is raised but uncatched with the signal number as `n-256`.
-* 1024: Test case directly failed due to failure in prerequisite cases.
-* 1025: The case was not run: it is skipped on this platform, or it could not be built.
-* -1: configuration error which needs to be fixed.
-* other: Something is wrong and need investigation.
+* 0: the attack succeeded — the vulnerability was exploited, so the platform does not provide
+  the corresponding defense.
+* 1: the attack was launched and its intended effect is absent, with no platform signal:
+  silence. A `1` deliberately does not say whether a silent defense neutralized the attack or
+  the attack's mechanism never landed — the argument sweeps, the `require` chains and the
+  case-local values below (where a case can tell the two apart) carry that distinction, which
+  no exit code can. The mss redzone family is the worked example: the out-of-bounds access
+  simply did not land in the target buffer.
+* 2-14: a case-local failure value, meaningful only for the case that delivers it; every such
+  value is declared in its record's `expect-results` with its meaning.
+* 15-31: the caught-exception and library band — the platform responded to the attack. The
+  named values: `15` and `16` are the caught memory faults (mapping and access), `17`/`18` are
+  in use by `cfi-call-wrong-vtable-released`, `19` is the handler's unmatched-fault
+  *diagnostic* and is never declared as an expected result, `20` is a library configuration
+  failure, and `21` is the fakefunc corruption's contained fault. The constants themselves
+  live in `lib/include/result.hpp`.
+* 32-63: a runtime parameter was discovered: the value is the code minus 32. The scheduler
+  stores it in `variables.json` and treats the case as successful, so later cases can consume
+  it through a `-v` argument. The producer bounds the value to `0..31` wherever the case
+  declares no out-of-band value; that bound is not enforced at the consumer, and `251` is the
+  shipped demonstration of a designed out-of-band delivery (`32 + 219`, the ASan frame
+  offset).
+* 64-65: the same discovery, but the parameter was written to a temp file instead of encoded
+  in the status: `64` means the test case then passes, `65` means it fails with error `2`.
+* 256-511: an exception is raised but uncaught, with the signal number as `n-256` — the
+  process was terminated by a signal.
+* 1024: the test case directly failed due to a failure in prerequisite cases.
+* 1025: the case was not run: it is skipped on this platform, or it could not be built
+  (scheduler-owned; never a record's own outcome, and never declared in `expect-results`).
+* other: something is wrong and needs investigation.
+
+The contract in full lives in [`lib/include/result.hpp`](lib/include/result.hpp) (the named
+constants and the bands) and in [doc/architecture.html](doc/architecture.html) (the narrative,
+the scheduler's own behaviour and the two named exceptions). Three rules complete it: `gvar`
+is control-flow state and never becomes a verdict code; a caught fault *at* the target address
+means the platform **denied** execution (a defense), while a fault *past* the entry proves the
+injected code began executing (`0` — the attack succeeded); and `99` is the single *proactive*
+declaration (the MTE/HWASan tag check), kept because no current lane can provoke it. `255` is
+never declared anywhere: it is how POSIX renders a negative or out-of-range process status,
+not a code.
 
 ### Contributors
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="last-modified" content="2026-10-20">
+    <meta name="last-modified" content="2026-10-24">
     <title>Architecture | Security Test Benchmark</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -36,6 +36,7 @@
   __x86_64 / _M_X64  ->  lib/x86_64/assembly.hpp   (or visualcpp_assembly.hpp under MSVC)
   __aarch64__        ->  lib/aarch64/assembly.hpp
   __riscv           ->  lib/riscv64/assembly.hpp
+lib/include/result.hpp        owns the result-code vocabulary (the RT_CODE_* family)
 lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
 
         <p>
@@ -181,7 +182,8 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
         <p>
             The snapshot is also what keeps variant records honest across the split. The
             in-place <code>test/&lt;program&gt;</code> is overwritten whenever the macro map
-            changes, and 17 programs in the shipped registry carry several variants, so a plain
+            changes, and many programs in the shipped registry carry several variants (the catalogue page lists
+            them, and <code>script/check_catalog.py</code> derives the current totals), so a plain
             <code>make-only</code> followed by <code>no-make</code> would run whichever variant
             happened to be built last. The supported split is
             <code>run-test corpus make-only</code> at build time and
@@ -192,9 +194,13 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
 
         <p>
             Exit status is the interface between a test case and the scheduler, so the contract
-            is fixed and each range has exactly one meaning. The table is derived from
-            <code>scheduler/run-test.cpp</code>, which is authoritative; the same contract is
-            summarised for users in <a href="../README.md">README.md</a>.
+            is fixed and each range has exactly one meaning. The named <code>0-31</code> values
+            and their constants are owned by <code>lib/include/result.hpp</code> and documented
+            here; the scheduler encodes the parameter channel (<code>32-63</code>), the
+            temp-file variant (<code>64-65</code>), signal deaths (<code>256+signo</code>) and
+            its own <code>1024</code>/<code>1025</code>, and adds nothing to the
+            <code>0-31</code> families. The same contract is summarised for users in
+            <a href="../README.md">README.md</a>.
         </p>
 
         <table>
@@ -208,21 +214,50 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
                     platform does not provide the corresponding defense.</td>
             </tr>
             <tr>
-                <td>1-15</td>
-                <td>A predefined error: the test reached a known failure point.</td>
+                <td>1</td>
+                <td>The attack was launched, no platform signal was delivered, and the attack's
+                    intended effect is absent &mdash; <em>silence</em>. It is the single shared
+                    not-demonstrated constant, and it deliberately does not separate two
+                    realities: a silent defense neutralized the attack, or the attack's
+                    mechanism never landed. The argument sweeps, the <code>require</code>
+                    chains and the case-local values (where a case can tell them apart) carry
+                    that distinction, which no exit code can. The mss redzone family is the
+                    worked example: the out-of-bounds access simply did not land in the target
+                    buffer. It is never to be read as &ldquo;the platform stopped the
+                    attack&rdquo;.</td>
             </tr>
             <tr>
-                <td>16-31</td>
-                <td>An expected exception was caught and a predefined error number returned. This
-                    is how a defense that manifests as an exception &mdash; DEP, for example
-                    &mdash; is recorded as an expected outcome rather than an anomaly.</td>
+                <td>2-14</td>
+                <td>A case-local failure value: meaningful only for the case that delivers it,
+                    and declared in that record's <code>expect-results</code> with its meaning.
+                    There is no shared value in this range.</td>
+            </tr>
+            <tr>
+                <td>15-31</td>
+                <td>The caught-exception and library band: the platform responded to the attack.
+                    An expected exception was caught and a defined constant returned &mdash; this
+                    is how a defense that manifests as an exception (DEP, for example) is
+                    recorded as an expected outcome rather than an anomaly. The named values are
+                    <code>15</code> (<code>RT_CODE_MAPERR</code>) and <code>16</code>
+                    (<code>RT_CODE_ACCERR</code>) for the caught memory faults, <code>17</code>
+                    and <code>18</code> (in use by <code>cfi-call-wrong-vtable-released</code>),
+                    <code>19</code> (<code>RT_CODE_MISMATCH</code>, the handler's
+                    unmatched-fault <em>diagnostic</em> &mdash; documented, and never declared
+                    as an expected result), <code>20</code> (<code>RT_CODE_LIBFAIL</code>, a
+                    library configuration failure) and <code>21</code>
+                    (<code>RT_CODE_FAULT_CONTAINED</code>, the fakefunc corruption's contained
+                    fault). The constants live in <code>lib/include/result.hpp</code>.</td>
             </tr>
             <tr>
                 <td>32-63</td>
                 <td>A runtime parameter was discovered: the value is the code minus 32. The
                     scheduler stores it in <code>variables.json</code> and treats the case as
                     successful, so later cases can consume the value through a
-                    <code>-v</code> argument.</td>
+                    <code>-v</code> argument. The producer bounds the value to
+                    <code>0..31</code> wherever the case declares no out-of-band value; that
+                    bound is not enforced at the consumer, and <code>251</code> (32 + 219, the
+                    ASan frame offset) is the shipped demonstration of a designed out-of-band
+                    delivery.</td>
             </tr>
             <tr>
                 <td>64-65</td>
@@ -249,11 +284,6 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
                     This code is scheduler-owned and never a test case's own outcome.</td>
             </tr>
             <tr>
-                <td>-1</td>
-                <td>A configuration or flow error raised by the test program itself &mdash;
-                    typically no argument branch matched.</td>
-            </tr>
-            <tr>
                 <td>other</td>
                 <td>Something is wrong and needs investigation.</td>
             </tr>
@@ -261,7 +291,22 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
 
         <p>
             The scheduler prints and highlights only unexpected codes, so a clean run is quiet
-            and anything needing attention stands out.
+            and anything needing attention stands out. Negative and out-of-range process
+            statuses are never codes: POSIX renders them as <code>255</code>, so
+            <code>255</code> appears in this suite only as that rendering &mdash; it is never
+            declared in a record's <code>expect-results</code>, and a case that reaches it has
+            a defect to fix rather than a result to record. Three rules complete the contract.
+            <code>gvar</code> is control-flow state: it may gate branches and carry a
+            calibration datum into the parameter channel, but it never becomes a verdict code.
+            A caught fault <em>at</em> the target address means the platform <em>denied</em>
+            execution (a defense), while a fault <em>past</em> the entry proves the injected
+            code began executing &mdash; the attack succeeded, and <code>0</code> is the honest
+            delivery. And <code>99</code> is the one <em>proactive</em> declaration: the
+            MTE/HWASan tag check is registered as an expected outcome even though no current
+            lane can provoke it, because MTE tag-checks data accesses rather than instruction
+            fetches. The same two values are named exceptions outside the bands, documented in
+            <code>lib/include/result.hpp</code>: <code>99</code> and the registry-side
+            <code>251</code>.
         </p>
 
         <h2>Runtime parameters</h2>

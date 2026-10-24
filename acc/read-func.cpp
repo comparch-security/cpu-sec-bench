@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     // helper() out of a bogus comparison; on CHERI it also keeps the
     // capability fault (290) from masking a failed extraction as the defense.
     if( !(itmpf >> std::hex >> code_num) )
-      return 1;
+      return 2; // precondition failed: the side file holds no usable opcode word
     return helper();
   }
   return 2;

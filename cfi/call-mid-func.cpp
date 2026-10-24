@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "include/global_var.hpp"
+#include "include/result.hpp"
 
 /* On Apple M1 Darwin 20.6.0 clang 12.0.5:
  * The global variable is accessed using a base register
@@ -25,7 +26,7 @@ FORCE_NOINLINE void * helper() {
   else return rv;
 TARGET_LABEL(fake_use_arg)
   WRITE_TRACE("Successfully Jumped","");
-  exit(gvar()-1);
+  exit(RT_CODE_SUCCESS);
 }
 
 typedef void (*fp_t)();
@@ -35,5 +36,5 @@ int main(int argc, char** argv) {
   gvar_init(1);
   fp_t fp = (fp_t)helper();
   fp();
-  return gvar();
+  return 1;
 }

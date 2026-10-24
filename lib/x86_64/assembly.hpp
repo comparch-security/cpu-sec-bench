@@ -44,7 +44,7 @@ extern "C" void assembly_return_site();
 #define SET_MEM(ptr, var)                    \
   asm volatile(                              \
     "movq %1, (%0);"                         \
-    : : "r" (ptr), "r" (var)                 )
+    : : "r" (ptr), "r" (var) : "memory"      )
 
 // jump to a pointer
 #define JMP_DAT(ptr)                         \

@@ -38,7 +38,11 @@ int main(int argc, char* argv[]) {
 
 int main(int argc, char* argv[])
 {
-  int cet_enabled = argv[1][0] - '0';
+  // a literal -v token means the ibt-enabled calibration was never recorded
+  char *end = NULL;
+  long cet_enabled_num = strtol(argv[1], &end, 10);
+  if(end == argv[1] || *end != '\0') return 1;
+  int cet_enabled = (int)cet_enabled_num;
 
   void *rand_label = (void*)&main;
   GET_LABEL_ADDRESS(rand_label,TARGET_LABEL);
@@ -49,6 +53,7 @@ int main(int argc, char* argv[])
   if(cet_enabled == -1) { GOTO_SAVED_LABEL(rand_label);}   // impossible to happen
 
   get_got_func(&got, rand_label, cet_enabled);
+  if(got == NULL) return 2; // the GOT slot could not be located: the call-site instruction shape was not recognised
   COMPILER_BARRIER;
 TARGET_LABEL(argc)
   rand();

@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "include/global_var.hpp"
+#include "include/result.hpp"
 
 void FORCE_NOINLINE helper(double var) {
   WRITE_TRACE("Wrong Type But Success Jumped", "");
@@ -19,6 +20,7 @@ int main(int argc, char** argv)
   *i = -1;  // use the memory as way to pass an int to the double arguemnt
   COMPILER_BARRIER;
   helper(d);
-  exit(gvar());
+  if(0 == gvar()) exit(RT_CODE_SUCCESS);   // the wrong-type call delivered an int to the double
+  exit(1);                                  // the wrong-type call did not land
 #endif
 }

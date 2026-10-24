@@ -1,6 +1,7 @@
 #include "include/mss.hpp"
 #include "include/conf.hpp"
 #include "include/assembly.hpp"
+#include <cstdlib>
 
 int main(int argc, char* argv[])
 {
@@ -31,7 +32,11 @@ int main(int argc, char* argv[])
       rv = check(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), underflow),      BUFFER_SIZE,  1, 'c');
     }
   }else if(flow_type >= 4){
-    int othersrc_dist = argv[2][0] - '0';
+    // a literal -v token means the redzone calibration variable was never recorded
+    char *end = NULL;
+    long othersrc_dist_num = strtol(argv[2], &end, 10);
+    if(end == argv[2] || *end != '\0') return 1;
+    int othersrc_dist = (int)othersrc_dist_num;
     if(flow_type == 4){
       update_by_index(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), data), othersrc_dist, BUFFER_SIZE,  1, 'c');
       rv = check(MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), overflow),      BUFFER_SIZE,  1, 'c');

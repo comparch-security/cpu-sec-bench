@@ -1,5 +1,6 @@
 #include "include/global_var.hpp"
 #include "include/assembly.hpp"
+#include "include/result.hpp"
 
 void FORCE_NOINLINE helper(int* var) {
   WRITE_TRACE("Wrong Type But Success Jumped", "");
@@ -24,5 +25,6 @@ int main(int argc, char** argv)
    */
   SET_MEM(&var, helper);
   helper(&var);
-  return gvar();
+  if(0 == gvar()) return RT_CODE_SUCCESS;  // the wrong-type call delivered the expected value
+  return 1;                                 // the wrong-type call did not land
 }

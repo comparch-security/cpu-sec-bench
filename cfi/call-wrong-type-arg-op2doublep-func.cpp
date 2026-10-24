@@ -1,10 +1,11 @@
 #include <cstdlib>
 #include "include/global_var.hpp"
+#include "include/result.hpp"
 
 void FORCE_NOINLINE helper(double *var) {
   WRITE_TRACE("Wrong Type But Success Jumped", "");
-  if(*var == 2.0) exit(0);
-  else gvar_init((unsigned int)(*var));
+  if(*var == 2.0) exit(RT_CODE_SUCCESS);
+  else gvar_init(1);
 }
 
 class DoubleObj
@@ -24,5 +25,5 @@ int main(int argc, char* argv[])
   DoubleObj m((double)num);
   dp = (double *)(&m);
   helper(dp);
-  return gvar();
+  return 1; // the misread double did not equal 2.0
 }

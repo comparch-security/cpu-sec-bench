@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
   long long distance_up   = 0;
   long long distance_down = 0;
 
-  int rv = -1;
+  int rv = 1; // not demonstrated unless a check below runs
 
   GET_DISTANCE(distance_up, (long long)MEMBEROP(STR2(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),_underflow),data), (long long)MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),data));
   GET_DISTANCE(distance_down, (long long)MEMBEROP(STR2(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),_overflow),data), (long long)MEMBEROP(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)),data));

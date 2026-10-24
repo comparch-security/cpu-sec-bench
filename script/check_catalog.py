@@ -28,8 +28,6 @@ inside a sibling's.
 Count figures. Every published count derives from the registry and is
 asserted against it:
 
-  * CLAUDE.md -- the phrase "<records> records over <programs> programs";
-  * doc/content.html -- the per-category table rows and the Total row;
   * doc/test-catalog.html -- the five "<programs> programs, <records>
     records" sentences under the per-category headings.
 
@@ -59,8 +57,6 @@ from html.parser import HTMLParser
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG = os.path.join(REPO_ROOT, "configure.json")
 DEFAULT_CATALOG = os.path.join(REPO_ROOT, "doc", "test-catalog.html")
-CONTENT = os.path.join(REPO_ROOT, "doc", "content.html")
-PROJECT_GUIDE = os.path.join(REPO_ROOT, "CLAUDE.md")
 
 BUCKETS = ("rec", "prog")
 CATEGORIES = ("acc", "cfi", "cpi", "mss", "mts")
@@ -148,29 +144,8 @@ def load_registry():
     return config, records, programs
 
 
-def check_counts(catalog, catalog_text, content_text, guide_text, records, programs, problems):
+def check_counts(catalog, catalog_text, records, programs, problems):
     """Assert the published count figures against the registry-derived ones."""
-    total_records = sum(records.values())
-    total_programs = len(set().union(*programs.values()))
-
-    phrase = "%d records over %d programs" % (total_records, total_programs)
-    if phrase not in guide_text:
-        problems.append("%s: expected the phrase %r (registry-derived totals), not found"
-                        % (PROJECT_GUIDE, phrase))
-
-    # doc/content.html: the summary table's per-category rows and Total row.
-    rows = {cat: (int(recs), int(progs)) for cat, progs, recs in re.findall(
-        r'<td><code>(acc|cfi|cpi|mss|mts)/</code></td>\s*<td>(\d+)</td>\s*<td>(\d+)</td>',
-        content_text)}
-    for cat in CATEGORIES:
-        report_figure(problems, "%s, table row %s/" % (CONTENT, cat),
-                      (records[cat], len(programs[cat])), rows.get(cat))
-    total_row = re.search(r'<th>Total</th>\s*<th></th>\s*<th>(\d+)</th>\s*<th>(\d+)</th>',
-                          content_text)
-    report_figure(problems, "%s, Total row" % CONTENT,
-                  (total_records, total_programs),
-                  (int(total_row.group(2)), int(total_row.group(1))) if total_row else None)
-
     # doc/test-catalog.html: the per-category "N programs, M records" sentences.
     sentences = {cat: (int(recs), int(progs)) for cat, progs, recs in re.findall(
         r'<h2>[^<>]*\(<code>(acc|cfi|cpi|mss|mts)/</code>\)</h2>\s*<p>(\d+) programs, (\d+) records',
@@ -181,7 +156,7 @@ def check_counts(catalog, catalog_text, content_text, guide_text, records, progr
 
 
 def check(catalog):
-    for path in (CONFIG, catalog, CONTENT, PROJECT_GUIDE):
+    for path in (CONFIG, catalog):
         if not os.path.isfile(path):
             print("internal error: %s not found" % path, file=sys.stderr)
             sys.exit(2)
@@ -193,11 +168,6 @@ def check(catalog):
         catalog_text = fh.read()
     parser.feed(catalog_text)
     parser.close()
-
-    with open(CONTENT, encoding="utf-8") as fh:
-        content_text = fh.read()
-    with open(PROJECT_GUIDE, encoding="utf-8") as fh:
-        guide_text = fh.read()
 
     # run-test.cpp case_parser(): the program is the explicit 'program' field,
     # otherwise the record key itself.
@@ -232,8 +202,7 @@ def check(catalog):
             problems.append("%s set: %d extra name(s): %s"
                             % (label, len(extra), ", ".join(extra)))
 
-    check_counts(catalog, catalog_text, content_text, guide_text,
-                 records, programs, problems)
+    check_counts(catalog, catalog_text, records, programs, problems)
 
     if problems:
         print("FAIL: catalog/config disagreement —", file=sys.stderr)

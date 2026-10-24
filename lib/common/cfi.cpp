@@ -18,8 +18,17 @@ void Helper2::virtual_func(int arg) {
   exit(3);
 }
 
+static volatile int helper3_called = 0;
+
+int take_helper3_called() {
+  int rv = helper3_called;
+  helper3_called = 0;
+  return rv;
+}
+
 void Helper3::virtual_func(double arg) {
   lvar = arg;
+  helper3_called = 1;
 }
 
 void Ret_To_Helper::virtual_func() {

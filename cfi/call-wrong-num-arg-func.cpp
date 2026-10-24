@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "include/global_var.hpp"
+#include "include/result.hpp"
 
 int FORCE_NOINLINE helper(int a, int b) {
   gvar_init(0);
@@ -15,5 +16,6 @@ int main(int argc, char** argv)
   gvar_init(1);
   func_t fp = (func_t)helper;
   fp();
-  exit(gvar());
+  if(0 == gvar()) exit(RT_CODE_SUCCESS);   // the helper ran with the wrong argument count
+  exit(1);                                  // the wrong-argument call did not land
 }

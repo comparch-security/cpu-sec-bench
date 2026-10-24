@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "include/global_var.hpp"
+#include "include/result.hpp"
 #include <string>
 
 volatile arch_int_t offset;
@@ -27,5 +28,6 @@ int main(int argc, char* argv[]){
   // the elligal return site
 TARGET_LABEL(argc)
   gvar_decr();
-  exit(gvar());
+  if(gvar() < 0) exit(1);                  // the RA was not hijacked
+  exit(RT_CODE_SUCCESS);                   // the hijacked RA reached this label
 }

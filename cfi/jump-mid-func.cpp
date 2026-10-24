@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include "include/global_var.hpp"
 #include "include/assembly.hpp"
+#include "include/result.hpp"
 
 extern "C"
 FORCE_NOINLINE void * helper(int a) {
@@ -20,7 +21,7 @@ FORCE_NOINLINE void * helper(int a) {
   case 1: return lp;
   }
 TARGET_LABEL(a) // illegal jump target
-    exit(gvar() - 2);
+    exit(RT_CODE_SUCCESS);
 }
 
 int main(int argc, char* argv[])
@@ -36,5 +37,5 @@ int main(int argc, char* argv[])
    */
   JMP_DAT(target);
   WRITE_TRACE("Successful Jumped", "");
-  return gvar();
+  return 1;
 }

@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include "include/cfi.hpp"
 #include "include/global_var.hpp"
+#include "include/result.hpp"
 #include <string>
 
 extern volatile arch_int_t cfi_offset;
@@ -39,5 +40,6 @@ int main(int argc, char* argv[]) {
   // the illegal return site
 TARGET_LABEL(argc)
   gvar_decr();
-  exit(gvar());
+  if(gvar() < 0) exit(1);                  // the RA was not hijacked
+  exit(RT_CODE_SUCCESS);                   // the hijacked RA reached this label
 }

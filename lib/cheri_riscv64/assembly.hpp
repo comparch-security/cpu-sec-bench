@@ -38,7 +38,7 @@ extern "C" void assembly_return_site();
   #define SET_MEM(ptr, var)                    \
     asm volatile(                              \
       "sc.cap %1, 0(%0);"                      \
-      : : "C" (ptr), "C" (var)                 )
+      : : "C" (ptr), "C" (var) : "memory"      )
 
   // jump to a pointer
   #define JMP_DAT(ptr)                         \

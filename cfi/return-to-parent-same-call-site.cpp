@@ -36,9 +36,12 @@ int main(int argc, char* argv[])
   // get the offset of RA on stack
 
   int sel = std::stol(argv[1]);
-  std::string cmd_var_offset = argv[2];
   std::string cmd_range_offset = argv[3];
-  arch_int_t var_offset = stoll(cmd_var_offset);
+  // a literal -v token means the calibration variable was never recorded
+  char *end = NULL;
+  long var_offset_num = strtol(argv[2], &end, 10);
+  if(end == argv[2] || *end != '\0') return 1;
+  arch_int_t var_offset = var_offset_num;
   arch_int_t range_offset = stoll(cmd_range_offset);
 
   offset = 4*(range_offset + var_offset);
@@ -52,8 +55,12 @@ int main(int argc, char* argv[])
   COMPILER_BARRIER;
   // the elligal return site
 TARGET_LABEL(argc)
-  if(gvar() < 0) exit(32 - gvar());
+  if(gvar() < 0) {
+    // 32+value is the runtime-parameter channel; the value is the case's own
+    // measurement, delivered as-is (251 = 32+219 is the declared ASan form)
+    exit(32 - gvar());
+  }
   helper(ret_label,sel);
   helper(ret_label,sel);
-  return gvar();
+  return 1; // normal return: the RA was not changed
 }

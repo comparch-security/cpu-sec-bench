@@ -9,7 +9,10 @@ int main(int argc, char* argv[])
   int flow_type  = argv[1][0] - '0';
   int large_ind  = argv[2][0] - '0';
 
-  int rv = -1;
+  int rv = 1; // no branch ran: an out-of-range flow_type is not demonstrated
+
+  // large_buf_lens has 9 entries; an out-of-range selector must not index past it
+  if(large_ind < 0 || large_ind > 8) return rv;
 
   if(flow_type == 0){
     update_by_pointer(ARROW(STR2BR(STR2UL(RSTR(REGION_KIND), BSTR(BUFFER_KIND)), large_ind), get_data()), large_buf_lens[large_ind], 1, 1, 'c');

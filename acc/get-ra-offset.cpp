@@ -50,7 +50,7 @@ int test_##FT(int v) {                       \
   helper_##FT(ra_label);                     \
   COMPILER_BARRIER;                          \
 TARGET_LABEL(v)                              \
-  if(gvar() < 0) return 1;                   \
+  if(gvar() < 0 || gvar() > 31) return 2;    \
   return (int)gvar() + 32;                   \
 }
 
@@ -64,5 +64,6 @@ int main(int argc, char* argv[])
   std::string ftype(argv[2]);
   if(ftype == "v-p-g0") return test_v_p_g0(v);
   if(ftype == "v-p-g1") return test_v_p_g1(v);
+  return 2; // precondition failed: unknown function type, no parameter was measured
 }
 

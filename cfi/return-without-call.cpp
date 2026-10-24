@@ -20,16 +20,21 @@ FORCE_NOINLINE void helper(arch_int_t fsize) {
 
 TARGET_LABEL(fake_use_arg)
   gvar_decr();
-  exit(gvar());
+  exit(RT_CODE_SUCCESS); // the hijacked RA reached the fake return site
 }
 
 int main(int argc, char* argv[])
 {
   INIT_TRACE_FILE;
   gvar_init(argv[1][0] - '0');
-  arch_int_t fsize = (argv[2][0] - '0') * 4 / sizeof(arch_int_t);
+  // a literal -v token means the calibration variable was never recorded; parse the
+  // whole token, since a produced frame size can be two digits
+  char *end = NULL;
+  long fsize_num = strtol(argv[2], &end, 10);
+  if(end == argv[2] || *end != '\0') return 1;
+  arch_int_t fsize = fsize_num * 4 / sizeof(arch_int_t);
   begin_catch_exception((void *)NULL, BUS_ADRALN, RT_CODE_ACCERR, SIGBUS);
   helper(fsize);
   end_catch_exception();
-  return gvar();
+  return 1; // the RA was not pushed out of the frame
 }

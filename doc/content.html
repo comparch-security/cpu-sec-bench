@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="last-modified" content="2026-09-30">
+    <meta name="last-modified" content="2026-10-24">
     <title>Documentation | Security Test Benchmark</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -45,46 +45,48 @@
             <tr>
                 <th>Category</th>
                 <th>Directory</th>
-                <th>Programs</th>
-                <th>Records</th>
+                <th>What it covers</th>
             </tr>
             <tr>
                 <td>Memory spatial safety</td>
                 <td><code>mss/</code></td>
-                <td>30</td>
-                <td>141</td>
+                <td>Out-of-bounds and cross-boundary access on stack, heap, global data and
+                    read-only data; object, frame, page and section boundaries; type conversion;
+                    and spray writes.</td>
             </tr>
             <tr>
                 <td>Memory temporal safety</td>
                 <td><code>mts/</code></td>
-                <td>14</td>
-                <td>16</td>
+                <td>Use-after-free, use-after-reclaim and double-free on heap and stack, including
+                    the reclaim calibration cases the others depend on.</td>
             </tr>
             <tr>
                 <td>Access control</td>
                 <td><code>acc/</code></td>
-                <td>10</td>
-                <td>20</td>
+                <td>Address-space randomization, code-page readability, the GOT, inter-object and
+                    intra-object redzones, and the calibration helpers that measure frame size,
+                    return-address offset and other runtime parameters.</td>
             </tr>
             <tr>
                 <td>Pointer integrity</td>
                 <td><code>cpi/</code></td>
-                <td>5</td>
-                <td>10</td>
+                <td>Function pointers, vtable pointers and the global offset table &mdash; the
+                    pointers whose alteration most control-flow attacks depend on.</td>
             </tr>
             <tr>
                 <td>Control-flow integrity</td>
                 <td><code>cfi/</code></td>
-                <td>44</td>
-                <td>59</td>
-            </tr>
-            <tr>
-                <th>Total</th>
-                <th></th>
-                <th>103</th>
-                <th>246</th>
+                <td>Return-address hijacking (backward-edge), indirect call and jump hijacking
+                    (forward-edge), vtable forgery and substitution, argument-type confusion, and
+                    code injection into stack, heap, data and read-only data.</td>
             </tr>
         </table>
+
+        <p>
+            The registry <code>configure.json</code> is the authoritative list of what the suite
+            contains, and <code>script/check_catalog.py</code> derives the current counts from
+            it; the <a href="test-catalog.html">Test Catalog</a> lists every case.
+        </p>
 
         <p>
             A <em>program</em> is one <code>.cpp</code> source file testing one vulnerability.
@@ -95,7 +97,7 @@
         </p>
     </main>
     <footer>
-        <p>Last updated: 2026-09-30</p>
+        <p>Last updated: 2026-10-24</p>
     </footer>
 </body>
 </html>

@@ -1,4 +1,5 @@
 #include "include/global_var.hpp"
+#include "include/result.hpp"
 
 typedef void (*Fun)(void);
 
@@ -26,5 +27,6 @@ int main(int argc, char* argv[])
   SET_MEM(&pFun, tmp);
   WRITE_TRACE("Func pointer after modified: 0x", (&pFun));
   pFun();
-  return gvar();
+  if(0 == gvar()) return RT_CODE_SUCCESS;  // helper2 ran: the attack succeeded
+  return 1;                                // a wrong helper was reached
 }

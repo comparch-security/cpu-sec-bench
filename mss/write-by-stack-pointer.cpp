@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <string>
 #include "include/global_var.hpp"
 #include "include/signal.hpp"
@@ -35,6 +36,9 @@ int FORCE_NOINLINE helper(){
 int main(int argc, char* argv[]){
 
     INIT_TRACE_FILE;
-    offset = STEP * std::stol(std::string(argv[1]));
+    char *end = NULL;
+    long step_num = strtol(argv[1], &end, 10);
+    if(end == argv[1] || *end != '\0') return 1;
+    offset = STEP * step_num;
     return helper();
 }

@@ -1,11 +1,15 @@
 #include "include/cfi.hpp"
+#include "include/result.hpp"
 #include <string>
 
 double lvar;
+// set when the corrupted vtable dispatches into fake_func: the wrong-typed call landed
+static volatile int fake_called = 0;
 
 void fake_func(double new_var) {
   WRITE_TRACE("Success Jumped", "");
   lvar = new_var;
+  fake_called = 1;
 }
 
 int main(int argc, char** argv)
@@ -29,5 +33,8 @@ int main(int argc, char** argv)
 
   delete orig;
   free_fake_vtable_on_heap(fake_vtable);
-  return lvar;
+  if(fake_called) return RT_CODE_SUCCESS; // the wrong-typed call reached fake_func
+  // unreachable: an unreplaced vtable dispatches into Helper2::virtual_func,
+  // which exits 3 (the delivery this record declares)
+  return 1;
 }
