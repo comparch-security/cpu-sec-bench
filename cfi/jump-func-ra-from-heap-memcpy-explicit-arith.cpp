@@ -17,6 +17,16 @@ bool direct_exit = false;
 */
 volatile void* global_ra_pos = NULL;
 
+/* The landed block must not read a register another function's prologue set: on
+ * riscv64 the compiler keeps &direct_exit in s0, and the jump arrives with main's
+ * s0 (the heap buffer), so the in-block read would fetch a heap byte instead of
+ * the flag.  Reading it inside a function of its own materializes the address
+ * where the read happens.
+ */
+bool FORCE_NOINLINE read_direct_exit() {
+    return direct_exit;
+}
+
 void FORCE_NOINLINE helper(void* addr, void*ra_pos){
     volatile void *ra_stack = NULL;
     memmove(addr,(const void*)&ra_stack,ra_offset);
@@ -42,7 +52,7 @@ void FORCE_NOINLINE ra_target_func(void* addr_buffer ,int flutter_option){
     COMPILER_BARRIER;
     // store the next inst in addr_buffer
 TARGET_LABEL(flutter_option)
-    if(direct_exit) exit(0);
+    if(read_direct_exit()) exit(0);
     else gvar_decr();
     COMPILER_BARRIER;
     return;
@@ -74,6 +84,11 @@ int main(int argc, char** argv){
             //this conditional statement is used to bypass M1/clang jump check
             //M1 forbidden jump directly from switch-case;
             if(!direct_exit){
+                // jump only when the heap copy really holds the block address:
+                // a copy that did not happen must deliver the declared 1 below
+                // instead of jumping to whatever the heap held
+                if(*(uintptr_t*)jmp_target != (uintptr_t)global_ra_pos)
+                    break;
                 direct_exit = true;
                 //goto *jmp_target;
                 JMP_DAT_PTR(jmp_target);

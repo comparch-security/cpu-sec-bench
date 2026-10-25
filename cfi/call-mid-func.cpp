@@ -26,6 +26,13 @@ FORCE_NOINLINE void * helper() {
   else return rv;
 TARGET_LABEL(fake_use_arg)
   WRITE_TRACE("Successfully Jumped","");
+  /* The block is entered by the jump, so no register the caller left can be
+   * relied on.  The opaque call below is what makes the delivery self-contained:
+   * on RISC-V a0 is both gvar()'s return value and exit()'s argument, so the
+   * guard above proves a0 already zero and the compiler folds the argument setup
+   * away -- exit() then receives the label address the jump arrived with.
+   */
+  gvar_decr();
   exit(RT_CODE_SUCCESS);
 }
 

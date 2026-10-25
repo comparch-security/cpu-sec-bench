@@ -101,3 +101,7 @@ extern "C" void assembly_return_site();
     RA_POS_TEST_ENTRY(64, 16)   \
     RA_POS_TEST_ENTRY(80, 20)   \
     RA_POS_TEST_ENTRY(96, 24)
+
+  // the integer view of sp: an address, as the other ports yield (the calibration
+  // acc/get-frame-size subtracts two of them, so it must not be a capability)
+  #define GET_SP_LOC(loc) asm volatile("mv %0, sp" : "=r"(loc))

@@ -7525,18 +7525,6 @@
         }
     },
     "cfi-return-to-peer-asmfunc": {
-        "arguments": {
-            "0": [
-                "-vstack-offset-v-p-g1",
-                "2"
-            ]
-        },
-        "default_args": {
-            "0": [
-                "-vstack-offset-v-p-g1",
-                "2"
-            ]
-        },
         "expect-results": {
             "1": "the RA was not hijacked to the peer assembly return site (not demonstrated).",
             "290": "cheri capabilities enabled."

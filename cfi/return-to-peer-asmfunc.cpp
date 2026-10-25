@@ -6,19 +6,38 @@ volatile arch_int_t offset = 0;
 
 void FORCE_NOINLINE helper(void * label) {
 
-  GET_RAA_SP_OFFSET(offset);
+  /* The saved return address sits at an offset that follows this frame's shape,
+   * so the offset calibrated for another function's frame (stack-offset-v-p-g1)
+   * does not aim at it: on riscv64 that write lands on the caller's canary slot
+   * and the stack protector aborts the process.  Locate the slot by the value it
+   * holds -- this frame's own return address -- and write nothing when it is not
+   * found, leaving the caller's not-landed path to deliver 1.
+   */
+  void *ra_val = NULL;
+  GET_RETURN_ADDRESS(ra_val);
+  void *ra_stack = NULL;
+  arch_int_t ra_offset = -1;
+  #define RA_POS_TEST_ENTRY(off, rv)                    \
+    READ_STACK_DAT_IMM(ra_stack, off);                  \
+    if(ra_offset < 0 && ra_stack == ra_val) ra_offset = off;
+  RA_POS_TEST
+  #undef RA_POS_TEST_ENTRY
   #ifdef TRACE_RUN
-    GET_SP_BASE(ra_addr);
-    WRITE_TRACE("RA address: 0x", ra_addr);
-    WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
+    if(ra_offset >= 0) {
+      ra_addr = ra_offset;
+      GET_RA_ADDR(ra_addr);
+      WRITE_TRACE("RA address: 0x", ra_addr);
+      WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
+    }
   #endif
-  MOD_STACK_DAT(label, offset);
-  WRITE_TRACE("RA address: 0x", ra_addr);
-  WRITE_TRACE("RA after modified: 0x", *(long long*)ra_addr);
+  if(ra_offset >= 0) {
+    MOD_STACK_DAT(label, ra_offset);
+    WRITE_TRACE("RA address: 0x", ra_addr);
+    WRITE_TRACE("RA after modified: 0x", *(long long*)ra_addr);
+  }
   /* HiFive Unmatched, GCC 11.2.0
-   * Make sure offset is modified as otherwise
-   * the stack is not expanded similarily with
-   * the return-to-parent-same-call-site test.
+   * Make sure the frame is expanded and the return address spilled: without a
+   * call in this function the helper would be a leaf and save no RA slot.
    */
   offset = rand();
 }
@@ -26,13 +45,7 @@ void FORCE_NOINLINE helper(void * label) {
 int main(int argc, char* argv[])
 {
   INIT_TRACE_FILE;
-  // get the offset of RA on stack
-  // a literal -v token means the calibration variable was never recorded
-  char *end = NULL;
-  long offset_num = strtol(argv[1], &end, 10);
-  if(end == argv[1] || *end != '\0') return 1;
-  // fake compiler: the peer assembly return site is reached with a fixed state value
-  offset = 4 * offset_num;
+  // the peer assembly return site is reached with a fixed state value
   gvar_init(2);
   void *label = (void *)(assembly_return_site);
   helper(label);

@@ -332,6 +332,15 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
             <code>require</code> graph guarantees its calibration case runs first.
         </p>
 
+        <p>
+            A case may instead derive the slot at run time, without consuming the calibrated
+            value, when its own frame's shape differs from the calibrating case's: it locates
+            the saved return-address slot by the value the slot holds
+            (<code>cfi-return-to-peer-asmfunc</code> does this), which keeps one frame's layout
+            assumption out of another frame's. The calibrated names remain the general channel;
+            such a case simply needs no <code>-v</code> argument for it.
+        </p>
+
         <h2>Configuration registry</h2>
 
         <p>

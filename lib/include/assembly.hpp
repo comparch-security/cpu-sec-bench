@@ -44,4 +44,14 @@
 extern void get_got_func(void **gotp, void *label, int cet);
 extern void replace_got_func(void **fake, void *got);
 
+// The return address of the current frame.  Keyed on the compiler rather than the
+// ISA: every GCC/clang port reads it with one builtin, and only MSVC spells it
+// differently.  A callee needs the value -- not an offset -- to locate its own
+// saved RA slot, because the slot's offset follows this frame's shape.
+#if defined(COMPILER_MSVC)
+  #define GET_RETURN_ADDRESS(v) ((v) = (void *)_ReturnAddress())
+#else
+  #define GET_RETURN_ADDRESS(v) ((v) = __builtin_return_address(0))
+#endif
+
 #endif // ASSEMBLY_HPP_INCLUDED

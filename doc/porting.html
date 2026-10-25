@@ -254,6 +254,66 @@ MAKEFLAGS='disable_independent_assembly=yes' ./run-test exhausted-run</code></pr
             </li>
         </ol>
 
+        <h2>Hazards in dynamically entered blocks</h2>
+
+        <p>
+            A case whose attack is a jump or a faked return does not <em>call</em> its delivery
+            block: the block is entered with whatever registers the attacker's path left behind,
+            and an earlier guard's proof does not survive the jump. Three shapes have bitten this
+            suite, each fixed in the port's own idiom rather than worked around in the case.
+        </p>
+
+        <p>
+            <strong>The argument register is not yours.</strong> On RISC-V <code>a0</code> is
+            both the value <code>gvar()</code> returns and the argument <code>exit()</code>
+            takes, so a guard that branches on <code>gvar()</code> leaves <code>a0</code>
+            provably zero and the compiler folds the delivery's argument setup away &mdash; the
+            status that reaches <code>exit()</code> is then whatever the jump arrived with (the
+            label address's low byte), not the case's designed value. The same source looks
+            correct on x86-64 and AArch64 because the guard's register (<code>rax</code>,
+            <code>x0</code>) and the call's argument register (<code>edi</code>,
+            <code>w0</code>) differ there. The fix is an in-block opaque call before the
+            delivery, as <code>cfi/call-mid-func.cpp</code> and
+            <code>cfi/return-without-call.cpp</code> both do; a memory-only
+            <code>COMPILER_BARRIER</code> is <em>not</em> enough, because it does not invalidate
+            a register the compiler has proved constant.
+        </p>
+
+        <p>
+            <strong>Case state must not be read through an inherited register.</strong> A
+            compiler may keep a case global's address in a callee-saved register inside the
+            function that starts the attack &mdash; <code>s0</code> on RISC-V, <code>x19</code>
+            on AArch64 &mdash; but the jump arrives with the <em>caller's</em> copy of that
+            register, so a flag read inside the block fetches unrelated memory and the block
+            takes the wrong branch. In
+            <code>cfi/jump-func-ra-from-heap-memcpy-{implicit,explicit}-arith</code> that meant
+            silently running the block's epilogue on <code>main</code>'s frame: a segfault in
+            one layout, a lucky pass in another. Read the state inside a function of its own
+            (<code>FORCE_NOINLINE</code>), so the address is materialized where the read
+            happens.
+        </p>
+
+        <p>
+            <strong>Guard the delivery, not only the attack.</strong> A condition that selects
+            the case's designed &ldquo;not demonstrated&rdquo; value must actually guard it: an
+            unbraced body makes that value unreachable, and the case then reports success for an
+            attack that never landed. <code>-Wmisleading-indentation</code> is the compiler's own
+            report of exactly this shape &mdash; treat it as a defect signal, not noise. The
+            companion idiom is to launch the attack only once the arranged data really holds the
+            target (the two heap-memcpy cases check the copied pointer before jumping), so a
+            copy that did not land takes the declared not-landed path instead of jumping at
+            whatever the memory held.
+        </p>
+
+        <p>
+            When a case in this family is added or touched, derive the family from the sources
+            (<code>grep -rl GET_LABEL_ADDRESS acc cfi cpi mss mts lib</code>), disassemble each
+            candidate's landing block on each port, and record where each block's argument comes
+            from &mdash; set in the block, proven by an earlier guard (the defect), or
+            hand-written assembly (which sets its own arguments by construction). Such a scan is
+            cheap, and it is the only way to see a folded-away setup.
+        </p>
+
         <h2>Adding an operating system</h2>
 
         <ol>
