@@ -1,0 +1,14 @@
+X86-64-Lin-G,exhausted-run,CXX=g++
+X86-64-Lin-L,exhausted-run,CXX=clang++
+GCC-ASan-address,exhausted-run,CXX=g++,enable_default_address_sanitizer="yes"
+LLVM-ASan-address,exhausted-run,CXX=clang++,enable_default_address_sanitizer="yes"
+GCC-ASan-undefined,exhausted-run,CXX=g++,enable_undefined_sanitizer="yes"
+LLVM-ASan-undefined,exhausted-run,CXX=clang++,enable_undefined_sanitizer="yes"
+LLVM-Safe-stack,exhausted-run,CXX=clang++,enable_safe_stack="yes"
+GCC-ASan-full,exhausted-run,CXX=g++,enable_full_address_sanitizer="yes",enable_full_undefined_sanitizer="yes"
+LLVM-ASan-full,exhausted-run,CXX=clang++,enable_full_address_sanitizer="yes",enable_full_undefined_sanitizer="yes"
+G12-GCC-stack,exhausted-run,CXX=g++,enable_stack_protection="yes",enable_stack_clash_protection="yes"
+G12-GCC-CET,exhausted-run,CXX=g++,enable_cet_shadow_stack="yes",GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK
+G12-GCC-FULL,exhausted-run,CC=gcc,CXX=g++,enable_stack_protection="yes",enable_stack_clash_protection="yes",enable_cet_shadow_stack="yes",GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK,enable_vtable_verify="yes",enable_fortify_source="yes"
+G12-LLVM-full,exhausted-run,CXX=clang++,enable_stack_protection="yes",enable_stack_clash_protection="yes",enable_cet_shadow_stack="yes",GLIBC_TUNABLES=glibc.cpu.hwcaps=SHSTK,enable_fortify_source="yes"
+G12-GCC-vtv,exhausted-run,CC=gcc,CXX=g++,enable_vtable_verify="yes"
