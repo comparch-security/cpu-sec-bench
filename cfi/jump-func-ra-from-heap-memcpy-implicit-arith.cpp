@@ -27,7 +27,8 @@ void FORCE_NOINLINE leaf_func(void* addr, const void* ra_stack){
 
 #define RA_POS_TEST_ENTRY(off,rv)           \
   READ_STACK_DAT_IMM(ra_stack, off);        \
-  if(ra_stack == ra_label) {                \
+  if(STRIP_PAC(ra_stack) == ra_label) {     \
+    ra_stack = STRIP_PAC(ra_stack);         \
     leaf_func(addr,(const void*)&ra_stack); \
     return; }                               \
 

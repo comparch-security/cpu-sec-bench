@@ -44,11 +44,12 @@
 //              for the platform or could not be built (1025).
 //
 // EXCEPTIONS.  Two values sit outside 0-31 by documentation, not by accident:
-// RT_CODE_MTE_TAGCHECK = 99 (hwasan's own tag-mismatch process value, declared on the
-// cfi-code-injection-backed records) and 251 (the shipped ASan frame-shape value on the
-// two return-to-parent-same-call-site records; registry-only, deliberately not a
-// constant here).  255 is NOT a code: it is only the POSIX rendering of a negative or
-// out-of-range process status, and it may never be declared in expect-results.
+// RT_CODE_MTE_TAGCHECK = 99 (hwasan's own tag-mismatch process value, declared per record
+// on the aarch64-mte HWASan build class's observed deliveries) and 251 (the shipped ASan
+// frame-shape value on the two return-to-parent-same-call-site records; registry-only,
+// deliberately not a constant here).  255 is NOT a code: it is only the POSIX rendering of
+// a negative or out-of-range process status, and it may never be declared in
+// expect-results.
 //
 // COLLISION RULE.  Never reuse 15/16/17/18.  No status constant outside 0-31 except the
 // named exceptions above.  No shared value may be minted for a case-local meaning: a new

@@ -30,8 +30,9 @@ Three commands, in order — each writes into `out/` and the second needs the fi
   platform/riscv64-nemu-linux/run.sh              # boot the image, extract the results
 ~~~
 
-`RUNSET` selects which records go into the image — `acc` (the default, 22 records: the smoke
-image), any single record class (`cfi`, `cpi`, `mss`, `mts`) or `all` (246 records):
+`RUNSET` selects which records go into the image — `acc` (the default: the smoke image), any
+single record class (`cfi`, `cpi`, `mss`, `mts`) or `all` (every record). The run prints the
+selected set's size; `python3 script/check_catalog.py` reports the registry's current totals:
 
 ~~~bash
   RUNSET=all platform/riscv64-nemu-linux/build-corpus.sh
@@ -40,15 +41,16 @@ image), any single record class (`cfi`, `cpi`, `mss`, `mts`) or `all` (246 recor
 ~~~
 
 The subset is applied by deriving a `configure.json` subset (records copied verbatim) into
-`out/<runset>/` and, for the duration of the build, swapping it over the work tree's copy — the
-scheduler always reads `configure.json` from its cwd — with an exit trap restoring the original.
-A completed run never changes the committed registry, but the swap is visible while one is in
-flight, and a hard kill (SIGKILL) inside that window would leave the subset in place: that
-crash-safety gap is recorded as a deferred issue
-(`tmp/reports/defer-issue-corpus-build-registry-swap-crash-safety.json` on the machine that
-produced this platform — the `tmp/` tree is machine-local and never committed), together with
-the concurrency hazard the same shared state carries; the remedy for both is to build in a
-scratch tree instead of swapping the tracked registry.
+`out/<runset>/`, then building in a scratch copy of the bench tree at
+`out/build/<runset>/tree`: the derived registry is placed there and every build runs with the
+scratch tree as its working directory, so the tracked `configure.json` and every other tracked
+file are never written. The work tree therefore stays clean — its `Bench tree:` provenance no
+longer carries a spurious `-dirty` — a hard kill (SIGKILL) cannot leak a subset into the
+registry, and a `flock` on `out/<runset>/.lock` makes a second build of the same runset refuse
+and name the holder instead of interleaving writes. `build-image.sh` takes the same lock for its
+whole run, so the corpus cannot be re-staged between its staged-corpus checks and the copy into
+the rootfs; and because the scripts share the `$OUT` build areas (`src/`, `busybox-*`, `kernel/`,
+`rootfs/`), only one venue build — corpus or image, whatever the runset — may run at a time.
 
 A fourth script produces the host-native reference run — the same record subset compiled and
 run directly on this workstation, which is what the guest's result distribution is compared
@@ -71,33 +73,49 @@ own `riscv64-unknown-linux-gnu-*` toolchain is the documented override — set `
 
 ### What each script does
 
-**`build-corpus.sh`** (host, bench work tree, terminated by `make clean`):
+**`build-corpus.sh`** (host; builds in the scratch tree `out/build/<runset>/tree`, never in
+the work tree):
 
-1. builds the host scheduler;
-2. derives the `RUNSET` subset of `configure.json` into `out/<runset>/`;
-3. runs `./run-test corpus make-only exhausted-run` with `ARCH=riscv64` — the scheduler drives
-   one forced-`-B` `make` per `(program, macro-map)` unit through the cross toolchain and
-   snapshots each build as `test/<program>__<key>`;
-4. cross-builds the riscv64 scheduler;
-5. stages `out/<runset>/bench/` (scheduler, subset registry, corpus files, `lib/common/libcfi.so`,
-   a guest-side `test/sys_info.txt`) and `out/<runset>/lib/` (the transitive `NEEDED` closure
-   plus the `PT_INTERP` loader, resolved through the cross compiler's own search path);
-6. verifies the staged tree with [corpus-manifest.py](corpus-manifest.py) — expected unit set
+1. derives the `RUNSET` subset of `configure.json` into `out/<runset>/`, capturing
+   `BENCH_COMMIT` and `BENCH_TREE` from the untouched work tree before anything is copied or
+   derived;
+2. copies the work tree into `out/build/<runset>/tree` (excluding `.git`, `tmp`, `test`,
+   `trace-log` and the venue's own `out/`), cleans it so no generated artifact is inherited —
+   the tree's `make clean` plus a direct removal of the cross-arch `lib/*/assembly.o` and
+   `lib/*/indepassembly*.o` that the ARCH-scoped clean list leaves behind — asserts the
+   generated roots (`run-test`, `lib/common/libcfi.so`, any `*.o` under `lib/`) are gone, and
+   places the derived registry there;
+3. builds the host scheduler in the scratch tree;
+4. runs `./run-test corpus make-only exhausted-run` there with `ARCH=riscv64` — the scheduler
+   drives one forced-`-B` `make` per `(program, macro-map)` unit through the cross toolchain
+   and snapshots each build as `test/<program>__<key>`;
+5. cross-builds the riscv64 scheduler in the scratch tree;
+6. stages `out/<runset>/bench/` (scheduler, subset registry, corpus files, `lib/common/libcfi.so`,
+   a guest-side `test/sys_info.txt` carrying the provenance from step 1) and
+   `out/<runset>/lib/` (the transitive `NEEDED` closure plus the `PT_INTERP` loader, resolved
+   through the cross compiler's own search path);
+7. verifies the staged tree with [corpus-manifest.py](corpus-manifest.py) — expected unit set
    equals the staged set, per-program keys collision-free, longest corpus path within the
-   scheduler's 63-character budget — and writes `out/<runset>/manifest.json`.
+   scheduler's 63-character budget — and publishes `out/<runset>/manifest.json` only when every
+   check passed (a failed verification leaves no manifest, so `build-image.sh`'s staged-corpus
+   guard refuses to consume the tree).
 
 Both scheduler invocations append `exhausted-run`: with a filtered subset a plain run aborts on
 `require` edges that cross the subset boundary, and both phases then enumerate the same
 argument kind, so the units built and the units run agree by construction.
 
-**`build-image.sh`** (host): clones/checks out the pinned inputs into `out/src/`, builds a
+**`build-image.sh`** (host): asserts up front — before any fetch — that the host cpio supports
+`--reproducible` and takes `out/<runset>/.lock`, then clones/checks out the pinned inputs into `out/src/`, builds a
 static busybox and the kernel `Image` (cached per kernel version), builds gcpt and OpenSBI,
 assembles the rootfs tree (busybox `_install`, `/init`, the guest overlay from
 [guest/](guest/), `/bench/` from the staging, `/lib/` from the library closure, the built
-`nemu-trap`), packs it with `cpio`, and hands the pieces to workload-builder's
-`build-firmware-linux.sh`, which produces `fw_payload.bin` and the DTB that carries the
-initramfs placement. `out/<runset>/meta.json` then records the image and rootfs sha256, the
-NEMU binary's sha256, the bench commit, the corpus compiler and every input pin.
+`nemu-trap`), packs it with `cpio --reproducible` (GNU cpio's
+`--ignore-devno --ignore-dirnlink --renumber-inodes`, on top of the `SOURCE_DATE_EPOCH` stamps
+and the sorted file list), so the same pinned inputs produce a byte-identical initramfs — stamps
+made before this change carry their own per-deploy image sha256s — and hands the pieces to
+workload-builder's `build-firmware-linux.sh`, which produces `fw_payload.bin` and the DTB that
+carries the initramfs placement. `out/<runset>/meta.json` then records the image and rootfs
+sha256, the NEMU binary's sha256, the bench commit, the corpus compiler and every input pin.
 
 **`run.sh`** (host): boots the image as `timeout $NEMU_TIMEOUT $NEMU_BIN -b out/<runset>/fw_payload.bin`;
 the guest console — including the `===CSB-...===` blocks that [guest/bench.sh](guest/bench.sh)
@@ -112,8 +130,9 @@ a partial one.
 
 ```
 out/src/                 pinned checkouts (workload-builder, opensbi, LibCheckpointAlpha) + downloads
-out/<runset>/            the venue: bench/ lib/ configure.json manifest.json meta.json
+out/<runset>/            the venue: bench/ lib/ configure.json manifest.json meta.json .lock
                          rootfs.cpio fw_payload.bin corpus-build.log scheduler-crossbuild.log
+out/build/<runset>/tree  the scratch bench copy the corpus is built in (outside the venue dir)
 out/<runset>/runs/<ts>/  one boot: boot.log results.json variables.json results.dat meta.json
 out/native/              the host-native reference run (+ tree/, its scratch copy of the bench)
 out/busybox-1.36.1/  out/linux-6.18.56/  out/kernel/  out/gcpt/  out/opensbi/  out/rootfs/

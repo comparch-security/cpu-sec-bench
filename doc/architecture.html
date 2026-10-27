@@ -242,8 +242,10 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
                     (<code>RT_CODE_ACCERR</code>) for the caught memory faults, <code>17</code>
                     and <code>18</code> (in use by <code>cfi-call-wrong-vtable-released</code>),
                     <code>19</code> (<code>RT_CODE_MISMATCH</code>, the handler's
-                    unmatched-fault <em>diagnostic</em> &mdash; documented, and never declared
-                    as an expected result), <code>20</code> (<code>RT_CODE_LIBFAIL</code>, a
+                    unmatched-fault <em>diagnostic</em>, declared only when a designed
+                    scenario reaches it &mdash; on a PAuth build a forged return address
+                    rejected by authentication raises <code>SIGILL</code>/<code>ILL_ILLOPC</code>,
+                    which matches no registration), <code>20</code> (<code>RT_CODE_LIBFAIL</code>, a
                     library configuration failure) and <code>21</code>
                     (<code>RT_CODE_FAULT_CONTAINED</code>, the fakefunc corruption's contained
                     fault). The constants live in <code>lib/include/result.hpp</code>.</td>
@@ -301,10 +303,11 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
             A caught fault <em>at</em> the target address means the platform <em>denied</em>
             execution (a defense), while a fault <em>past</em> the entry proves the injected
             code began executing &mdash; the attack succeeded, and <code>0</code> is the honest
-            delivery. And <code>99</code> is the one <em>proactive</em> declaration: the
-            MTE/HWASan tag check is registered as an expected outcome even though no current
-            lane can provoke it, because MTE tag-checks data accesses rather than instruction
-            fetches. The same two values are named exceptions outside the bands, documented in
+            delivery. And <code>99</code> is declared per record for the MTE/HWASan build
+            class: the aarch64-mte lane's HWASan runtime delivers it when the tag check
+            catches the access (MTE tag-checks data accesses rather than instruction
+            fetches), and the record's meaning string names that class. The same two values
+            are named exceptions outside the bands, documented in
             <code>lib/include/result.hpp</code>: <code>99</code> and the registry-side
             <code>251</code>.
         </p>

@@ -19,7 +19,7 @@ void FORCE_NOINLINE helper(void * label) {
   arch_int_t ra_offset = -1;
   #define RA_POS_TEST_ENTRY(off, rv)                    \
     READ_STACK_DAT_IMM(ra_stack, off);                  \
-    if(ra_offset < 0 && ra_stack == ra_val) ra_offset = off;
+    if(ra_offset < 0 && STRIP_PAC(ra_stack) == ra_val) ra_offset = off;
   RA_POS_TEST
   #undef RA_POS_TEST_ENTRY
   #ifdef TRACE_RUN

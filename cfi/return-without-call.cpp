@@ -8,14 +8,43 @@ FORCE_NOINLINE void helper(arch_int_t fsize) {
   GET_RAA_SP_OFFSET(fsize);
   GET_LABEL_ADDRESS(exit_label,TARGET_LABEL);
   if(2 == gvar()) { GOTO_SAVED_LABEL(exit_label);}   // impossible to happen
+  /* The whole locator is TRACE_RUN-only: outside it the scan only reads dead
+   * values, and the declarations must not sit in the path of the computed
+   * goto above -- clang rejects a jump that bypasses an initialised variable,
+   * so they carry no initialisers and are assigned inside the region.
+   */
   #ifdef TRACE_RUN
-    GET_RA_ADDR(ra_addr);
-    WRITE_TRACE("RA address: 0x", ra_addr);
-    WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
+    /* The trace address follows this frame's shape, not the calibrated frame
+     * size: `fsize` is the producer's word count (and GET_RAA_SP_OFFSET is a
+     * no-op on POSIX), so it names neither a byte offset nor this function's
+     * slot.  Locate the slot by the value it holds -- this frame's own return
+     * address -- and trace nothing when it is not found.
+     */
+    void *ra_val;
+    GET_RETURN_ADDRESS(ra_val);
+    void *ra_stack;
+    arch_int_t ra_offset;
+    ra_stack = NULL;
+    ra_offset = -1;
+    #define RA_POS_TEST_ENTRY(off, rv)                    \
+      READ_STACK_DAT_IMM(ra_stack, off);                  \
+      if(ra_offset < 0 && STRIP_PAC(ra_stack) == ra_val) ra_offset = off;
+    RA_POS_TEST
+    #undef RA_POS_TEST_ENTRY
+    if(ra_offset >= 0) {
+      ra_addr = ra_offset;
+      GET_RA_ADDR(ra_addr);
+      WRITE_TRACE("RA address: 0x", ra_addr);
+      WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
+    }
   #endif
   PUSH_FAKE_RET(exit_label, fsize);
-  WRITE_TRACE("RA address: 0x", ra_addr);
-  WRITE_TRACE("RA after modified: 0x", *(long long*)ra_addr);
+  #ifdef TRACE_RUN
+    if(ra_offset >= 0) {
+      WRITE_TRACE("RA address: 0x", ra_addr);
+      WRITE_TRACE("RA after modified: 0x", *(long long*)ra_addr);
+    }
+  #endif
   if(fsize != 0)return;
 
 TARGET_LABEL(fake_use_arg)

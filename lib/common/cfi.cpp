@@ -51,7 +51,8 @@ void Ret_From_Helper::virtual_func(void *label) {
   COMPILER_BARRIER;
   GET_RAA_SP_OFFSET(cfi_offset);
   #ifdef TRACE_RUN
-    GET_SP_BASE(ra_addr);
+    ra_addr = cfi_offset;
+    GET_RA_ADDR(ra_addr);
     WRITE_TRACE("RA address: 0x", ra_addr);
     WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
   #endif

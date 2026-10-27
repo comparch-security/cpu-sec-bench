@@ -98,6 +98,20 @@ def main():
     ap.add_argument("--out", required=True, help="manifest.json output path")
     args = ap.parse_args()
 
+    # A --out file exists only if the most recent verification published it:
+    # build-image.sh consumes its presence as proof that staging completed, so
+    # a previous run's manifest must not outlive this invocation unless this
+    # one publishes.  Removing both paths once here, before any read, routes
+    # *every* non-publishing exit through the removal -- a failed check, an
+    # unreadable --configure, a missing test/, a sha256 read error -- not just
+    # the check-failure branch below.  (The venue holds $DEST/.lock across
+    # this call, so no consumer can observe the gap.)
+    for stale in (args.out, args.out + ".tmp"):
+        try:
+            os.unlink(stale)
+        except FileNotFoundError:
+            pass
+
     proc = []
     def check(name, ok, detail=""):
         print("%s  %-58s %s" % ("PASS" if ok else "FAIL", name, detail))
@@ -176,12 +190,22 @@ def main():
         "corpus_files": corpus_files,
         "support_files": support,
     }
-    with open(args.out, "w") as f:
-        json.dump(manifest, f, indent=2, sort_keys=True)
-        f.write("\n")
-
-    print("manifest: %d units over %d programs, %d mismatches, longest path %d chars -> %s"
-          % (len(expected), len(per_program), len(missing) + len(extra), longest, args.out))
+    # Publish only after every check passed: build-image.sh treats the
+    # manifest's presence as proof that staging completed, so a failed
+    # verification must leave none behind.
+    if all(proc):
+        tmp = args.out + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump(manifest, f, indent=2, sort_keys=True)
+            f.write("\n")
+        os.replace(tmp, args.out)
+        # The summary names the published path, so it belongs to the success
+        # path only: a failing run must not end by naming <out> as though a
+        # manifest had been written there.
+        print("manifest: %d units over %d programs, %d mismatches, longest path %d chars -> %s"
+              % (len(expected), len(per_program), len(missing) + len(extra), longest, args.out))
+    else:
+        print("manifest NOT written: %d check(s) failed" % proc.count(False))
     return 1 if not all(proc) else 0
 
 

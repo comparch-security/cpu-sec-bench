@@ -140,9 +140,13 @@ The meaning of the result integer:
 * 15-31: the caught-exception and library band — the platform responded to the attack. The
   named values: `15` and `16` are the caught memory faults (mapping and access), `17`/`18` are
   in use by `cfi-call-wrong-vtable-released`, `19` is the handler's unmatched-fault
-  *diagnostic* and is never declared as an expected result, `20` is a library configuration
-  failure, and `21` is the fakefunc corruption's contained fault. The constants themselves
-  live in `lib/include/result.hpp`.
+  *diagnostic*, declared only when a designed scenario reaches it (`lib/include/result.hpp`'s
+  rule) — on a PAuth build a forged return address rejected by authentication raises
+  `SIGILL`/`ILL_ILLOPC`, which matches no registration (`cfi-return-without-call`; the four
+  `cfi-return-to-instruction-in-*` records reach the same diagnostic when the injected call's
+  return fails authentication), `20` is a
+  library configuration failure, and `21` is the fakefunc corruption's contained fault. The
+  constants themselves live in `lib/include/result.hpp`.
 * 32-63: a runtime parameter was discovered: the value is the code minus 32. The scheduler
   stores it in `variables.json` and treats the case as successful, so later cases can consume
   it through a `-v` argument. The producer bounds the value to `0..31` wherever the case
@@ -163,8 +167,9 @@ constants and the bands) and in [doc/architecture.html](doc/architecture.html) (
 the scheduler's own behaviour and the two named exceptions). Three rules complete it: `gvar`
 is control-flow state and never becomes a verdict code; a caught fault *at* the target address
 means the platform **denied** execution (a defense), while a fault *past* the entry proves the
-injected code began executing (`0` — the attack succeeded); and `99` is the single *proactive*
-declaration (the MTE/HWASan tag check), kept because no current lane can provoke it. `255` is
+injected code began executing (`0` — the attack succeeded); and `99` is declared per record for
+the MTE/HWASan build class — the aarch64-mte lane's HWASan runtime delivers it when the tag
+check catches the access, and the record's meaning string names that class. `255` is
 never declared anywhere: it is how POSIX renders a negative or out-of-range process status,
 not a code.
 

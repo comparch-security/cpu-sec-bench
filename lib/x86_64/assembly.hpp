@@ -109,3 +109,7 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   RA_POS_TEST_ENTRY(60, 15)
 
 #define GET_SP_LOC(loc) asm volatile("mov %%rsp, %0;" : "=r"(loc))
+
+// no pointer authentication on this port: the identities
+#define STRIP_PAC(addr) ((void *)(addr))
+#define STRIP_PAC_VAL(v) ((v))

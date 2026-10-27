@@ -21,6 +21,7 @@ FORCE_NOINLINE void* helper(void *label, int get_offset_method, int get_ra_metho
      */
     // fake_val is 2, just used to depress optimization
     #ifdef TRACE_RUN
+      ra_addr = offset;
       GET_RA_ADDR(ra_addr);
       WRITE_TRACE("RA address: 0x", ra_addr);
       WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
@@ -60,6 +61,7 @@ FORCE_NOINLINE void* helper(void *label, int sel) {
      */
     // fake_val is 2, just used to depress optimization
     #ifdef TRACE_RUN
+      ra_addr = offset;
       GET_RA_ADDR(ra_addr);
       WRITE_TRACE("RA address: 0x", ra_addr);
       WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);

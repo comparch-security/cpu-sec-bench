@@ -65,10 +65,35 @@ SEED_DIRS=(
 
 mkdir -p "$SRC" "$DL" "$OUT/generated-dts"
 
+# Hold the venue directory's lock for the whole run.  It is taken before the
+# staged-corpus checks below, so they cannot race a concurrent re-staging, and
+# held through the `cp -a "$DEST/bench/."` staging.  Same non-blocking lock
+# build-corpus.sh takes; a refusal names the holder.  Guarded by the directory
+# test so a venue that was never built still reports the diagnostic below.
+if [ -d "$DEST" ]; then
+    exec 8>>"$DEST/.lock"
+    if ! flock -n 8; then
+        echo "ERROR: another venue build holds $DEST/.lock (holder: $(cat "$DEST/.lock" 2>/dev/null || echo unknown))" >&2
+        exit 1
+    fi
+    printf '%s\n' "$$" > "$DEST/.lock"
+fi
+
 [ -x "$DEST/bench/run-test" ] || { echo "ERROR: staged corpus missing ($DEST/bench/run-test); run build-corpus.sh first" >&2; exit 1; }
 # a half-staged DEST (scheduler present, lib/ empty, no registry) must not be
 # consumed: manifest.json is written only after every staging step succeeded
 [ -f "$DEST/manifest.json" ] || { echo "ERROR: $DEST/manifest.json missing; build-corpus.sh did not complete for RUNSET=$RUNSET" >&2; exit 1; }
+
+# The packing step below requires GNU cpio's --reproducible; probe it here,
+# before any fetch or build, so a host without it fails with a diagnostic
+# instead of dying at the archive step after the long build.  Capture the help
+# text rather than piping it into grep -- the capture-then-case form keeps a
+# nonzero `--help` from masking the match.
+CPIO_HELP="$(cpio --help 2>/dev/null || true)"
+case "$CPIO_HELP" in
+    *--reproducible*) ;;
+    *) echo "ERROR: this host's cpio does not support --reproducible (GNU cpio is required)" >&2; exit 1 ;;
+esac
 
 ensure_checkout() { # url dir commit
     local url="$1" dir="$2" commit="$3" head
@@ -202,8 +227,12 @@ is_riscv_elf "$OUT/rootfs/bench/nemu-trap" || { echo "ERROR: nemu-trap is not a 
 # busybox builds already honour SOURCE_DATE_EPOCH).  Stamp every entry -- -h so
 # symlinks are stamped themselves, not their targets -- and feed cpio a sorted
 # file list so the archive does not depend on readdir order either.
+# --reproducible (GNU cpio: --ignore-devno --ignore-dirnlink --renumber-inodes)
+# finishes the job: device numbers are zeroed, inode numbers are renumbered
+# deterministically in list order and directory link counts are pinned, so the
+# host's own inode numbers never reach the newc headers.
 find "$OUT/rootfs" -exec touch -h -d "@$SOURCE_DATE_EPOCH" {} +
-( cd "$OUT/rootfs" && find . | LC_ALL=C sort | cpio -o -H newc --owner=0:0 ) > "$DEST/rootfs.cpio" 2>/dev/null
+( cd "$OUT/rootfs" && find . | LC_ALL=C sort | cpio -o -H newc --owner=0:0 --reproducible ) > "$DEST/rootfs.cpio" 2>/dev/null
 echo "   rootfs.cpio: $(stat -c%s "$DEST/rootfs.cpio") bytes"
 
 echo "== [6/6] assemble fw_payload.bin"

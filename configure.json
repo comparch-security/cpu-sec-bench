@@ -7,6 +7,9 @@
                 "REGION_KIND": "0",
                 "BUFFER_KIND": "0"
             }
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "acc-check-data-pointer-arithmetic-heap": {
@@ -17,6 +20,9 @@
                 "REGION_KIND": "1",
                 "BUFFER_KIND": "0"
             }
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "acc-check-data-pointer-arithmetic-data": {
@@ -27,6 +33,9 @@
                 "REGION_KIND": "2",
                 "BUFFER_KIND": "0"
             }
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "acc-check-data-pointer-arithmetic-rodata": {
@@ -37,6 +46,9 @@
                 "REGION_KIND": "3",
                 "BUFFER_KIND": "0"
             }
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "acc-check-inter-obj-stack-redzone": {
@@ -251,6 +263,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -303,6 +316,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -355,6 +369,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -415,6 +430,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -467,6 +483,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -519,6 +536,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -571,6 +589,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -623,6 +642,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -670,6 +690,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -722,6 +743,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -769,6 +791,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -816,6 +839,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -863,6 +887,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -910,6 +935,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -957,6 +983,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1004,6 +1031,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1065,6 +1093,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1126,6 +1155,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -1188,6 +1218,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -1250,6 +1281,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -1312,6 +1344,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1373,6 +1406,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -1435,6 +1469,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -1497,6 +1532,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -1546,6 +1582,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1594,6 +1631,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1642,6 +1680,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1690,6 +1729,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1728,6 +1768,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1776,6 +1817,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1824,6 +1866,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1872,6 +1915,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1929,6 +1973,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -1986,6 +2031,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2043,6 +2089,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2105,6 +2152,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2167,6 +2215,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2229,6 +2278,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2290,6 +2340,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2342,6 +2393,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2394,6 +2446,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2451,6 +2504,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2508,6 +2562,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2565,6 +2620,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2583,6 +2639,7 @@
             "0": []
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "attack not observed (the out-of-bounds write did not land in the target buffer)",
             "267": "the write at a stack offset that does not name the return-address slot leads to a segment error."
         },
@@ -2655,6 +2712,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2712,6 +2770,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -2770,6 +2829,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -2828,6 +2888,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -2885,6 +2946,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "262": "the heap corruption aborted the allocator (munmap_chunk(): invalid pointer)."
         }
@@ -2943,6 +3005,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -3010,6 +3073,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3067,6 +3131,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -3125,6 +3190,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -3183,6 +3249,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3240,6 +3307,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "262": "the heap corruption aborted the allocator (munmap_chunk(): invalid pointer)."
         }
@@ -3298,6 +3366,7 @@
             }
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled.",
             "1": "the out-of-bounds access did not land in the target buffer (not demonstrated)."
         }
@@ -3348,6 +3417,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3397,6 +3467,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3446,6 +3517,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3495,6 +3567,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3544,6 +3617,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3593,6 +3667,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3627,6 +3702,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3661,6 +3737,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3695,6 +3772,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3729,6 +3807,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3763,6 +3842,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3797,6 +3877,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3831,6 +3912,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3865,6 +3947,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3893,6 +3976,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3921,6 +4005,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3949,6 +4034,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -3977,6 +4063,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4005,6 +4092,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4033,6 +4121,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4061,6 +4150,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4089,6 +4179,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4117,6 +4208,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4145,6 +4237,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4173,6 +4266,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4201,6 +4295,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4217,6 +4312,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4233,6 +4329,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4251,6 +4348,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4269,6 +4367,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4285,6 +4384,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4301,6 +4401,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4321,6 +4422,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4341,6 +4443,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4364,6 +4467,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4387,6 +4491,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4410,6 +4515,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4433,6 +4539,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4456,6 +4563,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4479,6 +4587,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4502,6 +4611,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4525,6 +4635,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4548,6 +4659,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4571,6 +4683,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4594,6 +4707,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4617,6 +4731,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4640,6 +4755,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4663,6 +4779,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4686,6 +4803,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4709,6 +4827,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4732,6 +4851,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4755,6 +4875,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4778,6 +4899,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4801,6 +4923,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4824,6 +4947,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4847,6 +4971,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4870,6 +4995,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4893,6 +5019,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4916,6 +5043,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4939,6 +5067,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4962,6 +5091,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -4985,6 +5115,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5019,6 +5150,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5053,6 +5185,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5087,6 +5220,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5121,6 +5255,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5155,6 +5290,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5189,6 +5325,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5223,6 +5360,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5257,6 +5395,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5282,6 +5421,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5307,6 +5447,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5332,6 +5473,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5348,6 +5490,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5364,6 +5507,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5380,6 +5524,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5401,6 +5546,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5422,6 +5568,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5443,6 +5590,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5464,6 +5612,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5485,6 +5634,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5506,6 +5656,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5527,6 +5678,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5548,6 +5700,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "290": "cheri capabilities enabled."
         }
     },
@@ -5577,6 +5730,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "no duplicate pointer appeared after the double free (not demonstrated).",
             "262": "freebsd jemalloc check mechannism enabled"
         }
@@ -5608,6 +5762,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "no duplicate pointer appeared after the double free (not demonstrated).",
             "262": "freebsd jemalloc check mechannism enabled"
         }
@@ -5639,6 +5794,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "no duplicate pointer appeared after the double free (not demonstrated).",
             "262": "freebsd jemalloc check mechannism enabled"
         }
@@ -5658,10 +5814,14 @@
                     "mts-reallocate-stack"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "mts-reallocate-stack": {
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the two calls did not share the stack slot (not demonstrated)."
         }
     },
@@ -5680,9 +5840,16 @@
                     "mts-reallocate-stack"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
-    "mts-write-after-free-stack": {},
+    "mts-write-after-free-stack": {
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
+        }
+    },
     "mts-write-before-reclaim-stack": {
         "require-comment": [
             "relaxation",
@@ -5695,6 +5862,9 @@
                     "mts-reallocate-stack"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "mts-write-after-reclaim-stack": {
@@ -5713,6 +5883,9 @@
                 "c",
                 "c"
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "mts-access-after-free-org-heap": {
@@ -5738,6 +5911,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "expected when freed space is refilled with rubbish or cleaned."
         }
     },
@@ -5764,12 +5938,14 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "expected when freed space is refilled with rubbish or cleaned."
         }
     },
     "mts-reallocate-heap": {
         "comment": "try to get a block which is previously freed.",
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "2": "failed to get a reallocated block after a number of trials."
         }
     },
@@ -5795,11 +5971,16 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "expected when freed space is refilled with rubbish or cleaned.",
             "2": "failed to reallocate a block."
         }
     },
-    "mts-write-after-free-heap": {},
+    "mts-write-after-free-heap": {
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
+        }
+    },
     "mts-write-before-reclaim-heap": {
         "arguments": {
             "0": [
@@ -5824,6 +6005,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "expected when allocated space is refilled with rubbish or cleaned.",
             "2": "failed to reallocate a block."
         }
@@ -5840,6 +6022,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the freed space was refilled or cleaned (not demonstrated).",
             "2": "failed to reallocate a block after a number of trials."
         }
@@ -5863,6 +6046,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the altered stack data did not change the return address (not demonstrated).",
             "290": "cheri capabilities enabled."
         }
@@ -5877,6 +6061,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the altered stack data did not change the return address (not demonstrated).",
             "290": "cheri capabilities enabled."
         }
@@ -5900,6 +6085,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "ASLR in prog base is enabled."
         }
     },
@@ -5922,6 +6108,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "ASLR in stack region is enabled."
         }
     },
@@ -5933,6 +6120,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the extracted opcode did not match the side file (not demonstrated; observed as 1 on riscv64).",
             "290": "cheri capabilities enabled."
         }
@@ -6054,6 +6242,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the GOT slot read did not produce the expected entry (not demonstrated).",
             "2": "the GOT slot could not be located: the call-site instruction shape was not recognised.",
             "290": "cheri capabilities enabled."
@@ -6075,6 +6264,9 @@
             "0": [
                 "0"
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cpi-read-heap-vtable-pointer": {
@@ -6093,6 +6285,9 @@
             "0": [
                 "1"
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cpi-read-data-vtable-pointer": {
@@ -6111,6 +6306,9 @@
             "0": [
                 "2"
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cpi-read-rodata-vtable-pointer": {
@@ -6119,6 +6317,9 @@
             "0": [
                 "3"
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cpi-write-stack-vtable-pointer": {
@@ -6127,6 +6328,9 @@
             "0": [
                 "0"
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cpi-write-heap-vtable-pointer": {
@@ -6135,6 +6339,9 @@
             "0": [
                 "1"
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cpi-write-data-vtable-pointer": {
@@ -6143,10 +6350,14 @@
             "0": [
                 "2"
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cpi-func-pointer-assign": {
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the assigned function pointer did not reach helper (not demonstrated)."
         }
     },
@@ -6172,6 +6383,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the computed function pointer did not reach helper (not demonstrated).",
             "290": "cheri capabilities enabled."
         }
@@ -6209,6 +6421,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the GOT entry was not overwritten (not demonstrated).",
             "2": "the GOT slot could not be located: the call-site instruction shape was not recognised.",
             "16": "relocation tables under read-only protection.",
@@ -6247,6 +6460,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the illegal jump into the middle of a function did not land (not demonstrated)."
         }
     },
@@ -6272,6 +6486,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "a wrong helper was reached instead (not demonstrated)."
         }
     },
@@ -6292,6 +6507,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "a wrong helper was reached instead (not demonstrated)."
         }
     },
@@ -6313,6 +6529,9 @@
                     "cfi-call-instruction-in-stack"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-fake-vtable-with-func-heap": {
@@ -6333,6 +6552,9 @@
                     "cfi-call-instruction-in-heap"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-fake-vtable-with-func-data": {
@@ -6353,6 +6575,9 @@
                     "cfi-call-instruction-in-data"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-fake-vtable-arg-num": {
@@ -6365,6 +6590,9 @@
                     "cfi-call-fake-vtable"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-fake-vtable-arg-type": {
@@ -6382,6 +6610,9 @@
                     "cfi-call-fake-vtable"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-fake-vtable-arg-type-modified": {
@@ -6401,6 +6632,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "3": "the vtable pointer was not replaced: the call dispatched into the original Helper2::virtual_func, which exits 3."
         }
     },
@@ -6439,6 +6671,9 @@
                     "cpi-read-data-vtable-pointer"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-wrong-vtable-func-num": {
@@ -6451,6 +6686,9 @@
                     "cfi-call-wrong-vtable"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-wrong-vtable-arg-num": {
@@ -6463,6 +6701,9 @@
                     "cfi-call-wrong-vtable"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-wrong-vtable-arg-type": {
@@ -6475,6 +6716,9 @@
                     "cfi-call-wrong-vtable"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-wrong-vtable-arg-type-modified": {
@@ -6489,6 +6733,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "3": "the vtable pointer was not replaced: the call dispatched into the original Helper2::virtual_func, which exits 3."
         }
     },
@@ -6503,6 +6748,9 @@
                     "cfi-call-wrong-vtable-child"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-wrong-vtable-sibling": {
@@ -6516,6 +6764,9 @@
                     "cfi-call-wrong-vtable-child"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-wrong-vtable-child": {
@@ -6554,6 +6805,9 @@
                     "cpi-read-data-vtable-pointer"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-wrong-vtable-offset": {
@@ -6576,6 +6830,9 @@
                     "cpi-func-pointer-arithmetic"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-wrong-vtable": {
@@ -6588,6 +6845,9 @@
                     "cfi-call-wrong-vtable-child"
                 ]
             ]
+        },
+        "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access"
         }
     },
     "cfi-call-wrong-vtable-released": {
@@ -6608,6 +6868,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "17": "vtable pointer is cleaned after release (SEGV_MAPERR).",
             "18": "vtable pointer is cleaned after release (SEGV_ACCERR)."
         }
@@ -6624,6 +6885,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the wrong-argument call did not land (not demonstrated)."
         }
     },
@@ -6639,6 +6901,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the wrong-type call did not land (not demonstrated)."
         }
     },
@@ -6659,6 +6922,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the misread double did not equal 2.0 (not demonstrated)."
         }
     },
@@ -6679,11 +6943,13 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the misread int did not equal 2 (not demonstrated)."
         }
     },
     "cfi-call-wrong-type-arg-fp2dp-func": {
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the wrong-type call did not land (not demonstrated).",
             "290": "cheri capabilities enabled."
         },
@@ -6969,6 +7235,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the illegal jump into the middle of a function did not land (not demonstrated)."
         }
     },
@@ -6994,6 +7261,7 @@
             ]
         },
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the altered stack data did not change the return address (not demonstrated).",
             "290": "cheri capabilities enabled."
         }
@@ -7021,6 +7289,7 @@
             ]
         },
         "expect-results": {
+            "260": "libhwasan's reporting path faults and qemu-user ends the process with SIGILL (256+4) on the aarch64-mte build -- an environment artifact of the sanitizer venue, not a defence observation",
             "1": "the altered stack data did not change the return address (not demonstrated).",
             "290": "cheri capabilities enabled."
         }
@@ -7182,6 +7451,8 @@
             ]
         },
         "expect-results": {
+            "260": "on a PAuth build (aarch64-pa) the write of the unsigned target into the PAC-signed saved return-address slot fails authentication at the function's return and raises SIGILL -- PAuth's own rejection (diagnostic)",
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the RA was not hijacked (not demonstrated; observed as 4 on aarch64-morello).",
             "290": "cheri capabilities enabled."
         }
@@ -7209,6 +7480,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the RA was not hijacked (not demonstrated).",
             "290": "cheri capabilities enabled."
         }
@@ -7236,6 +7508,7 @@
             1
         ],
         "expect-results": {
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the RA was not hijacked (not demonstrated; observed as 255 on aarch64-morello).",
             "267": "the return address is partially written leading to a segment error due to the wrong RA; the swept offset half-covers the RA slot (observed natively at sizes 1 and 3).",
             "290": "cheri capabilities enabled."
@@ -7310,6 +7583,7 @@
             ]
         },
         "expect-results": {
+            "260": "on a PAuth build (aarch64-pa) the write of the unsigned target into the PAC-signed saved return-address slot fails authentication at the function's return and raises SIGILL -- PAuth's own rejection (diagnostic)",
             "290": "cheri capabilities enabled.",
             "1": "failed to change RA on stack at all, normal return.",
             "267": "RA is partially written leading to a segment error due to wrong RA.",
@@ -7520,12 +7794,16 @@
             ]
         },
         "expect-results": {
+            "260": "on a PAuth build (aarch64-pa) the write of the unsigned target into the PAC-signed saved return-address slot fails authentication at the function's return and raises SIGILL -- PAuth's own rejection (diagnostic)",
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the RA was not hijacked (not demonstrated; observed as 4 on aarch64-morello).",
             "290": "cheri capabilities enabled."
         }
     },
     "cfi-return-to-peer-asmfunc": {
         "expect-results": {
+            "260": "on a PAuth build (aarch64-pa) the write of the unsigned target into the PAC-signed saved return-address slot fails authentication at the function's return and raises SIGILL -- PAuth's own rejection (diagnostic)",
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the RA was not hijacked to the peer assembly return site (not demonstrated).",
             "290": "cheri capabilities enabled."
         }
@@ -7552,6 +7830,8 @@
             ]
         },
         "expect-results": {
+            "260": "on a PAuth build (aarch64-pa) the write of the unsigned target into the PAC-signed saved return-address slot fails authentication at the function's return and raises SIGILL -- PAuth's own rejection (diagnostic)",
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the RA was not hijacked to the peer function (not demonstrated; observed as 1 on aarch64-morello).",
             "290": "cheri capabilities enabled."
         }
@@ -7578,6 +7858,8 @@
             ]
         },
         "expect-results": {
+            "260": "on a PAuth build (aarch64-pa) the write of the unsigned target into the PAC-signed saved return-address slot fails authentication at the function's return and raises SIGILL -- PAuth's own rejection (diagnostic)",
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the RA was not hijacked to the peer member function (not demonstrated; observed as 1 on aarch64-morello).",
             "290": "cheri capabilities enabled."
         }
@@ -7604,6 +7886,8 @@
             ]
         },
         "expect-results": {
+            "260": "on a PAuth build (aarch64-pa) the write of the unsigned target into the PAC-signed saved return-address slot fails authentication at the function's return and raises SIGILL -- PAuth's own rejection (diagnostic)",
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the RA was not hijacked to the peer virtual function (not demonstrated; observed as 1 on aarch64-morello).",
             "290": "cheri capabilities enabled."
         }
@@ -7630,6 +7914,8 @@
             ]
         },
         "expect-results": {
+            "260": "on a PAuth build (aarch64-pa) the write of the unsigned target into the PAC-signed saved return-address slot fails authentication at the function's return and raises SIGILL -- PAuth's own rejection (diagnostic)",
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the modified RA did not reach exit() (not demonstrated; observed as 3 on aarch64-morello).",
             "290": "cheri capabilities enabled."
         }
@@ -7668,6 +7954,8 @@
             ]
         },
         "expect-results": {
+            "19": "on a PAuth build (aarch64-pa) the forged return address fails authentication and raises SIGILL/ILL_ILLOPC, which matches no registration -- PAuth's own rejection (diagnostic)",
+            "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the RA was not pushed out of the frame (not demonstrated; observed as 1 on aarch64-morello).",
             "16": "trip-wire on aarch64 leads to bus error.",
             "266": "illegally push stack out of the frame raises bus error"
@@ -7710,6 +7998,7 @@
             ]
         },
         "expect-results": {
+            "19": "on a PAuth build (aarch64-pa) the failed authentication raises SIGILL, which matches no registered handler -- PAuth's own rejection (diagnostic)",
             "1": "no injection path was staged: the injected code was never executed (the raw 2 seen on aarch64-morello folds to the shared 1).",
             "16": "expected excption on the illegal call.",
             "99": "the platform MTE/HWASan tag check stopped the injected code; hwasan own process value on aarch64.",
@@ -7753,6 +8042,7 @@
             ]
         },
         "expect-results": {
+            "19": "on a PAuth build (aarch64-pa) the failed authentication raises SIGILL, which matches no registered handler -- PAuth's own rejection (diagnostic)",
             "1": "no injection path was staged: the injected code was never executed (the raw 2 seen on aarch64-morello folds to the shared 1).",
             "16": "expected excption on the illegal call.",
             "99": "the platform MTE/HWASan tag check stopped the injected code; hwasan own process value on aarch64.",
@@ -7796,6 +8086,7 @@
             ]
         },
         "expect-results": {
+            "19": "on a PAuth build (aarch64-pa) the failed authentication raises SIGILL, which matches no registered handler -- PAuth's own rejection (diagnostic)",
             "1": "no injection path was staged: the injected code was never executed (the raw 2 seen on aarch64-morello folds to the shared 1).",
             "16": "expected excption on the illegal call.",
             "99": "the platform MTE/HWASan tag check stopped the injected code; hwasan own process value on aarch64.",
@@ -7840,6 +8131,7 @@
             ]
         },
         "expect-results": {
+            "19": "on a PAuth build (aarch64-pa) the failed authentication raises SIGILL, which matches no registered handler -- PAuth's own rejection (diagnostic)",
             "1": "no injection path was staged: the injected code was never executed (the raw 2 seen on aarch64-morello folds to the shared 1).",
             "16": "expected excption on the illegal call.",
             "99": "the platform MTE/HWASan tag check stopped the injected code; hwasan own process value on aarch64.",

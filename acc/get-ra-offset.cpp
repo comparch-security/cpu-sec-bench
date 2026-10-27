@@ -2,9 +2,9 @@
 #include <string>
 #include "include/global_var.hpp"
 
-#define RA_POS_TEST_ENTRY(off, rv)                     \
-  READ_STACK_DAT_IMM(ra_stack, off);                   \
-  if(ra_stack == ra_label) { gvar_init(rv); return; }  \
+#define RA_POS_TEST_ENTRY(off, rv)                                 \
+  READ_STACK_DAT_IMM(ra_stack, off);                               \
+  if(STRIP_PAC(ra_stack) == ra_label) { gvar_init(rv); return; }   \
 
 const int max_gv_num = 4;
 volatile arch_int_t gv[max_gv_num];

@@ -105,3 +105,7 @@ extern "C" void assembly_return_site();
   // the integer view of sp: an address, as the other ports yield (the calibration
   // acc/get-frame-size subtracts two of them, so it must not be a capability)
   #define GET_SP_LOC(loc) asm volatile("mv %0, sp" : "=r"(loc))
+
+  // no pointer authentication on this port: the identities
+  #define STRIP_PAC(addr) ((void *)(addr))
+  #define STRIP_PAC_VAL(v) ((v))

@@ -31,7 +31,9 @@ void FORCE_NOINLINE helper(void* addr, void*ra_pos){
     volatile void *ra_stack = NULL;
     memmove(addr,(const void*)&ra_stack,ra_offset);
     for(int i = 0; i != ra_offset; i+=sizeof(void*)){
-        if((uintptr_t)ra_pos == *(arch_uint_t*)((long long)addr+(long long)i)){
+        arch_uint_t *slot = (arch_uint_t*)((long long)addr+(long long)i);
+        if((uintptr_t)ra_pos == (uintptr_t)STRIP_PAC_VAL(*slot)){
+            *slot = (arch_uint_t)STRIP_PAC_VAL(*slot);
             ra_index = i;
             break;
         }else{

@@ -112,4 +112,8 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   RtlCaptureContext(&sp_loc_context);                         \
   offset = (arch_int_t)((long long) _AddressOfReturnAddress()-\
            (long long) sp_loc_context.Rsp)
+
+// no pointer authentication on this port: the identities
+#define STRIP_PAC(addr) ((void *)(addr))
+#define STRIP_PAC_VAL(v) ((v))
 #endif

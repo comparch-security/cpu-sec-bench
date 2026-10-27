@@ -121,3 +121,18 @@ void FORCE_INLINE assign_fake_machine_code(unsigned char *p) {
   RA_POS_TEST_ENTRY(60, 15)
 
 #define GET_SP_LOC(loc) asm volatile("mov %0, sp" : "=r"(loc))
+
+// strip the pointer-authentication field from a code address.  Value-preserving
+// for an unsigned canonical address, so a build that enables PAuth without
+// signing still compares equal to the raw label.
+#ifdef __ARM_FEATURE_PAUTH
+static inline unsigned long strip_pac_val(unsigned long v) {
+  asm volatile("xpaci %0;" : "+r"(v));
+  return v;
+}
+  #define STRIP_PAC(addr) ((void *)(strip_pac_val((unsigned long)(addr))))
+  #define STRIP_PAC_VAL(v) (strip_pac_val((unsigned long)(v)))
+#else
+  #define STRIP_PAC(addr) ((void *)(addr))
+  #define STRIP_PAC_VAL(v) ((v))
+#endif

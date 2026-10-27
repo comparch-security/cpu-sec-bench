@@ -16,6 +16,7 @@ void FORCE_NOINLINE helper(void *label, int sel) {
      */
     gvar_init(-offset/4);
     #ifdef TRACE_RUN
+      ra_addr = offset;
       GET_RA_ADDR(ra_addr);
       WRITE_TRACE("RA address: 0x", ra_addr);
       WRITE_TRACE("RA before modified: 0x", *(long long*)ra_addr);
