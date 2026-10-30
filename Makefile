@@ -423,7 +423,11 @@ ifdef enable_aarch64_bti
   OBJECT_CXXFLAGS += -march=armv8.5-a -mbranch-protection=bti
 endif
 
-SCHEDULER_CXXFLAGS += -DCSB_TARGET_ARCH="\"$(ARCH)\""
+CSB_TARGET_ARCH = $(ARCH)
+ifdef enable_aarch64_morello
+  CSB_TARGET_ARCH = aarch64-morello
+endif
+SCHEDULER_CXXFLAGS += -DCSB_TARGET_ARCH="\"$(CSB_TARGET_ARCH)\""
 
 # define cases
 mss-path  = mss

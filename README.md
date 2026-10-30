@@ -58,22 +58,20 @@ prep        Generate the preprocessed C++ files (resolving all macros) for all t
 clean       Clean up the test environment for a fresh test.
 ~~~
 
-### Running on NEMU (riscv64 Linux guest)
+### Splitting build and run across machines (corpus mode)
 
-The suite also runs inside a booted Linux guest under XiangShan NEMU, for venues that have no
-compiler: the corpus is cross-compiled on the host, baked into a bootable image together with
-the riscv64 scheduler, and executed in the guest. The scheduler's `corpus` option is what splits
-the two phases.
+A venue with no compiler — a slow emulator's guest, a locked-down target — cannot build the
+suite where it runs it. The scheduler's `corpus` option splits the two phases: the build host
+snapshots every build unit under a content key derived from the record's build macros, and the
+run host executes those snapshots without ever building. Venue staging that drives these
+commands lives in the consuming environment repo; the contract itself is documented in
+doc/architecture.html.
 
 ~~~bash
   make
   ./run-test corpus make-only exhausted-run     # build host: snapshot every build unit
   ./run-test no-make corpus exhausted-run       # run host: execute the prebuilt corpus
 ~~~
-
-See [platform/riscv64-nemu-linux/README.md](platform/riscv64-nemu-linux/README.md) for the
-pinned image recipe (`build-corpus.sh` → `build-image.sh` → `run.sh`), the host-native
-reference runner, and the known caveats of that venue.
 
 ### Usage (Windows MSVC)
 
@@ -103,7 +101,6 @@ For the obvious reasons, some functions are unavailable but we are working on th
 - **lib**: the architecture-specific support library.
 - **mss**: test cases related to memory spatial safety.
 - **mts**: test cases related to memory temporal safety.
-- **platform**: venue scripts for running the suite outside a native host (the riscv64 Linux guest under NEMU).
 - **doc**: documentation of the test suite.
 - **plans**: archived implementation plans.
 - **script**: helper scripts of the test suite.

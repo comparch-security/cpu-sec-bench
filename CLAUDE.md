@@ -56,9 +56,6 @@ configure.json                 Authoritative test registry — one record per ru
 Makefile                       Build rules; test cases are compiled on demand by the scheduler
 INTERNAL.md                    Internals narrative — rationale only, see Documentation
 doc/                           Project documentation (HTML)
-platform/                      Venue scripts — running the suite off a native host
-                               (riscv64-nemu-linux: host-built corpus + riscv64 scheduler in a
-                               booted Linux guest under XiangShan NEMU; see its own README)
 plans/                         Archived implementation plans (see Subagents)
 image/relationship.png         Relation-graph figure referenced by INTERNAL.md
 test/  trace-log/              Generated build and run output (gitignored)
@@ -98,7 +95,8 @@ make disable_independent_assembly=yes
 ./run-test print-trace    # print the trace log of the attacked target
 
 # Supporting targets
-# Split the build and run phases across two machines (see platform/riscv64-nemu-linux):
+# Split the build and run phases across two machines (the corpus-mode contract in
+# doc/architecture.html; venue staging lives in the consuming environment repo):
 # the build host snapshots every build unit as test/<program>__<key>; the run host
 # executes those snapshots and never builds. Note the forced `-B` and the variant
 # handling that make a plain make-only/no-make pair the wrong split.
@@ -132,7 +130,8 @@ implementation by ISA: `__x86_64`/`_M_X64` → `lib/x86_64/`, `__aarch64__` → 
 (records not already present in `results.json`), and for each record:
 
 1. Skips records whose `skip` list names the architecture the scheduler was built for
-   (`CSB_TARGET_ARCH`, which the Makefile passes from `ARCH`): the record is recorded as
+   (`CSB_TARGET_ARCH`, which the Makefile passes from `ARCH`; the `enable_aarch64_morello`
+   build bakes the distinct token `aarch64-morello`): the record is recorded as
    `1025` — not run — and neither built nor run. The check precedes argument expansion and
    prerequisite gating.
 2. Expands the record's `arguments`. A leading `-r`/`-l`/`-v` names a property holding a
@@ -153,8 +152,10 @@ implementation by ISA: `__x86_64`/`_M_X64` → `lib/x86_64/`, `__aarch64__` → 
    placeholder line when that file is missing — and followed by the two not-run count lines
    (`# not run (skipped for this platform): N`, `# not run (failed to build): M`).
 
-**Corpus mode (`corpus`).** A venue with no compiler — the NEMU guest platform is one — needs the
-two phases split across machines. With `corpus`, the build phase forces `-B` for every record and
+**Corpus mode (`corpus`).** A venue with no compiler — a slow emulator's guest, a locked-down
+target — needs the two phases split across machines. Venue staging itself lives in the consuming
+environment repo; the contract below is the runner feature such venues drive. With `corpus`, the
+build phase forces `-B` for every record and
 snapshots each fresh build as `test/<program>__<key>`, where `<key>` is FNV-1a-32 over the
 record's macro map rendered as sorted, comma-joined `K=V` pairs (empty map → `811c9dc5`); the run
 phase executes that keyed path and, if it is missing, names it on stderr and exits 1 rather than
@@ -173,7 +174,12 @@ consumes as `-vstack-offset-v-p-g1`.
 **`configure.json` record fields.** `program` (source basename, defaulting to the record key),
 `conf-macro` (per-variant macro values), `arguments` / `default_args`, `require` /
 `require-comment`, `skip` / `skip-reason` (platforms the record is not runnable on, matched
-against the scheduler's arch; the shipped registry declares none), `expect-results` (known
+against the scheduler's baked arch token; the shipped registry declares rows for
+`mss-write-by-stack-pointer` and `acc-get-frame-size` on `cheri_riscv64` and for
+`cfi-call-mid-func` on `aarch64-morello` — a Morello row names the distinct token
+`aarch64-morello`, never plain `aarch64`, and each reason states the build failure's technical
+cause; a skip propagates through `require`, ending a dependent variant whose groups the skipped
+row can no longer satisfy as `1024`), `expect-results` (known
 non-zero codes and their meanings), `set-var`, `get-code-offset`, `size`, `offset`,
 `extend_offset`, `reference`, `comment`, `todo`, `multitry`.
 
@@ -218,9 +224,6 @@ configuration, requiring elevation.
   duplicate classed cells, and exits 2 on unreadable or malformed inputs.
 - [doc/porting.html](doc/porting.html) — adding an ISA or an OS. **(keep in sync with the
   `lib/` layout and the Makefile's `ARCH` / `CLIBAPI` selection)**
-- [platform/riscv64-nemu-linux/README.md](platform/riscv64-nemu-linux/README.md) — running the
-  suite in a booted Linux guest under NEMU: the pinned image recipe, the three commands, the
-  output layout, and that venue's own caveats.
 
 ## Update and Commit
 

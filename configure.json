@@ -2647,7 +2647,11 @@
             0,
             2,
             1
-        ]
+        ],
+        "skip": [
+            "cheri_riscv64"
+        ],
+        "skip-reason": "build fails on cheri_riscv64: the inline-asm constraint 'C' is unavailable in the pinned CHERI clang"
     },
     "mss-write-by-bare-array-index-overflow-stack": {
         "program": "mss-write-by-bare-array-index",
@@ -6176,7 +6180,11 @@
             "0": [
                 "frame-size"
             ]
-        }
+        },
+        "skip": [
+            "cheri_riscv64"
+        ],
+        "skip-reason": "build fails on cheri_riscv64: GET_SP_LOC is undeclared against the pinned CHERI sysroot"
     },
     "acc-check-IBT": {
         "arguments": {
@@ -6462,7 +6470,11 @@
         "expect-results": {
             "99": "the aarch64-mte build class's HWASan runtime aborts with a tag mismatch (RT_CODE_MTE_TAGCHECK); the tag check caught the access",
             "1": "the illegal jump into the middle of a function did not land (not demonstrated)."
-        }
+        },
+        "skip": [
+            "aarch64-morello"
+        ],
+        "skip-reason": "build fails on aarch64-morello: LLVM backend crash (blockaddress is only valid for the current function)"
     },
     "cfi-call-wrong-func-within-static-analysis": {
         "comment": "add chain type support",

@@ -183,8 +183,12 @@ MAKEFLAGS='disable_independent_assembly=yes' ./run-test exhausted-run</code></pr
             scheduler records them as <code>1025</code> (not run) and the rest of the suite builds
             and runs normally. The switch is a bring-up interim, not a supported final
             configuration: once the port is otherwise complete, give those two records a
-            <code>skip</code> list naming the architecture instead, so the gap is declared rather
-            than left to fail the build.
+            <code>skip</code> list naming the token the scheduler was built for
+            (<code>CSB_TARGET_ARCH</code>) instead, so the gap is declared rather than left to
+            fail the build. The token usually equals the <code>ARCH</code> value &mdash; but not
+            always: the Morello build keeps <code>ARCH=aarch64</code> while baking the distinct
+            token <code>aarch64-morello</code>, so a Morello-only gap is declared as
+            <code>"skip": ["aarch64-morello"]</code>, never plain <code>aarch64</code>.
         </p>
 
         <h2>Supported platforms</h2>
@@ -204,6 +208,15 @@ MAKEFLAGS='disable_independent_assembly=yes' ./run-test exhausted-run</code></pr
             <tr><td>RISC-V 64</td><td>Linux</td><td><code>riscv64</code></td><td><code>posix</code></td></tr>
             <tr><td>RISC-V 64 (CHERI)</td><td>CheriBSD</td><td><code>cheri_riscv64</code></td><td><code>posix</code></td></tr>
         </table>
+
+        <p>
+            A <code>skip</code> list in <code>configure.json</code> matches against the baked
+            scheduler token, not against <code>ARCH</code> directly. For every row above the
+            token equals the <code>ARCH</code> value, with one exception: the Morello row is
+            built with <code>enable_aarch64_morello=yes</code> and keeps
+            <code>ARCH=aarch64</code>, but its scheduler bakes the token
+            <code>aarch64-morello</code>.
+        </p>
 
         <h2>Adding an instruction set</h2>
 

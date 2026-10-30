@@ -390,16 +390,29 @@ lib/posix/ or lib/visualcpp/  the OS/ABI layer, chosen by CLIBAPI</code></pre>
             </tr>
             <tr>
                 <td><code>skip</code></td>
-                <td>Platforms the record is not runnable on: an array of <code>ARCH</code> values.
-                    When it names the architecture the scheduler was built for, the record is
-                    recorded as <code>1025</code> and neither built nor run. The shipped registry
-                    declares none &mdash; the field exists so a port in progress can state what it
-                    cannot run yet instead of leaving unexplained build failures.</td>
+                <td>Platforms the record is not runnable on: an array of arch tokens matched
+                    against the <code>CSB_TARGET_ARCH</code> the scheduler was baked with. When a
+                    token matches, the record is recorded as <code>1025</code> and neither built
+                    nor run &mdash; which also keeps corpus mode from staging the unit or
+                    fail-fasting on it. The shipped registry declares rows for
+                    <code>mss-write-by-stack-pointer</code> and <code>acc-get-frame-size</code>
+                    on <code>cheri_riscv64</code> and for <code>cfi-call-mid-func</code> on
+                    <code>aarch64-morello</code>: the Morello build passes
+                    <code>enable_aarch64_morello=yes</code> but keeps <code>ARCH=aarch64</code>,
+                    so its baked token is the distinct <code>aarch64-morello</code> &mdash; a
+                    Morello row must name that token, never plain <code>aarch64</code>, or every
+                    healthy AArch64 build class would be skipped with it. A skip propagates
+                    through <code>require</code>: a dependent variant whose groups the skipped
+                    row can no longer satisfy ends <code>1024</code> (fast-run only &mdash; in
+                    exhausted-run, which the venue lanes run, the gate does not fire and only the
+                    direct skip is visible).</td>
             </tr>
             <tr>
                 <td><code>skip-reason</code></td>
                 <td>Free-text reason printed with the skip notice, so a skipped record explains
-                    itself in the run log.</td>
+                    itself in the run log. The shipped rows each state the technical build
+                    failure behind the skip, so a row stays checkable &mdash; and retirable
+                    &mdash; when a toolchain pin changes.</td>
             </tr>
             <tr>
                 <td><code>expect-results</code></td>
